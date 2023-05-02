@@ -1,0 +1,6 @@
+[submodule "vendor/opentk"]
+	path = vendor/opentk
+	url = https://github.com/kasperhbo/opentk.git
+[submodule "vendor/ImGui.NET"]
+	path = vendor/ImGui.NET
+	url = https://github.com/kasperhbo/ImGui.NET.git
