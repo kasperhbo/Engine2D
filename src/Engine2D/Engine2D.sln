@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine2D", "Engine2D\Engine2D.csproj", "{01EFA6C9-B70A-4B07-BA50-DE1D2256B0FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01EFA6C9-B70A-4B07-BA50-DE1D2256B0FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01EFA6C9-B70A-4B07-BA50-DE1D2256B0FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01EFA6C9-B70A-4B07-BA50-DE1D2256B0FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01EFA6C9-B70A-4B07-BA50-DE1D2256B0FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C920190E-9978-4665-B125-F9045BD17DC4}
+	EndGlobalSection
+EndGlobal

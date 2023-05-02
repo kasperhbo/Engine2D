@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\vendor\ImGui.NET\deps\cimgui\linux-x64\cimgui.so" Link="cimgui.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\vendor\ImGui.NET\deps\cimgui\osx\cimgui.dylib" Link="cimgui.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\vendor\ImGui.NET\deps\cimgui\win-x64\cimgui.dll" Link="cimgui.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+	
+	<ItemGroup>
+		<None Update="Shaders\shader_files\default.frag">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Shaders\shader_files\default.vert">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Shaders\shader_files\UI\imgui-frag.glsl">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Shaders\shader_files\UI\imgui-vertex.glsl">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+    <PackageReference Include="OpenTK" Version="4.7.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\vendor\ImGui.NET\src\ImGui.NET\ImGui.NET.csproj" />
+    <ProjectReference Include="..\..\vendor\ImGui.NET\src\ImPlot.NET\ImPlot.NET.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="dll_file_links\" />
+  </ItemGroup>
+
+</Project>
