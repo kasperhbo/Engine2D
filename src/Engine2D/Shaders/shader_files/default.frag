@@ -1,8 +1,14 @@
-#version 330
+#version 330 core
 
-out vec4 outputColor;
+out vec4 color;
+
+in vec2 fTexCoords;
+in vec4 fColor;
+
+uniform float uTime;
+uniform sampler2D TEX_SAMPLER;
 
 void main()
 {
-    outputColor = vec4(1.0, 1.0, 0.0, 1.0);
+    color = texture(TEX_SAMPLER, fTexCoords);
 }

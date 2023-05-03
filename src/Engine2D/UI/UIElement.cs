@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KDBEngine.UI
 {
-    internal class ImGuiWindow
+    public class ImGuiWindow
     {
         private string _title;        
         private ImGuiWindowFlags _flags;

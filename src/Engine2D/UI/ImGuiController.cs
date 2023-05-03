@@ -10,7 +10,7 @@ using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 
 namespace KDBEngine.UI
 {
-    internal class ImGuiController
+    public class ImGuiController
     {
         private bool _frameBegun;
 
@@ -147,6 +147,39 @@ namespace KDBEngine.UI
             CheckGLError("End of ImGui setup");
         }
 
+
+        public void SetupDockspace()
+        {
+            ImGuiWindowFlags windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
+
+            ImGuiViewportPtr mainViewport = ImGui.GetMainViewport();
+            
+            ImGui.SetNextWindowPos(mainViewport.WorkPos);
+            ImGui.SetNextWindowSize(mainViewport.WorkSize);
+            
+            ImGui.SetNextWindowViewport(mainViewport.ID);
+
+            ImGui.SetNextWindowPos(new System.Numerics.Vector2(0.0f, 0.0f));
+
+            //TODO: REMOVE THIS HARDCODED SHITTY
+            ImGui.SetNextWindowSize(new System.Numerics.Vector2(1920, 1080));
+
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+
+            windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
+                    ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
+                    ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+
+            ImGui.Begin("Dockspace Demo", windowFlags);
+            ImGui.PopStyleVar(2);
+
+            // Dockspace
+            ImGui.DockSpace(ImGui.GetID("Dockspace"));
+
+            ImGui.End();
+        }
+
         /// <summary>
         /// Recreates the device texture used to render text.
         /// </summary>
@@ -203,14 +236,16 @@ namespace KDBEngine.UI
         /// <summary>
         /// Updates ImGui input and IO configuration state.
         /// </summary>
-        public void Update(GameWindow wnd, float deltaSeconds)
+        public void Update(GameWindow wnd, double deltaSeconds)
         {
+            //SetupDockspace();
+
             if (_frameBegun)
             {
                 ImGui.Render();
             }
 
-            SetPerFrameImGuiData(deltaSeconds);
+            SetPerFrameImGuiData((float)deltaSeconds);
             UpdateImGuiInput(wnd);
 
             _frameBegun = true;
