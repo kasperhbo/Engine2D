@@ -7,6 +7,6 @@ public class Program {
     {
         Console.WriteLine("Creating Window");
 
-        Window.Get();
+        Engine.Get();
     }
 }

@@ -33,7 +33,7 @@ namespace Engine2D.Rendering
 
 
         private Vector2 projectionSize = new Vector2(6, 3);
-        public Matrix4 getProjectionMatrix()
+        public Matrix4 GetProjectionMatrix()
         {
             // return Matrix4.CreatePerspectiveFieldOfView(_fov, 800f/600f, 0.01f, 100f);
             return Matrix4.CreateOrthographicOffCenter(0, 
@@ -43,21 +43,23 @@ namespace Engine2D.Rendering
         }
 
 
-        public Matrix4 getInverseProjection()
+        public Matrix4 GetInverseProjection()
         {
             Matrix4 inverse = new Matrix4();
-            Matrix4.Invert(getProjectionMatrix(), out inverse);
+            Matrix4.Invert(GetProjectionMatrix(), out inverse);
 
             return inverse;
         }
 
-        public Matrix4 getInverseView()
+        public Matrix4 GetInverseView()
         {
             Matrix4 inverse = new Matrix4();
             Matrix4.Invert(getViewMatrix(), out inverse);
             return inverse;
         }
-        #region test1
+
+        #region test1 old
+
         //public Matrix4 projection, view, inverseProjection, inverseView;
         //public Vector2 position;
         //public static float projectionWidth = 6;

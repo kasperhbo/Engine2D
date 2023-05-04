@@ -21,8 +21,8 @@ namespace Engine2D.UI
             Vector2 windowPos = getCenteredPositionForViewport(windowSize);
 
             ImGui.SetCursorPos(new Vector2(windowPos.X, windowPos.Y));
-            int textureId = Window.Get()._currentScene.FrameBuffer.TextureID;
-            ImGui.ImageButton("vp",textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+            int textureId = Engine.Get()._currentScene.FrameBuffer.TextureID;
+            ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
 
             ImGui.End();
 
@@ -36,12 +36,12 @@ namespace Engine2D.UI
             windowSize.Y -= ImGui.GetScrollY();
 
             float aspectWidth = windowSize.X;
-            float aspectHeight = aspectWidth / Window.Get().TargetAspectRatio;
+            float aspectHeight = aspectWidth / Engine.Get().TargetAspectRatio;
             if (aspectHeight > windowSize.Y)
             {
                 // We must switch to pillarbox mode
                 aspectHeight = windowSize.Y;
-                aspectWidth = aspectHeight * Window.Get().TargetAspectRatio;
+                aspectWidth = aspectHeight * Engine.Get().TargetAspectRatio;
             }
 
             return new Vector2(aspectWidth, aspectHeight);

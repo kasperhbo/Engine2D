@@ -4,22 +4,24 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Mathematics;
 using Engine2D.Scenes;
 using System.Runtime.CompilerServices;
+using Engine2D.GameObjects;
+using Engine2D.Core.Scripting;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
     // OpenGL's initial hurdle is quite large, but once you get past that, things will start making more sense.
-    public class Window : GameWindow
+    public class Engine : GameWindow
     {
-        private static Window _instance = null;
+        private static Engine _instance = null;
 
-        internal Scene? _currentScene = null;
+        public Scene? _currentScene = null;
 
         private static bool _isEditor = true;
         private bool _gameIsRunning = false;
 
         public float TargetAspectRatio => 16.0f / 9.0f;
 
-        public static Window Get()
+        public static Engine Get()
         {
             if(_instance  == null)
             {
@@ -31,18 +33,28 @@ namespace KDBEngine.Core {
                 ntwSettings.Title = WindowSettings.s_Title;
                 ntwSettings.Size = WindowSettings.s_Size;
                 
-                Window window = new Window(gameWindowSettings, ntwSettings);
+                Engine window = new Engine(gameWindowSettings, ntwSettings);
                 
                 _instance = window;
-
-                window.Run();
             }
                         
             return _instance;
         }
 
+        public static Engine Get(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
+        {
+            if (_instance == null)
+            {
+                Engine window = new Engine(gameWindowSettings, nativeWindowSettings);
 
-        public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
+                _instance = window;
+            }
+
+            return _instance;
+        }
+
+
+        public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
         {
             
         }
@@ -51,13 +63,15 @@ namespace KDBEngine.Core {
         {
             base.OnLoad();
             SwitchScene(new Scene(_instance, "test scene"));
+            
+            _gameIsRunning = true;
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
 
-            if (_isEditor && !_gameIsRunning) { _currentScene?.EditorUpdate(args.Time); }
+            if (_isEditor) { _currentScene?.EditorUpdate(args.Time); }
             if(_gameIsRunning ) { _currentScene?.GameUpdate(args.Time); }   
         }
 
@@ -93,13 +107,23 @@ namespace KDBEngine.Core {
             _currentScene?.OnMouseWheel(e);
         }
 
-        internal void SwitchScene(Scene newScene)
+        public void SwitchScene(Scene newScene)
         {
             if (newScene == null) { throw new Exception("Scene is null"); }                       
 
             _currentScene = newScene;           
 
             newScene.Init();        
+        }
+        public void StartPlayingScene()
+        {
+            _gameIsRunning = true;
+            _currentScene?.StartGameLoop();
+        }
+        public void StopGameSceneFromPlaying()
+        {
+            _currentScene?.EndGameLoop();
+            _gameIsRunning = false;
         }
     }
 }

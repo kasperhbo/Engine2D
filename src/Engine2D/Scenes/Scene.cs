@@ -5,39 +5,38 @@ using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
 using KDBEngine.UI;
-using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Engine2D.Scenes
 {
-    internal class Scene
+    public class Scene
     {
         public string Name { get; private set; } = "No Scene Scene";
+        private KDBEngine.Core.Engine _window;
 
         private GameRenderer _renderer;
-        private ScriptRunner scriptRunner = new();
-
-        private KDBEngine.Core.Window _window;
-
+        
         private List<Gameobject> gameobjects = new List<Gameobject>();
-        private Camera _camera;
+        private List<Gameobject> gameObjectsDuplicate = new List<Gameobject>();
 
-
-        public FrameBuffer FrameBuffer;
+        Dictionary<string,UIElemenet> _windows = new Dictionary<string, UIElemenet>();
+                
+        public FrameBuffer FrameBuffer { get; private set; }
         private GameViewport _gameViewport = new GameViewport();
         private ImGuiController _controller;
 
+        private UIElemenet? _debugWindow;
 
-        internal Scene(KDBEngine.Core.Window window, string sceneName) 
+
+        public Scene(KDBEngine.Core.Engine window, string sceneName) 
         {
             this._window = window;
             Name = sceneName;
            
         }
 
-        internal virtual void Init(){
+        public virtual void Init(){
             //_camera = new Camera(new Vector2(0,0));
 
             _renderer = new GameRenderer();
@@ -45,43 +44,50 @@ namespace Engine2D.Scenes
 
             _controller = new ImGuiController(_window.ClientSize.X, _window.ClientSize.Y);
             FrameBuffer = new FrameBuffer(1920,1080);
+                        
+            _debugWindow = new UIElemenet(
+                "Debug Window", ImGuiWindowFlags.None, () => { } );
 
-            foreach (Gameobject gameobject in gameobjects)  gameobject.Init();
-
-            var go = AddGameObjectToScene(new Gameobject());
-            scriptRunner.LoadScript(new TestScript(), go);
+            _windows.Add(_debugWindow.Title,_debugWindow);
         }
 
-        internal virtual void EditorUpdate(double dt) {
+        public virtual void EditorUpdate(double dt) {
+            
             _renderer.Update(dt);
             _controller.Update(_window, dt);
+
+            foreach (Gameobject gameobject in gameobjects) { gameobject.EditorUpdate(dt); }
         }
 
-        bool _firstRun = true;
 
-        private void StartGame()
+        #region gameloop
+        bool _firstRunGameLoop = true;
+
+        public void StartGameLoop()
         {
-            foreach (Gameobject gameobject in gameobjects) gameobject.Init();
-            scriptRunner.RaiseStartEvenet();
-            _firstRun = false;
+            _firstRunGameLoop = false;
+            foreach (Gameobject gameobject in gameobjects) { gameobject.Init(); }
+            foreach (Gameobject gameobject in gameobjects) { gameobject.Start(); }
         }
 
-        internal virtual void GameUpdate(double dt)
+        public virtual void GameUpdate(double dt)
         {
-            if(_firstRun) { StartGame(); }    
-            _renderer.Update(dt);
-            //Run Game Scripts
-            scriptRunner.RaiseUpdateEvent(dt);
-            //Run Physics
+            if(_firstRunGameLoop) {
+                StartGameLoop();
+            }
+            
+            foreach (Gameobject gameobject in gameobjects) { gameobject.GameUpdate(dt); }
         }
 
-        internal virtual void PreRender()
+        public virtual void EndGameLoop()
         {
+            foreach (Gameobject gameobject in gameobjects) { gameobject.OnEndGameLoop(); }
         }
+        #endregion
 
+        public virtual void Render(bool inEditor) {
 
-
-        internal virtual void Render(bool inEditor) {
+            _renderer.DrawCalls = 0;
 
             if(inEditor) { 
                 FrameBuffer.Bind();
@@ -93,7 +99,14 @@ namespace Engine2D.Scenes
                 ImGui.ShowDemoWindow();
 
                 _gameViewport.OnGui();
-                
+                _debugWindow?.SetWindowContent(() => { ImGui.Text("DrawCalls: " + _renderer.DrawCalls); } );
+
+
+                foreach (UIElemenet window in _windows.Values)
+                {
+                    window.Render();
+                }
+
                 _controller.Render();
 
                 ImGuiController.CheckGLError("End of frame");
@@ -102,37 +115,54 @@ namespace Engine2D.Scenes
             }
 
             _renderer.Render();
+            
+            foreach (Gameobject gameobject in gameobjects) { gameobject.OnRender(); }
+
             _window.SwapBuffers();
         }
 
-        internal virtual void PostRender()
-        {
+        public virtual void OnClose() {
+            foreach (Gameobject go in gameobjects)
+            {
+                go.OnClose();
+            }
             
-        }
-
-        internal virtual void OnClose() {
             _renderer.OnClose();
         }
 
-        internal virtual void OnResized(Vector2i newSize) { 
+        #region inputs
+        public virtual void OnResized(Vector2i newSize) { 
             _renderer.OnResize(newSize);
             FrameBuffer = new FrameBuffer(newSize.X, newSize.Y);
             _controller.WindowResized(newSize.X, newSize.Y);
         }
-
-        internal virtual void OnMouseWheel(MouseWheelEventArgs mouseWheelEventArgs)
+                
+        public virtual void OnMouseWheel(MouseWheelEventArgs mouseWheelEventArgs)
         {
+            _controller.MouseScroll(mouseWheelEventArgs.Offset);
         }
 
-        internal virtual void OnTextInput(TextInputEventArgs inputEventArgs)
+        public virtual void OnTextInput(TextInputEventArgs inputEventArgs)
         {
+            _controller.PressChar((char)inputEventArgs.Unicode);
         }
+        #endregion
 
-        internal Gameobject AddGameObjectToScene(Gameobject go)
+        public Gameobject AddGameObjectToScene(Gameobject go)
         {
             gameobjects.Add(go);
+            
             go.Init();
+            go.Start();
+
             return go;
         }
+        public void RemoveGameObjectFromScene(Gameobject go)
+        {
+            go.OnDestroy();
+            
+            gameobjects.Remove(go);
+        }
+
     }
 }

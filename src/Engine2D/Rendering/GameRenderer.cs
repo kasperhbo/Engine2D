@@ -6,6 +6,8 @@ namespace Engine2D.Rendering
 {
     internal class GameRenderer {
 
+        public int DrawCalls { get; internal set; } = 0;
+
         private Vector3 camerapos;
 
         // IMPORTANT: Must be in counter-clockwise order
@@ -96,6 +98,8 @@ namespace Engine2D.Rendering
 
         internal void Render()
         {
+            DrawCalls++;
+
             GL.ClearColor(1f, .3f, .3f, 1);
             GL.Clear(ClearBufferMask.ColorBufferBit);
             GL.Enable(EnableCap.Blend);
@@ -110,7 +114,7 @@ namespace Engine2D.Rendering
             defaultShader.use();
             defaultShader.uploadInt("TEX_SAMPLER", 0);
 
-            defaultShader.uploadMat4f("uProjection", camera.getProjectionMatrix());
+            defaultShader.uploadMat4f("uProjection", camera.GetProjectionMatrix());
             defaultShader.uploadMat4f("uView", camera.getViewMatrix());
             defaultShader.uploadFloat("uTime", 1);
 
@@ -126,6 +130,7 @@ namespace Engine2D.Rendering
             GL.BindVertexArray(0);
 
             defaultShader.detach();
+            
         }
 
         internal void Update(double dt)

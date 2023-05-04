@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace KDBEngine.UI
 {
-    public class ImGuiWindow
+    public class UIElemenet
     {
-        private string _title;        
+        public string Title { get; private set; }        
         private ImGuiWindowFlags _flags;
         private Action _windowContents;
         private bool _visibility = true;
@@ -21,9 +21,9 @@ namespace KDBEngine.UI
         /// <param name="flags">The ImGuiWindowFlags.</param>
         /// <param name="windowContents">The Window contents like text, buttons and other elements
         /// </param>
-        public ImGuiWindow(string title, ImGuiWindowFlags flags, Action windowContents)
+        public UIElemenet(string title, ImGuiWindowFlags flags, Action windowContents)
         {
-            _title = title;
+            Title = title;
 
             this._flags = flags;
             this._windowContents = windowContents;
@@ -33,7 +33,7 @@ namespace KDBEngine.UI
         {
             if (!_visibility) { return; }
 
-            ImGui.Begin(_title, _flags);
+            ImGui.Begin(Title, _flags);
 
             _windowContents?.Invoke();
 
@@ -49,7 +49,7 @@ namespace KDBEngine.UI
 
         public void SetWindowTitle(string title)
         {
-            _title = title;
+            Title = title;
         }
 
         public void SetWindowFlags(ImGuiWindowFlags flags)

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -45,6 +45,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\vendor\ImGui.NET\src\ImGui.NET\ImGui.NET.csproj" />
     <ProjectReference Include="..\..\vendor\ImGui.NET\src\ImPlot.NET\ImPlot.NET.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\" />
   </ItemGroup>
 
 </Project>
