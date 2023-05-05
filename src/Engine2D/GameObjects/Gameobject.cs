@@ -1,64 +1,45 @@
-﻿using Engine2D.Core.Scripting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Engine2D.Components;
 
 namespace Engine2D.GameObjects
 {
-    public class Gameobject
+    internal class Gameobject
     {
-        private List<IGameScript> scripts = new List<IGameScript>();    
+        public Transform transform = new();
+        public string Name = "";
+        public List<Component> components = new();
 
-        private bool _initialized = false;
-        
-        public void Init()
+        internal void GameObject(string name, List<Component> components, Transform transform)
         {
-            if(_initialized) return;
-
-            
+            Console.WriteLine("build");
+            this.Name = name;            
+            this.transform = transform;
+            this.components = components;
         }
 
-        public void Start()
+        internal void Init()
         {
-            if(_initialized) return;
-
-            _initialized = true;
+            foreach (var component in components) { component.Init(this); }
         }
 
-        public void OnRender()
+        internal void Start()
+        {            
+            foreach (var component in components) { component.Start(); }
+        }
+
+        internal void Update(double dt)
         {
-
+            foreach (var component in components) { component.Update(dt); }
         }
 
-
-        public void EditorUpdate(double dt)
+        internal void Destroy()
         {
-
+            foreach (var component in components) { component.Destroy(); }
         }
 
-
-
-        public void GameUpdate(double dt)
-        {      
-        }
-
-        public void OnEndGameLoop()
+        internal void AddComponent(Component component)
         {
-
+            components.Add(component);
+            component.Init(this);
         }
-
-        public void OnDestroy()
-        {
-            //remove from renderer
-            //stop all components/gamescripts
-        }
-
-        public void OnClose()
-        {
-
-        }
-
     }
 }

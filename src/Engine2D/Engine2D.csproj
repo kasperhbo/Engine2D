@@ -21,6 +21,12 @@
   </ItemGroup>
 	
 	<ItemGroup>
+		<None Update="Shaders\default.frag">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Shaders\default.vert">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="Shaders\shader_files\default.frag">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -38,6 +44,8 @@
 
 
 	<ItemGroup>
+    <PackageReference Include="GlmNet" Version="0.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="OpenTK" Version="4.7.7" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
   </ItemGroup>
@@ -45,10 +53,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\vendor\ImGui.NET\src\ImGui.NET\ImGui.NET.csproj" />
     <ProjectReference Include="..\..\vendor\ImGui.NET\src\ImPlot.NET\ImPlot.NET.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Components\" />
   </ItemGroup>
 
 </Project>

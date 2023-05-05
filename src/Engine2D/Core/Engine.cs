@@ -5,7 +5,8 @@ using OpenTK.Mathematics;
 using Engine2D.Scenes;
 using System.Runtime.CompilerServices;
 using Engine2D.GameObjects;
-using Engine2D.Core.Scripting;
+using Newtonsoft.Json;
+using Engine2D.Rendering;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
@@ -14,10 +15,7 @@ namespace KDBEngine.Core {
     {
         private static Engine _instance = null;
 
-        public Scene? _currentScene = null;
-
-        private static bool _isEditor = true;
-        private bool _gameIsRunning = false;
+        internal Scene? _currentScene = null;        
 
         public float TargetAspectRatio => 16.0f / 9.0f;
 
@@ -62,23 +60,22 @@ namespace KDBEngine.Core {
         protected override void OnLoad()
         {
             base.OnLoad();
-            SwitchScene(new Scene(_instance, "test scene"));
-            
-            _gameIsRunning = true;
+            SwitchScene("ExampleScene");
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
 
-            if (_isEditor) { _currentScene?.EditorUpdate(args.Time); }
-            if(_gameIsRunning ) { _currentScene?.GameUpdate(args.Time); }   
+            if (Settings.s_IsEngine) { _currentScene?.EditorUpdate(args.Time); }            
+            
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-            _currentScene?.Render(inEditor: _isEditor);
+
+            _currentScene?.Render(isEditor: Settings.s_IsEngine);
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -86,7 +83,7 @@ namespace KDBEngine.Core {
             base.OnResize(e);
 
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
-            _currentScene?.OnResized(ClientSize);
+            _currentScene?.OnResized(e);
         }
 
         protected override void OnTextInput(TextInputEventArgs e)
@@ -94,10 +91,6 @@ namespace KDBEngine.Core {
             base.OnTextInput(e);
 
             _currentScene?.OnTextInput(e);
-
-            if ((char)e.Unicode == 'c')
-                _gameIsRunning = !_gameIsRunning;
-                //SwitchScene(new Scene(this, "test scene"));
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -107,23 +100,53 @@ namespace KDBEngine.Core {
             _currentScene?.OnMouseWheel(e);
         }
 
-        public void SwitchScene(Scene newScene)
+        internal void SwitchScene(string sceneName)
         {
-            if (newScene == null) { throw new Exception("Scene is null"); }                       
+            GameRenderer.Flush();
 
+            this.Title = WindowSettings.s_Title + " | " + sceneName;
+            Scene newScene = new();
+            newScene.Init(this, sceneName, Size.X, Size.Y);
             _currentScene = newScene;           
+        }
 
-            newScene.Init();        
-        }
-        public void StartPlayingScene()
+        internal static  void LoadScene(string sceneToLoad)
         {
-            _gameIsRunning = true;
-            _currentScene?.StartGameLoop();
+            Engine.Get().SwitchScene(sceneToLoad);
+
+            string path = sceneToLoad + ".json";
+            if (File.Exists(path))
+            {
+                Console.WriteLine("Load");
+                List<Gameobject?> objs = JsonConvert.DeserializeObject<List<Gameobject>>(File.ReadAllText(path))!;
+
+                foreach (var t in objs!)
+                {
+                    Console.WriteLine("add");
+                    Engine.Get()._currentScene.AddGameObjectToScene(t);
+                }
+            }
         }
-        public void StopGameSceneFromPlaying()
+
+        internal static void SaveScene(Scene scene)
         {
-            _currentScene?.EndGameLoop();
-            _gameIsRunning = false;
+            var gameObjectArray = scene.Gameobjects.ToArray();
+            string sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
+
+            string path = scene.SceneName + ".json";
+            if (File.Exists(path))
+            {
+                File.WriteAllText(path, sceneData);
+            }
+            else
+            {
+                using (FileStream fs = File.Create(path))
+                {
+                    fs.Close();
+                }
+
+                File.WriteAllText(path, sceneData);
+            }
         }
     }
 }
@@ -135,4 +158,14 @@ public static class WindowSettings
     
     public static float s_UpdateFrequency = 60;
     public static float s_RenderFrequency = 60;
+}
+
+public static class Settings
+{
+    public static bool s_IsEngine = true;
+}
+
+public static class RenderSettings
+{
+    public static Vector2 s_DefaultRenderResolution = new(3840, 2160);
 }

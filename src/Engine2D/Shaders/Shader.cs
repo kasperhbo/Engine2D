@@ -202,9 +202,10 @@ namespace KDBEngine.Shaders
         {
             vertexSource = File.ReadAllText(vertexFilePath);
             fragmentSource = File.ReadAllText(fragmentFilePath);
+            Compile(vertexSource, fragmentSource);
         }
 
-        public void compile()
+        public void Compile(string vertexSource, string fragmentSource)
         {
             int vertexID, fragmentID;
 
