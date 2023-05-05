@@ -50,7 +50,8 @@ namespace Engine2D.Scenes
                 "Game obj 1", ImGuiWindowFlags.None, () => {
                     ImGui.DragFloat2("pos", ref obj1.transform.position);
                     ImGui.DragFloat2("scale", ref obj1.transform.size);
-                    ImGui.DragFloat4("color", ref obj1.GetComponent<SpriteRenderer>.color);
+                    //ImGui.DragFloat4("color", ref obj1.GetComponent<SpriteRenderer>.color);
+                        
                     if(ImGui.Button("save scene"))
                     {
                         Engine.SaveScene(this);
@@ -100,6 +101,8 @@ namespace Engine2D.Scenes
                 _window.SwapBuffers();
                 return;
             }
+
+            GameRenderer.Render();
             _window.SwapBuffers();
         }
 

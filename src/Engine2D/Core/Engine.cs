@@ -167,5 +167,5 @@ public static class Settings
 
 public static class RenderSettings
 {
-    public static Vector2 s_DefaultRenderResolution = new(3840, 2160);
+    public static Vector2 s_DefaultRenderResolution = new(1920,1080);
 }

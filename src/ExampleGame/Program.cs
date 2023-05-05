@@ -5,6 +5,8 @@ public static class Program
 {
     static void Main()
     {
+        Settings.s_IsEngine = true;
+
         Engine.Get().Run();
     }
 }
