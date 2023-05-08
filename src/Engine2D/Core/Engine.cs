@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Engine2D.Rendering;
 using System.Data;
 using static System.Formats.Asn1.AsnWriter;
+using KDBEngine.UI;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
@@ -20,6 +21,8 @@ namespace KDBEngine.Core {
         internal Scene? _currentScene = null;        
 
         public float TargetAspectRatio => 16.0f / 9.0f;
+
+        public ImGuiController ImGuiController { get; internal set; }
 
         public static Engine Get()
         {
@@ -62,7 +65,8 @@ namespace KDBEngine.Core {
         protected override void OnLoad()
         {
             base.OnLoad();
-            LoadScene(ProjectSettings.s_FullProjectPath + "/DefaultScenes/testscene.kdbscene");
+            ImGuiController = new ImGuiController(Size.X, Size.Y);
+            LoadScene(ProjectSettings.s_FullProjectPath + "\\DefaultScenes\\testscene.kdbscene");
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -105,11 +109,20 @@ namespace KDBEngine.Core {
         internal void SwitchScene(string sceneName)
         {
             GameRenderer.Flush();
-
             this.Title = WindowSettings.s_Title + " | " + sceneName;
             Scene newScene = new();
             newScene.Init(this, sceneName, Size.X, Size.Y);
             _currentScene = newScene;           
+        }
+
+        internal void NewScene(string sceneName)
+        {
+            GameRenderer.Flush();
+            this.Title = WindowSettings.s_Title + " | " + sceneName;
+            Scene newScene = new();
+            newScene.Init(this, sceneName, Size.X, Size.Y);
+            _currentScene = newScene;
+            SaveScene(_currentScene);
         }
 
         internal static void CreateNewProject(string newProjectLocation, string newProjectName)
@@ -130,15 +143,12 @@ namespace KDBEngine.Core {
                     Engine.Get()._currentScene.AddGameObjectToScene(t);
                 }
             }
-            else
-            {
-
-            }
         }
 
         internal static void SaveScene(Scene scene)
         {
             var gameObjectArray = scene.Gameobjects.ToArray();
+            Console.WriteLine("saving: ", scene.ScenePath);
             string sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
             
             if (File.Exists(scene.ScenePath))
@@ -181,5 +191,5 @@ public static class ProjectSettings
 {
     public static string s_ProjectName = "helloworld-01";
     public static string s_ProjectLocation = "C:\\Users\\Kasper\\Documents\\GAMEPROJECTS\\";
-    public static string s_FullProjectPath = s_ProjectLocation + "/" + s_ProjectName;
+    public static string s_FullProjectPath = s_ProjectLocation + s_ProjectName;
 }

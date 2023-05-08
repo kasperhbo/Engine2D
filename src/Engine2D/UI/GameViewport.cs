@@ -12,8 +12,9 @@ namespace Engine2D.UI
         private static bool isPlaying = false;
         private static float leftX, rightX, topY, bottomY;
         public static bool IsInViewport { get; private set; } = false;
-
-        internal void OnGui(int TextureID)
+        
+        
+        internal void OnGui(int TextureID, Action actions)
         {
             ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
@@ -21,8 +22,10 @@ namespace Engine2D.UI
             Vector2 windowPos = getCenteredPositionForViewport(windowSize);
 
             ImGui.SetCursorPos(new Vector2(windowPos.X, windowPos.Y));            
-            ImGui.Image((IntPtr)TextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+            ImGui.ImageButton("viewport",(IntPtr)TextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
 
+            actions.Invoke();
+            
             ImGui.End();
 
         }

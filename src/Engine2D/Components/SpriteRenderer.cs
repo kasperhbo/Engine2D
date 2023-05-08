@@ -41,7 +41,10 @@ namespace Engine2D.GameObjects
 
         internal override void ImGuiFields()
         {
-            ImGui.ColorEdit4("Color: ", ref Color);
+            if(ImGui.CollapsingHeader("Sprite Renderer"))
+            {
+                ImGui.ColorEdit4("Color: ", ref Color);
+            }
         }
     }
 }

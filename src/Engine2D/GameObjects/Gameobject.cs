@@ -45,7 +45,11 @@ namespace Engine2D.GameObjects
 
         internal void ImGuiFields()
         {
-            transform.ImGuiFields();
+            if(ImGui.CollapsingHeader("Transform"))
+            {
+                transform.ImGuiFields();
+            }
+            
             foreach (var component in components) { component.ImGuiFields(); }
         }
     }
