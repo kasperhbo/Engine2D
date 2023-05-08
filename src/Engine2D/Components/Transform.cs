@@ -11,5 +11,12 @@ namespace Engine2D.Components
         
 
         public Transform() { }
+
+        internal void ImGuiFields()
+        {
+            ImGuiNET.ImGui.DragFloat2("Position: ", ref position);
+            ImGuiNET.ImGui.DragFloat2("Size: ", ref size);
+            ImGuiNET.ImGui.DragFloat("Rotation: ", ref rotation);
+        }
     }
 }

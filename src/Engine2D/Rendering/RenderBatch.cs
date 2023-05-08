@@ -1,4 +1,5 @@
-﻿using Engine2D.GameObjects;
+﻿using Engine2D.Core;
+using Engine2D.GameObjects;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -43,7 +44,7 @@ namespace Engine2D.Rendering
         
         internal RenderBatch()
         {
-            _shader = new Shader("Shaders/default.vert", "Shaders/default.frag");
+            _shader = new Shader(Utils.GetBaseEngineDir() + "/Shaders/default.vert", Utils.GetBaseEngineDir() + "/Shaders/default.frag");
             sprites = new SpriteRenderer[c_MaxBatchSize];
 
             _vertices = new float[c_MaxBatchSize*c_VertexSize*4];            

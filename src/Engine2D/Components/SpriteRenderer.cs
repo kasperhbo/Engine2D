@@ -1,5 +1,6 @@
 ﻿using Engine2D.Components;
 using Engine2D.Rendering;
+using ImGuiNET;
 using System.Numerics;
 
 namespace Engine2D.GameObjects
@@ -36,6 +37,11 @@ namespace Engine2D.GameObjects
         internal override void SetType()
         {
             Type = "SpriteRenderer";
+        }
+
+        internal override void ImGuiFields()
+        {
+            ImGui.ColorEdit4("Color: ", ref Color);
         }
     }
 }

@@ -34,5 +34,8 @@ namespace Engine2D.Components
         internal virtual void Destroy()
         {
         }
+
+        internal abstract void ImGuiFields();
+        
     }
 }

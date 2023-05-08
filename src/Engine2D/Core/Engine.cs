@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 using Engine2D.GameObjects;
 using Newtonsoft.Json;
 using Engine2D.Rendering;
+using System.Data;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
@@ -60,7 +62,7 @@ namespace KDBEngine.Core {
         protected override void OnLoad()
         {
             base.OnLoad();
-            SwitchScene("ExampleScene");
+            LoadScene(ProjectSettings.s_FullProjectPath + "/DefaultScenes/testscene.kdbscene");
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -75,7 +77,7 @@ namespace KDBEngine.Core {
         {
             base.OnRenderFrame(e);
 
-            _currentScene?.Render(isEditor: Settings.s_IsEngine);
+            _currentScene?.Render(isEditor: Settings.s_IsEngine, dt: e.Time);
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -110,21 +112,27 @@ namespace KDBEngine.Core {
             _currentScene = newScene;           
         }
 
-        internal static  void LoadScene(string sceneToLoad)
+        internal static void CreateNewProject(string newProjectLocation, string newProjectName)
         {
+            
+        }
+
+        internal static  void LoadScene(string sceneToLoad)
+        {         
             Engine.Get().SwitchScene(sceneToLoad);
 
-            string path = sceneToLoad + ".json";
-            if (File.Exists(path))
-            {
-                Console.WriteLine("Load");
-                List<Gameobject?> objs = JsonConvert.DeserializeObject<List<Gameobject>>(File.ReadAllText(path))!;
+            if (File.Exists(sceneToLoad))
+            {               
+                List<Gameobject?> objs = JsonConvert.DeserializeObject<List<Gameobject>>(File.ReadAllText(sceneToLoad))!;
 
                 foreach (var t in objs!)
                 {
-                    Console.WriteLine("add");
                     Engine.Get()._currentScene.AddGameObjectToScene(t);
                 }
+            }
+            else
+            {
+
             }
         }
 
@@ -132,20 +140,19 @@ namespace KDBEngine.Core {
         {
             var gameObjectArray = scene.Gameobjects.ToArray();
             string sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
-
-            string path = scene.SceneName + ".json";
-            if (File.Exists(path))
+            
+            if (File.Exists(scene.ScenePath))
             {
-                File.WriteAllText(path, sceneData);
+                File.WriteAllText(scene.ScenePath, sceneData);
             }
             else
             {
-                using (FileStream fs = File.Create(path))
+                using (FileStream fs = File.Create(scene.ScenePath))
                 {
                     fs.Close();
                 }
 
-                File.WriteAllText(path, sceneData);
+                File.WriteAllText(scene.ScenePath, sceneData);
             }
         }
     }
@@ -168,4 +175,11 @@ public static class Settings
 public static class RenderSettings
 {
     public static Vector2 s_DefaultRenderResolution = new(1920,1080);
+}
+
+public static class ProjectSettings
+{
+    public static string s_ProjectName = "helloworld-01";
+    public static string s_ProjectLocation = "C:\\Users\\Kasper\\Documents\\GAMEPROJECTS\\";
+    public static string s_FullProjectPath = s_ProjectLocation + "/" + s_ProjectName;
 }

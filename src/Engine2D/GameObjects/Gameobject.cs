@@ -1,4 +1,5 @@
 ﻿using Engine2D.Components;
+using ImGuiNET;
 
 namespace Engine2D.GameObjects
 {
@@ -40,6 +41,12 @@ namespace Engine2D.GameObjects
         {
             components.Add(component);
             component.Init(this);
+        }
+
+        internal void ImGuiFields()
+        {
+            transform.ImGuiFields();
+            foreach (var component in components) { component.ImGuiFields(); }
         }
     }
 }
