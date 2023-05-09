@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace KDBEngine.UI
 {
-    public class UIElemenet
+    public abstract class UIElemenet
     {
-        public string Title { get; private set; }        
-        private ImGuiWindowFlags _flags;
-        private Action _windowContents;
-        private bool _visibility = true;
+        public string Title { get; protected set; }        
+        protected ImGuiWindowFlags _flags;
+        protected Action _windowContents;
+        protected bool _visibility = true;
 
         /// <summary>
         /// An Simple UI Window
@@ -21,12 +21,8 @@ namespace KDBEngine.UI
         /// <param name="flags">The ImGuiWindowFlags.</param>
         /// <param name="windowContents">The Window contents like text, buttons and other elements
         /// </param>
-        public UIElemenet(string title, ImGuiWindowFlags flags, Action windowContents)
+        public UIElemenet()
         {
-            Title = title;
-
-            this._flags = flags;
-            this._windowContents = windowContents;
         }
 
         public void Render()

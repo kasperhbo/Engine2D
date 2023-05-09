@@ -13,12 +13,14 @@ namespace Engine2D.Components
     {
         internal Gameobject Parent;
         public string Type = "Component";
+        private bool _initialized = false;
 
         internal abstract void SetType();
 
         internal virtual void Init(Gameobject parent)
         {
-            Console.WriteLine("Initialize");
+            if(_initialized) return;
+            _initialized = true;
             SetType();
             this.Parent = parent;
         }

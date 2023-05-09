@@ -4,6 +4,7 @@ using ImGuiNET;
 using KDBEngine.Core;
 using OpenTK.Compute.OpenCL;
 using System.Numerics;
+using System.Runtime.Intrinsics.X86;
 
 namespace Engine2D.UI
 {
@@ -14,8 +15,19 @@ namespace Engine2D.UI
         public static bool IsInViewport { get; private set; } = false;
         
         
-        internal void OnGui(int TextureID, Action actions)
+        internal unsafe void OnGui(int TextureID, Action actions)
         {
+            ImGui.Begin("TEMP MENU");
+            if (ImGui.Button("PLAY"))
+            {
+                Engine.Get()._currentScene.IsPlaying = true;
+            }
+            if (ImGui.Button("STOP"))
+            {
+                Engine.Get()._currentScene.IsPlaying = false;
+            }
+            ImGui.End();
+
             ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
             Vector2 windowSize = getLargestSizeForViewport();
@@ -25,8 +37,23 @@ namespace Engine2D.UI
             //ImGui.ImageButton("viewport",(IntPtr)TextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
             ImGui.Image((IntPtr)TextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
 
-            actions.Invoke();
-            
+
+            //if (ImGui.BeginDragDropTarget())
+            //{
+
+            //    ImGui.EndDragDropTarget();
+            //}
+
+            if (ImGui.BeginDragDropTarget())
+            {
+                if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
+                {
+                    Engine.LoadScene(AssetBrowser.CurrentDraggingFileName);
+                }
+
+                ImGui.EndDragDropTarget();
+            }
+
             ImGui.End();
 
         }

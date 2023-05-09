@@ -10,6 +10,9 @@ using Engine2D.Rendering;
 using System.Data;
 using static System.Formats.Asn1.AsnWriter;
 using KDBEngine.UI;
+using Engine2D.UI;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using ImGuiNET;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
@@ -17,12 +20,15 @@ namespace KDBEngine.Core {
     public class Engine : GameWindow
     {
         private static Engine _instance = null;
+        private GameViewport gameViewport = new GameViewport();
 
         internal Scene? _currentScene = null;        
 
         public float TargetAspectRatio => 16.0f / 9.0f;
 
         public ImGuiController ImGuiController { get; internal set; }
+        private FrameBuffer _frameBuffer;
+        private Dictionary<string, UIElemenet> _guiWindows = new Dictionary<string, UIElemenet>();
 
         public static Engine Get()
         {
@@ -66,6 +72,13 @@ namespace KDBEngine.Core {
         {
             base.OnLoad();
             ImGuiController = new ImGuiController(Size.X, Size.Y);
+            
+            if (Settings.s_IsEngine)
+            {
+                Console.WriteLine("engine");
+                CreateUIWindows();
+            }
+
             LoadScene(ProjectSettings.s_FullProjectPath + "\\DefaultScenes\\testscene.kdbscene");
         }
 
@@ -81,7 +94,52 @@ namespace KDBEngine.Core {
         {
             base.OnRenderFrame(e);
 
-            _currentScene?.Render(isEditor: Settings.s_IsEngine, dt: e.Time);
+            if (Settings.s_IsEngine)
+            {
+                _frameBuffer.Bind();
+                GameRenderer.Render();
+                _frameBuffer.UnBind();
+
+                ImGuiController.Update(this, e.Time);
+                ImGui.BeginMainMenuBar();
+                if (ImGui.BeginMenu("Menu"))
+                {
+                    if (ImGui.MenuItem("Save Scene"))
+                    {
+                        SaveScene(_currentScene);
+                    }
+                    if (ImGui.MenuItem("Load Scene"))
+                    {
+
+                    }
+                    ImGui.EndMenu();
+                }
+                if (ImGui.BeginMenu("Help"))
+                {
+                    ImGui.EndMenu();
+                }
+                ImGui.EndMainMenuBar();
+
+
+                ImGui.DockSpaceOverViewport();
+                ImGui.ShowDemoWindow();
+
+                gameViewport.OnGui(_frameBuffer.TextureID, () => { });
+
+                foreach (UIElemenet window in _guiWindows.Values)
+                {
+                    window.Render();
+                }
+
+                ImGuiController.Render();
+
+                ImGuiController.CheckGLError("End of frame");
+                SwapBuffers();
+                return;
+            } 
+
+            _currentScene?.Render(dt: e.Time);
+            SwapBuffers();
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -89,6 +147,7 @@ namespace KDBEngine.Core {
             base.OnResize(e);
 
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
+            _frameBuffer = new FrameBuffer(ClientSize.X, ClientSize.Y);
             _currentScene?.OnResized(e);
         }
 
@@ -127,7 +186,11 @@ namespace KDBEngine.Core {
 
         internal static void CreateNewProject(string newProjectLocation, string newProjectName)
         {
-            
+            ProjectSettings.s_ProjectName = newProjectName;
+            ProjectSettings.s_ProjectLocation = newProjectLocation;
+            ProjectSettings.s_FullProjectPath = ProjectSettings.s_ProjectLocation + ProjectSettings.s_ProjectName;
+
+            LoadScene(ProjectSettings.s_FullProjectPath + "\\defaultscenes\\example.kdbscene");
         }
 
         internal static  void LoadScene(string sceneToLoad)
@@ -140,7 +203,7 @@ namespace KDBEngine.Core {
 
                 foreach (var t in objs!)
                 {
-                    Engine.Get()._currentScene.AddGameObjectToScene(t);
+                    Get()?._currentScene?.AddGameObjectToScene(t);
                 }
             }
         }
@@ -164,6 +227,20 @@ namespace KDBEngine.Core {
 
                 File.WriteAllText(scene.ScenePath, sceneData);
             }
+        }
+
+        private void CreateUIWindows()
+        {
+            AssetBrowser assetBrowser = new AssetBrowser();
+            _guiWindows.Add(assetBrowser.Title, assetBrowser);
+
+            Inspector inspector = new Inspector();
+            _guiWindows.Add(inspector.Title, inspector);
+
+            SceneHierachy hierarch = new SceneHierachy(inspector);
+            _guiWindows.Add(hierarch.Title, hierarch);
+
+            _frameBuffer = new FrameBuffer(Size.X, Size.Y);
         }
     }
 }

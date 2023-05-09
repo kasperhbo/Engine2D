@@ -13,7 +13,7 @@ namespace Engine2D.Components
         public Transform() { }
 
         /// <summary>
-        /// Custom copy method, if you dont do this the project will make an reference to the other transform component instead of copying the properties
+        /// Custom copy method, if you dont do this the project will make an reference to the other transform object instead of copying the properties
         /// </summary>
         /// <param name="to">The transform where it needs to copy to</param>
         public void Copy(Transform to)

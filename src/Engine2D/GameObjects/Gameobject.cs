@@ -10,6 +10,7 @@ namespace Engine2D.GameObjects
         public Transform transform = new();
         public string Name = "";
         public List<Component> components = new();
+               
 
         internal Gameobject() { }
 
@@ -46,7 +47,10 @@ namespace Engine2D.GameObjects
 
         internal void GameUpdate(double dt)
         {
-
+            foreach (var component in components)
+            {
+                component.GameUpdate(dt);
+            }
         }
 
         internal void Destroy()
