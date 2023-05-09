@@ -147,9 +147,9 @@ namespace Engine2D.Rendering
 
                 // Load position
                 _vertices[offset] = sprite.Parent.transform.position.X + 
-                    xAdd * (sprite.Parent.transform.size.X);
+                    (xAdd * (sprite.Parent.transform.size.X)) * sprite.SpriteSize.X;
                 _vertices[offset + 1] = sprite.Parent.transform.position.Y + 
-                    yAdd * (sprite.Parent.transform.size.Y);
+                    (yAdd * (sprite.Parent.transform.size.Y)) * sprite.SpriteSize.Y;
 
                 // Load color
                 _vertices[offset + 2] = color.X;

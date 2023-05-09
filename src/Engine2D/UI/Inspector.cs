@@ -1,4 +1,5 @@
 ﻿using Engine2D.GameObjects;
+using KDBEngine.Core;
 using KDBEngine.UI;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,14 @@ namespace Engine2D.UI
 {
     internal class Inspector : UIElemenet
     {
-        internal Gameobject _currentSelectedGameObject;
+        //internal Gameobject CurrentSelectedGameObject;
 
         internal Inspector() {
             this.Title = "Inspector";
             this._flags = ImGuiNET.ImGuiWindowFlags.None;
             this._windowContents = () =>
             {
-                _currentSelectedGameObject?.ImGuiFields();
+                Engine.Get()._currentScene.SelectedGameobject?.ImGuiFields();
             };
         }
     }

@@ -6,7 +6,7 @@ namespace Engine2D.Components
     internal class Transform
     {
         public Vector2 position = new();
-        public Vector2 size = new(32,32);
+        public Vector2 size = new(1,1);
         public float rotation = new();
         
 
@@ -33,6 +33,10 @@ namespace Engine2D.Components
             return t.position.Equals(position)&& t.size.Equals(size) && t.rotation.Equals(rotation);
         }
 
+        public void SetPosition(OpenTK.Mathematics.Vector2 position)
+        {
+            this.position = new Vector2(position.X, position.Y);
+        }
 
     }
 }

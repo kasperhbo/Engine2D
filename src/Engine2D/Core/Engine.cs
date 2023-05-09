@@ -13,6 +13,8 @@ using KDBEngine.UI;
 using Engine2D.UI;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using ImGuiNET;
+using Newtonsoft.Json.Bson;
+using Engine2D.Core;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
@@ -20,6 +22,7 @@ namespace KDBEngine.Core {
     public class Engine : GameWindow
     {
         private static Engine _instance = null;
+        
         private GameViewport gameViewport = new GameViewport();
 
         internal Scene? _currentScene = null;        
@@ -40,11 +43,10 @@ namespace KDBEngine.Core {
 
                 NativeWindowSettings ntwSettings  = NativeWindowSettings.Default;
                 ntwSettings.Title = WindowSettings.s_Title;
-                ntwSettings.Size = WindowSettings.s_Size;
+                ntwSettings.Size = WindowSettings.s_Size;                
                 
                 Engine window = new Engine(gameWindowSettings, ntwSettings);
-                
-                _instance = window;
+                _instance = window;                
             }
                         
             return _instance;
@@ -55,8 +57,7 @@ namespace KDBEngine.Core {
             if (_instance == null)
             {
                 Engine window = new Engine(gameWindowSettings, nativeWindowSettings);
-
-                _instance = window;
+                _instance = window;                
             }
 
             return _instance;
@@ -78,7 +79,6 @@ namespace KDBEngine.Core {
                 Console.WriteLine("engine");
                 CreateUIWindows();
             }
-
             LoadScene(ProjectSettings.s_FullProjectPath + "\\DefaultScenes\\testscene.kdbscene");
         }
 
@@ -86,13 +86,16 @@ namespace KDBEngine.Core {
         {
             base.OnUpdateFrame(args);
 
-            if (Settings.s_IsEngine) { _currentScene?.EditorUpdate(args.Time); }            
-            
+            Input.Update(KeyboardState, MouseState);
+
+            if (Settings.s_IsEngine) { _currentScene?.EditorUpdate(args.Time); }                       
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
+                       
+
 
             if (Settings.s_IsEngine)
             {
@@ -139,9 +142,10 @@ namespace KDBEngine.Core {
             } 
 
             _currentScene?.Render(dt: e.Time);
+
             SwapBuffers();
         }
-
+        
         protected override void OnResize(ResizeEventArgs e)
         {
             base.OnResize(e);
@@ -154,7 +158,7 @@ namespace KDBEngine.Core {
         protected override void OnTextInput(TextInputEventArgs e)
         {
             base.OnTextInput(e);
-
+            
             _currentScene?.OnTextInput(e);
         }
 
@@ -242,13 +246,18 @@ namespace KDBEngine.Core {
 
             _frameBuffer = new FrameBuffer(Size.X, Size.Y);
         }
+
+        static void MouseDown(MouseButtonEventArgs e)
+        {
+
+        }
     }
 }
 
 public static class WindowSettings
 {
     public static string s_Title = "Kasper Engine";
-    public static Vector2i s_Size = new Vector2i(1920/2, 1080/2);
+    public static Vector2i s_Size = new Vector2i(1920, 1080);
     
     public static float s_UpdateFrequency = 60;
     public static float s_RenderFrequency = 60;

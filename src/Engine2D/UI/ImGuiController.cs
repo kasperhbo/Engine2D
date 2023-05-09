@@ -115,7 +115,7 @@ namespace KDBEngine.UI
                 style.Colors[(int)ImGuiCol.NavWindowingHighlight] = new System.Numerics.Vector4(1.00f, 1.00f, 1.00f, 0.70f);
                 style.Colors[(int)ImGuiCol.NavWindowingDimBg] = new System.Numerics.Vector4(0.80f, 0.80f, 0.80f, 0.20f);
                 style.Colors[(int)ImGuiCol.ModalWindowDimBg] = new System.Numerics.Vector4(0.80f, 0.80f, 0.80f, 0.35f);
-                style.GrabRounding = style.FrameRounding = 2.3f;
+                //style.GrabRounding = style.FrameRounding = 2.3f;
             }
 
 

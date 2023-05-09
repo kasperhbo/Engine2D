@@ -1,4 +1,5 @@
 ﻿using Engine2D.Components;
+using Engine2D.UI;
 using ImGuiNET;
 using System.Globalization;
 using System.Xml.Serialization;
@@ -72,9 +73,10 @@ namespace Engine2D.GameObjects
 
             if(ImGui.CollapsingHeader("Transform"))
             {
-                ImGui.DragFloat2("Position", ref transform.position);
-                ImGui.DragFloat2("Size", ref transform.size);
-                ImGui.DragFloat("Rotation", ref transform.rotation);
+                //ImGui.DragFloat2("Position", ref transform.position);
+                UIHelper.DrawVec2Control("Position", ref transform.position);
+                UIHelper.DrawVec2Control("Size", ref transform.size);
+                UIHelper.DragFloat("Rotation", ref transform.rotation);
             }
 
 

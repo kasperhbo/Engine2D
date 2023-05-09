@@ -34,7 +34,8 @@ namespace Engine2D.UI
 
                         Engine.Get()._currentScene?.Gameobjects[i].Name
                     );
-
+                    
+                    
                     if (ImGui.BeginPopupContextWindow("t"))
                     {
                         ImGui.MenuItem("New Child");
@@ -42,7 +43,8 @@ namespace Engine2D.UI
 
                     if (ImGui.IsItemClicked())
                     {
-                        inspector._currentSelectedGameObject = Engine.Get()._currentScene?.Gameobjects[i];
+                        Engine.Get()._currentScene.SelectedGameobject = Engine.Get()._currentScene.Gameobjects[i];
+                        //inspector.CurrentSelectedGameObject = Engine.Get()._currentScene?.Gameobjects[i];
                     }
 
                     ImGuiNET.ImGui.PopID();

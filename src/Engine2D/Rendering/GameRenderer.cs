@@ -6,7 +6,7 @@ namespace Engine2D.Rendering
 {
     internal static class GameRenderer {
 
-        private static OrthographicCamera _currentCamera = new(0,0);
+        internal static OrthographicCamera S_CurrentCamera = new(0,0);
         private static List<RenderBatch> _renderBatches = new();
 
         private static Dictionary<SpriteRenderer, RenderBatch> _spriteBatchDict = new();
@@ -24,7 +24,7 @@ namespace Engine2D.Rendering
             // Calculate the size of the camera
             float size = RenderSettings.s_DefaultRenderResolution.Y / 10f;
 
-            _currentCamera = new OrthographicCamera(aspectRatio, size);
+            S_CurrentCamera = new OrthographicCamera(aspectRatio, size);
             
             foreach (var rb in _renderBatches) rb.Init();
         }
@@ -33,15 +33,15 @@ namespace Engine2D.Rendering
         {
             _renderBatches.Clear();
             _spriteBatchDict.Clear();
-            _currentCamera = null;
+            S_CurrentCamera = null;
         }
 
         internal static void Render()
-        {
-            GL.ClearColor(_currentCamera.ClearColor);
+        {            
+            GL.ClearColor(S_CurrentCamera.ClearColor);
             GL.Clear(ClearBufferMask.ColorBufferBit);
             
-            foreach (var rb in _renderBatches) rb.Render(_currentCamera.ProjectionMatrix, _currentCamera.ViewMatrix);
+            foreach (var rb in _renderBatches) rb.Render(S_CurrentCamera.ProjectionMatrix, S_CurrentCamera.ViewMatrix);
         }
 
         internal static void Update(double dt)

@@ -7,6 +7,7 @@ using KDBEngine.Core;
 using KDBEngine.UI;
 using NativeFileDialogExtendedSharp;
 using Newtonsoft.Json.Linq;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Linq.Expressions;
@@ -17,8 +18,12 @@ namespace Engine2D.Scenes
 {
     internal class Scene
     {
+        internal Gameobject SelectedGameobject;
+
         internal string ScenePath { get; private set; } = "NoScene";
+        
         internal List<Gameobject> Gameobjects { get; private set; } = new List<Gameobject>();
+
         private bool _isPlaying = false;
         public bool IsPlaying
         {
@@ -58,7 +63,19 @@ namespace Engine2D.Scenes
         }
 
         internal virtual void EditorUpdate(double dt) 
-        {                        
+        {
+            if(Input.KeyDown(Keys.LeftControl)){
+                if (Input.KeyPress(Keys.S))
+                {
+                    Engine.SaveScene(this);
+                }
+            }
+
+            if(SelectedGameobject != null) { 
+                SelectedGameobject.transform.SetPosition(Input.GetWorld());
+            }
+
+
             foreach (Gameobject obj in Gameobjects) { obj.EditorUpdate(dt); }
             if (IsPlaying) { foreach (Gameobject obj in Gameobjects) { obj.GameUpdate(dt); } }
         }

@@ -1,4 +1,5 @@
-﻿using Engine2D.Rendering;
+﻿using Engine2D.Core;
+using Engine2D.Rendering;
 using Engine2D.Scenes;
 using ImGuiNET;
 using KDBEngine.Core;
@@ -18,6 +19,7 @@ namespace Engine2D.UI
         internal unsafe void OnGui(int TextureID, Action actions)
         {
             ImGui.Begin("TEMP MENU");
+            
             if (ImGui.Button("PLAY"))
             {
                 Engine.Get()._currentScene.IsPlaying = true;
@@ -26,23 +28,16 @@ namespace Engine2D.UI
             {
                 Engine.Get()._currentScene.IsPlaying = false;
             }
+            ImGui.DragFloat2("camera pos", ref GameRenderer.S_CurrentCamera.Position);
             ImGui.End();
 
             ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
-            Vector2 windowSize = getLargestSizeForViewport();
-            Vector2 windowPos = getCenteredPositionForViewport(windowSize);
+            OpenTK.Mathematics.Vector2 windowSize = getLargestSizeForViewport();
+            OpenTK.Mathematics.Vector2 windowPos = getCenteredPositionForViewport(new Vector2(windowSize.X,windowSize.Y));
 
             ImGui.SetCursorPos(new Vector2(windowPos.X, windowPos.Y));            
-            //ImGui.ImageButton("viewport",(IntPtr)TextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
             ImGui.Image((IntPtr)TextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
-
-
-            //if (ImGui.BeginDragDropTarget())
-            //{
-
-            //    ImGui.EndDragDropTarget();
-            //}
 
             if (ImGui.BeginDragDropTarget())
             {
@@ -54,11 +49,14 @@ namespace Engine2D.UI
                 ImGui.EndDragDropTarget();
             }
 
+            Input.GameViewportPos = windowPos with { X = (windowPos.X), Y = windowPos.Y };
+            Input.GameViewportSize = windowPos with { X = (windowSize.X), Y = windowSize.Y };
+
             ImGui.End();
 
         }
 
-        private static Vector2 getLargestSizeForViewport()
+        private static OpenTK.Mathematics.Vector2 getLargestSizeForViewport()
         {
             Vector2 windowSize = ImGui.GetContentRegionAvail();
             
@@ -74,10 +72,10 @@ namespace Engine2D.UI
                 aspectWidth = aspectHeight * Engine.Get().TargetAspectRatio;
             }
 
-            return new Vector2(aspectWidth, aspectHeight);
+            return new OpenTK.Mathematics.Vector2(aspectWidth, aspectHeight);
         }
 
-        private static Vector2 getCenteredPositionForViewport(Vector2 aspectSize)
+        private static OpenTK.Mathematics.Vector2 getCenteredPositionForViewport(Vector2 aspectSize)
         {
             Vector2 windowSize = ImGui.GetContentRegionAvail();            
             windowSize.X -= ImGui.GetScrollX();
@@ -86,7 +84,7 @@ namespace Engine2D.UI
             float viewportX = (windowSize.X / 2.0f) - (aspectSize.X / 2.0f);
             float viewportY = (windowSize.Y / 2.0f) - (aspectSize.Y / 2.0f);
 
-            return new Vector2(viewportX + ImGui.GetCursorPosX(),
+            return new OpenTK.Mathematics.Vector2(viewportX + ImGui.GetCursorPosX(),
                     viewportY + ImGui.GetCursorPosY());
         }
     }

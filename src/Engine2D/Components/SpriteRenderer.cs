@@ -1,5 +1,6 @@
 ﻿using Engine2D.Components;
 using Engine2D.Rendering;
+using Engine2D.UI;
 using ImGuiNET;
 using System.Numerics;
 
@@ -23,10 +24,12 @@ namespace Engine2D.GameObjects
             }
         }
         public Texture Texture { get; private set; } = null;
+        public Vector2 SpriteSize { get; private set; } = new Vector2(32, 32);
 
         private Transform _lastTransform = new();
         private Vector4 _color = new(255,255,255,255);
         
+
         internal bool IsDirty = true;
 
 
@@ -71,18 +74,17 @@ namespace Engine2D.GameObjects
         {
             if(ImGui.CollapsingHeader("Sprite Renderer"))
             {
-                if(ImGui.ColorEdit4("Color: ", ref _color))
+                if(UIHelper.ColorPicker4("Color: ", ref _color))
                 {
                     IsDirty = true;
                 }
 
-                ImGui.Text("Texture: ");
-                ImGui.SameLine();
-
-                if(Texture != null)
-                    ImGui.ImageButton("Sprite", (IntPtr)Texture.TexID, new Vector2(56, 56));
+                if (Texture != null)
+                    UIHelper.ImageButton("Sprite: ", (IntPtr)Texture.TexID);
+                //ImGui.ImageButton("##sprite", (IntPtr)Texture.TexID, new Vector2(56, 56));
                 else
-                    ImGui.ImageButton("Sprite", IntPtr.Zero, new Vector2(56, 56));
+                    UIHelper.ImageButton("Sprite: ", IntPtr.Zero);
+                //ImGui.ImageButton("##sprite", IntPtr.Zero, new Vector2(56, 56));
             }
         }
     }
