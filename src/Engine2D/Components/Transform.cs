@@ -12,11 +12,27 @@ namespace Engine2D.Components
 
         public Transform() { }
 
-        internal void ImGuiFields()
+        /// <summary>
+        /// Custom copy method, if you dont do this the project will make an reference to the other transform component instead of copying the properties
+        /// </summary>
+        /// <param name="to">The transform where it needs to copy to</param>
+        public void Copy(Transform to)
         {
-            ImGuiNET.ImGui.DragFloat2("Position: ", ref position);
-            ImGuiNET.ImGui.DragFloat2("Size: ", ref size);
-            ImGuiNET.ImGui.DragFloat("Rotation: ", ref rotation);
+            to.position = position;
+            to.size = size;
+            to.rotation = rotation;
         }
+
+        public override bool Equals(object o)
+        {
+            if (o == null) return false;
+            if (!(o is Transform)) return false;
+
+            var t = (Transform)o;
+
+            return t.position.Equals(position)&& t.size.Equals(size) && t.rotation.Equals(rotation);
+        }
+
+
     }
 }

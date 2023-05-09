@@ -27,8 +27,12 @@ namespace Engine2D.Components
         { 
         }
 
-        internal virtual void Update(double dt)
+        internal virtual void EditorUpdate(double dt)
         { 
+        }
+
+        internal virtual void GameUpdate(double dt)
+        {
         }
 
         internal virtual void Destroy()

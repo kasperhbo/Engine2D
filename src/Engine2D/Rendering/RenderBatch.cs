@@ -90,7 +90,8 @@ namespace Engine2D.Rendering
             {
                 if (sprites[i].IsDirty)
                 {
-                    LoadVertexProperties(i);
+                    sprites[i].IsDirty = false;
+                    LoadVertexProperties(i);                    
                     rebufferData = true;
                 }
             }

@@ -7,6 +7,9 @@ using KDBEngine.Core;
 using KDBEngine.UI;
 using NativeFileDialogExtendedSharp;
 using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace Engine2D.Scenes
 {
@@ -49,132 +52,184 @@ namespace Engine2D.Scenes
                 {
                     for (int i = 0; i < Gameobjects.Count; i++) {
                         ImGui.PushID(i);
-                        ImGui.TreeNodeEx(
+
+                        bool treeOpen = ImGuiNET.ImGui.TreeNodeEx(
                             Gameobjects[i].Name,
+
                             ImGuiTreeNodeFlags.DefaultOpen |
                             ImGuiTreeNodeFlags.FramePadding |
                             ImGuiTreeNodeFlags.OpenOnArrow |
                             ImGuiTreeNodeFlags.SpanAvailWidth,
+
                             Gameobjects[i].Name
-                            );
+                        );
+
+                        if (ImGui.BeginPopupContextWindow("t"))
+                        {
+                            ImGui.MenuItem("New Child");    
+                        }
 
                         if (ImGui.IsItemClicked())
                         {
-                            _currentSelectedObject = Gameobjects[i];
-                            Console.WriteLine("Selected: " + _currentSelectedObject.Name);
+                            _currentSelectedObject = Gameobjects[i]; 
                         }
-                        ImGui.PopID();
+
+                        ImGuiNET.ImGui.PopID();
+
+                        if (treeOpen)
+                        {
+                            ImGuiNET.ImGui.TreePop();
+                        }
                     }
+
+                    ImGui.BeginChild("Scrolling");
+                    {
+                        if (ImGui.BeginPopupContextWindow("p"))
+                        {
+                            if (ImGui.MenuItem("New GameObject"))
+                            {
+                                Gameobject go = new Gameobject((Gameobjects.Count + 1).ToString(), new Components.Transform());
+                                this.AddGameObjectToScene(go);
+                            }
+                            if (ImGui.MenuItem("New SpriteRenderer"))
+                            {
+                                Gameobject go = new Gameobject((Gameobjects.Count + 1).ToString(), new Components.Transform());
+                                go.AddComponent(new SpriteRenderer());
+                                this.AddGameObjectToScene(go);
+                            }
+
+                            ImGui.EndPopup();
+                        }
+                    }
+                    ImGui.EndChild();
+
                 });
             
             int dirTexture = new Texture(Utils.GetBaseEngineDir() + "/icons/directoryIcon.png", false).TexID;
             int fileTexture = new Texture(Utils.GetBaseEngineDir() + "/icons/fileIcon.png", false).TexID;
             
             string newSceneName = "";
+            string errorMessage = "NONE";
 
             UIElemenet assetWindow = new UIElemenet(
                 "Asset Browser",
                 ImGuiWindowFlags.None,
                 () =>
                 {
-                    ImGui.Text(_currentDirectory);
+                    DirectoryInfo directoryInfo = new DirectoryInfo(_currentDirectory);
+                    bool createNewScene = false;
 
-                    if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
+                    if(ImGui.BeginPopupContextWindow("p"))
                     {
-                        ImGui.OpenPopup("**");
-                    }
-
-                    bool openNewScenePopup = false;
-
-                    if (ImGui.BeginPopup("**"))
-                    {
-                        if (ImGui.Button("New Scene"))
+                        if(ImGui.MenuItem("New Scene"))
                         {
-                            openNewScenePopup = true;
-                        }
+                            createNewScene = true;
+                        }                     
                         ImGui.EndPopup();
                     }
-
-                    if (openNewScenePopup)
+                    
+                    if (createNewScene)
                     {
-                        ImGui.OpenPopup("Create New Scene");
+                        ImGui.OpenPopup("New Scene");
                     }
-
-
-                    if (ImGui.BeginPopupModal("Create New Scene"))
+                    
+                    if (ImGui.BeginPopupModal("New Scene"))
                     {
-                        ImGui.Text("Scene Name: ");
+
+
+                        ImGui.Text("Name: ");
                         ImGui.SameLine();
-                        ImGui.InputText("" ,ref newSceneName, 256);
+                        ImGui.InputText("", ref newSceneName, 256);
+                        string newSceneFull = _currentDirectory + "\\" + newSceneName + ".kdbscene";
 
                         if (ImGui.Button("OK"))
-                        {
-                            Engine.Get().NewScene(_currentDirectory + "\\" + newSceneName);
+                        { 
+                            bool canCreate = true;
+                            foreach (var f in Directory.GetFiles(_currentDirectory))
+                            {
+                                if (f == newSceneFull)
+                                {
+                                    canCreate = false;
+                                    errorMessage = "Already Scene With Same Name " + newSceneFull;
+                                    ImGui.OpenPopup("Error");
+                                }
+                            }
+
+                            if (canCreate)
+                            {
+                                Engine.Get().NewScene(newSceneFull);
+                                ImGui.CloseCurrentPopup();
+                            }
                         }
 
-                        if (ImGui.Button("Cancel"))
-                        {
-                            ImGui.CloseCurrentPopup();
-                        }
+                        if(ImGui.BeginPopupModal("Error")){
+                            ImGui.Text(errorMessage);
+                            if (ImGui.Button("OK"))
+                            {
+                                ImGui.CloseCurrentPopup();
+                            }
 
+                            ImGui.EndPopup();
+                        }
                         ImGui.EndPopup();
                     }
 
-                    DirectoryInfo directoryInfo = new DirectoryInfo(_currentDirectory);
-
-                    if (_currentDirectory != ProjectSettings.s_FullProjectPath)
                     {
-                        if (ImGui.Button("Back"))
+                        if (_currentDirectory != ProjectSettings.s_FullProjectPath)
                         {
-                            _currentDirectory = directoryInfo!.Parent!.FullName;
-                        }
-                    }
-
-                    float padding = 16.0f;
-                    float thumbnailSize = 128.0f;
-                    float cellSize = thumbnailSize + padding;
-                    float panelWidth = ImGui.GetContentRegionAvail().X;
-                    int columnCount = (int)(panelWidth / cellSize);
-                    if (columnCount < 1)
-                        columnCount = 1;
-                    ImGui.Columns(columnCount, "0", false);
-
-                    foreach (var dir in directoryInfo.GetDirectories())
-                    {
-                        ImGui.PushID(dir.Name);
-                        if (ImGui.ImageButton(dir.Name, (IntPtr)dirTexture, new System.Numerics.Vector2(128, 128)))
-                        {
-                            _currentDirectory += "\\" + dir.Name;
-                        }
-                        ImGui.Text(dir.Name);
-                        ImGui.NextColumn();
-                        ImGui.PopID();
-                    }
-
-                    foreach (var file in directoryInfo.GetFiles())
-                    {
-                        ImGui.PushID(file.Name);
-                        ImGui.ImageButton(file.Name, (IntPtr)fileTexture, new System.Numerics.Vector2(128, 128));
-
-                        if (ImGui.BeginDragDropSource())
-                        {
-                            ImGui.Text(file.FullName);
-                            ImGui.SetDragDropPayload(typeof(string).FullName, IntPtr.Zero, 0);
-                            // draggedItem = items[i];
-                            s_CurrentDraggingFileName = file.FullName;
-                            ImGui.EndDragDropSource();
+                            if (ImGui.Button("Back"))
+                            {
+                                _currentDirectory = directoryInfo!.Parent!.FullName;
+                            }
                         }
 
-                        ImGui.Text(file.Name);
+                        float padding = 16.0f;
+                        float thumbnailSize = 128.0f;
+                        float cellSize = thumbnailSize + padding;
+                        float panelWidth = ImGui.GetContentRegionAvail().X;
+                        int columnCount = (int)(panelWidth / cellSize);
+                        if (columnCount < 1)
+                            columnCount = 1;
+                        ImGui.Columns(columnCount, "0", false);
 
-                        ImGui.NextColumn();
-                        ImGui.PopID();
+                        foreach (var dir in directoryInfo.GetDirectories())
+                        {
+                            ImGui.PushID(dir.Name);
+                            if (ImGui.ImageButton(dir.Name, (IntPtr)dirTexture, new System.Numerics.Vector2(128, 128)))
+                            {
+                                _currentDirectory += "\\" + dir.Name;
+                            }
+                            ImGui.Text(dir.Name);
+                            ImGui.NextColumn();
+                            ImGui.PopID();
+                        }
+
+                        foreach (var file in directoryInfo.GetFiles())
+                        {
+                            ImGui.PushID(file.Name);
+                            ImGui.ImageButton(file.Name, (IntPtr)fileTexture, new System.Numerics.Vector2(128, 128));
+
+                            if (file.Extension == ".kdbscene")
+                            {
+                                if (ImGui.BeginDragDropSource())
+                                {
+                                    ImGui.Text(file.FullName);
+                                    ImGui.SetDragDropPayload("CONTENT_BROWSER_ITEM", IntPtr.Zero, 0);
+                                    // draggedItem = items[i];
+                                    s_CurrentDraggingFileName = file.FullName;
+                                    ImGui.EndDragDropSource();
+                                }
+                            }
+
+                            ImGui.Text(file.Name);
+
+                            ImGui.NextColumn();
+                            ImGui.PopID();
+                        }
                     }
                 }
-            )
-            {
+            );
 
-            };
             UIElemenet currentSelectedObjInspector = new UIElemenet(
                 "Inspector",
                 ImGuiWindowFlags.None,
@@ -193,7 +248,7 @@ namespace Engine2D.Scenes
 
         internal virtual void EditorUpdate(double dt) 
         {                        
-            foreach (Gameobject obj in Gameobjects) { obj.Update(dt); }               
+            foreach (Gameobject obj in Gameobjects) { obj.EditorUpdate(dt); }               
         }
 
         internal virtual void Render(bool isEditor, double dt) {
@@ -204,20 +259,45 @@ namespace Engine2D.Scenes
                 _frameBuffer.UnBind();
 
                 Engine.Get().ImGuiController.Update(_window, dt);
+                
+                ImGui.BeginMainMenuBar();
+                if (ImGui.BeginMenu("Menu"))
+                {
+                    if (ImGui.MenuItem("Save Scene"))
+                    {
+                        Engine.SaveScene(this);
+                    }
+                    if (ImGui.MenuItem("Load Scene"))
+                    {
+
+                    }
+                    ImGui.EndMenu();
+                }
+                if (ImGui.BeginMenu("Help"))
+                {
+                    ImGui.EndMenu();
+                }
+                ImGui.EndMainMenuBar();
 
                 ImGui.DockSpaceOverViewport();
                 ImGui.ShowDemoWindow();
+
                 _gameViewport.OnGui(_frameBuffer.TextureID, () =>
                 {
                     unsafe
                     {
-                        var payload = ImGui.AcceptDragDropPayload(typeof(string).FullName);
-                        if (payload.NativePtr != null)
+                        if (ImGui.BeginDragDropTarget())
                         {
-                            Console.WriteLine("Dropped " + s_CurrentDraggingFileName + " onto viewport");
-                            Engine.LoadScene(s_CurrentDraggingFileName);
+                            var payload = ImGui.AcceptDragDropPayload("CONTENT_BROWSER_ITEM");
+                            if (payload.NativePtr != null)
+                            {
+                                Engine.SaveScene(this);
+                                Engine.LoadScene(s_CurrentDraggingFileName);
+                                s_CurrentDraggingFileName = null;
+                            }
+                            ImGui.EndDragDropTarget();
                         }
-                        ImGui.EndDragDropTarget();
+
                     }
                 });
                 TEMP_CREATE_AND_SAVE_MENU();

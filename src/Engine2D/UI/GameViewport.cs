@@ -22,7 +22,8 @@ namespace Engine2D.UI
             Vector2 windowPos = getCenteredPositionForViewport(windowSize);
 
             ImGui.SetCursorPos(new Vector2(windowPos.X, windowPos.Y));            
-            ImGui.ImageButton("viewport",(IntPtr)TextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+            //ImGui.ImageButton("viewport",(IntPtr)TextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+            ImGui.Image((IntPtr)TextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
 
             actions.Invoke();
             

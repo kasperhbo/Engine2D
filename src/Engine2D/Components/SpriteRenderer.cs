@@ -11,26 +11,54 @@ namespace Engine2D.GameObjects
         //public float rot = 0;
 
         //public Vector2 Size     = new(32,32);
-        public Vector4 Color    = new(255,0,0, 255);
+        //public Vector4 Color { public get; public set { Console.WriteLine(); }       } = new(255,255,255, 255);        
 
+        public Vector4 Color
+        {
+            get => _color;
+            set
+            {
+                _color = value;
+                IsDirty = true;
+            }
+        }
+        public Texture Texture { get; private set; } = null;
+
+        private Transform _lastTransform = new();
+        private Vector4 _color = new(255,255,255,255);
+        
         internal bool IsDirty = true;
+
 
 
         internal override void Init(Gameobject parent)
         {
             base.Init(parent);
             GameRenderer.AddSpriteRenderer(this);
+            parent.transform.Copy(_lastTransform);
         }
 
+        internal void SetTexture(Texture texture)
+        {
+            Texture = texture;
+            IsDirty = true;
+        }
+
+      
         internal override  void Start()
         {
         }
 
-        internal override  void Update(double dt)
+        internal override void EditorUpdate(double dt)
         {
+            if(!_lastTransform.Equals(Parent.transform))
+            {
+                IsDirty = true;
+                Parent.transform.Copy(_lastTransform);
+            }
         }
 
-        internal override  void Destroy()
+        internal override void GameUpdate(double dt)
         {
         }
 
@@ -43,7 +71,18 @@ namespace Engine2D.GameObjects
         {
             if(ImGui.CollapsingHeader("Sprite Renderer"))
             {
-                ImGui.ColorEdit4("Color: ", ref Color);
+                if(ImGui.ColorEdit4("Color: ", ref _color))
+                {
+                    IsDirty = true;
+                }
+
+                ImGui.Text("Texture: ");
+                ImGui.SameLine();
+
+                if(Texture != null)
+                    ImGui.ImageButton("Sprite", (IntPtr)Texture.TexID, new Vector2(56, 56));
+                else
+                    ImGui.ImageButton("Sprite", IntPtr.Zero, new Vector2(56, 56));
             }
         }
     }
