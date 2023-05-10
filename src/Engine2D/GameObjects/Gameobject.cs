@@ -78,9 +78,9 @@ namespace Engine2D.GameObjects
             if(ImGui.CollapsingHeader("Transform"))
             {
                 //ImGui.DragFloat2("Position", ref transform.position);
-                UIHelper.DrawVec2Control("Position", ref transform.position);
-                UIHelper.DrawVec2Control("Size", ref transform.size);
-                UIHelper.DragFloat("Rotation", ref transform.rotation);
+                OpenTKUIHelper.DrawVec2Control("Position", ref transform.position);
+                OpenTKUIHelper.DrawVec2Control("Size", ref transform.size);
+                OpenTKUIHelper.DragFloat("Rotation", ref transform.rotation);
             }
 
 

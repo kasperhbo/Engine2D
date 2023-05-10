@@ -37,7 +37,7 @@ namespace KDBEngine.Core {
 
         public ImGuiController ImGuiController { get; internal set; }
         private Dictionary<string, UIElemenet> _guiWindows = new Dictionary<string, UIElemenet>();
-
+        EngineSettingsWindow engineSettingsWindow = new EngineSettingsWindow();
 
         public static Engine Get()
         {
@@ -79,17 +79,22 @@ namespace KDBEngine.Core {
         {
             base.OnLoad();
             ImGuiController = new ImGuiController(Size.X, Size.Y);
-            
+
             if (Settings.s_IsEngine)
             {
-                Console.WriteLine("engine");
                 CreateUIWindows();
             }
-            LoadScene(ProjectSettings.s_FullProjectPath + "\\DefaultScenes\\testscene.kdbscene");
+
+            LoadScene(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
             testFB = new((int)width, (int)height);
             testCamera = new();
             viewportWindow = new();
             TestInput.Init();
+
+            if (!Settings.s_IsEngine)
+            {
+                _currentScene.IsPlaying = true;
+            }
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -105,8 +110,6 @@ namespace KDBEngine.Core {
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
-           
 
             if (Settings.s_IsEngine)
             {
@@ -144,6 +147,17 @@ namespace KDBEngine.Core {
                 }
                 if (ImGui.BeginMenu("Help"))
                 {
+                    if (ImGui.MenuItem("Website"))
+                    {
+                        Utils.TryOpenUrl("https://github.com/kasperhbo/Engine2D");
+                    }
+                    ImGui.EndMenu();
+                }
+                if (ImGui.BeginMenu("Settings"))
+                {
+                    if(ImGui.MenuItem("Engine Settings")){
+                        engineSettingsWindow.SetVisibility(true);
+                    }
                     ImGui.EndMenu();
                 }
                 ImGui.EndMainMenuBar();
@@ -163,8 +177,8 @@ namespace KDBEngine.Core {
                 ImGuiController.CheckGLError("End of frame");
                 SwapBuffers();
                 return;
-            } 
-
+            }
+            _currentScene?.GameUpdate(e.Time);
             _currentScene?.Render(dt: e.Time);
 
             SwapBuffers();
@@ -241,7 +255,7 @@ namespace KDBEngine.Core {
         internal static void SaveScene(Scene scene)
         {
             var gameObjectArray = scene.Gameobjects.ToArray();
-            Console.WriteLine("saving: ", scene.ScenePath);
+            Console.WriteLine("Saving: ", scene.ScenePath);
             string sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
             
             if (File.Exists(scene.ScenePath))
@@ -270,6 +284,8 @@ namespace KDBEngine.Core {
             SceneHierachy hierarch = new SceneHierachy(inspector);
             _guiWindows.Add(hierarch.Title, hierarch);
 
+            
+            _guiWindows.Add(engineSettingsWindow.Title, engineSettingsWindow);
         }
 
         static void MouseDown(MouseButtonEventArgs e)
@@ -297,6 +313,11 @@ namespace KDBEngine.Core {
             return (float)getWidth() / getHeight();
         }
     }
+}
+
+internal static class EngineSettings
+{
+    internal static float GlobalScale = 1;
 }
 
 public static class WindowSettings

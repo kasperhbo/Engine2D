@@ -57,7 +57,6 @@ namespace Engine2D.Rendering
         {
             bool added = false;
             RenderBatch addedToBatch = null;
-            Console.WriteLine("add");
             foreach (var batch in _renderBatches)
             {
                 if(batch.HasRoom)

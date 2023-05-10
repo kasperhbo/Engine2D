@@ -63,6 +63,11 @@ namespace Engine2D.GameObjects
 
         internal override void GameUpdate(double dt)
         {
+            if (!_lastTransform.Equals(Parent.transform))
+            {
+                IsDirty = true;
+                Parent.transform.Copy(_lastTransform);
+            }
         }
 
         internal override void SetType()
@@ -74,16 +79,16 @@ namespace Engine2D.GameObjects
         {
             if(ImGui.CollapsingHeader("Sprite Renderer"))
             {
-                if(UIHelper.ColorPicker4("Color: ", ref _color))
-                {
-                    IsDirty = true;
-                }
+                //if(UIHelper.ColorPicker4("Color: ", ref _color))
+                //{
+                //    IsDirty = true;
+                //}
 
-                if (Texture != null)
-                    UIHelper.ImageButton("Sprite: ", (IntPtr)Texture.TexID);
-                //ImGui.ImageButton("##sprite", (IntPtr)Texture.TexID, new Vector2(56, 56));
-                else
-                    UIHelper.ImageButton("Sprite: ", IntPtr.Zero);
+                //if (Texture != null)
+                //    UIHelper.ImageButton("Sprite: ", (IntPtr)Texture.TexID);
+                ////ImGui.ImageButton("##sprite", (IntPtr)Texture.TexID, new Vector2(56, 56));
+                //else
+                //    UIHelper.ImageButton("Sprite: ", IntPtr.Zero);
                 //ImGui.ImageButton("##sprite", IntPtr.Zero, new Vector2(56, 56));
             }
         }

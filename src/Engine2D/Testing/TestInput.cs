@@ -31,8 +31,8 @@ namespace Engine2D.Testing
         private static double lastX;
         private static double lastY;
 
-        private static KeyboardState keyboardState;
-        private static MouseState mouseState;
+        private static KeyboardState? keyboardState;
+        private static MouseState? mouseState;
 
         public static void Init()
         {
@@ -93,17 +93,17 @@ namespace Engine2D.Testing
 
         public static bool KeyPress(Keys key)
         {
-            return keyboardState.IsKeyPressed(key);
+            return keyboardState!.IsKeyPressed(key);
         }
 
         public static bool KeyReleased(Keys key)
         {
-            return keyboardState.IsKeyReleased(key);
+            return keyboardState!.IsKeyReleased(key);
         }
 
         public static bool KeyDown(Keys key)
         {
-            return keyboardState.IsKeyDown(key);
+            return keyboardState!.IsKeyDown(key);
         }
 
 
@@ -153,18 +153,21 @@ namespace Engine2D.Testing
         }
 
         public static bool MouseReleased(MouseButton button)
-        {            
-            return mouseState.IsButtonReleased(button);
+        {
+            if (mouseState == null) return false;
+            return mouseState!.IsButtonReleased(button);
         }
 
         public static bool MousePressed(MouseButton button)
         {
+            if (mouseState == null) return false;
             return mouseState.IsButtonPressed(button);
         }
 
         public static bool MouseDown(MouseButton button)
         {
-            return mouseState.IsButtonDown(button);
+            if (mouseState == null) return false;
+            return mouseState!.IsButtonDown(button);
         }
 
     }

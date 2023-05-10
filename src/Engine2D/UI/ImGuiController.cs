@@ -7,6 +7,7 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
+using Engine2D.Core;
 
 namespace KDBEngine.UI
 {
@@ -34,6 +35,7 @@ namespace KDBEngine.UI
 
         private static bool KHRDebugAvailable = false;
 
+
         /// <summary>
         /// Constructs a new ImGuiController.
         /// </summary>
@@ -53,7 +55,11 @@ namespace KDBEngine.UI
             var io = ImGui.GetIO();
             //io.Fonts.AddFontDefault();
             //io.Fonts.AddFontFromFileTTF("C:/Windows/Fonts/LEELAWUI.TTF", 25f);
-            io.Fonts.AddFontFromFileTTF("C:/Windows/Fonts/Tahoma.TTF", 15f);
+            
+            //TODO: MAKE THIS CHANGEABLE IN ENGINE SETTINGS
+            io.Fonts.AddFontFromFileTTF(Utils.GetBaseEngineDir() + "\\fonts\\opensans\\OpenSans-Regular.ttf", 18);
+                        
+
             //io.Fonts.AddFontFromFileTTF("C:/Windows/Fonts/FRABK.TTF", 25f);
 
             //io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;
@@ -125,7 +131,7 @@ namespace KDBEngine.UI
             SetPerFrameImGuiData(1f / 60f);
 
             ImGui.NewFrame();
-            _frameBegun = true;
+            _frameBegun = true;            
         }
 
         public void WindowResized(int width, int height)
@@ -257,7 +263,7 @@ namespace KDBEngine.UI
             GL.BindTexture(TextureTarget.Texture2D, _fontTexture);
             GL.TexStorage2D(TextureTarget2d.Texture2D, mips, SizedInternalFormat.Rgba8, width, height);
             LabelObject(ObjectLabelIdentifier.Texture, _fontTexture, "ImGui Text Atlas");
-
+ 
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, width, height, PixelFormat.Bgra, PixelType.UnsignedByte, pixels);
 
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);

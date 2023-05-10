@@ -49,7 +49,6 @@ namespace Engine2D.Components
         internal override void GameUpdate(double dt)
         {
             Parent.transform.position = runtimeBody.GetPosition();
-            Console.WriteLine(runtimeBody.GetPosition());
             base.GameUpdate(dt);
         }
 

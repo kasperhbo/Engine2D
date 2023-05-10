@@ -91,7 +91,7 @@ namespace Engine2D.Scenes
             }
         }
 
-        private void GameUpdate(double dt)
+        internal void GameUpdate(double dt)
         {
             int velocityItterations = 6;
             int positionItterations = 2;
