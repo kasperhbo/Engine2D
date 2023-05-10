@@ -12,7 +12,7 @@ namespace Engine2D.Components
 {
     public class BaseSpecifiedConcreteClassConverter : DefaultContractResolver
     {
-        protected override JsonConverter ResolveContractConverter(Type objectType)
+        protected override JsonConverter? ResolveContractConverter(Type objectType)
         {
             if ((
                     typeof(Component).IsAssignableFrom(objectType) ||
@@ -47,18 +47,20 @@ namespace Engine2D.Components
             {
                 case "Component":
                     return null;
+
                 case "SpriteRenderer":
                     return JsonConvert.DeserializeObject<SpriteRenderer>(jo.ToString(), _specifiedSubclassConversion);
+
                 case "Rigidbody":
                     return JsonConvert.DeserializeObject<RigidBody>(jo.ToString(), _specifiedSubclassConversion);
+
                 case "BoxCollider2D":
                     return JsonConvert.DeserializeObject<BoxCollider2D>(jo.ToString(), _specifiedSubclassConversion);
+
                 default:
                     throw new Exception();
             }
         }
-
-
         public override bool CanWrite
         {
             get { return false; }
@@ -68,6 +70,8 @@ namespace Engine2D.Components
         {
             throw new NotImplementedException(); // won't be called because CanWrite returns false
         }
+
+
 
     }
 }

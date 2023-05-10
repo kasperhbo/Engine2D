@@ -1,10 +1,12 @@
 ﻿using GlmNet;
 using ImGuiNET;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +14,6 @@ namespace Engine2D.UI
 {
     internal static class UIHelper
     {
-        private static float defaultResetValue = 0.0f;
         private static float defaultColumnWidth = 256;
         private static float defaultDragSpeed = 0.1f;
         private static float divideMultiplier = 2;
@@ -38,7 +39,7 @@ namespace Engine2D.UI
             ImGui.Text(label);
             
             ImGui.NextColumn();
-
+            ShiftCursor(7.0f, 0.0f);
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0f));
 
             float lineHeight = ImGui.GetFontSize() + ImGui.GetStyle().FramePadding.Y;
@@ -82,6 +83,7 @@ namespace Engine2D.UI
             ImGui.PopStyleVar();
             ImGui.PopStyleColor(6);
             ImGui.Spacing();
+            Underline(true) ;
             ImGui.PopID();
         }
 
@@ -146,5 +148,21 @@ namespace Engine2D.UI
             return clicked;
         }
 
+        private static void ShiftCursor(float x, float y)
+        {
+            Vector2 cursor = ImGui.GetCursorPos();
+            ImGui.SetCursorPos(new(cursor.X + x, cursor.Y + y));
+        }
+
+        static void Underline(bool fullWidth = false, float offsetX = 0.0f, float offsetY = -1.0f)
+        { 
+            float width = fullWidth ? ImGui.GetWindowWidth() : ImGui.GetContentRegionAvail().X;
+            Vector2 cursor = ImGui.GetCursorScreenPos();
+            
+            ImGui.GetWindowDrawList().AddLine(
+                new(cursor.X + offsetX, cursor.Y + offsetY),
+                new(cursor.X + width, cursor.Y + offsetY),
+                6);
+        }
     }
 }

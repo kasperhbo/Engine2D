@@ -1,6 +1,8 @@
 ﻿using Engine2D.Components;
+using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
+using OpenTK.Mathematics;
 using System.Globalization;
 using System.Xml.Serialization;
 
@@ -84,6 +86,15 @@ namespace Engine2D.GameObjects
 
 
             foreach (var component in components) { component.ImGuiFields(); }
+        }
+
+        public bool AABB(Vector2 point)
+        {
+            return (
+               point.X >= this.transform.position.X - this.transform.size.X * .5
+            && point.X <= this.transform.position.X + this.transform.size.X * .5
+            && point.Y >= this.transform.position.Y - this.transform.size.Y * .5
+            && point.Y <= this.transform.position.Y + this.transform.size.Y * .5);
         }
     }
 }

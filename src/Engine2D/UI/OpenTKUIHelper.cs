@@ -5,8 +5,7 @@ using OpenTK.Mathematics;
 namespace Engine2D.UI
 {
     internal static class OpenTKUIHelper
-    {
-        private static float defaultResetValue = 0.0f;
+    { 
         private static float defaultColumnWidth = 256;
         private static float defaultDragSpeed = 0.1f;
         private static float divideMultiplier = 2;

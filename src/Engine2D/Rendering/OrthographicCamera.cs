@@ -12,12 +12,8 @@ internal class OrthographicCamera : Gameobject
     internal Color4 ClearColor { get; } = new(56, 61, 58, 255);
     private Matrix4 _viewMatrix = Matrix4.Identity;
 
-    private float _aspectRatio;
     private float _size;
-
-    private float _near = -1f;
-    private float _far = 1f;
-
+        
     internal bool IsMainCamera = true;
 
     internal System.Numerics.Vector2 Position = new(0,0);
@@ -44,7 +40,6 @@ internal class OrthographicCamera : Gameobject
 
     public OrthographicCamera(float aspectRatio, float size)
     {
-        this._aspectRatio = aspectRatio;
         this._size = size;
         UpdateProjectionMatrix();
     }
@@ -57,7 +52,6 @@ internal class OrthographicCamera : Gameobject
 
     public void SetAspectRatio(float aspectRatio)
     {
-        this._aspectRatio = aspectRatio;
         UpdateProjectionMatrix();
     }
 

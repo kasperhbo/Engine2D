@@ -96,8 +96,8 @@ namespace KDBEngine.Core {
         {
             base.OnUpdateFrame(args);
 
-            Input.Update(KeyboardState, MouseState);
-            TestInput.mousePosCallback(MouseState.Position.X, MouseState.Position.Y);
+            //Input.Update(KeyboardState, MouseState);
+            TestInput.mousePosCallback(MouseState, KeyboardState);
             _currentScene?.EditorUpdate(args.Time);
             TestInput.endFrame();
         }
@@ -110,6 +110,18 @@ namespace KDBEngine.Core {
 
             if (Settings.s_IsEngine)
             {
+                if(TestViewportWindow.IsMouseInsideViewport() && TestInput.MousePressed(MouseButton.Left))
+                {
+                    foreach (Gameobject go in _currentScene?.Gameobjects)
+                    {
+                        if (go.AABB(TestInput.getWorld()))
+                        {
+                            _currentScene.SelectedGameobject = go;
+                            break;
+                        }
+                    }
+                }
+
                 //_frameBuffer.Bind();
                 testFB.Bind();
                 GameRenderer.Render();

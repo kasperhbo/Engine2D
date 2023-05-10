@@ -8,9 +8,6 @@ namespace Engine2D.Rendering
     {
         public readonly int TexID;
 
-        private int _width, _height;
-        private string _filepath;
-
         public Texture(string filepath, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
         {
             // Generate handle
@@ -85,10 +82,6 @@ namespace Engine2D.Rendering
 
         //    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, 0);
 
-            this._width = width;
-            this._height = height;
-
-            this._filepath = "Generated";
 
             // Generate handle
             TexID = GL.GenTexture();

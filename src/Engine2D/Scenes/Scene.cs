@@ -119,8 +119,8 @@ namespace Engine2D.Scenes
         internal virtual void EditorUpdate(double dt) 
         {
 
-            if(Input.KeyDown(Keys.LeftControl)){
-                if (Input.KeyPress(Keys.S))
+            if(TestInput.KeyDown(Keys.LeftControl)){
+                if (TestInput.KeyPress(Keys.S))
                 {
                     Engine.SaveScene(this);
                 }

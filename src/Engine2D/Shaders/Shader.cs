@@ -191,8 +191,7 @@ namespace KDBEngine.Shaders
         //{
         //    GL.UseProgram(0);
         //}
-
-        private string filepath;
+                
         private readonly string fragmentSource;
         private int shaderProgramID;
 

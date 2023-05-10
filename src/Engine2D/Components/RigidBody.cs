@@ -27,7 +27,6 @@ namespace Engine2D.Components
         {
             if (ImGui.CollapsingHeader("RB Renderer"))
             {
-                Console.WriteLine(BodyType.ToString());
                 if(ImGui.BeginCombo("##combo", BodyType.ToString()))
                 {
                     if (ImGui.Selectable("Dynamic"))

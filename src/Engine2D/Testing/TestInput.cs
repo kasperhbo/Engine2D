@@ -4,6 +4,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,6 +31,9 @@ namespace Engine2D.Testing
         private static double lastX;
         private static double lastY;
 
+        private static KeyboardState keyboardState;
+        private static MouseState mouseState;
+
         public static void Init()
         {
             xPos = 0.0;
@@ -52,12 +56,14 @@ namespace Engine2D.Testing
             viewportSize = new Vector2(Engine.Get().getWidth(), Engine.Get().getHeight());
         }
 
-        public static void mousePosCallback(double xpos, double ypos)
+        public static void mousePosCallback(MouseState mouse, KeyboardState keyboard)
         {
             //if (.mouseButtonDown > 0)
             //{
             //    isDragging = true;
             //}
+            keyboardState = keyboard;
+            mouseState = mouse;
 
             lastPos = (pos); // Useless since endFrame() ??
             lastX = xPos; // Useless since endFrame() ??
@@ -67,9 +73,9 @@ namespace Engine2D.Testing
             lastWorldX = worldX;  // Useless since endFrame() ??
             lastWorldY = worldY;  // Useless since endFrame() ??
 
-            pos = new((float)xpos, (float)ypos);
-            xPos = xpos;// Delete
-            yPos = ypos;// Delete
+            pos = new((float)mouseState.Position.X, (float)mouseState.Position.Y);
+            xPos = mouseState.Position.X;// Delete
+            yPos = mouseState.Position.Y;// Delete
 
             calcOrtho();
         }
@@ -84,6 +90,22 @@ namespace Engine2D.Testing
             lastWorldX = worldX; // Delete
             lastWorldY = worldY; // Delete
         }
+
+        public static bool KeyPress(Keys key)
+        {
+            return keyboardState.IsKeyPressed(key);
+        }
+
+        public static bool KeyReleased(Keys key)
+        {
+            return keyboardState.IsKeyReleased(key);
+        }
+
+        public static bool KeyDown(Keys key)
+        {
+            return keyboardState.IsKeyDown(key);
+        }
+
 
         public static float getX()
         {
@@ -128,6 +150,21 @@ namespace Engine2D.Testing
         public static Vector2 getWorld()
         {
             return world;
+        }
+
+        public static bool MouseReleased(MouseButton button)
+        {            
+            return mouseState.IsButtonReleased(button);
+        }
+
+        public static bool MousePressed(MouseButton button)
+        {
+            return mouseState.IsButtonPressed(button);
+        }
+
+        public static bool MouseDown(MouseButton button)
+        {
+            return mouseState.IsButtonDown(button);
         }
 
     }

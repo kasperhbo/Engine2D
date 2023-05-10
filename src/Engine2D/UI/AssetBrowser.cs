@@ -18,9 +18,6 @@ namespace Engine2D.UI
 
         private string _currentDirectory = ProjectSettings.s_FullProjectPath;
         
-
-        private string _errorMessage;
-        private string _newSceneName;
         
         internal unsafe AssetBrowser()
         {
@@ -37,7 +34,7 @@ namespace Engine2D.UI
             this._windowContents = () =>
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(_currentDirectory);
-                bool createNewScene = false;
+                
                 {
                     if (_currentDirectory != ProjectSettings.s_FullProjectPath)
                     {

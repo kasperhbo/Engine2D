@@ -11,8 +11,6 @@ namespace Engine2D.UI
 {
     internal class GameViewport
     {
-        private static bool isPlaying = false;
-        private static float leftX, rightX, topY, bottomY;
         public static bool IsInViewport { get; private set; } = false;
         
 

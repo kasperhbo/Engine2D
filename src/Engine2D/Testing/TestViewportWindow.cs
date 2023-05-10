@@ -10,7 +10,6 @@ namespace Engine2D.Testing
     {
         private static Vector2 viewportPos = new();
         private static Vector2 viewportSize = new();
-        private float leftX, rightX, topY, bottomY;
 
         public void OnGui()
         {
@@ -40,10 +39,10 @@ namespace Engine2D.Testing
             topLeft.X -= ImGui.GetScrollX();
             topLeft.Y -= ImGui.GetScrollY();
 
-            leftX = topLeft.X;
-            bottomY = topLeft.Y;
-            rightX = topLeft.X + windowSize.X;
-            topY = topLeft.Y + windowSize.Y;
+            //leftX = topLeft.X;
+            //bottomY = topLeft.Y;
+            //rightX = topLeft.X + windowSize.X;
+            //topY = topLeft.Y + windowSize.Y;
 
             viewportPos = new(topLeft.X, topLeft.Y);
             viewportSize = new(windowSize.X, windowSize.Y);
@@ -97,6 +96,15 @@ namespace Engine2D.Testing
             }
 
             return new(aspectWidth, aspectHeight);
+        }
+
+        public static bool IsMouseInsideViewport()
+        {
+            return
+                   TestInput.getX() >= viewportPos.X
+                && TestInput.getX() <= viewportPos.X + viewportSize.X
+                && TestInput.getY() >= viewportPos.Y
+                && TestInput.getY() <= viewportPos.Y + viewportSize.Y;
         }
 
     }
