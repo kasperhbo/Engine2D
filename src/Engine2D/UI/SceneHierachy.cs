@@ -75,6 +75,18 @@ namespace Engine2D.UI
                             Engine.Get()._currentScene?.AddGameObjectToScene(go);
                         }
 
+                        if (ImGui.MenuItem("New RB"))
+                        {
+                            List<Component> components = new List<Component>
+                            {
+                                new SpriteRenderer(),
+                                new RigidBody(Box2DSharp.Dynamics.BodyType.DynamicBody)
+                            };
+
+                            Gameobject go = new Gameobject((Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(), components, new Components.Transform());
+                            Engine.Get()._currentScene?.AddGameObjectToScene(go);
+                        }
+
                         ImGui.EndPopup();
                     }
                 }

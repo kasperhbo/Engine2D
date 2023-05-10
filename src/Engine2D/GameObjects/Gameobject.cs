@@ -45,7 +45,7 @@ namespace Engine2D.GameObjects
 
         internal void EditorUpdate(double dt)
         {
-            foreach (var component in components) { component.EditorUpdate(dt); }
+            foreach (var component in components) { component.EditorUpdate(dt); } 
         }
 
         internal void GameUpdate(double dt)
@@ -72,8 +72,6 @@ namespace Engine2D.GameObjects
             ImGui.Text("Name: ");
             ImGui.SameLine();
             ImGui.InputText("", ref Name, 256);
-
-            
 
             if(ImGui.CollapsingHeader("Transform"))
             {

@@ -17,6 +17,21 @@ namespace Engine2D.Testing
             ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
                 | ImGuiWindowFlags.MenuBar);
 
+            ImGui.BeginMenuBar();
+            if (!Engine.Get()._currentScene.IsPlaying) { 
+                if (ImGui.MenuItem("Play"))
+                {
+                    Engine.Get()._currentScene.IsPlaying = true;
+                }
+            }
+            else { 
+                if (ImGui.MenuItem("Stop"))
+                {
+                    Engine.Get()._currentScene.IsPlaying = false;
+                }
+            }
+            ImGui.EndMenuBar();
+
             Vector2 windowSize = getLargestSizeForViewport();
             Vector2 windowPos = getCenteredPositionForViewport(windowSize);
 

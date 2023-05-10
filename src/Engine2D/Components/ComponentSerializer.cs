@@ -49,6 +49,10 @@ namespace Engine2D.Components
                     return null;
                 case "SpriteRenderer":
                     return JsonConvert.DeserializeObject<SpriteRenderer>(jo.ToString(), _specifiedSubclassConversion);
+                case "Rigidbody":
+                    return JsonConvert.DeserializeObject<RigidBody>(jo.ToString(), _specifiedSubclassConversion);
+                case "BoxCollider2D":
+                    return JsonConvert.DeserializeObject<BoxCollider2D>(jo.ToString(), _specifiedSubclassConversion);
                 default:
                     throw new Exception();
             }

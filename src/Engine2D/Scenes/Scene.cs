@@ -1,4 +1,8 @@
-﻿using Engine2D.Core;
+﻿using Box2DSharp.Collision.Shapes;
+using Box2DSharp.Common;
+using Box2DSharp.Dynamics;
+using Engine2D.Components;
+using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Engine2D.Testing;
@@ -13,6 +17,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Xml.Linq;
 
 namespace Engine2D.Scenes
@@ -46,13 +51,61 @@ namespace Engine2D.Scenes
             }
         }
 
+        #region onplay
+        World physicsWorld = null;
+        #endregion  
+
         private void StartPlay()
         {
+            physicsWorld = new World(new System.Numerics.Vector2(0, -9.8f));
+            foreach (Gameobject gameobject in Gameobjects)
+            {
+                foreach (Component item in gameobject.components)
+                {
+                    if(item.Type == "Rigidbody")
+                    {
+                        BodyDef bodyDef = new BodyDef();
+                        RigidBody rb = (RigidBody)item;
+                        bodyDef.BodyType = rb.BodyType;
+                        bodyDef.Position = rb.Parent.transform.position;
 
+                        Body body = physicsWorld.CreateBody(bodyDef);
+                        body.IsFixedRotation = rb.FixedRotation;
+
+                        rb.runtimeBody = body;
+
+
+                        PolygonShape shape = new PolygonShape();
+
+                        shape.SetAsBox(gameobject.transform.size.X * .5f, gameobject.transform.size.Y * .5f);
+                        FixtureDef fixtureDef = new FixtureDef();
+                        fixtureDef.Shape = shape;
+                        fixtureDef.Density = 1.0f;
+                        fixtureDef.Friction = 0.5f;
+                        fixtureDef.Restitution = .0f;
+                        fixtureDef.RestitutionThreshold = 0.5f;
+
+                        body.CreateFixture(fixtureDef);
+                    }
+                }
+            }
+        }
+
+        private void GameUpdate(double dt)
+        {
+            int velocityItterations = 6;
+            int positionItterations = 2;
+
+            physicsWorld.Step((float)dt, velocityItterations, positionItterations);
+
+            foreach (Gameobject obj in Gameobjects)
+            {
+                obj.GameUpdate(dt);
+            }
         }
 
         private void StopPlay()
-        {
+        {            
             Engine.LoadScene(this.ScenePath);
         }
 
@@ -61,7 +114,6 @@ namespace Engine2D.Scenes
             ScenePath = scenePath;
 
             GameRenderer.Init();
-            
         }
 
         internal virtual void EditorUpdate(double dt) 
@@ -75,7 +127,8 @@ namespace Engine2D.Scenes
             }            
 
             foreach (Gameobject obj in Gameobjects) { obj.EditorUpdate(dt); }
-            if (IsPlaying) { foreach (Gameobject obj in Gameobjects) { obj.GameUpdate(dt); } }
+            if (IsPlaying) GameUpdate(dt);
+            //if (IsPlaying) { foreach (Gameobject obj in Gameobjects) { obj.GameUpdate(dt); } }
         }
 
         internal virtual void Render(double dt) {

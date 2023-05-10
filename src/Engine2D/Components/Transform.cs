@@ -7,10 +7,10 @@ namespace Engine2D.Components
     {
         public Vector2 position = new();
         public Vector2 size = new(1,1);
-        public float rotation = new();
-        
+        public float rotation = new();       
 
         public Transform() { }
+               
 
         /// <summary>
         /// Custom copy method, if you dont do this the project will make an reference to the other transform object instead of copying the properties

@@ -44,7 +44,11 @@ namespace Engine2D.Rendering
         
         internal RenderBatch()
         {
-            _shader = new Shader(Utils.GetBaseEngineDir() + "/Shaders/default.vert", Utils.GetBaseEngineDir() + "/Shaders/default.frag");
+            ShaderData dat = new ShaderData();
+            dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default.vert";
+            dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default.frag";
+
+            _shader = ResourceManager.GetShader(dat);
             sprites = new SpriteRenderer[c_MaxBatchSize];
 
             _vertices = new float[c_MaxBatchSize*c_VertexSize*4];            
@@ -147,9 +151,9 @@ namespace Engine2D.Rendering
 
                 // Load position
                 _vertices[offset] = sprite.Parent.transform.position.X + 
-                    (xAdd * (sprite.Parent.transform.size.X)) * sprite.SpriteSize.X;
-                _vertices[offset + 1] = sprite.Parent.transform.position.Y + 
-                    (yAdd * (sprite.Parent.transform.size.Y)) * sprite.SpriteSize.Y;
+                    (xAdd * (sprite.Parent.transform.size.X));
+                _vertices[offset + 1] = sprite.Parent.transform.position.Y +
+                    (yAdd * (sprite.Parent.transform.size.Y));
 
                 // Load color
                 _vertices[offset + 2] = color.X;
