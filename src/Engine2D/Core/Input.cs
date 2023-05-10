@@ -43,22 +43,24 @@ namespace Engine2D.Core
         public static Vector2 GetWorld()
         {
             float currentX = mouse.Position.X - GameViewportPos.X;
-            currentX = (2.0f * (currentX / GameViewportSize.X)) - 1f;
+            float currentY = mouse.Position.Y - GameViewportPos.Y;;
 
-            float currentY = mouse.Position.Y - GameViewportPos.Y;
-            currentY = -((2.0f * (1f - (currentY / GameViewportSize.Y))) - 1f);
 
-            OrthographicCamera camera = GameRenderer.S_CurrentCamera;
-            Vector4 temp = new Vector4(currentX, currentY, 0, 1f);
+            currentX = (currentX / GameViewportSize.X) *2- 1.0f;           
+            currentY = -((currentY / GameViewportSize.Y) *2- 1.0f);
+            Console.WriteLine(GameViewportSize.Y);
 
-            Matrix4 inverseView = camera.InverseView;
-            Matrix4 inverseProj = camera.InverseProjection;
+            Vector4 tmp = new Vector4(currentX, currentY, 0.0f, 1.0f);
 
-            Matrix4 viewProjection = Matrix4.Mult(inverseView, inverseProj);
+            //OrthographicCamera camera = GameRenderer.S_CurrentCamera;
+            //Matrix4 viewProjection = Matrix4.Mult(camera.InverseView, camera.InverseProjection);
+            //Vector4 t= MathHelper.Multiply(viewProjection, tmp);
+            Vector4 d = new();
 
-            Vector4 outV = MathHelper.Multiply(viewProjection, temp);
+            //MathHelper.Test(tmp, viewProjection, out d);
+                        
 
-            return new Vector2(outV.X, outV.Y - .1f);
+            return new(d.X, d.Y);
         }
         //internal static void IsKeyUp(KeyboardKeyEventArgs e)
         //{

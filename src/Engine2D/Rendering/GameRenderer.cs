@@ -1,4 +1,7 @@
 ﻿using Engine2D.GameObjects;
+using Engine2D.Testing;
+using ImGuiNET;
+using KDBEngine.Core;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 
@@ -6,11 +9,12 @@ namespace Engine2D.Rendering
 {
     internal static class GameRenderer {
 
-        internal static OrthographicCamera S_CurrentCamera = new(0,0);
+      //  internal static OrthographicCamera S_CurrentCamera = new(0,0);
         private static List<RenderBatch> _renderBatches = new();
 
         private static Dictionary<SpriteRenderer, RenderBatch> _spriteBatchDict = new();
         
+
         internal static void Init()
         {
             Flush();
@@ -18,13 +22,9 @@ namespace Engine2D.Rendering
             _renderBatches = new();
             
             // Calculate the aspect ratio
-            float aspectRatio = (float)RenderSettings.s_DefaultRenderResolution.X /
-                                (float)RenderSettings.s_DefaultRenderResolution.Y;
 
             // Calculate the size of the camera
-            float size = RenderSettings.s_DefaultRenderResolution.Y / 10f;
-
-            S_CurrentCamera = new OrthographicCamera(aspectRatio, size);
+            //S_CurrentCamera = new OrthographicCamera(Engine.Get().TargetAspectRatio, 1);
             
             foreach (var rb in _renderBatches) rb.Init();
         }
@@ -33,15 +33,15 @@ namespace Engine2D.Rendering
         {
             _renderBatches.Clear();
             _spriteBatchDict.Clear();
-            S_CurrentCamera = null;
+            //S_CurrentCamera = null;
         }
 
         internal static void Render()
         {            
-            GL.ClearColor(S_CurrentCamera.ClearColor);
+            //GL.ClearColor(S_CurrentCamera.ClearColor);
             GL.Clear(ClearBufferMask.ColorBufferBit);
             
-            foreach (var rb in _renderBatches) rb.Render(S_CurrentCamera.ProjectionMatrix, S_CurrentCamera.ViewMatrix);
+            foreach (var rb in _renderBatches) rb.Render(Engine.Get().testCamera.getProjectionMatrix(), Engine.Get().testCamera.getViewMatrix());
         }
 
         internal static void Update(double dt)

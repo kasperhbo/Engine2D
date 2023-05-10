@@ -15,23 +15,29 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using ImGuiNET;
 using Newtonsoft.Json.Bson;
 using Engine2D.Core;
+using Engine2D.Testing;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
     // OpenGL's initial hurdle is quite large, but once you get past that, things will start making more sense.
     public class Engine : GameWindow
     {
+        static int small = 1;
+		float width = 1920/small;
+		float height = 1080/small;
+        TestFrameBuffer testFB;
+        public TestCamera testCamera;
+        TestViewportWindow viewportWindow;
+
         private static Engine _instance = null;
         
         private GameViewport gameViewport = new GameViewport();
 
-        internal Scene? _currentScene = null;        
-
-        public float TargetAspectRatio => 16.0f / 9.0f;
+        internal Scene? _currentScene = null;
 
         public ImGuiController ImGuiController { get; internal set; }
-        private FrameBuffer _frameBuffer;
         private Dictionary<string, UIElemenet> _guiWindows = new Dictionary<string, UIElemenet>();
+
 
         public static Engine Get()
         {
@@ -80,6 +86,10 @@ namespace KDBEngine.Core {
                 CreateUIWindows();
             }
             LoadScene(ProjectSettings.s_FullProjectPath + "\\DefaultScenes\\testscene.kdbscene");
+            testFB = new((int)width, (int)height);
+            testCamera = new();
+            viewportWindow = new();
+            TestInput.Init();
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -87,21 +97,24 @@ namespace KDBEngine.Core {
             base.OnUpdateFrame(args);
 
             Input.Update(KeyboardState, MouseState);
-
-            if (Settings.s_IsEngine) { _currentScene?.EditorUpdate(args.Time); }                       
+            TestInput.mousePosCallback(MouseState.Position.X, MouseState.Position.Y);
+            _currentScene?.EditorUpdate(args.Time);
+            TestInput.endFrame();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-                       
 
+           
 
             if (Settings.s_IsEngine)
             {
-                _frameBuffer.Bind();
+                //_frameBuffer.Bind();
+                testFB.Bind();
                 GameRenderer.Render();
-                _frameBuffer.UnBind();
+                testFB.UnBind();
+                //_frameBuffer.UnBind();
 
                 ImGuiController.Update(this, e.Time);
                 ImGui.BeginMainMenuBar();
@@ -122,13 +135,11 @@ namespace KDBEngine.Core {
                     ImGui.EndMenu();
                 }
                 ImGui.EndMainMenuBar();
-
-
                 ImGui.DockSpaceOverViewport();
                 ImGui.ShowDemoWindow();
 
-                gameViewport.OnGui(_frameBuffer.TextureID, () => { });
-
+                //gameViewport.OnGui(_frameBuffer.TextureID, () => { });
+                viewportWindow.OnGui();
                 foreach (UIElemenet window in _guiWindows.Values)
                 {
                     window.Render();
@@ -151,8 +162,10 @@ namespace KDBEngine.Core {
             base.OnResize(e);
 
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
-            _frameBuffer = new FrameBuffer(ClientSize.X, ClientSize.Y);
             _currentScene?.OnResized(e);
+
+            testCamera.adjustProjection();
+            this.testFB = new TestFrameBuffer(ClientSize.X, ClientSize.Y);
         }
 
         protected override void OnTextInput(TextInputEventArgs e)
@@ -244,12 +257,31 @@ namespace KDBEngine.Core {
             SceneHierachy hierarch = new SceneHierachy(inspector);
             _guiWindows.Add(hierarch.Title, hierarch);
 
-            _frameBuffer = new FrameBuffer(Size.X, Size.Y);
         }
 
         static void MouseDown(MouseButtonEventArgs e)
         {
 
+        }
+
+        internal TestFrameBuffer getFramebuffer()
+        {
+            return testFB;
+        }
+
+        internal float getWidth()
+        {
+            return ClientSize.X;
+        }
+
+        internal float getHeight()
+        {
+            return ClientSize.Y;
+        }
+
+        internal float getTargetAspectRatio()
+        {
+            return (float)getWidth() / getHeight();
         }
     }
 }
@@ -266,11 +298,6 @@ public static class WindowSettings
 public static class Settings
 {
     public static bool s_IsEngine = true;
-}
-
-public static class RenderSettings
-{
-    public static Vector2 s_DefaultRenderResolution = new(1920,1080);
 }
 
 public static class ProjectSettings

@@ -1,6 +1,7 @@
 ﻿using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
+using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
@@ -59,20 +60,22 @@ namespace Engine2D.Scenes
         {
             ScenePath = scenePath;
 
-            GameRenderer.Init();            
+            GameRenderer.Init();
+            
         }
 
         internal virtual void EditorUpdate(double dt) 
         {
+
             if(Input.KeyDown(Keys.LeftControl)){
                 if (Input.KeyPress(Keys.S))
                 {
                     Engine.SaveScene(this);
                 }
             }
-
-            if(SelectedGameobject != null) { 
-                SelectedGameobject.transform.SetPosition(Input.GetWorld());
+            if(SelectedGameobject != null) {
+                Console.WriteLine(TestInput.getWorld());
+                SelectedGameobject.transform.SetPosition(TestInput.getWorld());
             }
 
 
@@ -94,6 +97,7 @@ namespace Engine2D.Scenes
             Gameobjects.Add(go);
             go.Init();
             go.Start();
+            SelectedGameobject = go;
         }
 
         private string _tempProjectPath = "";

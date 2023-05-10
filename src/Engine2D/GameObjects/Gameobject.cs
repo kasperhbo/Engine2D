@@ -8,7 +8,9 @@ namespace Engine2D.GameObjects
 {
     internal class Gameobject
     {
+        
         public Transform transform = new();
+
         public string Name = "";
         public List<Component> components = new();
                
@@ -70,6 +72,8 @@ namespace Engine2D.GameObjects
             ImGui.Text("Name: ");
             ImGui.SameLine();
             ImGui.InputText("", ref Name, 256);
+
+            
 
             if(ImGui.CollapsingHeader("Transform"))
             {

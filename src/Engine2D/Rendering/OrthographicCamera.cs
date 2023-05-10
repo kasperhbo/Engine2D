@@ -1,4 +1,5 @@
 ﻿using Engine2D.GameObjects;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using System.Text.Json;
 using System.Xml.Linq;
@@ -37,6 +38,7 @@ internal class OrthographicCamera : Gameobject
     {
         _viewMatrix = Matrix4.LookAt(new Vector3(Position.X, Position.Y, 0), new Vector3(Position.X, Position.Y, 0) + _front, _up);
         InverseView = Matrix4.Invert(_viewMatrix);
+        UpdateProjectionMatrix();
     }      
 
 
@@ -49,7 +51,7 @@ internal class OrthographicCamera : Gameobject
 
     public void UpdateProjectionMatrix()
     {
-        ProjectionMatrix = Matrix4.CreateOrthographicOffCenter(-_size * _aspectRatio, _size * _aspectRatio, -_size, _size, -1f, 1f);
+        ProjectionMatrix = Matrix4.CreateOrthographicOffCenter(0,1920 * _size, 0,1080 * _size, -1f, 100f);
         InverseProjection = Matrix4.Invert(ProjectionMatrix);
     }
 
