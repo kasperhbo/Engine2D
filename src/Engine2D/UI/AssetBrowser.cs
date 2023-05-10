@@ -3,6 +3,8 @@ using Engine2D.Rendering;
 using ImGuiNET;
 using KDBEngine.Core;
 using KDBEngine.UI;
+using OpenTK.Graphics.OpenGL4;
+
 namespace Engine2D.UI
 {
     public struct DragDropFile
@@ -20,9 +22,9 @@ namespace Engine2D.UI
         private string _errorMessage;
         private string _newSceneName;
 
-        int _dirTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\directoryicon.png", false).TexID;
-        int _fileTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\fileicon.png", false).TexID;
-        int _sceneTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\mapIcon.png", false).TexID;
+        int _dirTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\directoryicon.png", false, TextureMinFilter.Linear, TextureMagFilter.Linear).TexID;
+        int _fileTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\fileicon.png", false, TextureMinFilter.Linear, TextureMagFilter.Linear).TexID;
+        int _sceneTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\mapIcon.png", false, TextureMinFilter.Linear, TextureMagFilter.Linear).TexID;
 
         internal unsafe AssetBrowser()
         {            
@@ -123,6 +125,11 @@ namespace Engine2D.UI
                     {
                         ImGui.PushID(file.Name);
                         int tex = _fileTexture;
+                        if (file.Extension == ".kdbscene")
+                        {
+                            tex = _sceneTexture;
+                        }
+                       ImGui.ImageButton(file.Name, (IntPtr)tex, new System.Numerics.Vector2(128/2, 128/2));
 
                         if (file.Extension == ".kdbscene")
                         {
@@ -135,10 +142,9 @@ namespace Engine2D.UI
                                 ImGui.Text(CurrentDraggingFileName);
                                 ImGui.EndDragDropSource();
                             }
-                            tex = _sceneTexture;
+                            
                         }
 
-                        ImGui.ImageButton(file.Name, (IntPtr)tex, new System.Numerics.Vector2(128/2, 128/2));
 
                         ImGui.Text(file.Name);
                         ImGui.NextColumn();

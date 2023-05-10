@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine2D.UI;
+using GlmNet;
 using ImGuiNET;
 using KDBEngine.Core;
 using System.Numerics;
@@ -35,6 +36,16 @@ namespace Engine2D.Testing
 
             int textureId = Engine.Get().getFramebuffer().GetTextureID;
             ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new( 0, 1), new(1, 0));
+            if (ImGui.BeginDragDropTarget())
+            {
+                if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
+                {
+                    Engine.LoadScene(AssetBrowser.CurrentDraggingFileName);
+                }
+
+                ImGui.EndDragDropTarget();
+            }
+
 
             TestInput.setViewportPos(new OpenTK.Mathematics.Vector2(topLeft.X, topLeft.Y));
             TestInput.setViewportSize(new OpenTK.Mathematics.Vector2(windowSize.X, windowSize.Y));
