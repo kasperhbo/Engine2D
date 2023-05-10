@@ -140,6 +140,7 @@ namespace KDBEngine.Core {
 
                 //gameViewport.OnGui(_frameBuffer.TextureID, () => { });
                 viewportWindow.OnGui();
+                testCamera.CameraSettingsGUI();
                 foreach (UIElemenet window in _guiWindows.Values)
                 {
                     window.Render();

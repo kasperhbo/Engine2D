@@ -1,14 +1,12 @@
-﻿using ImGuiNET;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine2D.UI
+namespace Engine2D.Rendering
 {
-    internal static class NewProjectUI
+    internal class Sprite
     {
-      
     }
 }

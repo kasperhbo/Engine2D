@@ -1,4 +1,6 @@
-﻿using KDBEngine.Core;
+﻿using Engine2D.UI;
+using ImGuiNET;
+using KDBEngine.Core;
 using OpenTK.Mathematics;
 using System.Runtime.Intrinsics;
 
@@ -20,7 +22,8 @@ namespace Engine2D.Testing
         private Matrix4 inverseViewMatrix = new Matrix4();
 
         private Vector2 position;
-        private float zoom = 1.0f;
+        public float zoom = 1.0f;
+                
 
         public TestCamera()
         {
@@ -106,6 +109,8 @@ namespace Engine2D.Testing
             return zoom;
         }
 
+        
+
         public void setZoom(float zoom)
         {
             this.zoom = zoom;
@@ -115,6 +120,18 @@ namespace Engine2D.Testing
         public void addZoom(float value)
         {
             this.zoom += value;
+        }
+
+        public void CameraSettingsGUI()
+        {
+            ImGui.Begin("Camera Settings");
+            OpenTKUIHelper.DrawVec2Control("pos: ", ref position);
+            if(OpenTKUIHelper.DragFloat("Zoom: ", ref zoom))
+            {
+                adjustProjection();
+            }
+            ImGui.End();
+
         }
 
     }

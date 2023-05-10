@@ -3,15 +3,6 @@ using Engine2D.Rendering;
 using ImGuiNET;
 using KDBEngine.Core;
 using KDBEngine.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
 namespace Engine2D.UI
 {
     public struct DragDropFile
@@ -29,8 +20,9 @@ namespace Engine2D.UI
         private string _errorMessage;
         private string _newSceneName;
 
-        int _dirTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\directoryIcon.png", false).TexID;
-        int _fileTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\fileIcon.png", false).TexID;
+        int _dirTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\directoryicon.png", false).TexID;
+        int _fileTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\fileicon.png", false).TexID;
+        int _sceneTexture = new Texture(Utils.GetBaseEngineDir() + "\\icons\\mapIcon.png", false).TexID;
 
         internal unsafe AssetBrowser()
         {            
@@ -106,8 +98,8 @@ namespace Engine2D.UI
                         }
                     }
 
-                    float padding = 16.0f;
-                    float thumbnailSize = 128.0f;
+                    float padding = 16;
+                    float thumbnailSize = 128.0f/2;
                     float cellSize = thumbnailSize + padding;
                     float panelWidth = ImGui.GetContentRegionAvail().X;
                     int columnCount = (int)(panelWidth / cellSize);
@@ -118,7 +110,7 @@ namespace Engine2D.UI
                     foreach (var dir in directoryInfo.GetDirectories())
                     {
                         ImGui.PushID(dir.Name);
-                        if (ImGui.ImageButton(dir.Name, (IntPtr)_dirTexture, new System.Numerics.Vector2(128, 128)))
+                        if (ImGui.ImageButton(dir.Name, (IntPtr)_dirTexture, new System.Numerics.Vector2(128/2, 128/2)))
                         {
                             _currentDirectory += "\\" + dir.Name;
                         }
@@ -130,7 +122,7 @@ namespace Engine2D.UI
                     foreach (var file in directoryInfo.GetFiles())
                     {
                         ImGui.PushID(file.Name);
-                        ImGui.ImageButton(file.Name, (IntPtr)_fileTexture, new System.Numerics.Vector2(128, 128));
+                        int tex = _fileTexture;
 
                         if (file.Extension == ".kdbscene")
                         {
@@ -143,7 +135,10 @@ namespace Engine2D.UI
                                 ImGui.Text(CurrentDraggingFileName);
                                 ImGui.EndDragDropSource();
                             }
-                        }                        
+                            tex = _sceneTexture;
+                        }
+
+                        ImGui.ImageButton(file.Name, (IntPtr)tex, new System.Numerics.Vector2(128/2, 128/2));
 
                         ImGui.Text(file.Name);
                         ImGui.NextColumn();

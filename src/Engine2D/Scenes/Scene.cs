@@ -72,12 +72,7 @@ namespace Engine2D.Scenes
                 {
                     Engine.SaveScene(this);
                 }
-            }
-            if(SelectedGameobject != null) {
-                Console.WriteLine(TestInput.getWorld());
-                SelectedGameobject.transform.SetPosition(TestInput.getWorld());
-            }
-
+            }            
 
             foreach (Gameobject obj in Gameobjects) { obj.EditorUpdate(dt); }
             if (IsPlaying) { foreach (Gameobject obj in Gameobjects) { obj.GameUpdate(dt); } }
