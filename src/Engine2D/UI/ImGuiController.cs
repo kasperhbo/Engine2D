@@ -57,7 +57,7 @@ namespace KDBEngine.UI
             //io.Fonts.AddFontFromFileTTF("C:/Windows/Fonts/LEELAWUI.TTF", 25f);
             
             //TODO: MAKE THIS CHANGEABLE IN ENGINE SETTINGS
-            io.Fonts.AddFontFromFileTTF(Utils.GetBaseEngineDir() + "\\fonts\\opensans\\OpenSans-Regular.ttf", 18);
+            io.Fonts.AddFontFromFileTTF(Utils.GetBaseEngineDir() + "\\fonts\\opensans\\OpenSans-Regular.ttf", EngineSettings.DefaultFontSize);
                         
 
             //io.Fonts.AddFontFromFileTTF("C:/Windows/Fonts/FRABK.TTF", 25f);
@@ -66,6 +66,7 @@ namespace KDBEngine.UI
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
+            
 
             //ImGui Set Style
             {
@@ -123,8 +124,7 @@ namespace KDBEngine.UI
                 style.Colors[(int)ImGuiCol.ModalWindowDimBg] = new System.Numerics.Vector4(0.80f, 0.80f, 0.80f, 0.35f);
                 //style.GrabRounding = style.FrameRounding = 2.3f;
             }
-
-
+                        
             CreateDeviceResources();
             SetKeyMappings();
 

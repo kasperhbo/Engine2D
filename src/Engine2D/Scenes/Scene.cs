@@ -5,6 +5,7 @@ using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
+using Engine2D.SavingLoading;
 using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
@@ -41,6 +42,7 @@ namespace Engine2D.Scenes
             {
                 if (value)
                 {
+                    SaveLoad.SaveScene(this);
                     StartPlay();
                 }
                 else
@@ -105,8 +107,8 @@ namespace Engine2D.Scenes
         }
 
         private void StopPlay()
-        {            
-            Engine.LoadScene(this.ScenePath);
+        {
+            SaveLoad.LoadScene(this.ScenePath);
         }
 
         internal virtual void Init(Engine engine, string scenePath, int width, int height)
@@ -122,7 +124,7 @@ namespace Engine2D.Scenes
             if(TestInput.KeyDown(Keys.LeftControl)){
                 if (TestInput.KeyPress(Keys.S))
                 {
-                    Engine.SaveScene(this);
+                    SaveLoad.SaveScene(this);
                 }
             }            
 
@@ -135,11 +137,6 @@ namespace Engine2D.Scenes
             GameRenderer.Render();
         }
 
-        internal virtual void OnClose() {
-
-            GameRenderer.OnClose();
-        }
-
         internal void AddGameObjectToScene(Gameobject go)
         {
             Gameobjects.Add(go);
@@ -148,76 +145,9 @@ namespace Engine2D.Scenes
             SelectedGameobject = go;
         }
 
-        private string _tempProjectPath = "";
-        private string _tempProjectName = "";
-
-        //TODO: ABSTRACT THIS
-        private void TEMP_CREATE_AND_SAVE_MENU()
-        {
-            ImGui.Begin("test");
-            if (ImGui.Button("save scene"))
-            {
-                Engine.SaveScene(this);
-            }
-
-            if (ImGui.Button("New Project"))
-            {
-                ImGui.OpenPopup("Create New Project");
-                _tempProjectPath = ProjectSettings.s_ProjectLocation;
-                _tempProjectName = ProjectSettings.s_ProjectName;
-            }
-
-            if (ImGui.BeginPopupModal("Create New Project"))
-            {
-
-                ImGui.Text("Enter project details:");
-                ImGui.InputText("Project File Path", ref _tempProjectPath, 256);
-                ImGui.SameLine();
-
-                if (ImGui.Button("..."))
-                {
-                    NfdDialogResult res = Nfd.PickFolder();
-                    if (res.Path != null)
-                        _tempProjectPath = res.Path;
-                }
-
-                ImGui.InputText("Project Name", ref _tempProjectName, 256);
-                if (ImGui.Button("OK"))
-                {
-                    ProjectSettings.s_ProjectLocation = _tempProjectPath;
-                    ProjectSettings.s_ProjectName = _tempProjectName;
-                    ProjectSettings.s_FullProjectPath = ProjectSettings.s_ProjectLocation + "/" + ProjectSettings.s_ProjectName;
-
-                    Console.WriteLine("Create new project" + ProjectSettings.s_ProjectLocation);
-
-                    if (!Directory.Exists(ProjectSettings.s_FullProjectPath))
-                    {
-                        Directory.CreateDirectory(ProjectSettings.s_FullProjectPath);
-                    }
-                    else
-                    {
-                        throw new Exception("Project dir not empty");
-                    }
-
-                    Utils.CopyDirectory(Utils.GetBaseEngineDir() + "\\ExampleProject\\", ProjectSettings.s_FullProjectPath, true);
-
-                    //Engine.CreateNewProject(ProjectSettings.s_FullProjectPath + "\\DefaultScenes\\example.kdbscene");
-                    Engine.CreateNewProject(_tempProjectPath, _tempProjectName);
-
-                    ImGui.CloseCurrentPopup();
-                }
-
-                ImGui.SameLine();
-
-                if (ImGui.Button("Cancel"))
-                {
-                    ImGui.CloseCurrentPopup();
-                }
-
-                ImGui.EndPopup();
-            }
-            
-            ImGui.End();
+        internal virtual void OnClose() {
+            SaveLoad.SaveScene(this);
+            GameRenderer.OnClose();
         }
 
         #region inputs

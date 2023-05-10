@@ -16,6 +16,10 @@ using ImGuiNET;
 using Newtonsoft.Json.Bson;
 using Engine2D.Core;
 using Engine2D.Testing;
+using OpenTK.Compute.OpenCL;
+using Newtonsoft.Json.Linq;
+using System.Reflection;
+using Engine2D.SavingLoading;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
@@ -78,6 +82,9 @@ namespace KDBEngine.Core {
         protected override void OnLoad()
         {
             base.OnLoad();
+
+            SaveLoad.LoadEngineSettings();
+
             ImGuiController = new ImGuiController(Size.X, Size.Y);
 
             if (Settings.s_IsEngine)
@@ -85,11 +92,13 @@ namespace KDBEngine.Core {
                 CreateUIWindows();
             }
 
-            LoadScene(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
+            SaveLoad.LoadScene(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
+            TestInput.Init();
+            
             testFB = new((int)width, (int)height);
             testCamera = new();
             viewportWindow = new();
-            TestInput.Init();
+            
 
             if (!Settings.s_IsEngine)
             {
@@ -137,7 +146,7 @@ namespace KDBEngine.Core {
                 {
                     if (ImGui.MenuItem("Save Scene"))
                     {
-                        SaveScene(_currentScene);
+                        SaveLoad.SaveScene(_currentScene);
                     }
                     if (ImGui.MenuItem("Load Scene"))
                     {
@@ -209,6 +218,12 @@ namespace KDBEngine.Core {
             _currentScene?.OnMouseWheel(e);
         }
 
+        protected override void OnUnload()
+        {
+            _currentScene.OnClose();
+            base.OnUnload();
+        }
+
         internal void SwitchScene(string sceneName)
         {
             GameRenderer.Flush();
@@ -225,7 +240,7 @@ namespace KDBEngine.Core {
             Scene newScene = new();
             newScene.Init(this, sceneName, Size.X, Size.Y);
             _currentScene = newScene;
-            SaveScene(_currentScene);
+            SaveLoad.SaveScene(_currentScene);
         }
 
         internal static void CreateNewProject(string newProjectLocation, string newProjectName)
@@ -234,45 +249,9 @@ namespace KDBEngine.Core {
             ProjectSettings.s_ProjectLocation = newProjectLocation;
             ProjectSettings.s_FullProjectPath = ProjectSettings.s_ProjectLocation + ProjectSettings.s_ProjectName;
 
-            LoadScene(ProjectSettings.s_FullProjectPath + "\\defaultscenes\\example.kdbscene");
+            SaveLoad.LoadScene(ProjectSettings.s_FullProjectPath + "\\defaultscenes\\example.kdbscene");
         }
-
-        internal static  void LoadScene(string sceneToLoad)
-        {         
-            Engine.Get().SwitchScene(sceneToLoad);
-
-            if (File.Exists(sceneToLoad))
-            {               
-                List<Gameobject?> objs = JsonConvert.DeserializeObject<List<Gameobject>>(File.ReadAllText(sceneToLoad))!;
-
-                foreach (var t in objs!)
-                {
-                    Get()?._currentScene?.AddGameObjectToScene(t);
-                }
-            }
-        }
-
-        internal static void SaveScene(Scene scene)
-        {
-            var gameObjectArray = scene.Gameobjects.ToArray();
-            Console.WriteLine("Saving: ", scene.ScenePath);
-            string sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
-            
-            if (File.Exists(scene.ScenePath))
-            {
-                File.WriteAllText(scene.ScenePath, sceneData);
-            }
-            else
-            {
-                using (FileStream fs = File.Create(scene.ScenePath))
-                {
-                    fs.Close();
-                }
-
-                File.WriteAllText(scene.ScenePath, sceneData);
-            }
-        }
-
+               
         private void CreateUIWindows()
         {
             AssetBrowser assetBrowser = new AssetBrowser();
@@ -288,10 +267,6 @@ namespace KDBEngine.Core {
             _guiWindows.Add(engineSettingsWindow.Title, engineSettingsWindow);
         }
 
-        static void MouseDown(MouseButtonEventArgs e)
-        {
-
-        }
 
         internal TestFrameBuffer getFramebuffer()
         {
@@ -313,11 +288,13 @@ namespace KDBEngine.Core {
             return (float)getWidth() / getHeight();
         }
     }
+
 }
 
-internal static class EngineSettings
-{
-    internal static float GlobalScale = 1;
+public static class EngineSettings
+{ 
+    public static float GlobalScale = 1;
+    public static float DefaultFontSize = 18;
 }
 
 public static class WindowSettings

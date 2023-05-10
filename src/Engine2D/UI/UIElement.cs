@@ -53,7 +53,7 @@ namespace KDBEngine.UI
             _flags = flags;
         }
 
-        public void SetVisibility(bool visibility)
+        public virtual void SetVisibility(bool visibility)
         {
             _visibility = visibility;
         }

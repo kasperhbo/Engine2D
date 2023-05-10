@@ -17,8 +17,8 @@ namespace Engine2D.UI
         public static string CurrentDraggingFileName = "";
 
         private string _currentDirectory = ProjectSettings.s_FullProjectPath;
-        
-        
+
+
         internal unsafe AssetBrowser()
         {
             TextureData texDataDir = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\directoryicon.png", false, TextureMinFilter.Linear, TextureMagFilter.Linear);
@@ -29,127 +29,82 @@ namespace Engine2D.UI
             int fileTexture = ResourceManager.GetTexture(texDataFile).TexID;
             int sceneTexture = ResourceManager.GetTexture(texDataScene).TexID;
 
-            this._flags = ImGuiWindowFlags.None;
+            this._flags = ImGuiWindowFlags.MenuBar;
             this.Title = "Asset Browser";
             this._windowContents = () =>
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(_currentDirectory);
-                
                 {
                     if (_currentDirectory != ProjectSettings.s_FullProjectPath)
                     {
-                        if (ImGui.Button("Back"))
-                        {
-                            _currentDirectory = directoryInfo!.Parent!.FullName;
-                        }
+                        ImGui.BeginMenuBar();
+                        if (ImGui.MenuItem("Back")) _currentDirectory = directoryInfo!.Parent!.FullName;
+                        ImGui.EndMenuBar();
                     }
 
+                    //Thanks @The Cherno
                     float padding = 16;
-                    float thumbnailSize = 128.0f/2;
+                    float thumbnailSize = 128.0f / 2;
                     float cellSize = thumbnailSize + padding;
                     float panelWidth = ImGui.GetContentRegionAvail().X;
                     int columnCount = (int)(panelWidth / cellSize);
                     if (columnCount < 1)
                         columnCount = 1;
+
                     ImGui.Columns(columnCount, "0", false);
 
                     foreach (var dir in directoryInfo.GetDirectories())
                     {
-                        ImGui.PushID(dir.Name);
-                        if (ImGui.ImageButton(dir.Name, (IntPtr)dirTexture,
-                                new System.Numerics.Vector2(128 / 2, 128 / 2)))
-                        {
-                            _currentDirectory += "\\" + dir.Name;
-                        }
-
-                        ImGui.Text(dir.Name);
-                        ImGui.NextColumn();
-                        ImGui.PopID();
+                        CreateAssetBrowserItem(dir.Name, dirTexture, actionOnButtonClick: () => { _currentDirectory += "\\" + dir.Name; });
                     }
 
                     foreach (var file in directoryInfo.GetFiles())
                     {
                         ImGui.PushID(file.Name);
                         int tex = fileTexture;
+
                         if (file.Extension == ".kdbscene")
                         {
                             tex = sceneTexture;
                         }
-                        
-                        ImGui.ImageButton(file.Name, (IntPtr)tex, new System.Numerics.Vector2(128/2, 128/2));
-
-                        if (file.Extension == ".kdbscene")
-                        {
-                            bool open = false;
-                            if (ImGui.BeginPopupContextItem())
-                            {
-                                if (ImGui.MenuItem("Delete"))
-                                {
-                                    open = true;
-                                }
-
-                                ImGui.EndPopup();
+                        CreateAssetBrowserItem(file.Name, tex, OtherActions: () => OnSceneDragAndClick(file.FullName));
 
 
-                            }
-
-                            if (open)
-                            {
-                                ImGui.OpenPopup("DELETEDLG");
-                            }
-
-                            if (ImGui.BeginPopupModal("DELETEDLG"))
-                            {
-                                if (ImGui.Button("ok"))
-                                {
-                                    File.Delete(file.FullName);
-                                    ImGui.CloseCurrentPopup();
-                                }
-                                if (ImGui.Button("no"))
-                                {
-                                    ImGui.CloseCurrentPopup();
-                                }
-                                ImGui.EndPopup();
-                            }
-
-
-
-
-                            //TODO: MAKE THIS WITH POINTERS ETC
-                            if (ImGui.BeginDragDropSource())
-                            {
-                                CurrentDraggingFileName = file.FullName;
-
-                                ImGui.SetDragDropPayload("SCENE_DRAG_DROP", IntPtr.Zero, 0);
-                                ImGui.Text(CurrentDraggingFileName);
-                                ImGui.EndDragDropSource();
-                            }
-                            
-                        }
-
-
-                        ImGui.Text(file.Name);
-                        ImGui.NextColumn();
-                        ImGui.PopID();
                     }
                 }
             };
+
         }
 
-        private void DeleteDialog(string file)
+        private void OnSceneDragAndClick(string file)
         {
-            
+            //TODO: MAKE THIS WITH POINTERS ETC
+            if (ImGui.BeginDragDropSource())
+            {
+                CurrentDraggingFileName = file;
+
+                ImGui.SetDragDropPayload("SCENE_DRAG_DROP", IntPtr.Zero, 0);
+                ImGui.Text(CurrentDraggingFileName);
+                ImGui.EndDragDropSource();
+            }
         }
 
 
-    }
+        private void CreateAssetBrowserItem(string name, int texture, Action? actionOnButtonClick = null, Action? OtherActions = null)
+        {
+            ImGui.PushID(name);
+            if (ImGui.ImageButton(name, (IntPtr)texture, new System.Numerics.Vector2(128 / 2, 128 / 2)))
+            {                
+                   actionOnButtonClick?.Invoke();
+            }
 
-    //public static UIElemenet Create()
-    //{
-    //    new UIElemenet("Asset Browser", ImGuiNET.ImGuiWindowFlags.None, () =>
-    //    {
-    //       
-    //    });     
-    //}
+            
+            OtherActions?.Invoke();
+
+            ImGui.Text(name);
+            ImGui.NextColumn();
+            ImGui.PopID();
+        }
+    }
 }
 

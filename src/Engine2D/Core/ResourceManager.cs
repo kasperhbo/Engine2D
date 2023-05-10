@@ -42,13 +42,8 @@ namespace Engine2D.Core
             Shader shader;
             if (!_shaders.TryGetValue(shaderLocations, out shader))
             {
-                Console.WriteLine("Create shader");
                 shader = new Shader(shaderLocations.VertexPath, shaderLocations.FragPath);
                 _shaders.Add(shaderLocations, shader);
-            }
-            else
-            {
-                Console.WriteLine("has shader");
             }
 
             return shader;
@@ -59,13 +54,8 @@ namespace Engine2D.Core
             Texture tex;
             if (!_textures.TryGetValue(textureData, out tex))
             {
-                Console.WriteLine("Create texture");
                 tex = new Texture(textureData.texturePath, textureData.flipped, textureData.minFilter, textureData.magFilter);
                 _textures.Add(textureData, tex);
-            }
-            else
-            {
-                Console.WriteLine("has texture");
             }
 
             return tex;

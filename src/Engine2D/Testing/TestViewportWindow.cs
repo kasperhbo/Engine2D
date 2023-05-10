@@ -1,4 +1,5 @@
-﻿using Engine2D.UI;
+﻿using Engine2D.SavingLoading;
+using Engine2D.UI;
 using GlmNet;
 using ImGuiNET;
 using KDBEngine.Core;
@@ -54,7 +55,7 @@ namespace Engine2D.Testing
             {
                 if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
                 {
-                    Engine.LoadScene(AssetBrowser.CurrentDraggingFileName);
+                    SaveLoad.LoadScene(AssetBrowser.CurrentDraggingFileName);
                 }
 
                 ImGui.EndDragDropTarget();
