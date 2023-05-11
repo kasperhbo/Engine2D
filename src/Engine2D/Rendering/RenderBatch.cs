@@ -23,12 +23,18 @@ namespace Engine2D.Rendering
         #region fields
         private const int c_MaxBatchSize = 20000;
 
+        
         private const int c_PosSize = 2;
         private const int c_ColorSize = 4;
+        private const int c_TexCoordSize = 2;
+        private const int c_TexIDSize = 1;
 
         private const int c_PosOffset = 0;
         private const int c_ColorOffset = c_PosOffset + c_PosSize * sizeof(float);
-        private const int c_VertexSize = 6;
+        private const int c_TexCoordOffset = c_ColorOffset + c_ColorSize * sizeof(float);
+        private const int c_TexIDOffset = c_TexCoordOffset + c_TexIDSize * sizeof(float);
+
+        private const int c_VertexSize = 9;
         private const int c_VertexSizeInBytes = c_VertexSize* sizeof(float);
 
         private SpriteRenderer[] sprites;
@@ -36,10 +42,12 @@ namespace Engine2D.Rendering
         public bool HasRoom => spriteCount < c_MaxBatchSize;
 
         private float[] _vertices = new float[c_MaxBatchSize * c_VertexSize];
-        private float[] _vertices2 = new float[c_VertexSize];
+        
         private int _vaoID, _vboID;
 
         private Shader _shader;
+
+        private List<Texture> _textures = new();
         #endregion
         
         internal RenderBatch()
@@ -74,6 +82,12 @@ namespace Engine2D.Rendering
 
             GL.VertexAttribPointer(1, c_ColorSize, VertexAttribPointerType.Float, false, c_VertexSizeInBytes, c_ColorOffset);
             GL.EnableVertexAttribArray(1);
+
+            GL.VertexAttribPointer(2, c_TexCoordSize, VertexAttribPointerType.Float, false, c_VertexSizeInBytes, c_TexCoordOffset);
+            GL.EnableVertexAttribArray(2);
+
+            GL.VertexAttribPointer(3, c_TexIDSize, VertexAttribPointerType.Float, false, c_VertexSizeInBytes, c_TexIDOffset);
+            GL.EnableVertexAttribArray(3);
         }
 
         public void AddSprite(SpriteRenderer spr)
@@ -82,40 +96,61 @@ namespace Engine2D.Rendering
             sprites[index] = spr;
             spriteCount++;
 
+            if(spr.texture != null)
+            {
+                if (!_textures.Contains(spr.texture))
+                {
+                    _textures.Add(spr.texture);
+                }
+            }
+
             LoadVertexProperties(index);
         }
 
         public void Render(Matrix4 projectionMatrix, Matrix4 viewMatrix)
         {
             // For now, we will rebuffer all data every frame
-            bool rebufferData = false; 
-            
+            bool rebufferData = false;
+
             for (int i = 0; i < spriteCount; i++)
             {
                 if (sprites[i].IsDirty)
                 {
                     sprites[i].IsDirty = false;
-                    LoadVertexProperties(i);                    
+                    LoadVertexProperties(i);
                     rebufferData = true;
                 }
             }
-            
-            if(rebufferData)
+
+            if (rebufferData)
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vboID);
                 GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, _vertices.Length * sizeof(float), _vertices);
             }
-            
+
             // Use shader
             _shader.use();
             _shader.uploadMat4f("uProjection", projectionMatrix);
             _shader.uploadMat4f("uView", viewMatrix);
+
+            for (int i = 0; i < _textures.Count; i++)
+            {
+                GL.ActiveTexture(TextureUnit.Texture0 + i + 1);
+                _textures[i].bind();
+            }
+            int[] texSlots = { 0, 1, 2, 3, 4, 5, 6, 7 };
+            _shader.UploadIntArray("uTextures", texSlots);
 
             GL.BindVertexArray(_vaoID);
             GL.EnableVertexAttribArray(0);
             GL.EnableVertexAttribArray(1);
 
             GL.DrawElements(PrimitiveType.Triangles, this.spriteCount * 6, DrawElementsType.UnsignedInt, 0);
+
+            for (int i = 0; i < _textures.Count; i++)
+            {                
+                _textures[i].unbind();
+            }
 
             GL.DisableVertexAttribArray(0);
             GL.DisableVertexAttribArray(1);
@@ -133,6 +168,20 @@ namespace Engine2D.Rendering
             int offset = index * 4 * c_VertexSize;
 
             Vector4 color = new Vector4(sprite.Color.X, sprite.Color.Y, sprite.Color.Z, sprite.Color.W);
+
+            int texID = 0;
+            System.Numerics.Vector2[] texCoords = sprite.TextureCoords;
+
+            //Find texture
+            if(sprite.texture != null) { 
+                for (int i = 0; i < _textures.Count; i++)
+                {
+                    if (_textures[i] == sprite.texture) {
+                        texID = i + 1;
+                        break;
+                    }
+                }
+            }
 
 
             // Add vertices with the appropriate properties
@@ -160,7 +209,14 @@ namespace Engine2D.Rendering
                 _vertices[offset + 3] = color.Y;
                 _vertices[offset + 4] = color.Z;
                 _vertices[offset + 5] = color.W;
-                
+
+                //Load tex coords
+                _vertices[offset + 6] = texCoords[i].X;
+                _vertices[offset + 7] = texCoords[i].Y;
+
+                //Load tex id
+                _vertices[offset + 8] = texID;
+
                 offset += c_VertexSize;
             }
         }

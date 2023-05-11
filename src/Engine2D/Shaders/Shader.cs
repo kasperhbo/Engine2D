@@ -316,5 +316,12 @@ namespace KDBEngine.Shaders
 
             GL.Uniform1(varLocation, slot);
         }
+
+        internal void UploadIntArray(string v, int[] values)
+        {
+            use();
+            var varLocation = GL.GetUniformLocation(shaderProgramID, v);
+            GL.Uniform1(varLocation, values.Length, values);            
+        }
     }
 }

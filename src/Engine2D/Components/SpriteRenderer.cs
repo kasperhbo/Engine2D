@@ -1,19 +1,15 @@
 ﻿using Engine2D.Components;
+using Engine2D.Core;
 using Engine2D.Rendering;
 using Engine2D.UI;
 using ImGuiNET;
+using Newtonsoft.Json;
 using System.Numerics;
 
 namespace Engine2D.GameObjects
 {
     internal class SpriteRenderer : Component
     {
-        //public Vector2 Position = new();
-        //public float rot = 0;
-
-        //public Vector2 Size     = new(32,32);
-        //public Vector4 Color { public get; public set { Console.WriteLine(); }       } = new(255,255,255, 255);        
-
         public Vector4 Color
         {
             get => _color;
@@ -23,38 +19,45 @@ namespace Engine2D.GameObjects
                 IsDirty = true;
             }
         }
-        public Texture Texture { get; private set; } = null;
+
+//        public Sprite? sprite = null;
         public Vector2 SpriteSize { get; private set; } = new Vector2(32, 32);
 
         private Transform _lastTransform = new();
-        private Vector4 _color = new(255,255,255,255);
+        private Vector4 _color = new(1,1,1,1);
         
-
         internal bool IsDirty = true;
 
-
+        [JsonIgnore]internal Texture texture;
+        
+        public TextureData? textureData;
+        internal Vector2[] TextureCoords =
+        {
+            new Vector2(1, 1),
+            new Vector2(1, 0),
+            new Vector2(0, 0),
+            new Vector2(0, 1)
+        };
 
         internal override void Init(Gameobject parent)
         {
             base.Init(parent);
+            if(this.textureData != null)
+            {
+                Console.WriteLine("has texture data, loading texture...." + textureData.texturePath);
+                texture = ResourceManager.GetTexture(textureData);
+            }
             GameRenderer.AddSpriteRenderer(this);
-            parent.transform.Copy(_lastTransform);
         }
 
-        internal void SetTexture(Texture texture)
-        {
-            Texture = texture;
-            IsDirty = true;
-        }
-
-      
         internal override  void Start()
         {
         }
 
         internal override void EditorUpdate(double dt)
         {
-            if(!_lastTransform.Equals(Parent.transform))
+            //Console.WriteLine(this.texture?.TexID);
+            if (!_lastTransform.Equals(Parent.transform))
             {
                 IsDirty = true;
                 Parent.transform.Copy(_lastTransform);
@@ -79,16 +82,16 @@ namespace Engine2D.GameObjects
         {
             if(ImGui.CollapsingHeader("Sprite Renderer"))
             {
-                //if(UIHelper.ColorPicker4("Color: ", ref _color))
-                //{
-                //    IsDirty = true;
-                //}
+                if (ImGui.ColorPicker4("Color: ", ref _color))
+                {
+                    IsDirty = true;
+                }
 
-                //if (Texture != null)
-                //    UIHelper.ImageButton("Sprite: ", (IntPtr)Texture.TexID);
-                ////ImGui.ImageButton("##sprite", (IntPtr)Texture.TexID, new Vector2(56, 56));
-                //else
-                //    UIHelper.ImageButton("Sprite: ", IntPtr.Zero);
+                if (this.texture != null)
+                    ImGui.ImageButton("Sprite: ", (IntPtr)texture.TexID, new Vector2(128, 128));
+                //ImGui.ImageButton("##sprite", (IntPtr)Texture.TexID, new Vector2(56, 56));
+                else
+                    ImGui.ImageButton("Sprite: ", IntPtr.Zero, new Vector2(128,128));
                 //ImGui.ImageButton("##sprite", IntPtr.Zero, new Vector2(56, 56));
             }
         }

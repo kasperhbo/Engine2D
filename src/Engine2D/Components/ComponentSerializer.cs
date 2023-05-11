@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Engine2D.Core;
 
 namespace Engine2D.Components
 {
@@ -16,9 +17,10 @@ namespace Engine2D.Components
         {
             if ((
                     typeof(Component).IsAssignableFrom(objectType) ||
-                    typeof(Gameobject).IsAssignableFrom(objectType))
-
+                    typeof(Gameobject).IsAssignableFrom(objectType) ||
+                    typeof(TextureData).IsAssignableFrom(objectType))
                     && !objectType.IsAbstract)
+                    
             {
                 return null;
             }
@@ -36,7 +38,7 @@ namespace Engine2D.Components
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(Component) || objectType == typeof(Gameobject);
+            return objectType == typeof(Component) || objectType == typeof(Gameobject) || objectType == typeof(TextureData);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -57,6 +59,8 @@ namespace Engine2D.Components
                 case "BoxCollider2D":
                     return JsonConvert.DeserializeObject<BoxCollider2D>(jo.ToString(), _specifiedSubclassConversion);
 
+                case "TextureData":
+                    return JsonConvert.DeserializeObject<TextureData>(jo.ToString(), _specifiedSubclassConversion);
                 default:
                     throw new Exception();
             }

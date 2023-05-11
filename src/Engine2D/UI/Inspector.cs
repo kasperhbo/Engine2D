@@ -18,7 +18,7 @@ namespace Engine2D.UI
             this._flags = ImGuiNET.ImGuiWindowFlags.None;
             this._windowContents = () =>
             {
-                Engine.Get()._currentScene.SelectedGameobject?.ImGuiFields();
+                Engine.Get().CurrentSelectedAsset?.OnGui();
             };
         }
     }

@@ -43,7 +43,7 @@ namespace Engine2D.UI
 
                     if (ImGui.IsItemClicked())
                     {
-                        Engine.Get()._currentScene.SelectedGameobject = Engine.Get()._currentScene.Gameobjects[i];
+                        Engine.Get().CurrentSelectedAsset = Engine.Get()._currentScene.Gameobjects[i];
                         //inspector.CurrentSelectedGameObject = Engine.Get()._currentScene?.Gameobjects[i];
                     }
 
@@ -66,9 +66,16 @@ namespace Engine2D.UI
                         }
                         if (ImGui.MenuItem("New SpriteRenderer"))
                         {
+                            SpriteRenderer spriteRenderer = new SpriteRenderer();
+                            spriteRenderer.textureData = new(
+                                "C:\\Users\\Kasper\\Documents\\GAMEPROJECTS\\helloworld-01\\Images\\TestImage.png",
+                                false,
+                                OpenTK.Graphics.OpenGL4.TextureMinFilter.Nearest,
+                                OpenTK.Graphics.OpenGL4.TextureMagFilter.Nearest
+                                );
                             List<Component> components = new List<Component>
                             {
-                                new SpriteRenderer()
+                                spriteRenderer
                             };
                             
                             Gameobject go = new Gameobject((Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(), components, new Components.Transform());

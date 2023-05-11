@@ -25,8 +25,6 @@ namespace Engine2D.Scenes
 {
     internal class Scene
     {
-        internal Gameobject SelectedGameobject;
-
         internal string ScenePath { get; private set; } = "NoScene";
         
         internal List<Gameobject> Gameobjects { get; private set; } = new List<Gameobject>();
@@ -142,7 +140,7 @@ namespace Engine2D.Scenes
             Gameobjects.Add(go);
             go.Init();
             go.Start();
-            SelectedGameobject = go;
+            Engine.Get().CurrentSelectedAsset = go;
         }
 
         internal virtual void OnClose() {
