@@ -15,22 +15,34 @@ namespace Engine2D.UI
     internal class SceneHierachy : UIElemenet
     {
         internal SceneHierachy(Inspector inspector)
-        {
+        {            
             this.Title = "Hierachy";
             this._flags = ImGuiNET.ImGuiWindowFlags.None;
+            
             this._windowContents = () =>
             {
                 for (int i = 0; i < Engine.Get()._currentScene?.Gameobjects.Count; i++)
                 {
+                    ImGuiTreeNodeFlags flags = new();
+
+                    //if (Engine.Get().CurrentSelectedAsset == Engine.Get()._currentScene?.Gameobjects[i])
+                    //    flags |= ImGuiTreeNodeFlags.Selected;
+
+                    //? ImGuiTreeNodeFlags.Selected : 0) | ImGuiTreeNodeFlags.OpenOnArrow;
+
+                    if(Engine.Get().CurrentSelectedAsset == Engine.Get()._currentScene?.Gameobjects[i])
+                        flags |= ImGuiTreeNodeFlags.Selected;
+                    else
+                        flags |= ImGuiTreeNodeFlags.None;
+
+
+                    flags |= ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.OpenOnArrow; 
+
                     ImGui.PushID(i);
 
                     bool treeOpen = ImGuiNET.ImGui.TreeNodeEx(
                         Engine.Get()._currentScene?.Gameobjects[i].Name,
-
-                        ImGuiTreeNodeFlags.DefaultOpen |
-                        ImGuiTreeNodeFlags.FramePadding |
-                        ImGuiTreeNodeFlags.OpenOnArrow |
-                        ImGuiTreeNodeFlags.SpanAvailWidth,
+                        flags,
 
                         Engine.Get()._currentScene?.Gameobjects[i].Name
                     );
@@ -69,7 +81,7 @@ namespace Engine2D.UI
                             SpriteRenderer spriteRenderer = new SpriteRenderer();
                             spriteRenderer.textureData = new(
                                 "C:\\Users\\Kasper\\Documents\\GAMEPROJECTS\\helloworld-01\\Images\\TestImage.png",
-                                false,
+                                true,
                                 OpenTK.Graphics.OpenGL4.TextureMinFilter.Nearest,
                                 OpenTK.Graphics.OpenGL4.TextureMagFilter.Nearest
                                 );

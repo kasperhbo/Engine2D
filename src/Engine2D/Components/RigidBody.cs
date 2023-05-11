@@ -25,24 +25,21 @@ namespace Engine2D.Components
 
         internal override void ImGuiFields()
         {
-            if (ImGui.CollapsingHeader("RB Renderer"))
+            if(ImGui.BeginCombo("##combo", BodyType.ToString()))
             {
-                if(ImGui.BeginCombo("##combo", BodyType.ToString()))
+                if (ImGui.Selectable("Dynamic"))
                 {
-                    if (ImGui.Selectable("Dynamic"))
-                    {
-                        BodyType = BodyType.DynamicBody;
-                    }
-                    if (ImGui.Selectable("Static"))
-                    {
-                        BodyType = BodyType.StaticBody;
-                    }
-                    if (ImGui.Selectable("Kinematic"))
-                    {
-                        BodyType = BodyType.KinematicBody;
-                    }
-                    ImGui.EndCombo();
+                    BodyType = BodyType.DynamicBody;
                 }
+                if (ImGui.Selectable("Static"))
+                {
+                    BodyType = BodyType.StaticBody;
+                }
+                if (ImGui.Selectable("Kinematic"))
+                {
+                    BodyType = BodyType.KinematicBody;
+                }
+                ImGui.EndCombo();
             }
         }
 

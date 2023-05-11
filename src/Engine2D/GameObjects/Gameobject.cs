@@ -3,6 +3,7 @@ using Engine2D.Core;
 using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
+using KDBEngine.Core;
 using OpenTK.Mathematics;
 using System.Globalization;
 using System.Xml.Serialization;
@@ -81,9 +82,21 @@ namespace Engine2D.GameObjects
 
         internal override void OnGui()
         {
-            ImGui.Text("Name: ");
+            //ImGui.Text("Name: ");
+            //ImGui.SameLine();
+            //ImGui.InputText("", ref Name, 256);
+            //ImGui.SameLine();
+            //float xSize = ImGui.GetContentRegionAvail().X;
+            //ImGui.Dummy(new System.Numerics.Vector2(xSize-30, 0));
+            //ImGui.SameLine();
+            //if(ImGui.Button("+", new System.Numerics.Vector2(28, 28)))
+            //{
+
+            //}
+
+            ImGui.InputText("##name", ref Name, 256);
             ImGui.SameLine();
-            ImGui.InputText("", ref Name, 256);
+            ImGui.Separator();
 
             if (ImGui.CollapsingHeader("Transform"))
             {
@@ -92,8 +105,84 @@ namespace Engine2D.GameObjects
                 OpenTKUIHelper.DrawVec2Control("Size", ref transform.size);
                 OpenTKUIHelper.DragFloat("Rotation", ref transform.rotation);
             }
+            List<Component> componentsToRemove = new List<Component>();
 
-            foreach (var component in components) { component.ImGuiFields(); }
+            foreach (var component in components)
+            {
+                ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.AllowItemOverlap | ImGuiTreeNodeFlags.FramePadding;
+
+                System.Numerics.Vector2 contentRegionAvailable = ImGui.GetContentRegionAvail();
+
+                ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new System.Numerics.Vector2(4, 4));
+
+                float lineHeight = EngineSettings.DefaultFontSize + 3 * 2.0f;
+
+                ImGui.Separator();
+                bool open = ImGui.TreeNodeEx(component.Type, treeNodeFlags, component.Type);
+                ImGui.PopStyleVar();
+                ImGui.SameLine(contentRegionAvailable.X - lineHeight * 0.5f);
+                if (ImGui.Button("+", new System.Numerics.Vector2(lineHeight, lineHeight)))
+                {
+                    ImGui.OpenPopup("ComponentSettings");
+                }
+
+                if (ImGui.BeginPopup("ComponentSettings"))
+                {
+                    if (ImGui.MenuItem("Remove component"))
+                        componentsToRemove.Add(component);
+
+                    ImGui.EndPopup();
+                }
+                if (open)
+                {
+                    component.ImGuiFields();
+
+
+                }
+            }
+
+            {
+                ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y - 30));
+                ImGui.Separator();
+
+                if (ImGui.Button("Add component", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, 26)))
+                    ImGui.OpenPopup("AddComponent");
+
+                //TODO: ADD COMPONENT TO GOP
+                if (ImGui.BeginPopup("AddComponent"))
+                {
+                    //if (ImGui.MenuItem("Camera"))
+                    //{                    
+                    //    ImGui.CloseCurrentPopup();
+                    //}
+                    if (ImGui.MenuItem("RigidBody"))
+                    {
+                        RigidBody rb = new RigidBody(Box2DSharp.Dynamics.BodyType.DynamicBody);
+                        Gameobject? go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+                        go?.AddComponent(rb);
+                        ImGui.CloseCurrentPopup();
+                    }
+                    if (ImGui.MenuItem("Sprite Renderer"))
+                    {
+                        SpriteRenderer spr = new SpriteRenderer();
+                        Gameobject? go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+                        go?.AddComponent(spr);
+                        ImGui.CloseCurrentPopup();
+                    }
+
+                    ImGui.EndPopup();
+                }
+            }
+
+            foreach (var component in componentsToRemove)
+            {
+                RemoveComponents(component);
+            }
+        }
+
+        private void RemoveComponents(Component comp)
+        {
+            components.Remove(comp);
         }
     }
 }
