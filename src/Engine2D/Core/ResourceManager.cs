@@ -1,5 +1,7 @@
-﻿using Engine2D.Rendering;
+﻿using Engine2D.Components;
+using Engine2D.Rendering;
 using KDBEngine.Shaders;
+using Newtonsoft.Json;
 using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
@@ -15,12 +17,19 @@ namespace Engine2D.Core
         internal string VertexPath;
     }
 
-    internal struct TextureData
+    [JsonConverter(typeof(ComponentSerializer))]
+    public class TextureData
     {
-        internal string texturePath;
-        internal bool flipped;
-        internal TextureMinFilter minFilter;
-        internal TextureMagFilter magFilter;
+        public string texturePath;
+        public bool flipped;
+        public TextureMinFilter minFilter;
+        public TextureMagFilter magFilter;
+
+        public string Type = "TextureData";
+
+        public TextureData()
+        {
+        }
 
         public TextureData(string texturePath, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
         {

@@ -1,4 +1,5 @@
 ﻿using Engine2D.Components;
+using Engine2D.Core;
 using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
@@ -8,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace Engine2D.GameObjects
 {
-    internal class Gameobject
+    internal class Gameobject : Asset
     {
         
         public Transform transform = new();
@@ -69,25 +70,6 @@ namespace Engine2D.GameObjects
             component.Init(this);
         }
 
-        internal void ImGuiFields()
-        {
-            ImGui.Text("Name: ");
-            ImGui.SameLine();
-            ImGui.InputText("", ref Name, 256);
-
-            if(ImGui.CollapsingHeader("Transform"))
-            {
-                //ImGui.DragFloat2("Position", ref transform.position);
-                OpenTKUIHelper.DrawVec2Control("Position", ref transform.position);
-                OpenTKUIHelper.DrawVec2Control("Size", ref transform.size);
-                OpenTKUIHelper.DragFloat("Rotation", ref transform.rotation);
-            }
-
-
-
-            foreach (var component in components) { component.ImGuiFields(); }
-        }
-
         public bool AABB(Vector2 point)
         {
             return (
@@ -95,6 +77,23 @@ namespace Engine2D.GameObjects
             && point.X <= this.transform.position.X + this.transform.size.X * .5
             && point.Y >= this.transform.position.Y - this.transform.size.Y * .5
             && point.Y <= this.transform.position.Y + this.transform.size.Y * .5);
+        }
+
+        internal override void OnGui()
+        {
+            ImGui.Text("Name: ");
+            ImGui.SameLine();
+            ImGui.InputText("", ref Name, 256);
+
+            if (ImGui.CollapsingHeader("Transform"))
+            {
+                //ImGui.DragFloat2("Position", ref transform.position);
+                OpenTKUIHelper.DrawVec2Control("Position", ref transform.position);
+                OpenTKUIHelper.DrawVec2Control("Size", ref transform.size);
+                OpenTKUIHelper.DragFloat("Rotation", ref transform.rotation);
+            }
+
+            foreach (var component in components) { component.ImGuiFields(); }
         }
     }
 }

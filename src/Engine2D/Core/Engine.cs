@@ -20,32 +20,41 @@ using OpenTK.Compute.OpenCL;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 using Engine2D.SavingLoading;
+using Box2DSharp.Common;
+using Engine2D.Logging;
+using System.Diagnostics;
+using System.Text;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
     // OpenGL's initial hurdle is quite large, but once you get past that, things will start making more sense.
     public class Engine : GameWindow
     {
-        static int small = 1;
-		float width = 1920/small;
-		float height = 1080/small;
-        TestFrameBuffer testFB;
-        public TestCamera testCamera;
-        TestViewportWindow viewportWindow;
+        private static int small = 1;
+		private float width = 1920/small;
+		private float height = 1080/small;
+
+        private TestFrameBuffer testFB;
+        private TestViewportWindow viewportWindow;
 
         private static Engine _instance = null;
         
         private GameViewport gameViewport = new GameViewport();
 
         internal Scene? _currentScene = null;
+        internal TestCamera testCamera;
+        internal ImGuiController ImGuiController;
 
-        public ImGuiController ImGuiController { get; internal set; }
         private Dictionary<string, UIElemenet> _guiWindows = new Dictionary<string, UIElemenet>();
-        EngineSettingsWindow engineSettingsWindow = new EngineSettingsWindow();
+        
+        //TODO: MAKE THIS STATIC AND SAVABLE
+        private EngineSettingsWindow engineSettingsWindow = new EngineSettingsWindow();
+
+        internal Asset? CurrentSelectedAsset = null;
 
         public static Engine Get()
-        {
-            if(_instance  == null)
+        {   
+            if (_instance  == null)
             {
                 GameWindowSettings gameWindowSettings = GameWindowSettings.Default;
                 gameWindowSettings.UpdateFrequency = WindowSettings.s_UpdateFrequency;
@@ -83,6 +92,11 @@ namespace KDBEngine.Core {
         {
             base.OnLoad();
 
+            Log.Message("Message", showFile: true, showLine: true, showFunction: true);
+            Log.Succes("Succes");
+            Log.Warning("Warning");
+            Log.Error("Error");
+
             SaveLoad.LoadEngineSettings();
 
             ImGuiController = new ImGuiController(Size.X, Size.Y);
@@ -98,6 +112,7 @@ namespace KDBEngine.Core {
             testFB = new((int)width, (int)height);
             testCamera = new();
             viewportWindow = new();
+
             
 
             if (!Settings.s_IsEngine)
@@ -128,17 +143,15 @@ namespace KDBEngine.Core {
                     {
                         if (go.AABB(TestInput.getWorld()))
                         {
-                            _currentScene.SelectedGameobject = go;
+                            Engine.Get().CurrentSelectedAsset = go;
                             break;
                         }
                     }
                 }
 
-                //_frameBuffer.Bind();
                 testFB.Bind();
                 GameRenderer.Render();
                 testFB.UnBind();
-                //_frameBuffer.UnBind();
 
                 ImGuiController.Update(this, e.Time);
                 ImGui.BeginMainMenuBar();
@@ -220,6 +233,7 @@ namespace KDBEngine.Core {
 
         protected override void OnUnload()
         {
+            _currentScene.IsPlaying = false;
             _currentScene.OnClose();
             base.OnUnload();
         }

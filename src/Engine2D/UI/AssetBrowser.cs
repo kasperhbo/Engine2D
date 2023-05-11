@@ -1,8 +1,10 @@
 ﻿using Engine2D.Core;
 using Engine2D.Rendering;
+using Engine2D.Scenes;
 using ImGuiNET;
 using KDBEngine.Core;
 using KDBEngine.UI;
+using Newtonsoft.Json;
 using OpenTK.Graphics.OpenGL4;
 
 namespace Engine2D.UI
@@ -66,15 +68,56 @@ namespace Engine2D.UI
                         if (file.Extension == ".kdbscene")
                         {
                             tex = sceneTexture;
+                            CreateAssetBrowserItem(file.Name, tex, OtherActions: () => OnSceneDragAndClick(file.FullName));
                         }
-                        CreateAssetBrowserItem(file.Name, tex, OtherActions: () => OnSceneDragAndClick(file.FullName));
+                        if(file.Extension == ".png")
+                        {
+                            tex = ResourceManager.GetTexture(new TextureData(file.FullName, false, TextureMinFilter.Nearest, TextureMagFilter.Nearest)).TexID;
+                            CreateAssetBrowserItem(file.Name, tex, OtherActions: () => {                                
+                                if (ImGui.BeginPopupContextItem())
+                                {
+                                    if(ImGui.MenuItem("New Sprite"))
+                                    {
+                                        Sprite sprite = new Sprite();
+                                        TextureData texturedata = new TextureData(file.FullName, false, TextureMinFilter.Nearest, TextureMagFilter.Nearest);
+                                        sprite.Init(new System.Numerics.Vector2(1, 1), texturedata);
+                                        string sceneData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
+                                        string savePath = file.Directory + "\\" + file.Name + ".kdbsprite";
 
+                                        if (File.Exists(savePath))
+                                        {
+                                            File.WriteAllText(savePath, sceneData);
+                                        }
+                                        else
+                                        {
+                                            using (FileStream fs = File.Create(savePath))
+                                            {
+                                                fs.Close();
+                                            }
 
+                                            File.WriteAllText(savePath, sceneData);
+                                        }
+                                    }                                        
+                                    ImGui.EndPopup();
+                                }
+                            });
+                        }
+
+                        if (file.Extension == ".kdbsprite")
+                        {
+                            Sprite sprite = JsonConvert.DeserializeObject<Sprite>(File.ReadAllText(file.FullName));
+                            CreateAssetBrowserItem(file.Name, ResourceManager.GetTexture(sprite.TextureData).TexID, 
+                                actionOnButtonClick: () => {
+                                    Engine.Get().CurrentSelectedAsset = sprite;
+                                }
+                            );
+                        }
                     }
                 }
             };
-
         }
+
+
 
         private void OnSceneDragAndClick(string file)
         {
