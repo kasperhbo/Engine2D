@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL4;
+using OpenTK.Windowing.Common.Input;
 using StbImageSharp;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -8,8 +9,13 @@ namespace Engine2D.Rendering
     {
         public readonly int TexID;
 
+        public object Height { get; private set; }
+        public object Filepath { get; private set; }
+        public object Width { get; private set; }
+
         public Texture(string filepath, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
         {
+            Filepath = filepath;
             // Generate handle
             TexID = GL.GenTexture();
 
@@ -29,7 +35,8 @@ namespace Engine2D.Rendering
             using (Stream stream = File.OpenRead(filepath))
             {
                 var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-
+                this.Width = image.Width;
+                this.Height = image.Height;
                 // Now that our pixels are prepared, it's time to generate a texture. We do this with GL.TexImage2D.
                 // Arguments:
                 //   The type of texture we're generating. There are various different types of textures, but the only one we need right now is Texture2D.
@@ -69,12 +76,14 @@ namespace Engine2D.Rendering
             // This prevents moiré effects, as well as saving on texture bandwidth.
             // Here you can see and read about the morié effect https://en.wikipedia.org/wiki/Moir%C3%A9_pattern
             // Here is an example of mips in action https://en.wikipedia.org/wiki/File:Mipmap_Aliasing_Comparison.png
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);  
         }
 
         public Texture(int width, int height)
         {
-        //    this.filepath = "Generated";
+            this.Height = height;
+            this.Width = width;
+            this.Filepath = "Generated";
 
         //    // Generate texture on GPU
         //    TexID = GetHas;
@@ -107,6 +116,17 @@ namespace Engine2D.Rendering
         public void unbind()
         {
             GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) { Console.WriteLine("Obj is null"); return false; }
+
+            if (!(obj is Texture)) return false;
+
+            Texture oTex = (Texture)obj;
+            return oTex.Width.Equals(Width) && oTex.Height.Equals(Height) && oTex.TexID.Equals(TexID)
+                && oTex.Filepath.Equals(Filepath);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Engine2D.Rendering
         private const int c_PosOffset = 0;
         private const int c_ColorOffset = c_PosOffset + c_PosSize * sizeof(float);
         private const int c_TexCoordOffset = c_ColorOffset + c_ColorSize * sizeof(float);
-        private const int c_TexIDOffset = c_TexCoordOffset + c_TexIDSize * sizeof(float);
+        private const int c_TexIDOffset = c_TexCoordOffset + c_TexCoordSize * sizeof(float);
 
         private const int c_VertexSize = 9;
         private const int c_VertexSizeInBytes = c_VertexSize* sizeof(float);
@@ -169,14 +169,14 @@ namespace Engine2D.Rendering
 
             Vector4 color = new Vector4(sprite.Color.X, sprite.Color.Y, sprite.Color.Z, sprite.Color.W);
 
-            int texID = 0;
+            int texID = -1;
             System.Numerics.Vector2[] texCoords = sprite.TextureCoords;
 
             //Find texture
             if(sprite.texture != null) { 
                 for (int i = 0; i < _textures.Count; i++)
                 {
-                    if (_textures[i] == sprite.texture) {
+                    if (_textures[i].Equals(sprite.texture)) {                        
                         texID = i + 1;
                         break;
                     }
