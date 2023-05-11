@@ -5,10 +5,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Soap;
+using ImGuiNET;
+using static System.Net.Mime.MediaTypeNames;
+using Engine2D.Logging;
 
 namespace Engine2D.Core
 {
-    internal static class Utils
+    public static class Utils
     {
         internal static string GetBaseEngineDir()
         {
@@ -133,17 +136,23 @@ namespace Engine2D.Core
             try
             {
                 FieldInfo[] fields = static_class.GetFields(BindingFlags.Static | BindingFlags.Public);
+                
                 object[,] a = new object[fields.Length, 2];
                 int i = 0;
+                
                 foreach (FieldInfo field in fields)
                 {
                     a[i, 0] = field.Name;
                     a[i, 1] = field.GetValue(null);
                     i++;
                 };
+
                 Stream f = File.Open(filename, FileMode.Create);
+
                 SoapFormatter formatter = new SoapFormatter();
+                
                 formatter.Serialize(f, a);
+                
                 f.Close();
                 return true;
             }
@@ -179,5 +188,26 @@ namespace Engine2D.Core
                 return false;
             }
         }
-    }   
+
+        public static unsafe bool IsValidPayload(this ImGuiPayloadPtr payload)
+        {
+            return payload.NativePtr != null;
+        }
+
+        public static string[] GetAllScriptFiles()
+        {
+            return System.IO.Directory.GetFiles(ProjectSettings.s_FullProjectPath, "*.cs", SearchOption.AllDirectories);
+        }
+
+        public static string GetFilePath(string file) { 
+            string[] res = System.IO.Directory.GetFiles(ProjectSettings.s_FullProjectPath, file, SearchOption.AllDirectories);
+            if (res.Length == 0)
+            {
+                Log.Error(file + " not found");
+                return null;
+            }
+            string path = res[0];
+            return path;
+        }
+    }
 }

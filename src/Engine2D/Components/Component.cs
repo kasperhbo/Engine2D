@@ -9,39 +9,45 @@ using System.Threading.Tasks;
 namespace Engine2D.Components
 {
     [JsonConverter(typeof(ComponentSerializer))]
-    internal abstract class Component
+    public abstract class Component
     {
-        internal Gameobject Parent;
-        public string Type = "Component";
-        private bool _initialized = false;
+        [JsonIgnore]public Gameobject Parent;
+        public string Type => GetItemType();
+        [JsonIgnore] private bool _initialized = false;
 
-        internal abstract void SetType();
+        
+        public virtual string GetItemType()
+        {
+            return "Component";
+        }
 
-        internal virtual void Init(Gameobject parent)
+        public virtual void Init(Gameobject parent)
         {
             if(_initialized) return;
             _initialized = true;
-            SetType();
             this.Parent = parent;
         }
 
-        internal virtual void Start()
+        public virtual void Start()
         { 
         }
 
-        internal virtual void EditorUpdate(double dt)
+        public virtual void EditorUpdate(double dt)
         { 
         }
 
-        internal virtual void GameUpdate(double dt)
+        public virtual void GameUpdate(double dt)
         {
         }
 
-        internal virtual void Destroy()
+        public virtual void Destroy()
         {
         }
 
-        internal abstract void ImGuiFields();
+        public virtual void ImGuiFields()
+        {
+
+        }
         
     }
 }

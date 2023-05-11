@@ -80,7 +80,7 @@ namespace Engine2D.UI
                         {
                             SpriteRenderer spriteRenderer = new SpriteRenderer();
                             spriteRenderer.textureData = new(
-                                "C:\\Users\\Kasper\\Documents\\GAMEPROJECTS\\helloworld-01\\Images\\TestImage.png",
+                                "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
                                 true,
                                 OpenTK.Graphics.OpenGL4.TextureMinFilter.Nearest,
                                 OpenTK.Graphics.OpenGL4.TextureMagFilter.Nearest

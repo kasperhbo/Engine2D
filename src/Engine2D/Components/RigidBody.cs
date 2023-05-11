@@ -11,19 +11,24 @@ using System.Threading.Tasks;
 
 namespace Engine2D.Components
 {
-
-    internal class RigidBody : Component
+    [JsonConverter(typeof(ComponentSerializer))]
+    public class RigidBody : Component
     {
         public BodyType BodyType { get; set; }
         public bool FixedRotation = false;
 
         [JsonIgnore] public Body runtimeBody = null;
 
+        public RigidBody()
+        {
+            
+        }
+
         public RigidBody(BodyType bodyType) {
             BodyType = bodyType;
         }
 
-        internal override void ImGuiFields()
+        public override void ImGuiFields()
         {
             if(ImGui.BeginCombo("##combo", BodyType.ToString()))
             {
@@ -43,15 +48,15 @@ namespace Engine2D.Components
             }
         }
 
-        internal override void GameUpdate(double dt)
+        public override void GameUpdate(double dt)
         {
             Parent.transform.position = runtimeBody.GetPosition();
             base.GameUpdate(dt);
         }
 
-        internal override void SetType()
+        public override string GetItemType()
         {
-            Type = "Rigidbody";
+           return "Rigidbody";
         }
     }
 }

@@ -52,6 +52,8 @@ namespace KDBEngine.Core {
 
         internal Asset? CurrentSelectedAsset = null;
 
+        private TestContentBrowser cb;
+        
         public static Engine Get()
         {   
             if (_instance  == null)
@@ -112,8 +114,9 @@ namespace KDBEngine.Core {
             testFB = new((int)width, (int)height);
             testCamera = new();
             viewportWindow = new();
+            cb = new();
 
-            
+
 
             if (!Settings.s_IsEngine)
             {
@@ -130,6 +133,7 @@ namespace KDBEngine.Core {
             _currentScene?.EditorUpdate(args.Time);
             TestInput.endFrame();
         }
+
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -188,6 +192,7 @@ namespace KDBEngine.Core {
 
                 //gameViewport.OnGui(_frameBuffer.TextureID, () => { });
                 viewportWindow.OnGui();
+                cb.OnGui();
                 testCamera.CameraSettingsGUI();
                 foreach (UIElemenet window in _guiWindows.Values)
                 {
@@ -234,7 +239,7 @@ namespace KDBEngine.Core {
         protected override void OnUnload()
         {
             _currentScene.IsPlaying = false;
-            _currentScene.OnClose();
+            //_currentScene.OnClose();
             base.OnUnload();
         }
 
@@ -268,8 +273,10 @@ namespace KDBEngine.Core {
                
         private void CreateUIWindows()
         {
-            AssetBrowser assetBrowser = new AssetBrowser();
-            _guiWindows.Add(assetBrowser.Title, assetBrowser);
+            //AssetBrowser assetBrowser = new AssetBrowser();
+            //_guiWindows.Add(assetBrowser.Title, assetBrowser);
+
+
 
             Inspector inspector = new Inspector();
             _guiWindows.Add(inspector.Title, inspector);
@@ -327,7 +334,7 @@ public static class Settings
 
 public static class ProjectSettings
 {
-    public static string s_ProjectName = "helloworld-01";
-    public static string s_ProjectLocation = "C:\\Users\\Kasper\\Documents\\GAMEPROJECTS\\";
+    public static string s_ProjectName = "ExampleGame";
+    public static string s_ProjectLocation = "D:\\dev\\EngineDev\\Engine2D\\src\\";
     public static string s_FullProjectPath = s_ProjectLocation + s_ProjectName;
 }

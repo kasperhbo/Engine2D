@@ -5,7 +5,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Engine2D.Rendering
 {
-    internal class Texture
+    public class Texture
     {
         public readonly int TexID;
 

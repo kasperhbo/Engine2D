@@ -106,7 +106,7 @@ namespace Engine2D.Scenes
 
         private void StopPlay()
         {
-            SaveLoad.LoadScene(this.ScenePath);
+            //SaveLoad.LoadScene(this.ScenePath);
         }
 
         internal virtual void Init(Engine engine, string scenePath, int width, int height)
@@ -122,6 +122,7 @@ namespace Engine2D.Scenes
             if(TestInput.KeyDown(Keys.LeftControl)){
                 if (TestInput.KeyPress(Keys.S))
                 {
+                    if(IsPlaying) { return;  }
                     SaveLoad.SaveScene(this);
                 }
             }            

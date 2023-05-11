@@ -1,0 +1,15 @@
+{
+  "TextureCoords": {
+    "X": 1.0,
+    "Y": 1.0
+  },
+  "TextureData": {
+    "texturePath": "C:\\Users\\Kasper\\Documents\\GAMEPROJECTS\\helloworld-01\\Images\\testImage.png",
+    "flipped": false,
+    "minFilter": 9728,
+    "magFilter": 9728,
+    "Type": "TextureData"
+  },
+  "IsDirty": false,
+  "Type": "Sprite"
+}

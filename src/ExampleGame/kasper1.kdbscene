@@ -1,0 +1,42 @@
+[
+  {
+    "transform": {
+      "position": {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      "size": {
+        "X": 32.0,
+        "Y": 32.0
+      },
+      "rotation": 0.0
+    },
+    "Name": "1",
+    "components": [
+      {
+        "textureData": {
+          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
+          "flipped": true,
+          "minFilter": 9728,
+          "magFilter": 9728,
+          "Type": "TextureData"
+        },
+        "Color": {
+          "X": 1.0,
+          "Y": 1.0,
+          "Z": 1.0,
+          "W": 1.0
+        },
+        "Type": "SpriteRenderer"
+      },
+      {
+        "component": {
+          "test": 999592.0,
+          "Type": "TestComponent"
+        },
+        "Type": "ScriptHolderComponent"
+      }
+    ],
+    "LinkedComponents": []
+  }
+]

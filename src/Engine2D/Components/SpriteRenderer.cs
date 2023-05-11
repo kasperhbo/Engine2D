@@ -7,7 +7,8 @@ using System.Numerics;
 
 namespace Engine2D.GameObjects
 {
-    internal class SpriteRenderer : Component
+    [JsonConverter(typeof(ComponentSerializer))]
+    public class SpriteRenderer : Component
     {
         public Vector4 Color
         {
@@ -20,7 +21,7 @@ namespace Engine2D.GameObjects
         }
 
 //        public Sprite? sprite = null;
-        public Vector2 SpriteSize { get; private set; } = new Vector2(32, 32);
+        private Vector2 SpriteSize = new Vector2(32, 32);
 
         private Transform _lastTransform = new();
         private Vector4 _color = new(1,1,1,1);
@@ -30,6 +31,7 @@ namespace Engine2D.GameObjects
         [JsonIgnore]internal Texture texture;
         
         public TextureData? textureData;
+
         internal Vector2[] TextureCoords =
         {
             new Vector2(1, 1),
@@ -38,7 +40,7 @@ namespace Engine2D.GameObjects
             new Vector2(0, 1)
         };
 
-        internal override void Init(Gameobject parent)
+        public override void Init(Gameobject parent)
         {
             base.Init(parent);
             if(this.textureData != null)
@@ -49,11 +51,11 @@ namespace Engine2D.GameObjects
             GameRenderer.AddSpriteRenderer(this);
         }
 
-        internal override  void Start()
+        public override  void Start()
         {
         }
 
-        internal override void EditorUpdate(double dt)
+        public override void EditorUpdate(double dt)
         {
             //Console.WriteLine(this.texture?.TexID);
             if (!_lastTransform.Equals(Parent.transform))
@@ -63,7 +65,7 @@ namespace Engine2D.GameObjects
             }
         }
 
-        internal override void GameUpdate(double dt)
+        public override void GameUpdate(double dt)
         {
             if (!_lastTransform.Equals(Parent.transform))
             {
@@ -72,12 +74,13 @@ namespace Engine2D.GameObjects
             }
         }
 
-        internal override void SetType()
+        public override string GetItemType()
         {
-            Type = "SpriteRenderer";
+            return "SpriteRenderer";
         }
 
-        internal override void ImGuiFields()
+
+        public override void ImGuiFields()
         {
 
             

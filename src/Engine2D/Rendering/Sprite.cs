@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Engine2D.Rendering
 {
-    internal class Sprite : Asset
+    public class Sprite : Asset
     {
         [JsonIgnore]public Texture? Texture = null;
 
@@ -28,7 +28,7 @@ namespace Engine2D.Rendering
             Texture = ResourceManager.GetTexture(TextureData);
         }
 
-        internal override void OnGui()
+        public override void OnGui()
         {
                
         }

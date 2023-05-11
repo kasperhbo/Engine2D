@@ -1,9 +1,12 @@
-﻿using Engine2D.SavingLoading;
+﻿using Engine2D.Core;
+using Engine2D.SavingLoading;
 using Engine2D.UI;
 using GlmNet;
 using ImGuiNET;
 using KDBEngine.Core;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace Engine2D.Testing
 {
@@ -51,15 +54,45 @@ namespace Engine2D.Testing
 
             int textureId = Engine.Get().getFramebuffer().GetTextureID;
             ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new( 0, 1), new(1, 0));
+            //if (ImGui.BeginDragDropTarget())
+            //{
+            //    ImGuiPayloadPtr ptr = ImGui.AcceptDragDropPayload("ASSET_BROWSER_ITEM");
+            //    Console.WriteLine(ptr);
+
+            //    if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
+            //    {
+            //        SaveLoad.LoadScene(AssetBrowser.CurrentDraggingFileName);
+            //    }
+
+            //    ImGui.EndDragDropTarget();
+            //}
+            //if (ImGui.BeginDragDropTarget())
+            //{
+            //    ImGuiPayloadPtr payload = ImGui.AcceptDragDropPayload("Scene_Drop");
+            //    if (payload.Data != null)
+            //    {
+            //        string filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
+            //        Console.WriteLine("Opening scene: " + filename);
+            //        SaveLoad.LoadScene(AssetBrowser.CurrentDraggingFileName);
+            //        //Window.Get().ChangeScene(new LevelEditorScene(), filename);
+            //    }
+
+            //    ImGui.EndDragDropTarget();
+            //}
+
             if (ImGui.BeginDragDropTarget())
             {
-                if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
+                ImGuiPayloadPtr payload = ImGui.AcceptDragDropPayload("Scene_Drop");
+                if (payload.IsValidPayload())
                 {
-                    SaveLoad.LoadScene(AssetBrowser.CurrentDraggingFileName);
+                    string filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
+                    Console.WriteLine("Opening scene: " + filename);
+                    //Window.Get().ChangeScene(new LevelEditorScene(), filename);
                 }
 
                 ImGui.EndDragDropTarget();
             }
+
 
 
             TestInput.setViewportPos(new OpenTK.Mathematics.Vector2(topLeft.X, topLeft.Y));

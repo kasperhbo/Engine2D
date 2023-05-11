@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -7,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Engine2D.Components
 {
-    internal class BoxCollider2D : Component
+    [JsonConverter(typeof(ComponentSerializer))]
+    public class BoxCollider2D : Component
     {
         public Vector2 Offset = new Vector2();
         public Vector2 Size = new Vector2(0.5f, 0.5f);
@@ -17,13 +19,15 @@ namespace Engine2D.Components
         public float Restitution = 0.0f;
         public float RestitutionThreshold = 0.5f;
 
-        internal override void ImGuiFields()
+        public override void ImGuiFields()
         {
         }
 
-        internal override void SetType()
+        public override string GetItemType()
         {
-            Type = "BoxCollider2D";
+            Logging.Log.Warning("Getting type");
+            return "BoxCollider2D";
         }
+
     }
 }
