@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,10 +49,19 @@ namespace Engine2D.Rendering
         private Shader _shader;
 
         private List<Texture> _textures = new();
+
+        private int[] _textureUnits;
         #endregion
         
         internal RenderBatch()
         {
+            _textureUnits = new int[GL.GetInteger(GetPName.MaxTextureImageUnits)];
+
+            for (int i = 0; i < _textureUnits.Length; i++)
+            {
+                _textureUnits[i] = i;
+            }
+
             ShaderData dat = new ShaderData();
             dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default.vert";
             dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default.frag";
@@ -138,8 +148,8 @@ namespace Engine2D.Rendering
                 GL.ActiveTexture(TextureUnit.Texture0 + i + 1);
                 _textures[i].bind();
             }
-            int[] texSlots = { 0, 1, 2, 3, 4, 5, 6, 7 };
-            _shader.UploadIntArray("uTextures", texSlots);
+            
+            _shader.UploadIntArray("uTextures", _textureUnits);
 
             GL.BindVertexArray(_vaoID);
             GL.EnableVertexAttribArray(0);

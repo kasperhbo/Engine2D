@@ -20,6 +20,10 @@ using OpenTK.Compute.OpenCL;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 using Engine2D.SavingLoading;
+using Box2DSharp.Common;
+using Engine2D.Logging;
+using System.Diagnostics;
+using System.Text;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
@@ -49,8 +53,8 @@ namespace KDBEngine.Core {
         internal Asset? CurrentSelectedAsset = null;
 
         public static Engine Get()
-        {
-            if(_instance  == null)
+        {   
+            if (_instance  == null)
             {
                 GameWindowSettings gameWindowSettings = GameWindowSettings.Default;
                 gameWindowSettings.UpdateFrequency = WindowSettings.s_UpdateFrequency;
@@ -88,6 +92,11 @@ namespace KDBEngine.Core {
         {
             base.OnLoad();
 
+            Log.Message("Message", showFile: true, showLine: true, showFunction: true);
+            Log.Succes("Succes");
+            Log.Warning("Warning");
+            Log.Error("Error");
+
             SaveLoad.LoadEngineSettings();
 
             ImGuiController = new ImGuiController(Size.X, Size.Y);
@@ -103,6 +112,7 @@ namespace KDBEngine.Core {
             testFB = new((int)width, (int)height);
             testCamera = new();
             viewportWindow = new();
+
             
 
             if (!Settings.s_IsEngine)
@@ -134,17 +144,14 @@ namespace KDBEngine.Core {
                         if (go.AABB(TestInput.getWorld()))
                         {
                             Engine.Get().CurrentSelectedAsset = go;
-                            //_currentScene.SelectedGameobject = go;
                             break;
                         }
                     }
                 }
 
-                //_frameBuffer.Bind();
                 testFB.Bind();
                 GameRenderer.Render();
                 testFB.UnBind();
-                //_frameBuffer.UnBind();
 
                 ImGuiController.Update(this, e.Time);
                 ImGui.BeginMainMenuBar();
