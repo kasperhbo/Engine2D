@@ -133,7 +133,7 @@ namespace Engine2D.Testing
             Matrix4 viewProjection = new Matrix4();
 
             viewProjection = Matrix4.Mult(camera.getInverseViewMatrix(), camera.getInverseProjection());
-            Vector4 t = MathHelper.Multiply(viewProjection, tmp);
+            Vector4 t = MathUtils.Multiply(viewProjection, tmp);
             world = new(t.X, t.Y);
         }
 
