@@ -177,7 +177,7 @@ namespace Engine2D.Rendering
             // Find offset within array (4 vertices per sprite)
             int offset = index * 4 * c_VertexSize;
 
-            Vector4 color = new Vector4(sprite.Color.X, sprite.Color.Y, sprite.Color.Z, sprite.Color.W);
+            Vector4 color = new(sprite.Color.Color.X, sprite.Color.Color.Y, sprite.Color.Color.Z, sprite.Color.Color.W);
 
             int texID = -1;
             System.Numerics.Vector2[] texCoords = sprite.TextureCoords;

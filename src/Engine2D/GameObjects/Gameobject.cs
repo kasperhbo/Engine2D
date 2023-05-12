@@ -125,44 +125,43 @@ namespace Engine2D.GameObjects
 
              List<Component> componentsToRemove = new List<Component>();
 
-            OpenTKUIHelper.DrawTransformControl(() =>
+            OpenTKUIHelper.DrawComponentWindow("transform"+Name, "Transform", () =>
             {
-                ImGui.TableNextColumn();
-                ImGui.Text("Position");
-                ImGui.TableNextColumn();
-                ImGui.DragFloat2("##postion", ref transform.position);
+                OpenTKUIHelper.DrawProperty("Position: ", ref transform.position);
+                OpenTKUIHelper.DrawProperty("Rotation: ", ref transform.rotation);
+                OpenTKUIHelper.DrawProperty("Scale: ", ref transform.size);
 
-                ImGui.TableNextColumn();
-                ImGui.Text("Rotation");
-                ImGui.TableNextColumn();
-                ImGui.DragFloat("##rotation", ref transform.rotation);
-
-                ImGui.TableNextColumn();
-                ImGui.Text("Scale");
-                ImGui.TableNextColumn();
-                ImGui.DragFloat2("##scale", ref transform.size);
             });
 
             for (int i = 0; i < components.Count; i++)
             {
                 ImGui.PushID(i);
-                if (ImGui.CollapsingHeader(components[i].GetItemType(), ImGuiTreeNodeFlags.DefaultOpen))
+
+                
+                OpenTKUIHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(), () =>
                 {
-                    ImGui.PushStyleColor(ImGuiCol.ChildBg, new System.Numerics.Vector4(0.19f, .19f, .19f, 1)); //For visibility
-
-                    ImGui.BeginChild("##", new System.Numerics.Vector2(0, components[i].WindowSize().Y), false, 0); ; // Leave ~100
-                    ImGui.PopStyleColor(3);
-
-                    //ImGui.BeginGroup();
-
                     components[i].ImGuiFields();
-                    //ImGui.EndGroup();
-                    //ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), (int)ImGuiCol.ChildBg);
-                    ImGui.GetForegroundDrawList().AddRect(
-                        ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), 3);
+                }, components[i].WindowSize().Y
+                );
+                
 
-                    ImGui.EndChild();
-                }
+                //if (ImGui.CollapsingHeader(components[i].GetItemType(), ImGuiTreeNodeFlags.DefaultOpen))
+                //{
+                //    ImGui.PushStyleColor(ImGuiCol.ChildBg, new System.Numerics.Vector4(0.19f, .19f, .19f, 1)); //For visibility
+
+                //    ImGui.BeginChild("##", new System.Numerics.Vector2(0, components[i].WindowSize().Y), false, 0); ; // Leave ~100
+                //    ImGui.PopStyleColor(3);
+
+                //    //ImGui.BeginGroup();
+
+                //    components[i].ImGuiFields();
+                //    //ImGui.EndGroup();
+                //    //ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), (int)ImGuiCol.ChildBg);
+                //    ImGui.GetForegroundDrawList().AddRect(
+                //        ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), 3);
+
+                //    ImGui.EndChild();
+                //}
                 ImGui.PopID();
             }
 

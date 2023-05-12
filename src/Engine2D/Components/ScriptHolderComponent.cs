@@ -21,46 +21,21 @@ namespace Engine2D.Components
             base.Init(parent);            
         }
 
-        public override void ImGuiFields()
+        public override float ImGuiFields()
         {
             base.ImGuiFields();
-            
-            component?.ImGuiFields();
+            float f = 0;
 
+            if (component != null) { 
+                f = f + component.ImGuiFields();
+            }
+
+            sizeYGUI +=  f;
+            ImGui.TableNextColumn();
             //ImGui.ImageButton("", IntPtr.Zero, new System.Numerics.Vector2(56, 56));
-            if (component != null)
-            {
-                ImGui.Button(component?.Type, new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, 29));
-            }
-            else
-            {
-                ImGui.Button("script", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, 29));
-            }
-            if (ImGui.BeginDragDropTarget())
-            {
-                ImGuiPayloadPtr payload = ImGui.AcceptDragDropPayload("SCRIPT_DROP");
-                if (payload.IsValidPayload())
-                {
-                    string filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
 
-                    //Component instance = (Comp;onent)Activator.CreateInstance(refComponent);
-
-                    //refFile = filename;
-                    Type? type = ComponentRegistry.Get(filename);
-                    if (type != null)
-                    {
-                        Component instance = (Component)Activator.CreateInstance(type);
-
-                        component = instance!;
-                    }
-                }
-
-                ImGui.EndDragDropTarget();
-            }                        
+            return sizeYGUI;
         }
-
-
-    
 
         public override string GetItemType()
         {

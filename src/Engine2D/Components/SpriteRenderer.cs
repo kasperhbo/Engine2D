@@ -1,5 +1,6 @@
 ﻿using Engine2D.Components;
 using Engine2D.Core;
+using Engine2D.Flags;
 using Engine2D.Rendering;
 using ImGuiNET;
 using Newtonsoft.Json;
@@ -7,26 +8,30 @@ using System.Numerics;
 
 namespace Engine2D.GameObjects
 {
+    public class SpriteColor
+    {
+        public Vector4 Color = new();
+
+        public SpriteColor()
+        {
+            Color = new();
+        }
+
+        public SpriteColor(Vector4 color)
+        {
+            Color = color;
+        }
+    }
+
     [JsonConverter(typeof(ComponentSerializer))]
     public class SpriteRenderer : Component
     {
-        public Vector4 Color
-        {
-            get => _color;
-            set
-            {
-                _color = value;
-                IsDirty = true;
-            }
-        }
+        public SpriteColor Color = new SpriteColor();
 
-//        public Sprite? sprite = null;
-        private Vector2 SpriteSize = new Vector2(32, 32);
+        [ShowUI(show = false)] private Transform _lastTransform = new();
+        [ShowUI(show = false)] SpriteColor _lastColor = new SpriteColor();
 
-        private Transform _lastTransform = new();
-        private Vector4 _color = new(1,1,1,1);
-        
-        internal bool IsDirty = true;
+        [ShowUI(show = false)]internal bool IsDirty = true;
 
         [JsonIgnore]internal Texture texture;
         
@@ -63,6 +68,13 @@ namespace Engine2D.GameObjects
                 IsDirty = true;
                 Parent.transform.Copy(_lastTransform);
             }
+
+            if (!_lastColor.Color.Equals(Color.Color))
+            {
+                Console.WriteLine("dirty");
+                IsDirty = true;
+                _lastColor = new(Color.Color);
+            }
         }
 
         public override void GameUpdate(double dt)
@@ -71,6 +83,12 @@ namespace Engine2D.GameObjects
             {
                 IsDirty = true;
                 Parent.transform.Copy(_lastTransform);
+            }
+
+            if (!_lastColor.Color.Equals(Color.Color))
+            {
+                IsDirty = true;
+                _lastColor = new(Color.Color);
             }
         }
 

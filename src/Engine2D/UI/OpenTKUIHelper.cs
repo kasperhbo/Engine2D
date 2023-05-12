@@ -1,8 +1,11 @@
 ﻿using Box2DSharp.Common;
+using Engine2D.Components;
+using Engine2D.GameObjects;
 using GlmNet;
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using OpenTK.Mathematics;
+using System.Drawing;
 using System.Linq.Expressions;
 using System.Windows.Markup;
 
@@ -30,26 +33,6 @@ namespace Engine2D.UI
 
         public static void DrawVec2Control(String label,ref Vector2 values, float resetValue, float columnWidth, float dragSpeed = 0.1f)
         {
-            //ImGui.PushID(label);
-
-                       
-            //float lineHeight = ImGui.GetFontSize() + ImGui.GetStyle().FramePadding.Y;
-            //System.Numerics.Vector2 buttonSize = new System.Numerics.Vector2(lineHeight + 3, lineHeight + 3);
-            //float widthEach = (ImGui.CalcItemWidth() - buttonSize.X * 2.0f) / 2.0f;
-
-            //if (ImGui.Button("PX", buttonSize)) { values.X = 0; }
-            
-            //ImGui.SameLine();
-            //ImGui.DragFloat("##posx", ref values.X, 0.1f, 0, 0, "%.1f");            
-            //ImGui.SameLine();
-            
-            //if (ImGui.Button("PY", buttonSize)) 
-            //{ values.Y = 0; }
-            //ImGui.SameLine();
-            //ImGui.SetNextItemWidth(widthEach);
-            //ImGui.DragFloat("##posx", ref values.Y, 0.1f, 0, 0, "%.1f");
-            //ImGui.PopStyleVar();
-            //ImGui.PopID();            
         }
 
 
@@ -84,12 +67,13 @@ namespace Engine2D.UI
             //return changed;
         }
 
-        public static void DrawTransformControl(Action tablesToDraw)
+        public static void DrawComponentWindow(string id, string title, Action tablesToDraw,float size = 100)
         {
-            if (ImGui.CollapsingHeader("Transform", ImGuiTreeNodeFlags.DefaultOpen))
-            {                
+            ImGui.PushID(id);
+            if (ImGui.CollapsingHeader(title, ImGuiTreeNodeFlags.DefaultOpen))
+            {
                 ImGui.PushStyleColor(ImGuiCol.ChildBg, new System.Numerics.Vector4(.19f, .19f, .19f, 1)); //For visibility
-                ImGui.BeginChild("##transform_c", new System.Numerics.Vector2(0, 90), false, 0); // Leave ~100
+                ImGui.BeginChild("##transform_c", new System.Numerics.Vector2(0, size), false, 0); // Leave ~100
                 ImGui.PopStyleColor();
                 //Position Table
                 if (ImGui.BeginTable("##transform_t", 2, ImGuiTableFlags.Resizable))
@@ -99,11 +83,80 @@ namespace Engine2D.UI
                     ImGui.EndTable();
                 }
                 ImGui.EndChild();
-
             }
+            ImGui.PopID();
         }
 
 
+        public static bool DrawProperty(string name, ref System.Numerics.Vector2 property)
+        {
+            bool changed = false;
+            ImGui.TableNextColumn();
+            ImGui.Text(name);
+            ImGui.TableNextColumn();
+            if (ImGui.DragFloat2("##" + name, ref property)) changed = true;
+            return changed;
+        }
+
+        public static bool DrawProperty(string name, ref SpriteColor property)
+        {
+            bool changed = false;
+            ImGui.TableNextColumn();
+            ImGui.Text(name);
+            ImGui.TableNextColumn();
+            if (ImGui.ColorEdit4("##" + name, ref property.Color)) changed = true;
+            return changed;
+        }
+
+        public static bool DrawProperty(string name, ref bool property)
+        {
+            bool changed = false;
+            ImGui.TableNextColumn();
+            ImGui.Text(name);
+            ImGui.TableNextColumn();
+            if (ImGui.Checkbox("##" + name, ref property)) changed = true;
+            return changed;
+        }
+
+        public static bool DrawProperty(string name, ref int property)
+        {
+            bool changed = false;
+            ImGui.TableNextColumn();
+            ImGui.Text(name);
+            ImGui.TableNextColumn();
+            if (ImGui.DragInt("##" + name, ref property)) changed = true;
+            return changed;
+        }
+
+        public static bool DrawProperty(string name, ref System.Numerics.Vector3 property)
+        {
+            bool changed = false;
+            ImGui.TableNextColumn();
+            ImGui.Text(name);
+            ImGui.TableNextColumn();
+            if (ImGui.DragFloat3("##" + name, ref property)) changed = true;
+            return changed;
+        }
+
+        public static bool DrawProperty(string name, ref System.Numerics.Vector4 property)
+        {
+            bool changed = false;
+            ImGui.TableNextColumn();
+            ImGui.Text(name);
+            ImGui.TableNextColumn();
+            if (ImGui.DragFloat4("##" + name, ref property)) changed = true;
+            return changed;
+        }
+
+        public static bool DrawProperty(string name, ref float property)
+        {
+            bool changed = false;
+            ImGui.TableNextColumn();
+            ImGui.Text(name);
+            ImGui.TableNextColumn();
+            if (ImGui.DragFloat("##" + name, ref property)) changed = true;
+            return changed;
+        }
 
     }
 }

@@ -125,22 +125,17 @@ namespace Engine2D.Testing
         public void CameraSettingsGUI()
         {
             ImGui.Begin("Camera Settings");
-            OpenTKUIHelper.DrawTransformControl(() =>
+            OpenTKUIHelper.DrawComponentWindow("camera_transform", "Camera Transform", () =>
             {
-                ImGui.TableNextColumn();
-                ImGui.Text("Position");
-                ImGui.TableNextColumn();
                 System.Numerics.Vector2 tempPos = 
                 new System.Numerics.Vector2((float)this.position.X, (float)this.position.Y);
-
-                ImGui.DragFloat2("##postion", ref tempPos);
-
+                OpenTKUIHelper.DrawProperty("Position: ", ref tempPos);
                 this.position = new Vector2(tempPos.X, tempPos.Y);
 
-                ImGui.TableNextColumn();
-                ImGui.Text("Zoom");
-                ImGui.TableNextColumn();
-                if(ImGui.DragFloat("##zoom", ref zoom))adjustProjection();
+                if(OpenTKUIHelper.DrawProperty("Zoom", ref zoom))
+                {
+                    adjustProjection();
+                }
             });
             ImGui.End();
         }
