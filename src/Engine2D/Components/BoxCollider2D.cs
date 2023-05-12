@@ -29,5 +29,10 @@ namespace Engine2D.Components
             return "BoxCollider2D";
         }
 
+        public override System.Numerics.Vector2 WindowSize()
+        {
+            return new System.Numerics.Vector2(0, 100);
+        }
+
     }
 }

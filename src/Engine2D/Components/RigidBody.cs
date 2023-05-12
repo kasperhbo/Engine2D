@@ -58,5 +58,14 @@ namespace Engine2D.Components
         {
            return "Rigidbody";
         }
+
+        private int _numberOfFields = 1;
+
+        public override System.Numerics.Vector2 WindowSize()
+        {
+            float y = ImGui.GetFontSize() + 10;
+            y *= _numberOfFields;
+            return new System.Numerics.Vector2(-1, y);
+        }
     }
 }

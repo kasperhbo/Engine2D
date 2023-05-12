@@ -2,12 +2,12 @@
 using System.Runtime.CompilerServices;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 using Engine2D.Core;
+using Engine2D;
 
 namespace KDBEngine.UI
 {
@@ -34,6 +34,35 @@ namespace KDBEngine.UI
         private System.Numerics.Vector2 _scaleFactor = System.Numerics.Vector2.One;
 
         private static bool KHRDebugAvailable = false;
+
+        public static class Colors
+        {
+            public static readonly Color ConnectedParameter = new Color(0.6f, 0.6f, 1f, 1f);
+            public static readonly Color ValueLabel = new Color(1, 1, 1, 0.5f);
+            public static readonly Color ValueLabelHover = new Color(1, 1, 1, 1.2f);
+            public static readonly Color GraphLine = new Color(1, 1, 1, 0.3f);
+            public static readonly Color GraphLineHover = new Color(1, 1, 1, 0.7f);
+            public static readonly Color GraphAxis = new Color(0, 0, 0, 0.3f);
+
+            public static readonly Color Button = Color.FromString("#CC282828");
+            public static readonly Color ButtonHover = new Color(43, 65, 80, 255);
+
+            public static readonly Color ButtonActive = Color.FromString("#4592FF");
+            public static readonly Color DarkGray = Color.FromString("#131313");
+
+            public static readonly Color WidgetSlider = new Color(0.15f);
+            public static readonly Color TextWidgetTitle = new Color(0.65f);
+            public static readonly Color Text = new Color(0.9f);
+            public static readonly Color TextMuted = new Color(0.5f);
+            public static readonly Color TextDisabled = new Color(0.2f);
+            public static readonly Color Warning = new Color(203, 19, 113, 255);
+
+            public static readonly Color WindowBackground = new Color(0.05f, 0.05f, 0.05f, 1);
+            public static readonly Color Background = new Color(0.1f, 0.1f, 0.1f, 0.98f);
+
+            public static readonly Color GraphActiveLine = Color.Orange;
+        }
+
 
 
         /// <summary>
@@ -66,11 +95,11 @@ namespace KDBEngine.UI
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
-            
+
 
             //ImGui Set Style
+            /*
             {
-                ImGuiStylePtr style = ImGui.GetStyle();
 
                 style.Colors[(int)ImGuiCol.Text] = new System.Numerics.Vector4(1.00f, 1.00f, 1.00f, 1.00f);
                 style.Colors[(int)ImGuiCol.TextDisabled] = new System.Numerics.Vector4(0.50f, 0.50f, 0.50f, 1.00f);
@@ -124,7 +153,11 @@ namespace KDBEngine.UI
                 style.Colors[(int)ImGuiCol.ModalWindowDimBg] = new System.Numerics.Vector4(0.80f, 0.80f, 0.80f, 0.35f);
                 //style.GrabRounding = style.FrameRounding = 2.3f;
             }
-                        
+              */
+
+            LoadStyle();
+            //LoadStyle2();
+            
             CreateDeviceResources();
             SetKeyMappings();
 
@@ -132,6 +165,144 @@ namespace KDBEngine.UI
 
             ImGui.NewFrame();
             _frameBegun = true;            
+        }
+
+        private void LoadStyle()
+        {
+            ImGuiStylePtr style = ImGui.GetStyle();
+
+            //style.WindowPadding = new System.Numerics.Vector2(4.0f, 4.0f);
+            //style.FrameBorderSize = 0.0f;
+            //style.ItemSpacing = new System.Numerics.Vector2(8.0f, 4.0f);
+            //style.ItemInnerSpacing = new System.Numerics.Vector2(4.0f, 4.0f);
+            //style.ScrollbarSize = 14.0f;
+            //style.IndentSpacing = 14.0f;
+            //style.GrabMinSize = 12.0f;
+            //style.FramePadding = new System.Numerics.Vector2(8.0f, 4.0f);
+
+            //style.ChildRounding = 4.0f;
+            //style.FrameRounding = 4.0f;
+            //style.GrabRounding = 4.0f;
+            //style.PopupRounding = 4.0f;
+            //style.ScrollbarRounding = 4.0f;
+            //style.TabRounding = 4.0f;
+            //style.WindowRounding = 4.0f;
+
+
+            style.AntiAliasedFill = true;
+            style.AntiAliasedLines = true;
+
+            //style.WindowPadding = System.Numerics.Vector2.Zero;
+            //style.FramePadding = new System.Numerics.Vector2(7, 4);
+            //style.ItemSpacing = new System.Numerics.Vector2(1, 1);
+            //style.ItemInnerSpacing = new System.Numerics.Vector2(3, 2);
+            //style.GrabMinSize = 10;
+            //style.FrameBorderSize = 0;
+            //style.WindowRounding = 0;
+            //style.ChildRounding = 0;
+            //style.ScrollbarRounding = 2;
+            //style.FrameRounding = 0f;
+            //style.DisplayWindowPadding = System.Numerics.Vector2.Zero;
+            //style.DisplaySafeAreaPadding = System.Numerics.Vector2.Zero;
+            //style.ChildBorderSize = 1;
+            //style.TabRounding = 2;
+
+            style.Colors[(int)ImGuiCol.Text] = new(0.88f, 0.88f, 0.88f, 1.00f);
+            style.Colors[(int)ImGuiCol.TextDisabled] = new(0.50f, 0.50f, 0.50f, 1.00f);
+            style.Colors[(int)ImGuiCol.WindowBg] = new(0.196f, 0.196f, 0.196f, 1.00f);
+            style.Colors[(int)ImGuiCol.ChildBg] = new(0.196f, 0.196f, 0.196f, 1.00f);
+            style.Colors[(int)ImGuiCol.PopupBg] = new(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.Border] = new(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.BorderShadow] = new(0.36f, 0.36f, 0.36f, 0.21f);
+            style.Colors[(int)ImGuiCol.FrameBg] = new(0.15f, 0.15f, 0.15f, 1.00f);
+            style.Colors[(int)ImGuiCol.FrameBgHovered] = new(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.FrameBgActive] = new(0.12f, 0.12f, 0.12f, 1.00f);
+            style.Colors[(int)ImGuiCol.TitleBg] = new(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.TitleBgActive] = new(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.TitleBgCollapsed] = new(0.00f, 0.00f, 0.00f, 0.51f);
+            style.Colors[(int)ImGuiCol.MenuBarBg] = new(0.14f, 0.14f, 0.14f, 1.00f);
+            style.Colors[(int)ImGuiCol.ScrollbarBg] = new(0.16f, 0.16f, 0.16f, 1.00f);
+            style.Colors[(int)ImGuiCol.ScrollbarGrab] = new(0.28f, 0.28f, 0.28f, 1.00f);
+            style.Colors[(int)ImGuiCol.ScrollbarGrabHovered] = new(0.28f, 0.28f, 0.28f, 1.00f);
+            style.Colors[(int)ImGuiCol.ScrollbarGrabActive] = new(0.24f, 0.24f, 0.24f, 1.00f);
+            style.Colors[(int)ImGuiCol.CheckMark] = new(0.50f, 0.50f, 0.50f, 1.00f);
+            style.Colors[(int)ImGuiCol.SliderGrab] = new(0.28f, 0.28f, 0.28f, 1.00f);
+            style.Colors[(int)ImGuiCol.SliderGrabActive] = new(0.28f, 0.28f, 0.28f, 1.00f);
+            style.Colors[(int)ImGuiCol.Button] = new(0.16f, 0.16f, 0.16f, 1.00f);
+            style.Colors[(int)ImGuiCol.ButtonHovered] = new(0.14f, 0.14f, 0.14f, 1.00f);
+            style.Colors[(int)ImGuiCol.ButtonActive] = new(0.12f, 0.12f, 0.12f, 1.00f);
+            style.Colors[(int)ImGuiCol.Header] = new(0.18f, 0.18f, 0.18f, 1.00f);
+            style.Colors[(int)ImGuiCol.HeaderHovered] = new(0.16f, 0.16f, 0.16f, 1.00f);
+            style.Colors[(int)ImGuiCol.HeaderActive] = new(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.Separator] = new(0.15f, 0.15f, 0.15f, 1.00f);
+            style.Colors[(int)ImGuiCol.SeparatorHovered] = new(0.37f, 0.37f, 0.37f, 1.00f);
+            style.Colors[(int)ImGuiCol.SeparatorActive] = new(0.49f, 0.49f, 0.49f, 1.00f);
+            style.Colors[(int)ImGuiCol.ResizeGrip] = new(0.15f, 0.15f, 0.15f, 1.00f);
+            style.Colors[(int)ImGuiCol.ResizeGripHovered] = new(0.35f, 0.35f, 0.35f, 1.00f);
+            style.Colors[(int)ImGuiCol.ResizeGripActive] = new(0.49f, 0.49f, 0.49f, 1.00f);
+            style.Colors[(int)ImGuiCol.Tab] = new(0.16f, 0.16f, 0.16f, 1.00f);
+            style.Colors[(int)ImGuiCol.TabHovered] = new(0.18f, 0.18f, 0.18f, 1.00f);
+            style.Colors[(int)ImGuiCol.TabActive] = new(0.20f, 0.20f, 0.20f, 1.00f);
+            style.Colors[(int)ImGuiCol.TabUnfocused] = new(0.16f, 0.16f, 0.16f, 1.00f);
+            style.Colors[(int)ImGuiCol.TabUnfocusedActive] = new(0.20f, 0.20f, 0.20f, 1.00f);
+            style.Colors[(int)ImGuiCol.DockingPreview] = new(0.41f, 0.41f, 0.41f, 1.00f);
+            style.Colors[(int)ImGuiCol.DockingEmptyBg] = new(0.20f, 0.20f, 0.20f, 1.00f);
+            style.Colors[(int)ImGuiCol.PlotLines] = new(0.66f, 0.66f, 0.66f, 1.00f);
+            style.Colors[(int)ImGuiCol.PlotLinesHovered] = new(0.27f, 0.37f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.PlotHistogram] = new(0.34f, 0.47f, 0.17f, 1.00f);
+            style.Colors[(int)ImGuiCol.PlotHistogramHovered] = new(0.41f, 0.56f, 0.20f, 0.99f);
+            style.Colors[(int)ImGuiCol.TextSelectedBg] = new(0.80f, 0.80f, 0.80f, 0.27f);
+            style.Colors[(int)ImGuiCol.DragDropTarget] = new(0.59f, 0.59f, 0.59f, 0.98f);
+            style.Colors[(int)ImGuiCol.NavHighlight] = new(0.83f, 0.83f, 0.83f, 1.00f);
+            style.Colors[(int)ImGuiCol.NavWindowingHighlight] = new(0.83f, 0.83f, 0.83f, 1.00f);
+            style.Colors[(int)ImGuiCol.NavWindowingDimBg] = new(0.05f, 0.05f, 0.05f, 0.50f);
+            style.Colors[(int)ImGuiCol.ModalWindowDimBg] = new(0.05f, 0.05f, 0.05f, 0.50f);
+
+        }
+
+        private void LoadStyle2()
+        {
+            var style = ImGui.GetStyle();
+            style.Colors[(int)ImGuiCol.Text] = new System.Numerics.Vector4(1, 1, 1, 0.85f);
+            style.Colors[(int)ImGuiCol.TextDisabled] = new(Colors.TextDisabled.R, Colors.TextDisabled.G, Colors.TextDisabled.B, Colors.TextDisabled.A);
+            style.Colors[(int)ImGuiCol.Button] = new(Colors.Button.R, Colors.Button.G, Colors.Button.B, Colors.Button.A);
+            style.Colors[(int)ImGuiCol.ButtonHovered] = new(Colors.ButtonHover.R, Colors.ButtonHover.G, Colors.ButtonHover.B, Colors.ButtonHover.A);
+            style.Colors[(int)ImGuiCol.Border] = new System.Numerics.Vector4(0, 0.00f, 0.00f, 0.97f);
+            style.Colors[(int)ImGuiCol.BorderShadow] = new System.Numerics.Vector4(0.00f, 0.00f, 0.00f, 1.00f);
+            style.Colors[(int)ImGuiCol.FrameBg] = new System.Numerics.Vector4(0.13f, 0.13f, 0.13f, 0.80f);
+            style.Colors[(int)ImGuiCol.FrameBgHovered] = new System.Numerics.Vector4(0.38f, 0.38f, 0.38f, 0.40f);
+            style.Colors[(int)ImGuiCol.FrameBgActive] = new System.Numerics.Vector4(0.00f, 0.55f, 0.8f, 1.00f);
+            style.Colors[(int)ImGuiCol.ScrollbarBg] = new System.Numerics.Vector4(0.12f, 0.12f, 0.12f, 0.53f);
+            style.Colors[(int)ImGuiCol.ScrollbarGrab] = new System.Numerics.Vector4(0.31f, 0.31f, 0.31f, 0.33f);
+            style.Colors[(int)ImGuiCol.ResizeGrip] = new System.Numerics.Vector4(0.00f, 0.00f, 0.00f, 0.25f);
+            style.Colors[(int)ImGuiCol.WindowBg] = new System.Numerics.Vector4(0.1f, 0.1f, 0.1f, 0.98f);
+            style.Colors[(int)ImGuiCol.ModalWindowDimBg] = new System.Numerics.Vector4(0.1f, 0.1f, 0.1f, 0.1f);
+            style.Colors[(int)ImGuiCol.MenuBarBg] = new System.Numerics.Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+            style.Colors[(int)ImGuiCol.Separator] = new System.Numerics.Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+
+            //style.Colors[(int)ImGuiCol.SeparatorHovered] =      Color.FromString("#FF00B2FF");
+            //style.Colors[(int)ImGuiCol.TabUnfocused] =          Color.FromString("#FF1C1C1C");
+            //style.Colors[(int)ImGuiCol.TabActive] =             Color.FromString("#FF505050");
+            //style.Colors[(int)ImGuiCol.Tab] =                   Color.FromString("#FF202020");
+            //style.Colors[(int)ImGuiCol.TabUnfocused] =          Color.FromString("#FF151515");
+            //style.Colors[(int)ImGuiCol.TabUnfocusedActive] =    Color.FromString("#FF202020");
+            //style.Colors[(int)ImGuiCol.TitleBgActive] =         Color.FromString("#FF000000");
+            //style.Colors[(int)ImGuiCol.TitleBg] =               Color.FromString("#FF000000");
+
+            style.WindowPadding = System.Numerics.Vector2.Zero;
+            style.FramePadding = new System.Numerics.Vector2(7, 4);
+            style.ItemSpacing = new System.Numerics.Vector2(1, 1);
+            style.ItemInnerSpacing = new System.Numerics.Vector2(3, 2);
+            style.GrabMinSize = 10;
+            style.FrameBorderSize = 0;
+            style.WindowRounding = 0;
+            style.ChildRounding = 0;
+            style.ScrollbarRounding = 2;
+            style.FrameRounding = 0f;
+            style.DisplayWindowPadding = System.Numerics.Vector2.Zero;
+            style.DisplaySafeAreaPadding = System.Numerics.Vector2.Zero;
+            style.ChildBorderSize = 1;
+            style.TabRounding = 2;
         }
 
         public void WindowResized(int width, int height)
@@ -645,6 +816,306 @@ namespace KDBEngine.UI
             while ((error = GL.GetError()) != ErrorCode.NoError)
             {
                 Debug.Print($"{title} ({i++}): {error}");
+            }
+        }
+    }
+
+    public static class Colors
+    {
+        public static readonly Color ConnectedParameter = new Color(0.6f, 0.6f, 1f, 1f);
+        public static readonly Color ValueLabel = new Color(1, 1, 1, 0.5f);
+        public static readonly Color ValueLabelHover = new Color(1, 1, 1, 1.2f);
+        public static readonly Color GraphLine = new Color(1, 1, 1, 0.3f);
+        public static readonly Color GraphLineHover = new Color(1, 1, 1, 0.7f);
+        public static readonly Color GraphAxis = new Color(0, 0, 0, 0.3f);
+
+        public static readonly Color Button = Color.FromString("#CC282828");
+        public static readonly Color ButtonHover = new Color(43, 65, 80, 255);
+
+        public static readonly Color ButtonActive = Color.FromString("#4592FF");
+        public static readonly Color DarkGray = Color.FromString("#131313");
+
+        public static readonly Color WidgetSlider = new Color(0.15f);
+        public static readonly Color TextWidgetTitle = new Color(0.65f);
+        public static readonly Color Text = new Color(0.9f);
+        public static readonly Color TextMuted = new Color(0.5f);
+        public static readonly Color TextDisabled = new Color(0.2f);
+        public static readonly Color Warning = new Color(203, 19, 113, 255);
+
+        public static readonly Color WindowBackground = new Color(0.05f, 0.05f, 0.05f, 1);
+        public static readonly Color Background = new Color(0.1f, 0.1f, 0.1f, 0.98f);
+
+        public static readonly Color GraphActiveLine = Color.Orange;
+    }
+
+
+
+    public struct Color
+    {
+        public Vector4 Rgba;
+
+        public static readonly Color Transparent = new Color(1f, 1f, 1f, 0f);
+        public static readonly Color TransparentBlack = new Color(0f, 0f, 0f, 0f);
+        public static readonly Color White = new Color(1f, 1f, 1f, 1f);
+        public static readonly Color Gray = new Color(0.6f, 0.6f, 0.6f, 1);
+        public static readonly Color DarkGray = new Color(0.3f, 0.3f, 0.3f, 1);
+        public static readonly Color Black = new Color(0, 0, 0, 1f);
+        public static readonly Color Red = new Color(1f, 0.2f, 0.2f, 1f);
+        public static readonly Color Green = new Color(0.2f, 0.9f, 0.2f, 1f);
+        public static readonly Color Blue = new Color(0.4f, 0.5f, 1f, 1);
+        public static readonly Color Orange = new Color(1f, 0.46f, 0f, 1f);
+
+        /// <summary>
+        /// Creates white transparent color
+        /// </summary>
+        public Color(float alpha)
+        {
+            Rgba = new Vector4(1, 1, 1, alpha);
+        }
+
+        public Color(float r, float g, float b, float a = 1.0f)
+        {
+            Rgba.X = r;
+            Rgba.Y = g;
+            Rgba.Z = b;
+            Rgba.W = a;
+        }
+
+        public Color(int r, int g, int b, int a = 255)
+        {
+            float sc = 1.0f / 255.0f;
+            Rgba.X = r * sc;
+            Rgba.Y = g * sc;
+            Rgba.Z = b * sc;
+            Rgba.W = a * sc;
+        }
+
+
+        public Color(Vector4 color)
+        {
+            Rgba = color;
+        }
+
+        public override string ToString()
+        {
+            return $"[{Rgba.X:0.00}, {Rgba.Y:0.00}, {Rgba.Z:0.00}, {Rgba.W:0.00}]";
+        }
+
+        static public Color FromHSV(float h, float s, float v, float a = 1.0f)
+        {
+            ImGui.ColorConvertHSVtoRGB(h, s, v, out float r, out float g, out float b);
+            return new Color(r, g, b, a);
+        }
+
+        static public Color FromString(string hex)
+        {
+            System.Drawing.Color systemColor = System.Drawing.ColorTranslator.FromHtml(hex);
+            return new Color(systemColor.R, systemColor.G, systemColor.B, systemColor.A);
+        }
+
+        public string ToHTML()
+        {
+            var drawingColor = System.Drawing.Color.FromArgb((int)(A * 255).Clamp(0, 255),
+                                                             (int)(R * 255).Clamp(0, 255),
+                                                             (int)(G * 255).Clamp(0, 255),
+                                                             (int)(B * 255).Clamp(0, 255));
+            return System.Drawing.ColorTranslator.ToHtml(drawingColor);
+        }
+
+
+        public static implicit operator Vector4(Color color)
+        {
+            return color.Rgba;
+        }
+
+        public static Color operator *(Color c, float f)
+        {
+            c.Rgba.W *= f;
+            return c;
+        }
+
+        public static Color Mix(Color c1, Color c2, float t)
+        {
+            return new Color(
+                             c1.Rgba.X + (c2.Rgba.X - c1.Rgba.X) * t,
+                             c1.Rgba.Y + (c2.Rgba.Y - c1.Rgba.Y) * t,
+                             c1.Rgba.Z + (c2.Rgba.Z - c1.Rgba.Z) * t,
+                             c1.Rgba.W + (c2.Rgba.W - c1.Rgba.W) * t
+                            );
+        }
+
+        public static Color GetStyleColor(ImGuiCol color)
+        {
+            unsafe
+            {
+                var c = ImGui.GetStyleColorVec4(color);
+                return new Color(c->X, c->Y, c->Z, c->W);
+            }
+        }
+
+        /// <summary>
+        /// This is a variation of the normal HSV function in that it returns a desaturated "white" colors brightness above 0.5   
+        /// </summary>
+        public static Color ColorFromHsl(float h, float s, float l, float a = 1)
+        {
+            float r, g, b, m, c, x;
+
+            h /= 60;
+            if (h < 0) h = 6 - (-h % 6);
+            h %= 6;
+
+            s = Math.Max(0, Math.Min(1, s));
+            l = Math.Max(0, Math.Min(1, l));
+
+            c = (1 - Math.Abs((2 * l) - 1)) * s;
+            x = c * (1 - Math.Abs((h % 2) - 1));
+
+            if (h < 1)
+            {
+                r = c;
+                g = x;
+                b = 0;
+            }
+            else if (h < 2)
+            {
+                r = x;
+                g = c;
+                b = 0;
+            }
+            else if (h < 3)
+            {
+                r = 0;
+                g = c;
+                b = x;
+            }
+            else if (h < 4)
+            {
+                r = 0;
+                g = x;
+                b = c;
+            }
+            else if (h < 5)
+            {
+                r = x;
+                g = 0;
+                b = c;
+            }
+            else
+            {
+                r = c;
+                g = 0;
+                b = x;
+            }
+
+            m = l - c / 2;
+
+            return new Color(r + m, g + m, b + m, a);
+        }
+
+        public Vector3 AsHsl
+        {
+            get
+            {
+                float r = Rgba.X;
+                float g = Rgba.Y;
+                float b = Rgba.Z;
+
+                float tmp = (r < g) ? r : g;
+                float min = (tmp < b) ? tmp : b;
+
+                tmp = (r > g) ? r : g;
+                float max = (tmp > b) ? tmp : b;
+
+                float delta = max - min;
+                float lum = (min + max) / 2.0f;
+                float sat = 0;
+                if (lum > 0.0f && lum < 1.0f)
+                {
+                    sat = delta / ((lum < 0.5f) ? (2.0f * lum) : (2.0f - 2.0f * lum));
+                }
+
+                float hue = 0.0f;
+                if (delta > 0.0f)
+                {
+                    if (max == r && max != g)
+                        hue += (g - b) / delta;
+                    if (max == g && max != b)
+                        hue += (2.0f + (b - r) / delta);
+                    if (max == b && max != r)
+                        hue += (4.0f + (r - g) / delta);
+                    hue *= 60.0f;
+                }
+
+                return new Vector3(hue, sat, lum);
+            }
+        }
+
+        public readonly Color Fade(float f)
+        {
+            return new Color(Rgba.X, Rgba.Y, Rgba.Z, Rgba.W * f);
+        }
+
+        public float R { get => Rgba.X; set => Rgba.X = value; }
+        public float G { get => Rgba.Y; set => Rgba.Y = value; }
+        public float B { get => Rgba.Z; set => Rgba.Z = value; }
+        public float A { get => Rgba.W; set => Rgba.W = value; }
+
+        /**
+         * Normalized from [0..1]
+         */
+        public float Hue
+        {
+            get
+            {
+                ImGui.ColorConvertRGBtoHSV(R, G, B, out float h, out var s, out var v);
+                return h;
+            }
+            set
+            {
+                ImGui.ColorConvertRGBtoHSV(R, G, B, out float h, out var s, out var v);
+                h = value;
+                ImGui.ColorConvertHSVtoRGB(h, s, v, out var r, out var g, out var b);
+                R = r;
+                G = g;
+                B = b;
+            }
+        }
+
+
+        public float Saturation
+        {
+            get
+            {
+                ImGui.ColorConvertRGBtoHSV(R, G, B, out float h, out var s, out var v);
+                return s;
+            }
+            set
+            {
+                ImGui.ColorConvertRGBtoHSV(R, G, B, out float h, out var s, out var v);
+                s = value;
+                ImGui.ColorConvertHSVtoRGB(h, s, v, out var r, out var g, out var b);
+                R = r;
+                G = g;
+                B = b;
+            }
+        }
+
+
+        public float V
+        {
+            get
+            {
+                ImGui.ColorConvertRGBtoHSV(R, G, B, out float h, out var s, out var v);
+                return v;
+            }
+            set
+            {
+                ImGui.ColorConvertRGBtoHSV(R, G, B, out float h, out var s, out var v);
+                v = value;
+                ImGui.ColorConvertHSVtoRGB(h, s, v, out var r, out var g, out var b);
+                R = r;
+                G = g;
+                B = b;
             }
         }
     }

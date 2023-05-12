@@ -1,4 +1,5 @@
 ﻿using Engine2D.GameObjects;
+using ImGuiNET;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,16 +11,14 @@ namespace Engine2D.Components
 {
     [JsonConverter(typeof(ComponentSerializer))]
     public abstract class Component
-    {
+    {        
         [JsonIgnore]public Gameobject Parent;
         public string Type => GetItemType();
         [JsonIgnore] private bool _initialized = false;
 
-        
-        public virtual string GetItemType()
-        {
-            return "Component";
-        }
+
+        public abstract string GetItemType();
+        public abstract System.Numerics.Vector2 WindowSize();
 
         public virtual void Init(Gameobject parent)
         {
@@ -46,7 +45,7 @@ namespace Engine2D.Components
 
         public virtual void ImGuiFields()
         {
-
+            //lastSize = ImGui.GetItemRectMin();
         }
         
     }

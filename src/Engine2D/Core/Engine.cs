@@ -193,7 +193,9 @@ namespace KDBEngine.Core {
                 //gameViewport.OnGui(_frameBuffer.TextureID, () => { });
                 viewportWindow.OnGui();
                 cb.OnGui();
+                
                 testCamera.CameraSettingsGUI();
+
                 foreach (UIElemenet window in _guiWindows.Values)
                 {
                     window.Render();
@@ -273,10 +275,8 @@ namespace KDBEngine.Core {
                
         private void CreateUIWindows()
         {
-            //AssetBrowser assetBrowser = new AssetBrowser();
-            //_guiWindows.Add(assetBrowser.Title, assetBrowser);
-
-
+            AssetBrowser assetBrowser = new AssetBrowser();
+            _guiWindows.Add(assetBrowser.Title, assetBrowser);
 
             Inspector inspector = new Inspector();
             _guiWindows.Add(inspector.Title, inspector);

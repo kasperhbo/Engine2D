@@ -79,6 +79,10 @@ namespace Engine2D.GameObjects
             return "SpriteRenderer";
         }
 
+        public override System.Numerics.Vector2 WindowSize()
+        {
+            return new System.Numerics.Vector2(0, 200);
+        }
 
         public override void ImGuiFields()
         {

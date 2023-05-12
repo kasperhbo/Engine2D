@@ -209,5 +209,17 @@ namespace Engine2D.Core
             string path = res[0];
             return path;
         }
+
+        public static void CreateEntry( string fileName, string lineToWriteTo, string lineToAdd) //npcName = "item1"
+        {
+            var endTag = String.Format("{0}", lineToWriteTo);
+
+            var txtLines = File.ReadAllLines(fileName).ToList();   //Fill a list with the lines from the txt file.
+
+            txtLines.Insert(txtLines.IndexOf(endTag), lineToAdd);  //Insert the line you want to add last under the tag 'item1'.
+            
+            File.WriteAllLines(fileName, txtLines);                //Add the lines including the new one.
+        }
+
     }
 }

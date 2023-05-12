@@ -38,13 +38,17 @@ namespace Engine2D.Components
                 if (payload.IsValidPayload())
                 {
                     string filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
-                    
+
                     //Component instance = (Comp;onent)Activator.CreateInstance(refComponent);
 
                     //refFile = filename;
+                    Type? type = ComponentRegistry.Get(filename);
+                    if (type != null)
+                    {
+                        Component instance = (Component)Activator.CreateInstance(type);
 
-                    Component instance = (Component)Activator.CreateInstance(ComponentRegistry.Get(filename));
-                    component = instance;   
+                        component = instance!;
+                    }
                 }
 
                 ImGui.EndDragDropTarget();
@@ -52,6 +56,18 @@ namespace Engine2D.Components
 
             component?.ImGuiFields();
 
+        }
+
+        public override System.Numerics.Vector2 WindowSize()
+        {
+            System.Numerics.Vector2 s = new System.Numerics.Vector2(0, 100);
+
+            if (component != null)
+                s.Y += component.WindowSize().Y;
+            float y = ImGui.GetFontSize() + 10;
+            y *= 6;
+            y += 29;
+            return new System.Numerics.Vector2(-1,y);
         }
 
 

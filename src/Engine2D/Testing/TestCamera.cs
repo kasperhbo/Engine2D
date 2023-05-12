@@ -23,7 +23,7 @@ namespace Engine2D.Testing
 
         private Vector2 position;
         public float zoom = 1.0f;
-                
+
 
         public TestCamera()
         {
@@ -53,7 +53,7 @@ namespace Engine2D.Testing
             //projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0, 32.0f * 21.0f, 0, 100);
             projectionMatrix = Matrix4.CreateOrthographicOffCenter(
                     -((projectionSize.X * zoom) / 2),
-                    (projectionSize.X * zoom)/2,
+                    (projectionSize.X * zoom) / 2,
                     -((projectionSize.Y * zoom) / 2),
                     ((projectionSize.Y * zoom) / 2),
                     0,
@@ -109,7 +109,7 @@ namespace Engine2D.Testing
             return zoom;
         }
 
-        
+
 
         public void setZoom(float zoom)
         {
@@ -125,14 +125,24 @@ namespace Engine2D.Testing
         public void CameraSettingsGUI()
         {
             ImGui.Begin("Camera Settings");
-            OpenTKUIHelper.DrawVec2Control("pos: ", ref position);
-            if(OpenTKUIHelper.DragFloat("Zoom: ", ref zoom))
+            OpenTKUIHelper.DrawTransformControl(() =>
             {
-                adjustProjection();
-            }
+                ImGui.TableNextColumn();
+                ImGui.Text("Position");
+                ImGui.TableNextColumn();
+                System.Numerics.Vector2 tempPos = 
+                new System.Numerics.Vector2((float)this.position.X, (float)this.position.Y);
+
+                ImGui.DragFloat2("##postion", ref tempPos);
+
+                this.position = new Vector2(tempPos.X, tempPos.Y);
+
+                ImGui.TableNextColumn();
+                ImGui.Text("Zoom");
+                ImGui.TableNextColumn();
+                if(ImGui.DragFloat("##zoom", ref zoom))adjustProjection();
+            });
             ImGui.End();
-
         }
-
     }
 }

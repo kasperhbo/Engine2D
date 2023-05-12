@@ -22,14 +22,14 @@ namespace Engine2D.UI
 
 
         internal unsafe AssetBrowser()
-        {
+        {   
             TextureData texDataDir = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\directoryicon.png", false, TextureMinFilter.Linear, TextureMagFilter.Linear);
             TextureData texDataFile = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\fileicon.png", false, TextureMinFilter.Linear, TextureMagFilter.Linear);
             TextureData texDataScene = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\mapIcon.png", false, TextureMinFilter.Linear, TextureMagFilter.Linear);
 
-            int dirTexture = ResourceManager.GetTexture(texDataDir).TexID;
-            int fileTexture = ResourceManager.GetTexture(texDataFile).TexID;
-            int sceneTexture = ResourceManager.GetTexture(texDataScene).TexID;
+            IntPtr dirTexture =   (IntPtr)ResourceManager.GetTexture(texDataDir).TexID;
+            IntPtr fileTexture =  (IntPtr)ResourceManager.GetTexture(texDataFile).TexID;
+            IntPtr sceneTexture = (IntPtr)ResourceManager.GetTexture(texDataScene).TexID;
 
             this._flags = ImGuiWindowFlags.MenuBar;
             this.Title = "Asset Browser";
@@ -55,63 +55,16 @@ namespace Engine2D.UI
 
                     ImGui.Columns(columnCount, "0", false);
 
-                    foreach (var dir in directoryInfo.GetDirectories())
+
+                    for (int i = 0; i < 100; i++)
                     {
-                        CreateAssetBrowserItem(dir.Name, dirTexture, actionOnButtonClick: () => { _currentDirectory += "\\" + dir.Name; });
-                    }
-
-                    foreach (var file in directoryInfo.GetFiles())
-                    {
-                        ImGui.PushID(file.Name);
-                        int tex = fileTexture;
-
-                        if (file.Extension == ".kdbscene")
-                        {
-                            tex = sceneTexture;
-                            CreateAssetBrowserItem(file.Name, tex, OtherActions: () => OnSceneDragAndClick(file.FullName));
-                        }
-                        if(file.Extension == ".png")
-                        {
-                            tex = ResourceManager.GetTexture(new TextureData(file.FullName, false, TextureMinFilter.Nearest, TextureMagFilter.Nearest)).TexID;
-                            CreateAssetBrowserItem(file.Name, tex, OtherActions: () => {                                
-                                if (ImGui.BeginPopupContextItem())
-                                {
-                                    if(ImGui.MenuItem("New Sprite"))
-                                    {
-                                        Sprite sprite = new Sprite();
-                                        TextureData texturedata = new TextureData(file.FullName, false, TextureMinFilter.Nearest, TextureMagFilter.Nearest);
-                                        sprite.Init(new System.Numerics.Vector2(1, 1), texturedata);
-                                        string sceneData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
-                                        string savePath = file.Directory + "\\" + file.Name + ".kdbsprite";
-
-                                        if (File.Exists(savePath))
-                                        {
-                                            File.WriteAllText(savePath, sceneData);
-                                        }
-                                        else
-                                        {
-                                            using (FileStream fs = File.Create(savePath))
-                                            {
-                                                fs.Close();
-                                            }
-
-                                            File.WriteAllText(savePath, sceneData);
-                                        }
-                                    }                                        
-                                    ImGui.EndPopup();
-                                }
-                            });
-                        }
-
-                        if (file.Extension == ".kdbsprite")
-                        {
-                            Sprite sprite = JsonConvert.DeserializeObject<Sprite>(File.ReadAllText(file.FullName));
-                            CreateAssetBrowserItem(file.Name, ResourceManager.GetTexture(sprite.TextureData).TexID, 
-                                actionOnButtonClick: () => {
-                                    Engine.Get().CurrentSelectedAsset = sprite;
-                                }
-                            );
-                        }
+                        //OpenTKUIHelper.IconWithText(i.ToString(), i, dirTexture, new OpenTK.Mathematics.Vector2(56,56));
+                        //ImGui.PushID(i);
+                        //ImGui.ImageButton(i.ToString(), dirTexture, new System.Numerics.Vector2(64, 64));
+                        //ImGui.AlignTextToFramePadding();
+                        //ImGui.Text("test");
+                        //ImGui.PopID();
+                        //ImGui.NextColumn();
                     }
                 }
             };
@@ -119,35 +72,7 @@ namespace Engine2D.UI
 
 
 
-        private void OnSceneDragAndClick(string file)
-        {
-            //TODO: MAKE THIS WITH POINTERS ETC
-            if (ImGui.BeginDragDropSource())
-            {
-                CurrentDraggingFileName = file;
-
-                ImGui.SetDragDropPayload("SCENE_DRAG_DROP", IntPtr.Zero, 0);
-                ImGui.Text(CurrentDraggingFileName);
-                ImGui.EndDragDropSource();
-            }
-        }
-
-
-        private void CreateAssetBrowserItem(string name, int texture, Action? actionOnButtonClick = null, Action? OtherActions = null)
-        {
-            ImGui.PushID(name);
-            if (ImGui.ImageButton(name, (IntPtr)texture, new System.Numerics.Vector2(128 / 2, 128 / 2)))
-            {                
-                   actionOnButtonClick?.Invoke();
-            }
-
-            
-            OtherActions?.Invoke();
-
-            ImGui.Text(name);
-            ImGui.NextColumn();
-            ImGui.PopID();
-        }
+       
     }
 }
 

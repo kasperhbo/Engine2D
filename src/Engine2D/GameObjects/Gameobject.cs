@@ -3,12 +3,17 @@ using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Testing;
 using Engine2D.UI;
+using GlmNet;
 using ImGuiNET;
 using KDBEngine.Core;
 using Newtonsoft.Json;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
+using System.Drawing;
 using System.Globalization;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Engine2D.GameObjects
@@ -113,81 +118,57 @@ namespace Engine2D.GameObjects
 
         public override void OnGui()
         {
-            //ImGui.Text("Name: ");
-            //ImGui.SameLine();
-            //ImGui.InputText("", ref Name, 256);
-            //ImGui.SameLine();
-            //float xSize = ImGui.GetContentRegionAvail().X;
-            //ImGui.Dummy(new System.Numerics.Vector2(xSize-30, 0));
-            //ImGui.SameLine();
-            //if(ImGui.Button("+", new System.Numerics.Vector2(28, 28)))
-            //{
-
-            //}
-
            
             ImGui.InputText("##name", ref Name, 256);
             ImGui.SameLine();
             ImGui.Separator();
 
-            if (ImGui.CollapsingHeader("Transform"))
+             List<Component> componentsToRemove = new List<Component>();
+
+            OpenTKUIHelper.DrawTransformControl(() =>
             {
-                //ImGui.DragFloat2("Position", ref transform.position);
-                OpenTKUIHelper.DrawVec2Control("Position", ref transform.position);
-                OpenTKUIHelper.DrawVec2Control("Size", ref transform.size);
-                OpenTKUIHelper.DragFloat("Rotation", ref transform.rotation);
-            }
-            List<Component> componentsToRemove = new List<Component>();
+                ImGui.TableNextColumn();
+                ImGui.Text("Position");
+                ImGui.TableNextColumn();
+                ImGui.DragFloat2("##postion", ref transform.position);
 
-            foreach (var component in components)
+                ImGui.TableNextColumn();
+                ImGui.Text("Rotation");
+                ImGui.TableNextColumn();
+                ImGui.DragFloat("##rotation", ref transform.rotation);
+
+                ImGui.TableNextColumn();
+                ImGui.Text("Scale");
+                ImGui.TableNextColumn();
+                ImGui.DragFloat2("##scale", ref transform.size);
+            });
+
+            for (int i = 0; i < components.Count; i++)
             {
-                ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.AllowItemOverlap | ImGuiTreeNodeFlags.FramePadding;
-
-                System.Numerics.Vector2 contentRegionAvailable = ImGui.GetContentRegionAvail();
-
-                ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new System.Numerics.Vector2(4, 4));
-
-                float lineHeight = EngineSettings.DefaultFontSize + 3 * 2.0f;
-                
-                bool open = false;
-
-                ImGui.Separator();
-                string title = component.Type;
-                if (component.Type == "ScriptHolderComponent")
+                ImGui.PushID(i);
+                if (ImGui.CollapsingHeader(components[i].GetItemType(), ImGuiTreeNodeFlags.DefaultOpen))
                 {
-                    ScriptHolderComponent scriptHolder = (ScriptHolderComponent)component;
-                    if(scriptHolder.component != null)
-                    {
-                        title = scriptHolder.component.Type;
-                    }
+                    ImGui.PushStyleColor(ImGuiCol.ChildBg, new System.Numerics.Vector4(0.19f, .19f, .19f, 1)); //For visibility
+
+                    ImGui.BeginChild("##", new System.Numerics.Vector2(0, components[i].WindowSize().Y), false, 0); ; // Leave ~100
+                    ImGui.PopStyleColor(3);
+
+                    //ImGui.BeginGroup();
+
+                    components[i].ImGuiFields();
+                    //ImGui.EndGroup();
+                    //ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), (int)ImGuiCol.ChildBg);
+                    ImGui.GetForegroundDrawList().AddRect(
+                        ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), 3);
+
+                    ImGui.EndChild();
                 }
-
-                open = ImGui.TreeNodeEx(title, treeNodeFlags, title);
-
-                ImGui.PopStyleVar();
-                ImGui.SameLine(contentRegionAvailable.X - lineHeight * 0.5f);
-                if (ImGui.Button("+", new System.Numerics.Vector2(lineHeight, lineHeight)))
-                {
-                    ImGui.OpenPopup("ComponentSettings");
-                }
-
-                if (ImGui.BeginPopup("ComponentSettings"))
-                {
-                    if (ImGui.MenuItem("Remove component"))
-                        componentsToRemove.Add(component);
-
-                    ImGui.EndPopup();
-                }
-                if (open)
-                {
-                    component.ImGuiFields();
-
-
-                }
+                ImGui.PopID();
             }
 
+
             {
-                ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y - 30));
+                ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y - 80));
                 ImGui.Separator();
 
                 if (ImGui.Button("Add component", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, 26)))
@@ -200,8 +181,6 @@ namespace Engine2D.GameObjects
                         {
                             string component = (string)GCHandle.FromIntPtr(payload.Data).Target;
                             Log.Message("Dropped: " + component);
-                            
-                            //Window.Get().ChangeScene(new LevelEditorScene(), filename);
                         }
 
                         ImGui.EndDragDropTarget();
@@ -209,8 +188,11 @@ namespace Engine2D.GameObjects
 
                     ImGui.OpenPopup("AddComponent");
                 }
+                ImGui.GetMousePos();
+                
+                ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y));
 
-              
+
                 //TODO: ADD COMPONENT TO GOP
                 if (ImGui.BeginPopup("AddComponent"))
                 {
@@ -269,4 +251,6 @@ namespace Engine2D.GameObjects
         }
 
     }
+
+
 }
