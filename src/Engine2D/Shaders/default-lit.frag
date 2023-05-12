@@ -16,12 +16,11 @@ uniform float uGlobalLightIntensity; // set as (0.3, 0.3, 0.3), night!
 uniform vec2 uPointLightPos;
 
 vec3 point_light_col = vec3(0.999, 0.99, 0.999);
-float point_light_intensity = 1;
+float point_light_intensity = 100;
 
 void main()
 {
     if (fTexId > 0) {
-
         int id = int(fTexId);
         switch (id) {
             case 0:
