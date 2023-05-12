@@ -1,37 +1,28 @@
-﻿using Engine2D.Core;
-using ImGuiNET;
+﻿using System.Numerics;
+using Engine2D.Core;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;  
-using System.Threading.Tasks;
-using ImGuizmoNET;
 
-namespace Engine2D.Rendering
+namespace Engine2D.Rendering;
+
+public class Sprite : Asset
 {
-    public class Sprite : Asset
+    public bool IsDirty = false;
+    [JsonIgnore] public Texture? Texture;
+
+    public Vector2 TextureCoords = new(1, 1);
+
+    public TextureData TextureData = new();
+
+    public string Type = "Sprite";
+
+    public void Init(Vector2 textureCoords, TextureData textureData)
     {
-        [JsonIgnore]public Texture? Texture = null;
+        TextureCoords = textureCoords;
+        TextureData = textureData;
+        Texture = ResourceManager.GetTexture(TextureData);
+    }
 
-        public Vector2 TextureCoords = new Vector2(1,1);        
-
-        public TextureData TextureData = new(); 
-        public bool IsDirty = false;
-
-        public string Type = "Sprite";
-
-        public void Init(Vector2 textureCoords, TextureData textureData)
-        {
-            this.TextureCoords = textureCoords; 
-            this.TextureData = textureData;
-            Texture = ResourceManager.GetTexture(TextureData);
-        }
-
-        public override void OnGui()
-        {
-               
-        }
+    public override void OnGui()
+    {
     }
 }

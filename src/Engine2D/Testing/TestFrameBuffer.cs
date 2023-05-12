@@ -1,59 +1,51 @@
 ﻿using Engine2D.Rendering;
 using OpenTK.Graphics.OpenGL;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Engine2D.Testing
+namespace Engine2D.Testing;
+
+internal class TestFrameBuffer
 {
-    internal class TestFrameBuffer
+    private readonly int fboId;
+    private readonly Texture texture;
+
+    public TestFrameBuffer(int width, int height)
     {
-        private int fboId = 0;
-        private Texture texture;
+        // Generate framebuffer
+        fboId = GL.GenFramebuffer();
+        GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
 
-        public TestFrameBuffer(int width, int height)
-        {
-            // Generate framebuffer
-            fboId = GL.GenFramebuffer();
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
+        texture = new Texture(width, height);
+        GL.FramebufferTexture2D(
+            FramebufferTarget.Framebuffer,
+            FramebufferAttachment.ColorAttachment0,
+            TextureTarget.Texture2D,
+            texture.TexID,
+            0
+        );
 
-            this.texture = new Texture(width, height);
-            GL.FramebufferTexture2D(
-                FramebufferTarget.Framebuffer,
-                FramebufferAttachment.ColorAttachment0,
-                TextureTarget.Texture2D,
-                this.texture.TexID,
-                0
-            );
+        // Create renderbuffer store the depth info
+        var rboId = GL.GenRenderbuffer();
+        GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, rboId);
+        GL.RenderbufferStorage(
+            RenderbufferTarget.Renderbuffer,
+            RenderbufferStorage.DepthComponent32,
+            width,
+            height
+        );
+        GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer,
+            FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, rboId);
+        GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+    }
 
-            // Create renderbuffer store the depth info
-            int rboId = GL.GenRenderbuffer();
-            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, rboId);
-            GL.RenderbufferStorage(
-                    RenderbufferTarget.Renderbuffer,
-                    RenderbufferStorage.DepthComponent32,
-                    width,
-                    height
-            );
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer,
-                FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, rboId);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-        }
+    public int GetTextureID => texture.TexID;
 
-        public void Bind()
-        {
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
-        }
+    public void Bind()
+    {
+        GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
+    }
 
-        public void UnBind()
-        {
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-        }
-
-        public int GetTextureID => texture.TexID;
+    public void UnBind()
+    {
+        GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
 }

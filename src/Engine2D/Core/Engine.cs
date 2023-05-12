@@ -1,74 +1,70 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using Engine2D.Core;
+using Engine2D.Logging;
+using Engine2D.Rendering;
+using Engine2D.SavingLoading;
+using Engine2D.Scenes;
+using Engine2D.Testing;
+using Engine2D.UI;
+using ImGuiNET;
+using KDBEngine.UI;
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
-using OpenTK.Mathematics;
-using Engine2D.Scenes;
-using System.Runtime.CompilerServices;
-using Engine2D.GameObjects;
-using Newtonsoft.Json;
-using Engine2D.Rendering;
-using System.Data;
-using static System.Formats.Asn1.AsnWriter;
-using KDBEngine.UI;
-using Engine2D.UI;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using ImGuiNET;
-using Newtonsoft.Json.Bson;
-using Engine2D.Core;
-using Engine2D.Testing;
-using OpenTK.Compute.OpenCL;
-using Newtonsoft.Json.Linq;
-using System.Reflection;
-using Engine2D.SavingLoading;
-using Box2DSharp.Common;
-using Engine2D.Logging;
-using System.Diagnostics;
 
-namespace KDBEngine.Core { 
+namespace KDBEngine.Core
+{
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
     // OpenGL's initial hurdle is quite large, but once you get past that, things will start making more sense.
     public class Engine : GameWindow
-    {        
-        private static int small = 1;
-		private float width = 1920/small;
-		private float height = 1080/small;
+    {
+        private static readonly int small = 1;
+
+        private static Engine _instance;
+
+        internal Scene? _currentScene;
+
+        private readonly Dictionary<string, UIElemenet> _guiWindows = new();
+
+        private TestContentBrowser cb;
+
+        internal Asset? CurrentSelectedAsset;
+
+        //TODO: MAKE THIS STATIC AND SAVABLE
+        private readonly EngineSettingsWindow engineSettingsWindow = new();
+
+        private GameViewport gameViewport = new();
+        private readonly float height = 1080 / small;
+        internal ImGuiController ImGuiController;
+        internal TestCamera testCamera;
 
         private TestFrameBuffer testFB;
         private TestViewportWindow viewportWindow;
+        private readonly float width = 1920 / small;
 
-        private static Engine _instance = null;
-        
-        private GameViewport gameViewport = new GameViewport();
 
-        internal Scene? _currentScene = null;
-        internal TestCamera testCamera;
-        internal ImGuiController ImGuiController;
+        public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
+            gameWindowSettings, nativeWindowSettings)
+        {
+        }
 
-        private Dictionary<string, UIElemenet> _guiWindows = new Dictionary<string, UIElemenet>();
-        
-        //TODO: MAKE THIS STATIC AND SAVABLE
-        private EngineSettingsWindow engineSettingsWindow = new EngineSettingsWindow();
-
-        internal Asset? CurrentSelectedAsset = null;
-
-        private TestContentBrowser cb;
-        
         public static Engine Get()
-        {   
-            if (_instance  == null)
+        {
+            if (_instance == null)
             {
-                GameWindowSettings gameWindowSettings = GameWindowSettings.Default;
+                var gameWindowSettings = GameWindowSettings.Default;
                 gameWindowSettings.UpdateFrequency = WindowSettings.s_UpdateFrequency;
                 gameWindowSettings.RenderFrequency = WindowSettings.s_RenderFrequency;
 
-                NativeWindowSettings ntwSettings  = NativeWindowSettings.Default;
+                var ntwSettings = NativeWindowSettings.Default;
                 ntwSettings.Title = WindowSettings.s_Title;
-                ntwSettings.Size = WindowSettings.s_Size;                
-                
-                Engine window = new Engine(gameWindowSettings, ntwSettings);
-                _instance = window;                
+                ntwSettings.Size = WindowSettings.s_Size;
+
+                var window = new Engine(gameWindowSettings, ntwSettings);
+                _instance = window;
             }
-                        
+
             return _instance;
         }
 
@@ -76,17 +72,11 @@ namespace KDBEngine.Core {
         {
             if (_instance == null)
             {
-                Engine window = new Engine(gameWindowSettings, nativeWindowSettings);
-                _instance = window;                
+                var window = new Engine(gameWindowSettings, nativeWindowSettings);
+                _instance = window;
             }
 
             return _instance;
-        }
-
-
-        public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
-        {
-            
         }
 
         protected override void OnLoad()
@@ -102,25 +92,18 @@ namespace KDBEngine.Core {
 
             ImGuiController = new ImGuiController(Size.X, Size.Y);
 
-            if (Settings.s_IsEngine)
-            {
-                CreateUIWindows();
-            }
+            if (Settings.s_IsEngine) CreateUIWindows();
 
             SaveLoad.LoadScene(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
             TestInput.Init();
-            
-            testFB = new((int)width, (int)height);
-            testCamera = new();
-            viewportWindow = new();
-            cb = new();
+
+            testFB = new TestFrameBuffer((int)width, (int)height);
+            testCamera = new TestCamera();
+            viewportWindow = new TestViewportWindow();
+            cb = new TestContentBrowser();
 
 
-
-            if (!Settings.s_IsEngine)
-            {
-                _currentScene.IsPlaying = true;
-            }
+            if (!Settings.s_IsEngine) _currentScene.IsPlaying = true;
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -132,7 +115,6 @@ namespace KDBEngine.Core {
             _currentScene?.EditorUpdate(args.Time);
             TestInput.endFrame();
         }
-                
 
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -141,21 +123,16 @@ namespace KDBEngine.Core {
 
             if (Settings.s_IsEngine)
             {
-                if(TestViewportWindow.IsMouseInsideViewport() && TestInput.MousePressed(MouseButton.Left))
-                {
-                    foreach (Gameobject go in _currentScene?.Gameobjects)
-                    {
+                if (TestViewportWindow.IsMouseInsideViewport() && TestInput.MousePressed(MouseButton.Left))
+                    foreach (var go in _currentScene?.Gameobjects)
                         if (go.AABB(TestInput.getWorld()))
                         {
-                            Engine.Get().CurrentSelectedAsset = go;
+                            Get().CurrentSelectedAsset = go;
                             break;
                         }
-                    }
-                }
 
-                if(CurrentSelectedAsset != null)
+                if (CurrentSelectedAsset != null)
                 {
-
                 }
 
                 testFB.Bind();
@@ -166,31 +143,26 @@ namespace KDBEngine.Core {
                 ImGui.BeginMainMenuBar();
                 if (ImGui.BeginMenu("Menu"))
                 {
-                    if (ImGui.MenuItem("Save Scene"))
-                    {
-                        SaveLoad.SaveScene(_currentScene);
-                    }
+                    if (ImGui.MenuItem("Save Scene")) SaveLoad.SaveScene(_currentScene);
                     if (ImGui.MenuItem("Load Scene"))
                     {
-
                     }
+
                     ImGui.EndMenu();
                 }
+
                 if (ImGui.BeginMenu("Help"))
                 {
-                    if (ImGui.MenuItem("Website"))
-                    {
-                        Utils.TryOpenUrl("https://github.com/kasperhbo/Engine2D");
-                    }
+                    if (ImGui.MenuItem("Website")) Utils.TryOpenUrl("https://github.com/kasperhbo/Engine2D");
                     ImGui.EndMenu();
                 }
+
                 if (ImGui.BeginMenu("Settings"))
                 {
-                    if(ImGui.MenuItem("Engine Settings")){
-                        engineSettingsWindow.SetVisibility(true);
-                    }
+                    if (ImGui.MenuItem("Engine Settings")) engineSettingsWindow.SetVisibility(true);
                     ImGui.EndMenu();
                 }
+
                 ImGui.EndMainMenuBar();
                 ImGui.DockSpaceOverViewport();
                 ImGui.ShowDemoWindow();
@@ -205,28 +177,26 @@ namespace KDBEngine.Core {
                 //    Console.WriteLine("double");
 
                 ImGui.End();
-                
+
                 testCamera.CameraSettingsGUI();
 
-                foreach (UIElemenet window in _guiWindows.Values)
-                {
-                    window.Render();
-                }
+                foreach (var window in _guiWindows.Values) window.Render();
 
                 _currentScene.OnGui();
-                
+
                 ImGuiController.Render();
 
                 ImGuiController.CheckGLError("End of frame");
                 SwapBuffers();
                 return;
             }
+
             _currentScene?.GameUpdate(e.Time);
-            _currentScene?.Render(dt: e.Time);
+            _currentScene?.Render(e.Time);
 
             SwapBuffers();
         }
-        
+
         protected override void OnResize(ResizeEventArgs e)
         {
             base.OnResize(e);
@@ -235,13 +205,13 @@ namespace KDBEngine.Core {
             _currentScene?.OnResized(e);
 
             testCamera.adjustProjection();
-            this.testFB = new TestFrameBuffer(ClientSize.X, ClientSize.Y);
+            testFB = new TestFrameBuffer(ClientSize.X, ClientSize.Y);
         }
 
         protected override void OnTextInput(TextInputEventArgs e)
         {
             base.OnTextInput(e);
-            
+
             _currentScene?.OnTextInput(e);
         }
 
@@ -262,16 +232,16 @@ namespace KDBEngine.Core {
         internal void SwitchScene(string sceneName)
         {
             GameRenderer.Flush();
-            this.Title = WindowSettings.s_Title + " | " + sceneName;
+            Title = WindowSettings.s_Title + " | " + sceneName;
             Scene newScene = new();
             newScene.Init(this, sceneName, Size.X, Size.Y);
-            _currentScene = newScene;           
+            _currentScene = newScene;
         }
 
         internal void NewScene(string sceneName)
         {
             GameRenderer.Flush();
-            this.Title = WindowSettings.s_Title + " | " + sceneName;
+            Title = WindowSettings.s_Title + " | " + sceneName;
             Scene newScene = new();
             newScene.Init(this, sceneName, Size.X, Size.Y);
             _currentScene = newScene;
@@ -286,19 +256,19 @@ namespace KDBEngine.Core {
 
             SaveLoad.LoadScene(ProjectSettings.s_FullProjectPath + "\\defaultscenes\\example.kdbscene");
         }
-               
+
         private void CreateUIWindows()
         {
-            AssetBrowser assetBrowser = new AssetBrowser();
+            var assetBrowser = new AssetBrowser();
             _guiWindows.Add(assetBrowser.Title, assetBrowser);
 
-            Inspector inspector = new Inspector();
+            var inspector = new Inspector();
             _guiWindows.Add(inspector.Title, inspector);
 
-            SceneHierachy hierarch = new SceneHierachy(inspector);
+            var hierarch = new SceneHierachy(inspector);
             _guiWindows.Add(hierarch.Title, hierarch);
 
-            
+
             _guiWindows.Add(engineSettingsWindow.Title, engineSettingsWindow);
         }
 
@@ -320,14 +290,13 @@ namespace KDBEngine.Core {
 
         internal float getTargetAspectRatio()
         {
-            return (float)getWidth() / getHeight();
+            return getWidth() / getHeight();
         }
     }
-
 }
 
 public static class EngineSettings
-{ 
+{
     public static float GlobalScale = 1;
     public static float DefaultFontSize = 18;
 }
@@ -335,8 +304,8 @@ public static class EngineSettings
 public static class WindowSettings
 {
     public static string s_Title = "Kasper Engine";
-    public static Vector2i s_Size = new Vector2i(1920, 1080);
-    
+    public static Vector2i s_Size = new(1920, 1080);
+
     public static float s_UpdateFrequency = 60;
     public static float s_RenderFrequency = 60;
 }

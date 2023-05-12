@@ -1,106 +1,104 @@
-﻿using Engine2D.Components;
+﻿using System.Numerics;
+using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.Rendering;
-using ImGuiNET;
-
 using Newtonsoft.Json;
-using System.Numerics;
 
-namespace Engine2D.GameObjects
+namespace Engine2D.GameObjects;
+
+public class SpriteColor
 {
-    public class SpriteColor
+    public Vector4 Color;
+
+    public SpriteColor()
     {
-        public Vector4 Color = new();
+        Color = new Vector4();
+    }
 
-        public SpriteColor()
+    public SpriteColor(Vector4 color)
+    {
+        Color = color;
+    }
+
+    public SpriteColor(float r, float g, float b, float a)
+    {
+        Color = new Vector4(r, g, b, a);
+    }
+}
+
+[JsonConverter(typeof(ComponentSerializer))]
+public class SpriteRenderer : Component
+{
+    [ShowUI(show = false)] private SpriteColor _lastColor = new();
+
+    [ShowUI(show = false)] private readonly Transform _lastTransform = new();
+    public SpriteColor Color = new();
+
+    [ShowUI(show = false)] internal bool IsDirty = true;
+
+    [JsonIgnore] internal Texture texture;
+
+    internal Vector2[] TextureCoords =
+    {
+        new(1, 1),
+        new(1, 0),
+        new(0, 0),
+        new(0, 1)
+    };
+
+    public TextureData? textureData;
+
+    public override void Init(Gameobject parent)
+    {
+        base.Init(parent);
+        if (textureData != null)
         {
-            Color = new();
+            Console.WriteLine("has texture data, loading texture...." + textureData.texturePath);
+            texture = ResourceManager.GetTexture(textureData);
         }
 
-        public SpriteColor(Vector4 color)
+        GameRenderer.AddSpriteRenderer(this);
+    }
+
+    public override void Start()
+    {
+    }
+
+    public override void EditorUpdate(double dt)
+    {
+        //Console.WriteLine(this.texture?.TexID);
+        if (!_lastTransform.Equals(Parent.transform))
         {
-            Color = color;
+            IsDirty = true;
+            Parent.transform.Copy(_lastTransform);
         }
 
-        public SpriteColor(float r, float g, float b, float a)
+        if (!_lastColor.Color.Equals(Color.Color))
         {
-            Color = new(r, g, b, a);
+            IsDirty = true;
+            _lastColor = new SpriteColor(Color.Color);
         }
     }
 
-    [JsonConverter(typeof(ComponentSerializer))]
-    public class SpriteRenderer : Component
+    public override void GameUpdate(double dt)
+
     {
-        public SpriteColor Color = new SpriteColor();
-
-        [ShowUI(show = false)] private Transform _lastTransform = new();
-        [ShowUI(show = false)] SpriteColor _lastColor = new SpriteColor();
-
-        [ShowUI(show = false)]internal bool IsDirty = true;
-
-        [JsonIgnore]internal Texture texture;
-        
-        public TextureData? textureData;
-
-        internal Vector2[] TextureCoords =
+        if (!_lastTransform.Equals(Parent.transform))
         {
-            new Vector2(1, 1),
-            new Vector2(1, 0),
-            new Vector2(0, 0),
-            new Vector2(0, 1)
-        };
-
-        public override void Init(Gameobject parent)
-        {
-            base.Init(parent);
-            if(this.textureData != null)
-            {
-                Console.WriteLine("has texture data, loading texture...." + textureData.texturePath);
-                texture = ResourceManager.GetTexture(textureData);
-            }
-            GameRenderer.AddSpriteRenderer(this);
+            IsDirty = true;
+            Parent.transform.Copy(_lastTransform);
         }
 
-        public override  void Start()
+        if (!_lastColor.Color.Equals(Color.Color))
         {
+            IsDirty = true;
+            _lastColor = new SpriteColor(Color.Color);
         }
+    }
 
-        public override void EditorUpdate(double dt)
-        {
-            //Console.WriteLine(this.texture?.TexID);
-            if (!_lastTransform.Equals(Parent.transform))
-            {
-                IsDirty = true;
-                Parent.transform.Copy(_lastTransform);
-            }
-
-            if (!_lastColor.Color.Equals(Color.Color))
-            {
-                IsDirty = true;
-                _lastColor = new(Color.Color);
-            }
-        }
-
-        public override void GameUpdate(double dt)
-        
-        {
-            if (!_lastTransform.Equals(Parent.transform))
-            {
-                IsDirty = true;
-                Parent.transform.Copy(_lastTransform);
-            }
-
-            if (!_lastColor.Color.Equals(Color.Color))
-            {
-                IsDirty = true;
-                _lastColor = new(Color.Color);
-            }
-        }
-
-        public override string GetItemType()
-        {
-            return "SpriteRenderer";
-        }
+    public override string GetItemType()
+    {
+        return "SpriteRenderer";
     }
 }

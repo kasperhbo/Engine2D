@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Engine2D.Core;
 
-namespace Engine2D.Core
+internal class UIDManager
 {
-    internal class UIDManager
-    {
-    }
 }

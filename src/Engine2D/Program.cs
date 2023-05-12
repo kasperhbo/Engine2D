@@ -1,7 +1,11 @@
 ﻿//using ImGuiNET;
+
 using KDBEngine.Core;
 
-public class Program { 
+namespace Engine2D;
+
+public class Program
+{
     public static void Main()
     {
         Engine.Get();

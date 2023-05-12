@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Engine2D.UI;
 
-namespace Engine2D.UI
+internal class MenuBar
 {
-    internal class MenuBar
-    {
-    }
 }

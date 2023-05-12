@@ -3,73 +3,65 @@ using Engine2D.Rendering;
 using KDBEngine.Shaders;
 using Newtonsoft.Json;
 using OpenTK.Graphics.OpenGL4;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Engine2D.Core
+namespace Engine2D.Core;
+
+internal struct ShaderData
 {
-    internal struct ShaderData
+    internal string FragPath;
+    internal string VertexPath;
+}
+
+[JsonConverter(typeof(ComponentSerializer))]
+public class TextureData
+{
+    public bool flipped;
+    public TextureMagFilter magFilter;
+    public TextureMinFilter minFilter;
+    public string texturePath;
+
+    public string Type = "TextureData";
+
+    public TextureData()
     {
-        internal string FragPath;
-        internal string VertexPath;
     }
 
-    [JsonConverter(typeof(ComponentSerializer))]
-    public class TextureData
+    public TextureData(string texturePath, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
     {
-        public string texturePath;
-        public bool flipped;
-        public TextureMinFilter minFilter;
-        public TextureMagFilter magFilter;
+        this.texturePath = texturePath;
+        this.flipped = flipped;
+        this.minFilter = minFilter;
+        this.magFilter = magFilter;
+    }
+}
 
-        public string Type = "TextureData";
+internal static class ResourceManager
+{
+    private static readonly Dictionary<ShaderData, Shader> _shaders = new();
+    private static readonly Dictionary<TextureData, Texture> _textures = new();
 
-        public TextureData()
+    internal static Shader GetShader(ShaderData shaderLocations)
+    {
+        Shader shader;
+        if (!_shaders.TryGetValue(shaderLocations, out shader))
         {
+            shader = new Shader(shaderLocations.VertexPath, shaderLocations.FragPath);
+            _shaders.Add(shaderLocations, shader);
         }
 
-        public TextureData(string texturePath, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
-        {
-            this.texturePath = texturePath;
-            this.flipped = flipped;
-            this.minFilter = minFilter;
-            this.magFilter = magFilter;
-        }
+        return shader;
     }
 
-
-    internal static class ResourceManager
+    internal static Texture GetTexture(TextureData textureData)
     {
-        private static Dictionary<ShaderData, Shader> _shaders = new Dictionary<ShaderData, Shader>();
-        private static Dictionary<TextureData, Texture> _textures = new Dictionary<TextureData, Texture>();
-
-        internal static Shader GetShader(ShaderData shaderLocations)
+        Texture tex;
+        if (!_textures.TryGetValue(textureData, out tex))
         {
-            Shader shader;
-            if (!_shaders.TryGetValue(shaderLocations, out shader))
-            {
-                shader = new Shader(shaderLocations.VertexPath, shaderLocations.FragPath);
-                _shaders.Add(shaderLocations, shader);
-            }
-
-            return shader;
+            tex = new Texture(textureData.texturePath, textureData.flipped, textureData.minFilter,
+                textureData.magFilter);
+            _textures.Add(textureData, tex);
         }
 
-        internal static Texture GetTexture(TextureData textureData)
-        {
-            Texture tex;
-            if (!_textures.TryGetValue(textureData, out tex))
-            {
-                tex = new Texture(textureData.texturePath, textureData.flipped, textureData.minFilter, textureData.magFilter);
-                _textures.Add(textureData, tex);
-            }
-
-            return tex;
-        }
-
-
+        return tex;
     }
 }

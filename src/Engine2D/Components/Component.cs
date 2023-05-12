@@ -1,144 +1,143 @@
-﻿using Engine2D.Flags;
-using Engine2D.GameObjects;
-using Newtonsoft.Json;
+﻿using System.Numerics;
 using System.Reflection;
-using System.Numerics;
-using System.ComponentModel;
-using ImGuiNET;
+using Engine2D.Flags;
+using Engine2D.GameObjects;
 using Engine2D.UI;
+using ImGuiNET;
+using Newtonsoft.Json;
 
-namespace Engine2D.Components
+namespace Engine2D.Components;
+
+[JsonConverter(typeof(ComponentSerializer))]
+public abstract class Component
 {
-    [JsonConverter(typeof(ComponentSerializer))]
-    public abstract class Component
-    {        
-        [JsonIgnore]public Gameobject Parent;
-        [JsonIgnore]private bool _initialized = false;
-        public string Type => GetItemType();
+    [JsonIgnore] private bool _initialized;
+    [JsonIgnore] public Gameobject Parent;
+
+    protected float sizeYGUI;
+    public string Type => GetItemType();
 
 
-        public abstract string GetItemType();
-        
+    public abstract string GetItemType();
 
-        public virtual void Init(Gameobject parent)
+
+    public virtual void Init(Gameobject parent)
+    {
+        if (_initialized) return;
+        _initialized = true;
+        Parent = parent;
+    }
+
+    public virtual void Start()
+    {
+    }
+
+    public virtual void EditorUpdate(double dt)
+    {
+    }
+
+    public virtual void GameUpdate(double dt)
+    {
+    }
+
+    public virtual void Destroy()
+    {
+    }
+
+    public virtual Vector2 WindowSize()
+    {
+        return new Vector2(0, sizeYGUI);
+    }
+
+
+    public virtual float ImGuiFields()
+    {
+        sizeYGUI = 3;
+        var y = ImGui.GetFontSize() + 14;
+        var fields = GetType().GetFields(
+            BindingFlags.DeclaredOnly
+            | BindingFlags.Public
+            | BindingFlags.NonPublic
+            | BindingFlags.Instance
+        );
+        foreach (var field in fields)
         {
-            if(_initialized) return;
-            _initialized = true;
-            this.Parent = parent;
-        }
+            var type = field.FieldType;
+            var value = field.GetValue(this);
+            var name = field.Name;
 
-        public virtual void Start()
-        { 
-            
-        }
-
-        public virtual void EditorUpdate(double dt)
-        { 
-        }
-
-        public virtual void GameUpdate(double dt)
-        {
-        }
-
-        public virtual void Destroy()
-        {
-        }
-
-        protected float sizeYGUI = 0;
-        public virtual System.Numerics.Vector2 WindowSize()
-        {            
-            return new Vector2(0, sizeYGUI);
-        }
-
-
-
-
-        public virtual float ImGuiFields()
-        {
-            sizeYGUI = 3;
-            float y = ImGui.GetFontSize() + 14;
-            FieldInfo[] fields = this.GetType().GetFields(
-                                                          BindingFlags.DeclaredOnly
-                                                        | BindingFlags.Public
-                                                        | BindingFlags.NonPublic
-                                                        | BindingFlags.Instance                                                        
-                                                        ); foreach (var field in fields)
-            {
-                Type type = field.FieldType;
-                var value = field.GetValue(this);
-                string name = field.Name;
-
-                var attrs = (ShowUIAttribute[])field.GetCustomAttributes
+            var attrs = (ShowUIAttribute[])field.GetCustomAttributes
                 (typeof(ShowUIAttribute), false);
 
-                bool ignore = false;
-                foreach (var attr in attrs) if (!attr.show) ignore = true;
+            var ignore = false;
+            foreach (var attr in attrs)
+                if (!attr.show)
+                    ignore = true;
 
-                
 
-                if (!ignore)
+            if (!ignore)
+            {
+                if (type == typeof(SpriteColor))
                 {
-                    if (type == typeof(SpriteColor))
-                    {
-                        SpriteColor val = (SpriteColor)value;
+                    var val = (SpriteColor)value;
 
-                        sizeYGUI += y;
-                        
-                        OpenTKUIHelper.DrawProperty(name, ref val);
-                        
-                        field.SetValue(this, val);
-                    }
+                    sizeYGUI += y;
 
-                    if (type == typeof(int))
-                    {
-                        int val = (int)value;
-                        sizeYGUI += y;
-                        OpenTKUIHelper.DrawProperty(name, ref val);
-                        field.SetValue(this, val);
-                    }
+                    OpenTKUIHelper.DrawProperty(name, ref val);
 
-                    if (type == typeof(float))
-                    {
-                        float val = (float)value;
-                        sizeYGUI += y;
-                        OpenTKUIHelper.DrawProperty(name, ref val);
-                        field.SetValue(this,val);
-                    }
+                    field.SetValue(this, val);
+                }
 
-                    if (type == typeof(bool))
-                    {
-                        bool val = (bool)value;
-                        sizeYGUI += y;
-                        OpenTKUIHelper.DrawProperty(name, ref val);
-                        field.SetValue(this, val);
-                    }
+                if (type == typeof(int))
+                {
+                    var val = (int)value;
+                    sizeYGUI += y;
+                    OpenTKUIHelper.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
 
-                    if (type == typeof(System.Numerics.Vector2))
-                    {
-                        Vector2 val = (Vector2)value;
-                        sizeYGUI += y;
-                        OpenTKUIHelper.DrawProperty(name, ref val);
-                        field.SetValue(this,val);
-                    }
+                if (type == typeof(float))
+                {
+                    var val = (float)value;
+                    sizeYGUI += y;
+                    OpenTKUIHelper.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
 
-                    if (type == typeof(Vector3))
-                    {
-                        Vector3 val = (Vector3)value;
-                        sizeYGUI += y;
-                        OpenTKUIHelper.DrawProperty(name, ref val);
-                        field.SetValue(this,val);
-                    }
+                if (type == typeof(bool))
+                {
+                    var val = (bool)value;
+                    sizeYGUI += y;
+                    OpenTKUIHelper.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
 
-                    if (type == typeof(Vector4))
-                    {
-                        Vector4 val = (Vector4)value;
-                        sizeYGUI += y;
-                        OpenTKUIHelper.DrawProperty(name, ref val);
-                        field.SetValue(this,val);
-                    }
+                if (type == typeof(Vector2))
+                {
+                    var val = (Vector2)value;
+                    sizeYGUI += y;
+                    OpenTKUIHelper.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
+
+                if (type == typeof(Vector3))
+                {
+                    var val = (Vector3)value;
+                    sizeYGUI += y;
+                    OpenTKUIHelper.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
+
+                if (type == typeof(Vector4))
+                {
+                    var val = (Vector4)value;
+                    sizeYGUI += y;
+                    OpenTKUIHelper.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
                 }
             }
-            return sizeYGUI;   
         }
+
+        return sizeYGUI;
     }
 }

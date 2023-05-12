@@ -1,45 +1,36 @@
-﻿using Engine2D.Core;
-using Engine2D.GameObjects;
-using Engine2D.Rendering;
+﻿using Engine2D.GameObjects;
 using ImGuiNET;
-using KDBEngine.Core;
 using Newtonsoft.Json;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 
-namespace Engine2D.Components
+namespace Engine2D.Components;
+
+[JsonConverter(typeof(ComponentSerializer))]
+public class ScriptHolderComponent : Component
 {
-    [JsonConverter(typeof(ComponentSerializer))]
-    public class ScriptHolderComponent : Component
+    //public string refFile = "";
+    public Component component = null;
+
+    public override void Init(Gameobject parent)
     {
+        base.Init(parent);
+    }
 
-        //public string refFile = "";
-        public Component component = null;
+    public override float ImGuiFields()
+    {
+        base.ImGuiFields();
+        float f = 0;
 
-        public override void Init(Gameobject parent)
-        {
-            base.Init(parent);            
-        }
+        if (component != null) f = f + component.ImGuiFields();
 
-        public override float ImGuiFields()
-        {
-            base.ImGuiFields();
-            float f = 0;
+        sizeYGUI += f;
+        ImGui.TableNextColumn();
+        //ImGui.ImageButton("", IntPtr.Zero, new System.Numerics.Vector2(56, 56));
 
-            if (component != null) { 
-                f = f + component.ImGuiFields();
-            }
+        return sizeYGUI;
+    }
 
-            sizeYGUI +=  f;
-            ImGui.TableNextColumn();
-            //ImGui.ImageButton("", IntPtr.Zero, new System.Numerics.Vector2(56, 56));
-
-            return sizeYGUI;
-        }
-
-        public override string GetItemType()
-        {
-            return "ScriptHolderComponent";
-        }
+    public override string GetItemType()
+    {
+        return "ScriptHolderComponent";
     }
 }
