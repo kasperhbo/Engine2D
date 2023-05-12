@@ -19,9 +19,9 @@ namespace Engine2D.Components
         public float Restitution = 0.0f;
         public float RestitutionThreshold = 0.5f;
 
-        public override void ImGuiFields()
-        {
-        }
+        //public override void ImGuiFields()
+        //{
+        //}
 
         public override string GetItemType()
         {

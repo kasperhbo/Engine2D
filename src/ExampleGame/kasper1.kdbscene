@@ -2,24 +2,50 @@
   {
     "transform": {
       "position": {
-        "X": 9.0,
+        "X": 0.0,
         "Y": 0.0
       },
       "size": {
-        "X": 120.0,
-        "Y": 120.0
+        "X": 1.0,
+        "Y": 1.0
       },
       "rotation": 0.0
     },
     "Name": "1",
     "components": [
       {
-        "component": {
-          "test": 129.0,
-          "Type": "TestComponent"
+        "textureData": {
+          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
+          "flipped": true,
+          "minFilter": 9728,
+          "magFilter": 9728,
+          "Type": "TextureData"
         },
-        "Type": "ScriptHolderComponent"
+        "Color": {
+          "X": 1.0,
+          "Y": 1.0,
+          "Z": 1.0,
+          "W": 1.0
+        },
+        "Type": "SpriteRenderer"
+      }
+    ],
+    "LinkedComponents": []
+  },
+  {
+    "transform": {
+      "position": {
+        "X": 0.0,
+        "Y": 0.0
       },
+      "size": {
+        "X": 32.0,
+        "Y": 32.0
+      },
+      "rotation": 0.0
+    },
+    "Name": "2",
+    "components": [
       {
         "textureData": null,
         "Color": {
@@ -29,16 +55,6 @@
           "W": 1.0
         },
         "Type": "SpriteRenderer"
-      },
-      {
-        "FixedRotation": false,
-        "BodyType": 0,
-        "Type": "Rigidbody"
-      },
-      {
-        "FixedRotation": false,
-        "BodyType": 1,
-        "Type": "Rigidbody"
       },
       {
         "FixedRotation": false,

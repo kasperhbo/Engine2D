@@ -9,9 +9,4 @@ public class NewComponent : Component
     {
         return "NewComponent";
     }
-
-    public override Vector2 WindowSize()
-    {
-        return new(-1,-1);
-    }
 }

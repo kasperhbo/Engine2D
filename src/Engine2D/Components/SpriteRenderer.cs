@@ -78,33 +78,5 @@ namespace Engine2D.GameObjects
         {
             return "SpriteRenderer";
         }
-
-        public override System.Numerics.Vector2 WindowSize()
-        {
-            return new System.Numerics.Vector2(0, 200);
-        }
-
-        public override void ImGuiFields()
-        {
-
-            
-                if (this.texture != null)
-                    ImGui.ImageButton("Sprite: ", (IntPtr)texture.TexID, new Vector2(128, 128), new Vector2(0, 1),
-                new Vector2(1, 0));
-                //ImGui.ImageButton("##sprite", (IntPtr)Texture.TexID, new Vector2(56, 56));
-                else
-                    ImGui.ImageButton("Sprite: ", IntPtr.Zero, new Vector2(128, 128));
-                ImGui.TreePop();
-
-            //if(ImGui.CollapsingHeader("Sprite Renderer"))
-            //{
-            //    if (ImGui.ColorPicker4("Color: ", ref _color))
-            //    {
-            //        IsDirty = true;
-            //    }
-
-            //ImGui.ImageButton("##sprite", IntPtr.Zero, new Vector2(56, 56));
-        }
-  
     }
 }

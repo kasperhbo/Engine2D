@@ -23,6 +23,10 @@ namespace Engine2D.Components
 
         public override void ImGuiFields()
         {
+            base.ImGuiFields();
+            
+            component?.ImGuiFields();
+
             //ImGui.ImageButton("", IntPtr.Zero, new System.Numerics.Vector2(56, 56));
             if (component != null)
             {
@@ -52,24 +56,11 @@ namespace Engine2D.Components
                 }
 
                 ImGui.EndDragDropTarget();
-            }
-
-            component?.ImGuiFields();
-
+            }                        
         }
 
-        public override System.Numerics.Vector2 WindowSize()
-        {
-            System.Numerics.Vector2 s = new System.Numerics.Vector2(0, 100);
 
-            if (component != null)
-                s.Y += component.WindowSize().Y;
-            float y = ImGui.GetFontSize() + 10;
-            y *= 6;
-            y += 29;
-            return new System.Numerics.Vector2(-1,y);
-        }
-
+    
 
         public override string GetItemType()
         {

@@ -14,7 +14,18 @@ namespace ExampleGame
 {
     public class TestComponent : Component
     {
-        public float test = 0;
+        public float y = 0;
+        public float s = 0;
+        public float f = 0;
+        public float g = 0;
+        public float u = 0;
+        public float t = 0;
+        public float e = 0;
+        public float w = 0;
+        public float Q = 0;
+        public float k = 0;
+        public float Z = 0;
+        public float x = 0;
 
         public override void Init(Gameobject parent)
         {
@@ -24,27 +35,11 @@ namespace ExampleGame
             Utils.GetFilePath("TestComponent.cs");
         }
 
-        public override void ImGuiFields()
-        {
-            base.ImGuiFields();
-
-            ImGui.DragFloat("float: ", ref test);
-            ImGui.DragFloat("float: ", ref test);
-            ImGui.DragFloat("float: ", ref test);
-            ImGui.DragFloat("float: ", ref test);
-            ImGui.DragFloat("float: ", ref test);
-            ImGui.DragFloat("float: ", ref test);
-
-        }
 
         public override string GetItemType()
         {            
             return "TestComponent";
         }
 
-        public override Vector2 WindowSize()
-        {
-            return new(-1,-1);
-        }
     }
 }
