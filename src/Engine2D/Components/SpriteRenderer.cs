@@ -22,6 +22,11 @@ namespace Engine2D.GameObjects
         {
             Color = color;
         }
+
+        public SpriteColor(float r, float g, float b, float a)
+        {
+            Color = new(r, g, b, a);
+        }
     }
 
     [JsonConverter(typeof(ComponentSerializer))]

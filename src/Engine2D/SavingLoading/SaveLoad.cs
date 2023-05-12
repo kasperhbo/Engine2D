@@ -40,7 +40,12 @@ namespace Engine2D.SavingLoading
             var gameObjectArray = scene.Gameobjects.ToArray();
 
             string sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
-
+            //So we can see where the go array stops when we deserialize the file
+            sceneData += "\n////GAMEOBJECTS////\n";
+            //Save Light settings
+            sceneData += JsonConvert.SerializeObject(Engine.Get()._currentScene.LightSettings, Formatting.Indented);
+            sceneData += "\n////LightSettings////\n";
+            
             if (File.Exists(scene.ScenePath))
             {
                 File.WriteAllText(scene.ScenePath, sceneData);
@@ -62,12 +67,40 @@ namespace Engine2D.SavingLoading
 
             if (File.Exists(sceneToLoad))
             {
-                List<Gameobject?> objs = JsonConvert.DeserializeObject<List<Gameobject>>(File.ReadAllText(sceneToLoad))!;
+                string[] lines = File.ReadAllLines(sceneToLoad);
 
+                string gos = "";
+                string lightSettingsStr = "";
+                
+                int lastIndex=0;
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    lastIndex = i;
+                    //if comment then we now we are at and of GO array and we break
+                    if (lines[i].Contains("////GAMEOBJECTS////")) break;
+                    gos += lines[i];
+                }
+
+                lastIndex += 1;
+                for (int i = lastIndex; i < lines.Length; i++)
+                {
+                    lastIndex++;
+                    if (lines[i].Contains("////LightSettings////")) break;
+                    lightSettingsStr += lines[i];
+                }
+
+                //Load gameobjects
+                List<Gameobject?> objs = JsonConvert.DeserializeObject<List<Gameobject>>(gos)!;
+                
+                //Load light settings
+                LightSettings lightSettings = JsonConvert.DeserializeObject<LightSettings>(lightSettingsStr);
+                
                 foreach (var t in objs!)
                 {
                     Engine.Get()?._currentScene?.AddGameObjectToScene(t);
                 }
+
+                Engine.Get()._currentScene.LightSettings = lightSettings;
             }
         }
         #endregion

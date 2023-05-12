@@ -64,8 +64,8 @@
         "Color": {
           "Color": {
             "X": 1.0,
-            "Y": 0.0,
-            "Z": 0.0,
+            "Y": 1.0,
+            "Z": 1.0,
             "W": 1.0
           }
         },
@@ -87,3 +87,16 @@
     "LinkedComponents": []
   }
 ]
+////GAMEOBJECTS////
+{
+  "GlobalLightIntensity": 0.57,
+  "ClearColor": {
+    "Color": {
+      "X": 0.14509805,
+      "Y": 0.1882353,
+      "Z": 0.1882353,
+      "W": 0.74509805
+    }
+  }
+}
+////LightSettings////

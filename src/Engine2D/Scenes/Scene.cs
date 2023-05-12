@@ -27,7 +27,8 @@ namespace Engine2D.Scenes
     internal class LightSettings
     {
         public float GlobalLightIntensity = 1;
-        public Vector4 ClearColor = new(.19f,.19f,.19f,1f);
+        public SpriteColor ClearColor = new SpriteColor(.19f,.19f,.19f,1f);
+        // public Vector4 ClearColor = new(.19f,.19f,.19f,1f);
     }
     internal class Scene
     {

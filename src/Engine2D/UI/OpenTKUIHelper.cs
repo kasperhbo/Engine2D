@@ -114,14 +114,16 @@ namespace Engine2D.UI
             return changed;
         }
 
-        public static bool DrawProperty(string name, ref Vector4 property)
+        public static bool DrawProperty(string name, ref Vector4 property, float dragSpeed = 0.1f)
         {
             bool changed = false;
             ImGui.TableNextColumn();
             ImGui.Text(name);
             ImGui.TableNextColumn();
-            System.Numerics.Vector4 copy = new(property.X, property.Y, property.Z, property.W); 
-            if (ImGui.DragFloat4("##" + name, ref copy)) changed = true;
+            System.Numerics.Vector4 copy = new(property.X, property.Y, property.Z, property.W);
+            
+            if (ImGui.DragFloat4("##" + name, ref copy, dragSpeed)) changed = true;
+            
             property = new(copy.X, copy.Y, copy.Z, copy.W);
             return changed;
         }

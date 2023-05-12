@@ -40,8 +40,8 @@ namespace Engine2D.Rendering
 
         internal static void Render()
         {
-            Vector4 col = Engine.Get()._currentScene.LightSettings.ClearColor;
-            GL.ClearColor(col.X, col.Y, col.Z, col.W);        
+            SpriteColor col = Engine.Get()._currentScene.LightSettings.ClearColor;
+            GL.ClearColor(col.Color.X, col.Color.Y, col.Color.Z, col.Color.W);        
             GL.Clear(ClearBufferMask.ColorBufferBit);
             GL.Enable(EnableCap.Blend);
         
