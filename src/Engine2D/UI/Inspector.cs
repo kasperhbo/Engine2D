@@ -10,8 +10,20 @@ internal class Inspector : UIElemenet
 
     internal Inspector()
     {
-        Title = "Inspector";
-        _flags = ImGuiWindowFlags.None;
-        _windowContents = () => { Engine.Get().CurrentSelectedAsset?.OnGui(); };
+    }
+
+    protected override string SetWindowTitle()
+    {
+        return "Inspector";
+    }
+
+    protected override ImGuiWindowFlags SetWindowFlags()
+    {
+        return ImGuiWindowFlags.None;
+    }
+
+    protected override Action SetWindowContent()
+    {
+        return () => { Engine.Get().CurrentSelectedAsset?.OnGui(); };
     }
 }

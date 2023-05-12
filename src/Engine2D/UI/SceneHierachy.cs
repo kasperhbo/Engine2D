@@ -11,12 +11,19 @@ namespace Engine2D.UI;
 
 internal class SceneHierachy : UIElemenet
 {
-    internal SceneHierachy(Inspector inspector)
+    protected override string SetWindowTitle()
     {
-        Title = "Hierachy";
-        _flags = ImGuiWindowFlags.None;
+        return "Hierachy";
+    }
 
-        _windowContents = () =>
+    protected override ImGuiWindowFlags SetWindowFlags()
+    {
+        return ImGuiWindowFlags.None;
+    }
+
+    protected override Action SetWindowContent()
+    {
+        return () =>
         {
             for (var i = 0; i < Engine.Get()._currentScene?.Gameobjects.Count; i++)
             {

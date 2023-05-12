@@ -265,7 +265,7 @@ namespace KDBEngine.Core
             var inspector = new Inspector();
             _guiWindows.Add(inspector.Title, inspector);
 
-            var hierarch = new SceneHierachy(inspector);
+            var hierarch = new SceneHierachy();
             _guiWindows.Add(hierarch.Title, hierarch);
 
 

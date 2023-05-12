@@ -9,15 +9,14 @@ in vec4 fLightPos;
 
 uniform sampler2D uTextures[32];
 
+vec4 color;
 out vec4 outColor;
-
 
 uniform float uGlobalLightIntensity; // set as (0.3, 0.3, 0.3), night!
 uniform vec2 uPointLightPos;
 
-vec4 color;
-vec3 point_light_col = vec3(0.999, 0.999, 0.999);
-float point_light_intensity = 0.4;
+vec3 point_light_col = vec3(0.999, 0.99, 0.999);
+float point_light_intensity = 1;
 
 void main()
 {
@@ -126,17 +125,17 @@ void main()
         }
     } else {
         color = fColor;
-    }
-    
-    if(color.a < 1.0)
-        discard;
+    }    
 
     float distance = distance(fLightPos.xy, fPosition.xy);
     float diffuse = 0.0;
 
     if (distance <= point_light_intensity)
     diffuse =  1.0 - abs(distance / point_light_intensity);
-    
-    outColor = vec4(min(color.rgb * ((point_light_col * diffuse) + uGlobalLightIntensity), color.rgb), 1.0);
+    //outColor = color;
+    outColor = vec4(min(
+    color.rgb * (
+    (point_light_col * diffuse) + uGlobalLightIntensity), 
+    color.rgb), color.a);
 //    outColor = color;
 }

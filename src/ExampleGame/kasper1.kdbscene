@@ -22,9 +22,9 @@
       {
         "Color": {
           "Color": {
-            "X": 0.08235294,
+            "X": 0.95686275,
             "Y": 0.76862746,
-            "Z": 0.0,
+            "Z": 1.0,
             "W": 0.0
           }
         },
@@ -36,13 +36,13 @@
     "Name": "1",
     "transform": {
       "position": {
-        "X": -611.0,
-        "Y": 30.0
+        "X": -22.0,
+        "Y": 0.0
       },
-      "rotation": -57.0,
+      "rotation": 0.0,
       "size": {
-        "X": 192.0,
-        "Y": 93.0
+        "X": 1000.0,
+        "Y": 1000.0
       }
     }
   },
@@ -81,8 +81,43 @@
       },
       "rotation": 0.0,
       "size": {
-        "X": 500.0,
+        "X": 598.0,
         "Y": 500.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0,
+            "Y": 1.0,
+            "Z": 0.8156863,
+            "W": 0.0
+          }
+        },
+        "textureData": {
+          "flipped": true,
+          "magFilter": 9728,
+          "minFilter": 9728,
+          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
+          "Type": "TextureData"
+        },
+        "Type": "SpriteRenderer"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "3",
+    "transform": {
+      "position": {
+        "X": 5.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 100.0,
+        "Y": 100.0
       }
     }
   }
@@ -97,6 +132,6 @@
       "W": 0.74509805
     }
   },
-  "GlobalLightIntensity": 0.25
+  "GlobalLightIntensity": 0.59
 }
 ////LightSettings////

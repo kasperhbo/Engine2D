@@ -7,15 +7,30 @@ namespace Engine2D.UI;
 internal class EngineSettingsWindow : UIElemenet
 {
     private bool showRestartBar;
+    private UIElemenet _uiElemenetImplementation;
 
     internal EngineSettingsWindow()
     {
         _flags = ImGuiWindowFlags.None;
-        Title = "Engine Settings";
-
+        
         SetVisibility(false);
 
-        _windowContents = () =>
+ 
+    }
+
+    protected override string SetWindowTitle()
+    {
+        return "Engine Settings";
+    }
+
+    protected override ImGuiWindowFlags SetWindowFlags()
+    {
+        return ImGuiWindowFlags.None;
+    }
+
+    protected override Action SetWindowContent()
+    {
+        return () =>
         {
             if (ImGui.Button("Close"))
             {

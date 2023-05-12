@@ -28,10 +28,55 @@ internal class AssetBrowser : UIElemenet
     {
         LoadIcons();
         SwitchDirectory(ProjectSettings.s_FullProjectPath);
+    }
 
-        _flags = ImGuiWindowFlags.MenuBar;
-        Title = "Asset Browser";
-        _windowContents = () =>
+
+    private void SwitchDirectory(string newDir)
+    {
+        _currentFolders = new List<ImageTextIcon>();
+
+        _currentDirectory = new DirectoryInfo(newDir);
+
+        GetDirectories();
+    }
+
+    private void GetDirectories()
+    {
+        var dirs = _currentDirectory.GetDirectories();
+        foreach (var dir in dirs)
+        {
+            var icon = new ImageTextIcon(dir.Name, dirTexture, fileTexture, sceneTexture, dir.FullName);
+            _currentFolders.Add(icon);
+        }
+    }
+
+    private void LoadIcons()
+    {
+        texDataDir = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\directoryIcon.png", false,
+            TextureMinFilter.Linear, TextureMagFilter.Linear);
+        texDataFile = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\fileicon.png", false,
+            TextureMinFilter.Linear, TextureMagFilter.Linear);
+        texDataScene = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\mapIcon.png", false,
+            TextureMinFilter.Linear, TextureMagFilter.Linear);
+
+        dirTexture = (IntPtr)ResourceManager.GetTexture(texDataDir).TexID;
+        fileTexture = (IntPtr)ResourceManager.GetTexture(texDataFile).TexID;
+        sceneTexture = (IntPtr)ResourceManager.GetTexture(texDataScene).TexID;
+    }
+
+    protected override string SetWindowTitle()
+    {
+        return "Asset Browser";
+    }
+
+    protected override ImGuiWindowFlags SetWindowFlags()
+    {
+        return ImGuiWindowFlags.MenuBar;
+    }
+
+    protected override Action SetWindowContent()
+    {
+        return () =>
         {
             if (_currentDirectory.FullName != ProjectSettings.s_FullProjectPath)
             {
@@ -74,39 +119,5 @@ internal class AssetBrowser : UIElemenet
             ImGui.Columns(1);
 
         };
-    }
-
-
-    private void SwitchDirectory(string newDir)
-    {
-        _currentFolders = new List<ImageTextIcon>();
-
-        _currentDirectory = new DirectoryInfo(newDir);
-
-        GetDirectories();
-    }
-
-    private void GetDirectories()
-    {
-        var dirs = _currentDirectory.GetDirectories();
-        foreach (var dir in dirs)
-        {
-            var icon = new ImageTextIcon(dir.Name, dirTexture, fileTexture, sceneTexture, dir.FullName);
-            _currentFolders.Add(icon);
-        }
-    }
-
-    private void LoadIcons()
-    {
-        texDataDir = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\directoryIcon.png", false,
-            TextureMinFilter.Linear, TextureMagFilter.Linear);
-        texDataFile = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\fileicon.png", false,
-            TextureMinFilter.Linear, TextureMagFilter.Linear);
-        texDataScene = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\mapIcon.png", false,
-            TextureMinFilter.Linear, TextureMagFilter.Linear);
-
-        dirTexture = (IntPtr)ResourceManager.GetTexture(texDataDir).TexID;
-        fileTexture = (IntPtr)ResourceManager.GetTexture(texDataFile).TexID;
-        sceneTexture = (IntPtr)ResourceManager.GetTexture(texDataScene).TexID;
     }
 }
