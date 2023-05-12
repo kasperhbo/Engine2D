@@ -1,8 +1,10 @@
 ﻿using Engine2D.GameObjects;
 using Engine2D.Testing;
+using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 
 namespace Engine2D.Rendering
@@ -37,10 +39,14 @@ namespace Engine2D.Rendering
         }
 
         internal static void Render()
-        {            
-            //GL.ClearColor(S_CurrentCamera.ClearColor);
+        {
+            Vector4 col = Engine.Get()._currentScene.LightSettings.ClearColor;
+            GL.ClearColor(col.X, col.Y, col.Z, col.W);        
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            
+            GL.Enable(EnableCap.Blend);
+        
+            GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
+
             foreach (var rb in _renderBatches) rb.Render(Engine.Get().testCamera.getProjectionMatrix(), Engine.Get().testCamera.getViewMatrix());
         }
 

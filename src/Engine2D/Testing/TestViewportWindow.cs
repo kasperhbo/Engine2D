@@ -1,7 +1,6 @@
 ﻿using Engine2D.Core;
 using Engine2D.SavingLoading;
 using Engine2D.UI;
-using GlmNet;
 using ImGuiNET;
 using KDBEngine.Core;
 using OpenTK.Windowing.GraphicsLibraryFramework;

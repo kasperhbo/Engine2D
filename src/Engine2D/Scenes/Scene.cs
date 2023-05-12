@@ -20,15 +20,23 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Xml.Linq;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Engine2D.Scenes
 {
+    internal class LightSettings
+    {
+        public float GlobalLightIntensity = 1;
+        public Vector4 ClearColor = new(.19f,.19f,.19f,1f);
+    }
     internal class Scene
     {
         internal string ScenePath { get; private set; } = "NoScene";
-        
         internal List<Gameobject> Gameobjects { get; private set; } = new List<Gameobject>();
 
+        public LightSettings LightSettings = new();
+        
+        
         private bool _isPlaying = false;
         public bool IsPlaying
         {
@@ -166,5 +174,19 @@ namespace Engine2D.Scenes
             Engine.Get().ImGuiController.PressChar((char)inputEventArgs.Unicode);
         }
         #endregion
+
+        internal void OnGui()
+        {
+            ImGui.Begin("Scene Settings");
+            
+            OpenTKUIHelper.DrawComponentWindow("Light Settings", "Light Settings", () =>
+            {
+                OpenTKUIHelper.DrawProperty("Global Light Intensity", ref LightSettings.GlobalLightIntensity, 0, 1,
+                    dragSpeed: 0.01f);
+                OpenTKUIHelper.DrawProperty("Enviroment Color", ref LightSettings.ClearColor);
+            });
+            
+            ImGui.End();
+        }
     }
 }

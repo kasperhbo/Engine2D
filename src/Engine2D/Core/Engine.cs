@@ -23,13 +23,12 @@ using Engine2D.SavingLoading;
 using Box2DSharp.Common;
 using Engine2D.Logging;
 using System.Diagnostics;
-using System.Text;
 
 namespace KDBEngine.Core { 
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
     // OpenGL's initial hurdle is quite large, but once you get past that, things will start making more sense.
     public class Engine : GameWindow
-    {
+    {        
         private static int small = 1;
 		private float width = 1920/small;
 		private float height = 1080/small;
@@ -133,6 +132,7 @@ namespace KDBEngine.Core {
             _currentScene?.EditorUpdate(args.Time);
             TestInput.endFrame();
         }
+                
 
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -151,6 +151,11 @@ namespace KDBEngine.Core {
                             break;
                         }
                     }
+                }
+
+                if(CurrentSelectedAsset != null)
+                {
+
                 }
 
                 testFB.Bind();
@@ -193,6 +198,13 @@ namespace KDBEngine.Core {
                 //gameViewport.OnGui(_frameBuffer.TextureID, () => { });
                 viewportWindow.OnGui();
                 cb.OnGui();
+                ImGui.Begin("test");
+                //ImageTextIcon img = new ImageTextIcon();
+
+                //if (OpenTKUIHelper.DrawIconWithText("LABEL", dirTexture))
+                //    Console.WriteLine("double");
+
+                ImGui.End();
                 
                 testCamera.CameraSettingsGUI();
 
@@ -201,6 +213,8 @@ namespace KDBEngine.Core {
                     window.Render();
                 }
 
+                _currentScene.OnGui();
+                
                 ImGuiController.Render();
 
                 ImGuiController.CheckGLError("End of frame");

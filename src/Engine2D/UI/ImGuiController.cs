@@ -8,6 +8,7 @@ using System.Diagnostics;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 using Engine2D.Core;
 using Engine2D;
+using ImGuizmoNET;
 
 namespace KDBEngine.UI
 {
@@ -37,6 +38,7 @@ namespace KDBEngine.UI
 
         public static class Colors
         {
+            
             public static readonly Color ConnectedParameter = new Color(0.6f, 0.6f, 1f, 1f);
             public static readonly Color ValueLabel = new Color(1, 1, 1, 0.5f);
             public static readonly Color ValueLabelHover = new Color(1, 1, 1, 1.2f);
@@ -70,7 +72,6 @@ namespace KDBEngine.UI
         /// </summary>
         public ImGuiController(int width, int height)
         {
-            
             _windowWidth = width;
             _windowHeight = height;
 
@@ -164,49 +165,18 @@ namespace KDBEngine.UI
             SetPerFrameImGuiData(1f / 60f);
 
             ImGui.NewFrame();
-            _frameBegun = true;            
+            //ImGuizmo.BeginFrame();
+            
+            _frameBegun = true;                
         }
 
         private void LoadStyle()
         {
             ImGuiStylePtr style = ImGui.GetStyle();
 
-            //style.WindowPadding = new System.Numerics.Vector2(4.0f, 4.0f);
-            //style.FrameBorderSize = 0.0f;
-            //style.ItemSpacing = new System.Numerics.Vector2(8.0f, 4.0f);
-            //style.ItemInnerSpacing = new System.Numerics.Vector2(4.0f, 4.0f);
-            //style.ScrollbarSize = 14.0f;
-            //style.IndentSpacing = 14.0f;
-            //style.GrabMinSize = 12.0f;
-            //style.FramePadding = new System.Numerics.Vector2(8.0f, 4.0f);
-
-            //style.ChildRounding = 4.0f;
-            //style.FrameRounding = 4.0f;
-            //style.GrabRounding = 4.0f;
-            //style.PopupRounding = 4.0f;
-            //style.ScrollbarRounding = 4.0f;
-            //style.TabRounding = 4.0f;
-            //style.WindowRounding = 4.0f;
-
-
             style.AntiAliasedFill = true;
             style.AntiAliasedLines = true;
-
-            //style.WindowPadding = System.Numerics.Vector2.Zero;
-            //style.FramePadding = new System.Numerics.Vector2(7, 4);
-            //style.ItemSpacing = new System.Numerics.Vector2(1, 1);
-            //style.ItemInnerSpacing = new System.Numerics.Vector2(3, 2);
-            //style.GrabMinSize = 10;
-            //style.FrameBorderSize = 0;
-            //style.WindowRounding = 0;
-            //style.ChildRounding = 0;
-            //style.ScrollbarRounding = 2;
-            //style.FrameRounding = 0f;
-            //style.DisplayWindowPadding = System.Numerics.Vector2.Zero;
-            //style.DisplaySafeAreaPadding = System.Numerics.Vector2.Zero;
-            //style.ChildBorderSize = 1;
-            //style.TabRounding = 2;
-
+            
             style.Colors[(int)ImGuiCol.Text] = new(0.88f, 0.88f, 0.88f, 1.00f);
             style.Colors[(int)ImGuiCol.TextDisabled] = new(0.50f, 0.50f, 0.50f, 1.00f);
             style.Colors[(int)ImGuiCol.WindowBg] = new(0.196f, 0.196f, 0.196f, 1.00f);
@@ -485,7 +455,10 @@ namespace KDBEngine.UI
             UpdateImGuiInput(wnd);
 
             _frameBegun = true;
+
             ImGui.NewFrame();
+
+
         }
 
         /// <summary>

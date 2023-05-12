@@ -28,7 +28,6 @@ namespace Engine2D.UI
             dirTexture   = ResourceManager.GetTexture(texDataDir).TexID;
             fileTexture  = ResourceManager.GetTexture(texDataFile).TexID;
             sceneTexture = ResourceManager.GetTexture(texDataScene).TexID;
-
         }
 
         private static GCHandle? _currentlyDraggedHandle;

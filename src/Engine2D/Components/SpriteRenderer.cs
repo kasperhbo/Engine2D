@@ -3,6 +3,7 @@ using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.Rendering;
 using ImGuiNET;
+
 using Newtonsoft.Json;
 using System.Numerics;
 
@@ -71,13 +72,13 @@ namespace Engine2D.GameObjects
 
             if (!_lastColor.Color.Equals(Color.Color))
             {
-                Console.WriteLine("dirty");
                 IsDirty = true;
                 _lastColor = new(Color.Color);
             }
         }
 
         public override void GameUpdate(double dt)
+        
         {
             if (!_lastTransform.Equals(Parent.transform))
             {

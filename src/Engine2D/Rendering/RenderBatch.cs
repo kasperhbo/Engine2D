@@ -12,6 +12,8 @@ using System.Runtime.Serialization.Formatters;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Engine2D.Scenes;
+using KDBEngine.Core;
 
 namespace Engine2D.Rendering
 {
@@ -150,6 +152,8 @@ namespace Engine2D.Rendering
             }
             
             _shader.UploadIntArray("uTextures", _textureUnits);
+            _shader.uploadFloat("uGlobalLightIntensity", 
+                Engine.Get()._currentScene.LightSettings.GlobalLightIntensity);
 
             GL.BindVertexArray(_vaoID);
             GL.EnableVertexAttribArray(0);

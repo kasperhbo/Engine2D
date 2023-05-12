@@ -29,6 +29,7 @@ namespace Engine2D.Components
 
         public virtual void Start()
         { 
+            
         }
 
         public virtual void EditorUpdate(double dt)
