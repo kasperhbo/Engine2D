@@ -5,15 +5,11 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace Engine2D.UI;
 
-public struct DragDropFile
-{
-    public string FileName;
-}
-
 internal class AssetBrowser : UIElemenet
 {
-    public static string CurrentDraggingFileName = "";
-
+    public static float ThumbnailSize { get; } = 128;
+    public static bool DisplayAssetType { get; } = true;
+    
     private DirectoryInfo _currentDirectory;
 
     private List<ImageTextIcon> _currentFolders = new();
@@ -76,11 +72,10 @@ internal class AssetBrowser : UIElemenet
 
 
             ImGui.Columns(1);
+
         };
     }
 
-    public static float ThumbnailSize { get; } = 128;
-    public static bool DisplayAssetType { get; } = true;
 
     private void SwitchDirectory(string newDir)
     {

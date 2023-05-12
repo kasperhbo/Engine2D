@@ -1,17 +1,5 @@
 [
   {
-    "transform": {
-      "position": {
-        "X": 75.0,
-        "Y": 30.0
-      },
-      "size": {
-        "X": 192.0,
-        "Y": 93.0
-      },
-      "rotation": -57.0
-    },
-    "Name": "1",
     "components": [
       {
         "component": {
@@ -44,21 +32,21 @@
         "Type": "SpriteRenderer"
       }
     ],
-    "LinkedComponents": []
-  },
-  {
+    "LinkedComponents": [],
+    "Name": "1",
     "transform": {
       "position": {
-        "X": -432.0,
-        "Y": 0.0
+        "X": -611.0,
+        "Y": 30.0
       },
+      "rotation": -57.0,
       "size": {
-        "X": 500.0,
-        "Y": 500.0
-      },
-      "rotation": 0.0
-    },
-    "Name": "2",
+        "X": 192.0,
+        "Y": 93.0
+      }
+    }
+  },
+  {
     "components": [
       {
         "Color": {
@@ -70,10 +58,10 @@
           }
         },
         "textureData": {
-          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
           "flipped": true,
-          "minFilter": 9728,
           "magFilter": 9728,
+          "minFilter": 9728,
+          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
           "Type": "TextureData"
         },
         "Type": "SpriteRenderer"
@@ -84,12 +72,23 @@
         "Type": "Rigidbody"
       }
     ],
-    "LinkedComponents": []
+    "LinkedComponents": [],
+    "Name": "2",
+    "transform": {
+      "position": {
+        "X": -432.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 500.0,
+        "Y": 500.0
+      }
+    }
   }
 ]
 ////GAMEOBJECTS////
 {
-  "GlobalLightIntensity": 0.57,
   "ClearColor": {
     "Color": {
       "X": 0.14509805,
@@ -97,6 +96,7 @@
       "Z": 0.1882353,
       "W": 0.74509805
     }
-  }
+  },
+  "GlobalLightIntensity": 0.25
 }
 ////LightSettings////

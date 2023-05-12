@@ -1,5 +1,6 @@
 ﻿using Engine2D.Core;
 using Engine2D.GameObjects;
+using Engine2D.Testing;
 using KDBEngine.Core;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL;
@@ -20,8 +21,8 @@ internal class RenderBatch
         for (var i = 0; i < _textureUnits.Length; i++) _textureUnits[i] = i;
 
         var dat = new ShaderData();
-        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default.vert";
-        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default.frag";
+        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default-lit.vert";
+        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default-lit.frag";
 
         _shader = ResourceManager.GetShader(dat);
         sprites = new SpriteRenderer[c_MaxBatchSize];
@@ -109,6 +110,12 @@ internal class RenderBatch
         _shader.uploadFloat("uGlobalLightIntensity",
             Engine.Get()._currentScene.LightSettings.GlobalLightIntensity);
 
+        _shader.uploadVec3f("uPointLightPos", new Vector3(
+            TestInput.getWorld().X,
+            TestInput.getWorld().Y,
+            0
+        ));
+        
         GL.BindVertexArray(_vaoID);
         GL.EnableVertexAttribArray(0);
         GL.EnableVertexAttribArray(1);
