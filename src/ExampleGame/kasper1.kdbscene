@@ -36,13 +36,13 @@
     "Name": "1",
     "transform": {
       "position": {
-        "X": -22.0,
+        "X": 1000.0,
         "Y": 0.0
       },
       "rotation": 0.0,
       "size": {
-        "X": 1000.0,
-        "Y": 1000.0
+        "X": 4035.0,
+        "Y": 1256.0
       }
     }
   },
@@ -76,7 +76,7 @@
     "Name": "2",
     "transform": {
       "position": {
-        "X": -432.0,
+        "X": 1000.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -111,7 +111,7 @@
     "Name": "3",
     "transform": {
       "position": {
-        "X": 5.0,
+        "X": 0.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -132,6 +132,6 @@
       "W": 0.74509805
     }
   },
-  "GlobalLightIntensity": 0.59
+  "GlobalLightIntensity": 0.0
 }
 ////LightSettings////

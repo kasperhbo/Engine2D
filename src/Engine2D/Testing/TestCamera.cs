@@ -13,7 +13,7 @@ public class TestCamera
     // The inverse view matrix
     private Matrix4 inverseViewMatrix;
 
-    private Vector2 position;
+    public Vector2 position;
 
 
     // Projection matrix say how big the screen is going to be.

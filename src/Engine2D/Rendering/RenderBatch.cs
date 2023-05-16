@@ -1,10 +1,12 @@
-﻿using Engine2D.Core;
+﻿using System.Threading.Channels;
+using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Testing;
 using KDBEngine.Core;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Engine2D.Rendering;
 
@@ -21,8 +23,8 @@ internal class RenderBatch
         for (var i = 0; i < _textureUnits.Length; i++) _textureUnits[i] = i;
 
         var dat = new ShaderData();
-        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default-lit.vert";
-        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default-lit.frag";
+        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default-unlit-lighting.vert";
+        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default-unlit-lighting.frag";
 
         _shader = ResourceManager.GetShader(dat);
         sprites = new SpriteRenderer[c_MaxBatchSize];
@@ -99,7 +101,23 @@ internal class RenderBatch
         _shader.use();
         _shader.uploadMat4f("uProjection", projectionMatrix);
         _shader.uploadMat4f("uView", viewMatrix);
-
+        
+        Matrix4 model = Matrix4.Identity;
+        
+        _shader.uploadMat4f("uModel", model);
+        int loc = 0;
+        _shader.uploadVec2f($"pointLights[{loc}].position", Engine.Get().LightLocation);
+        Vector3 col1 = new(Engine.Get().LightColor.Color.X, Engine.Get().LightColor.Color.Y,
+            Engine.Get().LightColor.Color.Z);
+        _shader.uploadVec3f($"pointLights[{loc}].lightColor", col1);
+        _shader.uploadFloat($"pointLights[{loc}].intensity", Engine.Get().intensity);
+        loc = 1;
+        col1 = new(Engine.Get().LightColor2.Color.X, Engine.Get().LightColor2.Color.Y,
+            Engine.Get().LightColor2.Color.Z);
+        _shader.uploadVec2f($"pointLights[{loc}].position", Engine.Get().LightLocation2);
+        _shader.uploadVec3f($"pointLights[{loc}].lightColor", col1);
+        _shader.uploadFloat($"pointLights[{loc}].intensity", Engine.Get().intensity2);
+        
         for (var i = 0; i < _textures.Count; i++)
         {
             GL.ActiveTexture(TextureUnit.Texture0 + i + 1);
@@ -107,14 +125,7 @@ internal class RenderBatch
         }
 
         _shader.UploadIntArray("uTextures", _textureUnits);
-        _shader.uploadFloat("uGlobalLightIntensity",
-            Engine.Get()._currentScene.LightSettings.GlobalLightIntensity);
-
-        _shader.uploadVec3f("uPointLightPos", new Vector3(
-            TestInput.getWorld().X,
-            TestInput.getWorld().Y,
-            0
-        ));
+        
         
         GL.BindVertexArray(_vaoID);
         GL.EnableVertexAttribArray(0);

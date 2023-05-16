@@ -1,4 +1,5 @@
 ﻿using Engine2D.Core;
+using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
@@ -43,7 +44,13 @@ namespace KDBEngine.Core
         private TestViewportWindow viewportWindow;
         private readonly float width = 1920 / small;
 
-
+        public Vector2 LightLocation = new(0, 0);
+        public SpriteColor LightColor = new(0, 0, 0,0);
+        public float intensity = 0;
+        public Vector2 LightLocation2 = new(0, 0);
+        public float intensity2 = 0;
+        public SpriteColor LightColor2 = new(0, 0, 0,0);
+        
         public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
             gameWindowSettings, nativeWindowSettings)
         {
@@ -175,7 +182,13 @@ namespace KDBEngine.Core
 
                 //if (OpenTKUIHelper.DrawIconWithText("LABEL", dirTexture))
                 //    Console.WriteLine("double");
-
+                LightLocation = OpenTKUIHelper.DrawProperty("light1", LightLocation);
+                OpenTKUIHelper.DrawProperty("light1Intensity", ref intensity);
+                OpenTKUIHelper.DrawProperty("light1Color", ref LightColor);
+                LightLocation2 = OpenTKUIHelper.DrawProperty("light2", LightLocation2);
+                OpenTKUIHelper.DrawProperty("light2Intensity", ref intensity2);
+                OpenTKUIHelper.DrawProperty("light2Color", ref LightColor2);
+                
                 ImGui.End();
 
                 testCamera.CameraSettingsGUI();

@@ -39,6 +39,19 @@ internal static class OpenTKUIHelper
         if (ImGui.DragFloat2("##" + name, ref property)) changed = true;
         return changed;
     }
+    
+    public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector2 property)
+    {
+        var changed = false;
+        ImGui.TableNextColumn();
+        ImGui.Text(name);
+        ImGui.TableNextColumn();
+        Vector2 data = new(property.X, property.Y);
+        if (ImGui.DragFloat2("##" + name, ref data)) changed = true;
+        property = new(data.X, data.Y);
+        return changed;
+    }
+
 
     public static bool DrawProperty(string name, ref SpriteColor property)
     {
@@ -182,6 +195,21 @@ internal static class OpenTKUIHelper
     {
         var cursor = ImGui.GetCursorPos();
         ImGui.SetCursorPos(new Vector2(cursor.X + x, cursor.Y + y));
+    }
+
+    public static OpenTK.Mathematics.Vector2 DrawProperty(string name, OpenTK.Mathematics.Vector2 property)
+    {
+        var changed = false;
+        ImGui.TableNextColumn();
+        ImGui.Text(name);
+        ImGui.TableNextColumn();
+        System.Numerics.Vector2 copy = new(property.X, property.Y);
+
+        if (ImGui.DragFloat2("##" + name, ref copy, 0.1f)) changed = true;
+
+        property = new OpenTK.Mathematics.Vector2(copy.X, copy.Y);
+        return property;
+        // return changed;
     }
 }
 

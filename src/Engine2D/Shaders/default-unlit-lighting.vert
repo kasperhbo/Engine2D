@@ -7,16 +7,22 @@ layout (location=3) in float aTexId;
 
 uniform mat4 uProjection;
 uniform mat4 uView;
+uniform mat4 uModel;
 
 out vec4 fColor;
 out vec2 fTexCoords;
 out float fTexId;
+
+out vec3 fFragPos;
 
 void main()
 {
     fColor = aColor;
     fTexCoords = aTexCoords;
     fTexId = aTexId;
-
-    gl_Position = uProjection * uView * vec4(aPos, 1.0);
+    
+    fFragPos = aPos;
+//    gl_Position = vec4(aPos, 1.0) * uView * uProjection;
+    
+   gl_Position = uProjection * uView * vec4(aPos, 1.0);
 }

@@ -1,17 +1,24 @@
 #version 330 core
 
+struct PointLight {
+    vec2 position;
+    vec3 lightColor;
+    float intensity;
+};
+
+#define NR_POINT_LIGHTS 2
+uniform PointLight pointLights[NR_POINT_LIGHTS];
+
 in vec4 fColor;
 in vec2 fTexCoords;
 in float fTexId;
 
-uniform sampler2D uTextures[32];
+in vec3 fFragPos;
 
-vec2 lightLocation = vec2(0,0);// = vec2(1920,1080);
-vec3 lightColor = vec3(255,255,255);
+uniform sampler2D uTextures[32];
 
 vec4 color;
 out vec4 outColor;
-
 
 
 void main()
@@ -123,9 +130,18 @@ void main()
         color = fColor;
     }
     
-    float distance = length(lightLocation - gl_FragCoord.xy);
-    float attenuation = 1.0 / distance;
-    vec4 Lcolor = vec4(attenuation, attenuation, attenuation, pow(attenuation, 3)) * vec4(lightColor, 1);
-    color = color * Lcolor;
+//    vec3 lightLocation = vec3(0,0,0);
+    
+    vec4 LColor  = vec4(0,0,0,0);
+    
+    for(int i = 0; i < NR_POINT_LIGHTS; i++){
+        float distance = length(pointLights[i].position.xy - fFragPos.xy);
+        
+        float attenuation = 1.0 / distance;
+        attenuation *= pointLights[i].intensity;
+        LColor += vec4(attenuation, attenuation, attenuation, pow(attenuation, 3)) * vec4(pointLights[i].lightColor, 1);
+    }
+
+    color = color * LColor;
     outColor = color;
 }

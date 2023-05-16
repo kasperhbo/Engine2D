@@ -117,6 +117,5 @@ void main()
     } else {
         color = fColor;
     }
-    
     outColor = color;
 }

@@ -14,8 +14,8 @@ internal class TestInput
     private static double lastWorldY;
     private static Vector2 lastWorld;
 
-    private static Vector2 viewportPos;
-    private static Vector2 viewportSize;
+    public static Vector2 viewportPos;
+    public static Vector2 viewportSize;
 
     private static double xPos;
     private static double yPos;
@@ -67,6 +67,11 @@ internal class TestInput
         lastWorldY = worldY; // Useless since endFrame() ??
 
         pos = new Vector2(mouseState.Position.X, mouseState.Position.Y);
+        
+        // float currentY = getY();
+        //
+        // Console.WriteLine();
+        
         xPos = mouseState.Position.X; // Delete
         yPos = mouseState.Position.Y; // Delete
 

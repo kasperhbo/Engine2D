@@ -112,6 +112,7 @@ internal class Scene
 
     internal virtual void EditorUpdate(double dt)
     {
+
         if (TestInput.KeyDown(Keys.LeftControl))
             if (TestInput.KeyPress(Keys.S))
             {
@@ -119,6 +120,22 @@ internal class Scene
                 SaveLoad.SaveScene(this);
             }
 
+        if (TestInput.KeyDown(Keys.A))
+        {
+            Engine.Get().testCamera.position.X -= 100 * (float)dt;
+        }
+        if (TestInput.KeyDown(Keys.D))
+        {
+            Engine.Get().testCamera.position.X += 100 * (float)dt;
+        }
+        if (TestInput.KeyDown(Keys.W))
+        {
+            Engine.Get().testCamera.position.Y += 100 * (float)dt;
+        }
+        if (TestInput.KeyDown(Keys.S))
+        {
+            Engine.Get().testCamera.position.Y -= 100 * (float)dt;
+        }
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
         if (IsPlaying) GameUpdate(dt);
         //if (IsPlaying) { foreach (Gameobject obj in Gameobjects) { obj.GameUpdate(dt); } }
