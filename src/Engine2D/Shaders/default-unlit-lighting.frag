@@ -20,6 +20,7 @@ uniform sampler2D uTextures[32];
 vec4 color;
 out vec4 outColor;
 
+vec3 ambient_light = vec3(0,0,0);
 
 void main()
 {
@@ -130,18 +131,28 @@ void main()
         color = fColor;
     }
     
-//    vec3 lightLocation = vec3(0,0,0);
+    vec3 LColor  = vec3(0,0,0);
     
-    vec4 LColor  = vec4(0,0,0,0);
+    float diffuse =0;
     
     for(int i = 0; i < NR_POINT_LIGHTS; i++){
         float distance = length(pointLights[i].position.xy - fFragPos.xy);
         
-        float attenuation = 1.0 / distance;
-        attenuation *= pointLights[i].intensity;
-        LColor += vec4(attenuation, attenuation, attenuation, pow(attenuation, 3)) * vec4(pointLights[i].lightColor, 1);
+        if(color.a <= 0)
+            discard;
+
+        if (distance <= pointLights[i].intensity)
+            diffuse +=  1.0 - abs(distance / pointLights[i].intensity);
+        
+        LColor += pointLights[i].lightColor.rgb;
     }
 
-    color = color * LColor;
-    outColor = color;
+
+    outColor = vec4(min(color.rgb * ((LColor * diffuse) + ambient_light), color.rgb), 1.0);
+//    vec4 final = color.rgba + LColor.rgba;
+//
+//    outColor = final;
+//    
+//    color = color + LColor;
+//    outColor = color;
 }
