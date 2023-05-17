@@ -159,7 +159,7 @@ internal static class GameRenderer
         SceneFrameBuffer.UnBind();
         
         FrameBuffer.Bind();
-        GL.ClearColor(0,0,0,0);
+        GL.ClearColor(1,0,0,1);
         GL.Clear(ClearBufferMask.ColorBufferBit);
         
         SceneFrameBuffer.Texture.Use(TextureUnit.Texture0);
