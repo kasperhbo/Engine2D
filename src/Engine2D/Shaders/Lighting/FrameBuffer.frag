@@ -1,4 +1,4 @@
-﻿#version 330
+#version 330
 
 out vec4 outColor;
 
@@ -6,6 +6,10 @@ in vec2 texCoord;
 
 uniform sampler2D lightTexture;
 uniform sampler2D sceneTexture;
+
+uniform vec4 ClearColor;
+
+vec4 end;
 
 void main()
 {

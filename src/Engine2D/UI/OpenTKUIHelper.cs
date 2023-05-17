@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using Engine2D.GameObjects;
 using ImGuiNET;
@@ -237,10 +238,12 @@ internal class ImageTextIcon
 
     internal string Path { get; }
 
-    public unsafe void Draw(out bool doubleClick, out bool singleClick)
+    public unsafe void Draw(out bool doubleClick, out bool singleClick, out bool rightClick)
     {
         doubleClick = false;
         singleClick = false;
+        rightClick = false;
+
 
         //TODO: MOVE TO EDITOR SETTINGS
         var thumbnailSize = AssetBrowser.ThumbnailSize;
@@ -311,6 +314,8 @@ internal class ImageTextIcon
             if (ImGui.IsItemHovered())
                 singleClick = true;
 
+
+
         //UI::RectExpanded(UI::GetItemRect(), -6.0f, -6.0f));
         ImGui.Text(_label);
         if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
@@ -320,6 +325,22 @@ internal class ImageTextIcon
             if (ImGui.IsItemHovered())
                 singleClick = true;
 
+        if (ImGui.BeginPopupContextWindow("test"))
+        {
+            if (ImGui.MenuItem("Show In Explorer"))
+            {
+                Console.WriteLine(Path);
+                var proc = Process.Start("explorer.exe", "/select, " + Path);
+                
+            }
+            if (ImGui.MenuItem("Delete"))
+            {
+                //TODO: MAKE SURE WINDOW
+                throw new NotImplementedException();
+            }
+            ImGui.EndPopup();
+        }
+
 
         // End of the Item Group
         //======================
@@ -328,12 +349,19 @@ internal class ImageTextIcon
         ImGui.EndChild();
         
         
-        if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
-            if (ImGui.IsItemHovered())
-                doubleClick = true;
-
-        if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
-            if (ImGui.IsItemHovered())
-                singleClick = true;
+//        if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+        //     if (ImGui.IsItemHovered())
+        //         doubleClick = true;
+        // if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+        //     if (ImGui.IsItemHovered())
+        //         singleClick = true;
+        // if (ImGui.BeginPopupContextWindow("test"))
+        // {
+        //     if (ImGui.MenuItem("New Child"))
+        //     {
+        //         Console.WriteLine("c");
+        //     }
+        //     ImGui.EndPopup();
+        // }
     }
 }

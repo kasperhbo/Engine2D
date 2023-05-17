@@ -30,11 +30,6 @@ internal class SceneHierachy : UIElemenet
             {
                 ImGuiTreeNodeFlags flags = new();
 
-                //if (Engine.Get().CurrentSelectedAsset == Engine.Get()._currentScene?.Gameobjects[i])
-                //    flags |= ImGuiTreeNodeFlags.Selected;
-
-                //? ImGuiTreeNodeFlags.Selected : 0) | ImGuiTreeNodeFlags.OpenOnArrow;
-
                 if (Engine.Get().CurrentSelectedAsset == Engine.Get()._currentScene?.Gameobjects[i])
                     flags |= ImGuiTreeNodeFlags.Selected;
                 else
@@ -52,7 +47,14 @@ internal class SceneHierachy : UIElemenet
                 );
 
 
-                if (ImGui.BeginPopupContextWindow("t")) ImGui.MenuItem("New Child");
+                if (ImGui.BeginPopupContextWindow("t"))
+                {
+                    if (ImGui.MenuItem("New Child"))
+                    {
+                        
+                    }
+                    ImGui.EndPopup();
+                }
 
                 if (ImGui.IsItemClicked())
                     Engine.Get().CurrentSelectedAsset = Engine.Get()._currentScene.Gameobjects[i];
@@ -128,8 +130,8 @@ internal class SceneHierachy : UIElemenet
 
                     ImGui.EndPopup();
                 }
+                ImGui.EndChild();
             }
-            ImGui.EndChild();
         };
     }
 }

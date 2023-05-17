@@ -1,11 +1,7 @@
 ﻿using Engine2D.Components;
 using Engine2D.Core;
-using Engine2D.GameObjects;
-using ExampleGame;
 using ExampleGame.Registers;
 using KDBEngine.Core;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 public class Program
 {

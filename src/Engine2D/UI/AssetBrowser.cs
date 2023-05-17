@@ -144,10 +144,10 @@ internal class AssetBrowser : UIElemenet
             {
                 if (folder == currentSelected) folder.IsSelected = true;
 
-                folder.Draw(out var doublec, out var single);
+                folder.Draw(out var doublec, out var single, out var rightClick);
                 if (doublec) SwitchDirectory(folder.Path);
                 if (single) currentSelected = folder;
-
+                
 
                 ImGui.NextColumn();
             }
@@ -156,7 +156,8 @@ internal class AssetBrowser : UIElemenet
             {
                 if (file == currentSelected) file.IsSelected = true;
 
-                file.Draw(out var doublec, out var single);
+                file.Draw(out var doublec, out var single, out var rightClick);
+
                 if (doublec)
                 {
                     new Process
