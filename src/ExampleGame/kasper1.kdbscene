@@ -40,9 +40,9 @@
       {
         "Color": {
           "Color": {
-            "X": 0.13333334,
+            "X": 0.9882353,
             "Y": 1.0,
-            "Z": 0.28627452,
+            "Z": 0.9882353,
             "W": 1.0
           }
         },
@@ -60,7 +60,7 @@
     "Name": "SpriteLight: 2",
     "transform": {
       "position": {
-        "X": 96.0,
+        "X": 327.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -81,7 +81,7 @@
             "W": 0.96862745
           }
         },
-        "ZIndex": 2,
+        "ZIndex": 1,
         "textureData": null,
         "Type": "SpriteRenderer"
       },
@@ -96,7 +96,7 @@
     "transform": {
       "position": {
         "X": -112.0,
-        "Y": 0.0
+        "Y": 1.0
       },
       "rotation": 0.0,
       "size": {
@@ -110,13 +110,13 @@
       {
         "Color": {
           "Color": {
-            "X": 0.9882353,
-            "Y": 0.9411765,
-            "Z": 1.0,
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": 0.96862745,
             "W": 1.0
           }
         },
-        "ZIndex": 2,
+        "ZIndex": 3,
         "textureData": {
           "flipped": true,
           "magFilter": 9728,
@@ -131,7 +131,7 @@
     "Name": "SmallMario",
     "transform": {
       "position": {
-        "X": 28.0,
+        "X": -2.0,
         "Y": 0.0
       },
       "rotation": 0.0,

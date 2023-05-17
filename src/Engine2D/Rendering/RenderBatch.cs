@@ -71,9 +71,9 @@ internal class RenderBatch: IComparable<RenderBatch>
 
     public void AddSprite(SpriteRenderer spr)
     {
-        var index = spriteCount;
+        var index = SpriteCount;
         sprites[index] = spr;
-        spriteCount++;
+        SpriteCount++;
 
         if (spr.texture != null)
             if (!_textures.Contains(spr.texture))
@@ -96,7 +96,7 @@ internal class RenderBatch: IComparable<RenderBatch>
         // For now, we will rebuffer all data every frame
         var rebufferData = false;
 
-        for (var i = 0; i < spriteCount; i++)
+        for (var i = 0; i < SpriteCount; i++)
             if (sprites[i].IsDirty)
             {
                 sprites[i].IsDirty = false;
@@ -135,7 +135,7 @@ internal class RenderBatch: IComparable<RenderBatch>
         
         
 
-        GL.DrawElements(PrimitiveType.Triangles, spriteCount * 6, DrawElementsType.UnsignedInt, 0);
+        GL.DrawElements(PrimitiveType.Triangles, SpriteCount * 6, DrawElementsType.UnsignedInt, 0);
 
         for (var i = 0; i < _textures.Length; i++)
         {
@@ -288,16 +288,16 @@ internal class RenderBatch: IComparable<RenderBatch>
 
     public void RemoveSprite(SpriteRenderer spr)
     {
-        for (var i = 0; i < spriteCount; i++)
+        for (var i = 0; i < SpriteCount; i++)
             if (sprites[i] == spr)
             {
-                for (var j = i; j < spriteCount - 1; j++)
+                for (var j = i; j < SpriteCount - 1; j++)
                 {
                     sprites[j] = sprites[j + 1];
                     sprites[j].IsDirty = true;
                 }
 
-                spriteCount--;
+                SpriteCount--;
             }
     }
 
@@ -320,8 +320,8 @@ internal class RenderBatch: IComparable<RenderBatch>
     private const int c_VertexSizeInBytes = c_VertexSize * sizeof(float);
 
     private readonly SpriteRenderer[] sprites;
-    private int spriteCount;
-    public bool HasRoom => spriteCount < c_MaxBatchSize;
+    public int SpriteCount { get; private set; }
+    public bool HasRoom => SpriteCount < c_MaxBatchSize;
 
     private readonly float[] _vertices = new float[c_MaxBatchSize * c_VertexSize];
 

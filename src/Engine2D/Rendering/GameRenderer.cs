@@ -24,6 +24,8 @@ internal static class GameRenderer
     public static TestFrameBuffer FrameBuffer { get; private set; }
     public static TestFrameBuffer LightFrameBuffer { get; private set; }
     public static TestFrameBuffer SceneFrameBuffer { get; private set; }
+    public static int DrawCalls { get; private set; }
+    public static int RenderBatches => _renderBatches.Count;
     
     private static readonly float[] _vertices =
     {
@@ -106,7 +108,7 @@ internal static class GameRenderer
     internal static void Render()
     {
         var col = Engine.Get()._currentScene.LightSettings.ClearColor;
-
+        DrawCalls = 0;
         LightFrameBuffer.Bind();
         
         GL.ClearColor(0,0,0,0);
@@ -115,7 +117,10 @@ internal static class GameRenderer
         GL.BlendFunc(BlendingFactor.One, BlendingFactor.DstAlpha);
         
         foreach (var rb in _lightRenderBatches)
+        {
+            DrawCalls++;
             rb.Render(Engine.Get().testCamera.getProjectionMatrix(), Engine.Get().testCamera.getViewMatrix());
+        }
         
         LightFrameBuffer.UnBind();
         
@@ -127,8 +132,30 @@ internal static class GameRenderer
         GL.Enable(EnableCap.Blend);
         GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
 
+        List<RenderBatch> batchedToRemove = new List<RenderBatch>();
+
         foreach (var rb in _renderBatches)
-            rb.Render(Engine.Get().testCamera.getProjectionMatrix(), Engine.Get().testCamera.getViewMatrix());
+        {
+            bool removed = false;
+            if (rb.SpriteCount <= 0)
+            {
+                removed = true;
+                batchedToRemove.Add(rb);
+            }
+
+            if(!removed)
+            {
+                DrawCalls++;
+
+                rb.Render(Engine.Get().testCamera.getProjectionMatrix(), Engine.Get().testCamera.getViewMatrix());
+            }
+        }
+
+        foreach (var batchToRemove in batchedToRemove)
+        {
+            _renderBatches.Remove(batchToRemove);
+        }
+        
         SceneFrameBuffer.UnBind();
         
         FrameBuffer.Bind();
@@ -145,6 +172,7 @@ internal static class GameRenderer
         GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
         //COMBINE TWO TEXTURES
         _frameShader.use();
+        DrawCalls++;
         FrameBuffer.UnBind();
 
     }
@@ -184,7 +212,6 @@ internal static class GameRenderer
             batch.Init();
             batch.AddSprite(spr);
             _renderBatches.Add(batch);
-            addedToBatch = batch;
             
             _renderBatches.Sort();
         }

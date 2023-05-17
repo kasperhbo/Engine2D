@@ -232,7 +232,7 @@ namespace KDBEngine.Core
         protected override void OnUnload()
         {
             _currentScene.IsPlaying = false;
-            //_currentScene.OnClose();
+            _currentScene.OnClose();
             base.OnUnload();
         }
 
@@ -274,6 +274,9 @@ namespace KDBEngine.Core
 
             var hierarch = new SceneHierachy();
             _guiWindows.Add(hierarch.Title, hierarch);
+            
+            var renderDebug = new RenderDebugUI();
+            _guiWindows.Add(renderDebug.Title, renderDebug);
 
 
             _guiWindows.Add(engineSettingsWindow.Title, engineSettingsWindow);

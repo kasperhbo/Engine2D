@@ -13,48 +13,10 @@ internal class TestViewportWindow
     private static Vector2 viewportSize;
 
     private TestFrameBuffer frameBufferToRenderer = null;
-
-    private void CreateFrameBufferDebugger()
-    {
-        var windowSize = getLargestSizeForViewport();
-        var windowPos = getCenteredPositionForViewport(windowSize);
-
-        //Vector2 topLeft = new Vector2();
-        var topLeft = ImGui.GetCursorScreenPos();
-        topLeft.X -= ImGui.GetScrollX();
-        topLeft.Y -= ImGui.GetScrollY();
-
-        //leftX = topLeft.X;
-        //bottomY = topLeft.Y;
-        //rightX = topLeft.X + windowSize.X;
-        //topY = topLeft.Y + windowSize.Y;
-
-        viewportPos = new Vector2(topLeft.X, topLeft.Y);
-        viewportSize = new Vector2(windowSize.X, windowSize.Y);
-
-
-        var textureId = GameRenderer.SceneFrameBuffer.GetTextureID;
-        ImGui.Text("Scene");
-        ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
-        
-        textureId = GameRenderer.LightFrameBuffer.GetTextureID;
-        ImGui.Text("Lighting");
-        ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
-        
-        textureId = GameRenderer.FrameBuffer.GetTextureID;
-        ImGui.Text("Game");
-        ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
-
-    }
-
+    
+    
     public void OnGui()
     {
-        if (frameBufferToRenderer == null) frameBufferToRenderer = GameRenderer.FrameBuffer;
-        
-        ImGui.Begin("Frame buffers");
-        CreateFrameBufferDebugger();
-        ImGui.End();
-        
         ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
                                                                   | ImGuiWindowFlags.MenuBar);
 
@@ -124,7 +86,7 @@ internal class TestViewportWindow
             viewportY + ImGui.GetCursorPosY());
     }
 
-    private Vector2 getLargestSizeForViewport()
+    public static Vector2 getLargestSizeForViewport()
     {
         var windowSize = ImGui.GetContentRegionAvail();
         windowSize.X -= ImGui.GetScrollX();

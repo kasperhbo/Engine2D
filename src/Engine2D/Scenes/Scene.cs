@@ -58,6 +58,8 @@ internal class Scene
 
     private void StartPlay()
     {
+        SaveLoad.SaveScene(this);
+        
         physicsWorld = new World(new Vector2(0, -9.8f));
         foreach (var gameobject in Gameobjects)
         foreach (var item in gameobject.components)
@@ -100,7 +102,7 @@ internal class Scene
 
     private void StopPlay()
     {
-        //SaveLoad.LoadScene(this.ScenePath);
+        SaveLoad.LoadScene(this.ScenePath);
     }
 
     internal virtual void Init(Engine engine, string scenePath, int width, int height)
@@ -135,17 +137,9 @@ internal class Scene
         {
             Engine.Get().testCamera.position.Y -= 100 * (float)dt;
         }
-
-        //TODO: TEST CODE FOR GIZMO
-        // if (Engine.Get().CurrentSelectedAsset != null)
-        // {
-        //     Gameobject go = (Gameobject)Engine.Get().CurrentSelectedAsset;
-        //     go.transform.rotation += Engine.Get().MouseState.PreviousPosition.Y - Engine.Get().MouseState.Position.Y;
-        // }
-        //
+        
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
         if (IsPlaying) GameUpdate(dt);
-        //if (IsPlaying) { foreach (Gameobject obj in Gameobjects) { obj.GameUpdate(dt); } }
     }
 
     internal virtual void Render(double dt)

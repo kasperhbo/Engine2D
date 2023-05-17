@@ -87,7 +87,6 @@ public class SpriteRenderer : Component
 
         if (!_prevZIndex.Equals(ZIndex))
         {
-            Console.WriteLine("changed");
             _prevZIndex = ZIndex;
             GameRenderer.RemoveSprite(this);
             GameRenderer.AddSpriteRenderer(this);
