@@ -6,7 +6,7 @@ namespace Engine2D.Testing;
 internal class TestFrameBuffer
 {
     private readonly int fboId;
-    private readonly Texture texture;
+    public Texture Texture { get; private set; }
 
     public TestFrameBuffer(int width, int height)
     {
@@ -14,12 +14,12 @@ internal class TestFrameBuffer
         fboId = GL.GenFramebuffer();
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
 
-        texture = new Texture(width, height);
+        Texture = new Texture(width, height);
         GL.FramebufferTexture2D(
             FramebufferTarget.Framebuffer,
             FramebufferAttachment.ColorAttachment0,
             TextureTarget.Texture2D,
-            texture.TexID,
+            Texture.TexID,
             0
         );
 
@@ -37,7 +37,7 @@ internal class TestFrameBuffer
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
 
-    public int GetTextureID => texture.TexID;
+    public int GetTextureID => Texture.TexID;
 
     public void Bind()
     {

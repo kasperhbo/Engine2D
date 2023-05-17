@@ -4,16 +4,10 @@ in vec4 fColor;
 in vec2 fTexCoords;
 in float fTexId;
 
-in vec3 fFragPos;
-
 uniform sampler2D uTextures[32];
 
-
 vec4 color;
-vec4 lightingColor;
 out vec4 outColor;
-
-
 
 void main()
 {
@@ -123,5 +117,6 @@ void main()
     } else {
         color = fColor;
     }
+     
     outColor = color;
 }

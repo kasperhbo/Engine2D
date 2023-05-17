@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Runtime.InteropServices;
 using Engine2D.GameObjects;
 using ImGuiNET;
 using Vector4 = OpenTK.Mathematics.Vector4;
@@ -182,6 +183,8 @@ internal static class OpenTKUIHelper
     {
         var result = rect;
 
+        
+        
         result.X -= x;
         result.Y -= y;
 
@@ -191,11 +194,6 @@ internal static class OpenTKUIHelper
         return result;
     }
 
-    public static void ShiftCursor(float x, float y)
-    {
-        var cursor = ImGui.GetCursorPos();
-        ImGui.SetCursorPos(new Vector2(cursor.X + x, cursor.Y + y));
-    }
 
     public static OpenTK.Mathematics.Vector2 DrawProperty(string name, OpenTK.Mathematics.Vector2 property)
     {
@@ -223,19 +221,23 @@ internal class ImageTextIcon
     private readonly IntPtr _textureHovered;
 
     public bool IsSelected = false;
+    private GCHandle? _currentlyDraggedHandle;
+    private bool _currentlyDragging;
+    private FileType _type;
 
-    public ImageTextIcon(string label, IntPtr texture, IntPtr textureHovered, IntPtr textureActive, string path)
+    public ImageTextIcon(string label, IntPtr texture, IntPtr textureHovered, IntPtr textureActive, string path, FileType type)
     {
         _label = label;
         _texture = texture;
         _textureHovered = textureHovered;
         _textureActive = textureActive;
+        _type = type;
         Path = path;
     }
 
     internal string Path { get; }
 
-    public void Draw(out bool doubleClick, out bool singleClick)
+    public unsafe void Draw(out bool doubleClick, out bool singleClick)
     {
         doubleClick = false;
         singleClick = false;
@@ -251,28 +253,19 @@ internal class ImageTextIcon
         else
             ImGui.PushStyleColor(ImGuiCol.ChildBg, new System.Numerics.Vector4(1f, .19f, .19f, 1));
 
-        ImGui.BeginChild("##transform_c", new Vector2(thumbnailSize + 30, thumbnailSize + 30), true, 0); // Leave ~100
+        ImGui.BeginChild("##transform_c", new Vector2(thumbnailSize + 32, thumbnailSize + 32), false, ImGuiWindowFlags.NoScrollbar); // Leave ~100
         ImGui.PopStyleColor();
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
 
-        const float edgeOffset = 4.0f;
-
-        var textLineHeight = ImGui.GetTextLineHeightWithSpacing() * 2.0f + edgeOffset * 2.0f;
         //float infoPanelHeight = std::max(displayAssetType ? 
         //    thumbnailSize * 0.5f : textLineHeight, textLineHeight);
         float infoPanelHeight = 64;
 
         var topLeft = ImGui.GetCursorScreenPos();
-        Vector2 thumbBottomRight = new(topLeft.X + thumbnailSize - 16, topLeft.Y + thumbnailSize - 16);
-        Vector2 infoTopLeft = new(topLeft.X - 16, topLeft.Y + thumbnailSize - 16);
-        Vector2 bottomRight = new(topLeft.X - 16 + thumbnailSize, topLeft.Y + thumbnailSize + infoPanelHeight);
-
-        {
-            //var drawList = ImGui.GetWindowDrawList();
-            //const ImRect itemRect = UI::RectOffset(ImRect(topLeft, bottomRight), 1.0f, 1.0f);
-            //drawList->AddRect(itemRect.Min, itemRect.Max, Colours::Theme::propertyField, 6.0f, directory ? 0 : ImDrawFlags_RoundCornersBottom, 2.0f);
-        }
-        ;
+        Vector2 thumbBottomRight = new(topLeft.X + thumbnailSize - 14, topLeft.Y + thumbnailSize - 14);
+        Vector2 infoTopLeft = new(topLeft.X - 16, topLeft.Y + thumbnailSize - 14);
+        Vector2 bottomRight = new(topLeft.X - 14 + thumbnailSize, topLeft.Y + thumbnailSize + infoPanelHeight);
+        
 
         var isFocused = ImGui.IsWindowFocused();
 
@@ -297,6 +290,20 @@ internal class ImageTextIcon
                 -6
             )
         );
+        
+        if(_type == FileType.Scene){
+            if (ImGui.BeginDragDropSource())
+            {
+                _currentlyDragging = true;
+                _currentlyDraggedHandle ??= GCHandle.Alloc(Path);
+
+                ImGui.SetDragDropPayload("Scene_Drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                    (uint)sizeof(IntPtr));
+
+                ImGui.EndDragDropSource();
+            }
+        }
+        
         if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             if (ImGui.IsItemHovered())
                 doubleClick = true;
@@ -313,11 +320,14 @@ internal class ImageTextIcon
             if (ImGui.IsItemHovered())
                 singleClick = true;
 
-        ImGui.PopStyleVar(); // ItemSpacing
 
         // End of the Item Group
         //======================
+        ImGui.PopStyleVar(); // ItemSpacing
+        
         ImGui.EndChild();
+        
+        
         if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             if (ImGui.IsItemHovered())
                 doubleClick = true;

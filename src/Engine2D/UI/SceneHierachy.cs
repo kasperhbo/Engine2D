@@ -1,5 +1,6 @@
 ﻿using Box2DSharp.Dynamics;
 using Engine2D.Components;
+using Engine2D.Components.Lights;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using ImGuiNET;
@@ -91,6 +92,27 @@ internal class SceneHierachy : UIElemenet
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
 
+                    if (ImGui.MenuItem("New Sprite Light"))
+                    {
+                        var spriteRenderer = new SpriteLightRenderer
+                        {
+                            textureData = new TextureData(
+                                "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\lightsource.png",
+                                true,
+                                TextureMinFilter.Linear,
+                                TextureMagFilter.Linear
+                            )
+                        };
+                        var components = new List<Component>
+                        {
+                            spriteRenderer
+                        };
+
+                        var go = new Gameobject("SpriteLight: " + (Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                            components, new Transform());
+                        Engine.Get()._currentScene?.AddGameObjectToScene(go);
+                    }
+                    
                     if (ImGui.MenuItem("New RB"))
                     {
                         var components = new List<Component>

@@ -27,11 +27,6 @@
 
 
     <ItemGroup>
-      <Folder Include="Shaders\shader_files" />
-    </ItemGroup>
-
-
-    <ItemGroup>
       <None Update="Shaders\default-unlit.frag">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -48,6 +43,18 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Shaders\default-unlit-lighting.vert">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\Lighting\default-sprite-light.frag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\Lighting\default-sprite-light.vert">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\Lighting\FrameBuffer.frag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\Lighting\FrameBuffer.vert">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

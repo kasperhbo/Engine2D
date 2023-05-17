@@ -106,7 +106,6 @@ internal class Scene
     internal virtual void Init(Engine engine, string scenePath, int width, int height)
     {
         ScenePath = scenePath;
-
         GameRenderer.Init();
     }
 
@@ -136,6 +135,14 @@ internal class Scene
         {
             Engine.Get().testCamera.position.Y -= 100 * (float)dt;
         }
+
+        //TODO: TEST CODE FOR GIZMO
+        // if (Engine.Get().CurrentSelectedAsset != null)
+        // {
+        //     Gameobject go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+        //     go.transform.rotation += Engine.Get().MouseState.PreviousPosition.Y - Engine.Get().MouseState.Position.Y;
+        // }
+        //
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
         if (IsPlaying) GameUpdate(dt);
         //if (IsPlaying) { foreach (Gameobject obj in Gameobjects) { obj.GameUpdate(dt); } }

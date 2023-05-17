@@ -1,45 +1,22 @@
-﻿using System.Numerics;
-using Engine2D.Components;
-using Engine2D.Core;
+﻿using Engine2D.Core;
 using Engine2D.Flags;
+using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Newtonsoft.Json;
+using OpenTK.Mathematics;
 
-namespace Engine2D.GameObjects;
-
-public class SpriteColor
-{
-    public Vector4 Color;
-
-    public SpriteColor()
-    {
-        Color = new Vector4();
-    }
-
-    public SpriteColor(Vector4 color)
-    {
-        Color = color;
-    }
-
-    public SpriteColor(float r, float g, float b, float a)
-    {
-        Color = new Vector4(r, g, b, a);
-    }
-}
+namespace Engine2D.Components.Lights;
 
 [JsonConverter(typeof(ComponentSerializer))]
-public class SpriteRenderer : Component
+public class SpriteLightRenderer : Component
 {
     [ShowUI(show = false)] private SpriteColor _lastColor = new();
 
     [ShowUI(show = false)] private readonly Transform _lastTransform = new();
     public SpriteColor Color = new();
-    
+
     [ShowUI(show = false)] internal bool IsDirty = true;
-    
-    public int ZIndex = 0;
-    [JsonIgnore][ShowUI(show = false)]int _prevZIndex = 0;
-    
+
     [JsonIgnore] internal Texture texture;
 
     [JsonIgnore] protected bool _addToRendererAsSprite = true;
@@ -63,7 +40,7 @@ public class SpriteRenderer : Component
             texture = ResourceManager.GetTexture(textureData);
         }
         if(_addToRendererAsSprite)
-            GameRenderer.AddSpriteRenderer(this);
+            GameRenderer.AddSpriteLightRenderer(this);
     }
 
     public override void Start()
@@ -84,18 +61,10 @@ public class SpriteRenderer : Component
             IsDirty = true;
             _lastColor = new SpriteColor(Color.Color);
         }
-
-        if (!_prevZIndex.Equals(ZIndex))
-        {
-            Console.WriteLine("changed");
-            _prevZIndex = ZIndex;
-            GameRenderer.RemoveSprite(this);
-            GameRenderer.AddSpriteRenderer(this);
-            this.IsDirty = true;
-        }
     }
 
     public override void GameUpdate(double dt)
+
     {
         if (!_lastTransform.Equals(Parent.transform))
         {
@@ -112,6 +81,6 @@ public class SpriteRenderer : Component
 
     public override string GetItemType()
     {
-        return "SpriteRenderer";
+        return "SpriteLightRenderer";
     }
 }

@@ -131,4 +131,10 @@ public class Texture
         return oTex.Width.Equals(Width) && oTex.Height.Equals(Height) && oTex.TexID.Equals(TexID)
                && oTex.Filepath.Equals(Filepath);
     }
+
+    public void Use(TextureUnit unit)
+    {
+        GL.ActiveTexture(unit);
+        GL.BindTexture(TextureTarget.Texture2D, TexID);
+    }
 }

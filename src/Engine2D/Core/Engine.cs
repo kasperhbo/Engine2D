@@ -20,8 +20,6 @@ namespace KDBEngine.Core
     // OpenGL's initial hurdle is quite large, but once you get past that, things will start making more sense.
     public class Engine : GameWindow
     {
-        private static readonly int small = 1;
-
         private static Engine _instance;
 
         internal Scene? _currentScene;
@@ -34,15 +32,11 @@ namespace KDBEngine.Core
 
         //TODO: MAKE THIS STATIC AND SAVABLE
         private readonly EngineSettingsWindow engineSettingsWindow = new();
-
-        private GameViewport gameViewport = new();
-        private readonly float height = 1080 / small;
+     
         internal ImGuiController ImGuiController;
         internal TestCamera testCamera;
 
-        private TestFrameBuffer testFB;
         private TestViewportWindow viewportWindow;
-        private readonly float width = 1920 / small;
 
         public Vector2 LightLocation = new(0, 0);
         public SpriteColor LightColor = new(0, 0, 0,0);
@@ -104,7 +98,7 @@ namespace KDBEngine.Core
             SaveLoad.LoadScene(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
             TestInput.Init();
 
-            testFB = new TestFrameBuffer((int)width, (int)height);
+            // testFB = new TestFrameBuffer((int)width, (int)height);
             testCamera = new TestCamera();
             viewportWindow = new TestViewportWindow();
             cb = new TestContentBrowser();
@@ -142,10 +136,9 @@ namespace KDBEngine.Core
                 {
                 }
 
-                testFB.Bind();
-                GameRenderer.Render();
-                testFB.UnBind();
 
+                GameRenderer.Render();
+                
                 ImGuiController.Update(this, e.Time);
                 ImGui.BeginMainMenuBar();
                 if (ImGui.BeginMenu("Menu"))
@@ -218,7 +211,8 @@ namespace KDBEngine.Core
             _currentScene?.OnResized(e);
 
             testCamera.adjustProjection();
-            testFB = new TestFrameBuffer(ClientSize.X, ClientSize.Y);
+            GameRenderer.OnResize(e);
+            // testFB = new TestFrameBuffer(ClientSize.X, ClientSize.Y);
         }
 
         protected override void OnTextInput(TextInputEventArgs e)
@@ -247,8 +241,8 @@ namespace KDBEngine.Core
             GameRenderer.Flush();
             Title = WindowSettings.s_Title + " | " + sceneName;
             Scene newScene = new();
-            newScene.Init(this, sceneName, Size.X, Size.Y);
             _currentScene = newScene;
+            newScene.Init(this, sceneName, Size.X, Size.Y);
         }
 
         internal void NewScene(string sceneName)
@@ -283,12 +277,6 @@ namespace KDBEngine.Core
 
 
             _guiWindows.Add(engineSettingsWindow.Title, engineSettingsWindow);
-        }
-
-
-        internal TestFrameBuffer getFramebuffer()
-        {
-            return testFB;
         }
 
         internal float getWidth()

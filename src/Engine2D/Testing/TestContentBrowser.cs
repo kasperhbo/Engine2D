@@ -8,25 +8,12 @@ namespace Engine2D.UI;
 
 public class TestContentBrowser
 {
-    public enum FileType
-    {
-        Folder,
-        File,
-        Script,
-        Shader,
-        Scene,
-        Sprite,
-        Texture,
-        TextFile
-    }
-
     private static GCHandle? _currentlyDraggedHandle;
     private Directory currentDirectory = new("", ProjectSettings.s_FullProjectPath, "");
-    private readonly int dirTexture;
+    private readonly int dirTexture; 
     private readonly int fileTexture;
     private List<ContentBrowserItemInfo> previous = new();
     private int sceneTexture;
-
 
     private readonly TextureData texDataDir;
     private readonly TextureData texDataFile;

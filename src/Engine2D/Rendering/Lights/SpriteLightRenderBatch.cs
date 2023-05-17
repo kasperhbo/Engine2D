@@ -1,6 +1,6 @@
-﻿using System.Net.Mime;
-using System.Threading.Channels;
+﻿using System.Threading.Channels;
 using Engine2D.Components;
+using Engine2D.Components.Lights;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Testing;
@@ -16,22 +16,20 @@ namespace Engine2D.Rendering;
 ///     Old code that I got from following GAMES WITH GABE'S How to create a game engine in Java Series!
 ///     Thanks Gabe, your code is now my property;)
 /// </summary>
-internal class RenderBatch: IComparable<RenderBatch>
+internal class SpriteLightRenderBatch
 {
-    internal RenderBatch(int zIndex)
+    internal SpriteLightRenderBatch()
     {
-        this.ZIndex = zIndex;
         _textureUnits = new int[GL.GetInteger(GetPName.MaxTextureImageUnits)];
-        _textures = new Texture[GL.GetInteger(GetPName.MaxTextureImageUnits)];
-        
+
         for (var i = 0; i < _textureUnits.Length; i++) _textureUnits[i] = i;
 
         var dat = new ShaderData();
-        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default-unlit-lighting.vert";
-        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default-unlit-lighting.frag";
+        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/Lighting/default-sprite-light.vert";
+        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/Lighting/default-sprite-light.frag";
 
         _shader = ResourceManager.GetShader(dat);
-        sprites = new SpriteRenderer[c_MaxBatchSize];
+        sprites = new SpriteLightRenderer[c_MaxBatchSize];
 
         _vertices = new float[c_MaxBatchSize * c_VertexSize * 4];
     }
@@ -69,7 +67,7 @@ internal class RenderBatch: IComparable<RenderBatch>
         GL.EnableVertexAttribArray(3);
     }
 
-    public void AddSprite(SpriteRenderer spr)
+    public void AddSprite(SpriteLightRenderer spr)
     {
         var index = spriteCount;
         sprites[index] = spr;
@@ -77,16 +75,7 @@ internal class RenderBatch: IComparable<RenderBatch>
 
         if (spr.texture != null)
             if (!_textures.Contains(spr.texture))
-            {
-                for (int i = 0; i < _textures.Length; i++)
-                {
-                    if (_textures[i] == null)
-                    {
-                        _textures[i] = spr.texture;
-                        break;
-                    }
-                }
-            }
+                _textures.Add(spr.texture);
 
         LoadVertexProperties(index);
     }
@@ -109,41 +98,28 @@ internal class RenderBatch: IComparable<RenderBatch>
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vboID);
             GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, _vertices.Length * sizeof(float), _vertices);
         }
-        
+
+        // Use shader
         _shader.use();
         _shader.uploadMat4f("uProjection", projectionMatrix);
         _shader.uploadMat4f("uView", viewMatrix);
         
-        for (var i = 0; i < _textures.Length; i++)
+        for (var i = 0; i < _textures.Count; i++)
         {
-            if(_textures[i] != null){
-                GL.ActiveTexture(TextureUnit.Texture0 + i + 1);
-                _textures[i].bind();
-            }
+            GL.ActiveTexture(TextureUnit.Texture0 + i + 1);
+            _textures[i].bind();
         }
-        
+
         _shader.UploadIntArray("uTextures", _textureUnits);
-        //
-        // GL.BindTexture(TextureTarget.Texture2D, 18);
-        // GL.ActiveTexture(TextureUnit.Texture18);
-        // _shader.use();
-        // _shader.uploadTexture("uLightTexture", 18);
+        
         
         GL.BindVertexArray(_vaoID);
         GL.EnableVertexAttribArray(0);
         GL.EnableVertexAttribArray(1);
-        
-        
 
         GL.DrawElements(PrimitiveType.Triangles, spriteCount * 6, DrawElementsType.UnsignedInt, 0);
 
-        for (var i = 0; i < _textures.Length; i++)
-        {
-            if (_textures[i] != null)
-            {
-                _textures[i].unbind();
-            }
-        }
+        for (var i = 0; i < _textures.Count; i++) _textures[i].unbind();
 
         GL.DisableVertexAttribArray(0);
         GL.DisableVertexAttribArray(1);
@@ -167,7 +143,7 @@ internal class RenderBatch: IComparable<RenderBatch>
 
         //Find texture
         if (sprite.texture != null)
-            for (var i = 0; i < _textures.Length; i++)
+            for (var i = 0; i < _textures.Count; i++)
                 if (_textures[i].Equals(sprite.texture))
                 {
                     texID = i + 1;
@@ -286,7 +262,7 @@ internal class RenderBatch: IComparable<RenderBatch>
     }
 
 
-    public void RemoveSprite(SpriteRenderer spr)
+    public void RemoveSprite(SpriteLightRenderer spr)
     {
         for (var i = 0; i < spriteCount; i++)
             if (sprites[i] == spr)
@@ -319,7 +295,7 @@ internal class RenderBatch: IComparable<RenderBatch>
     private const int c_VertexSize = 9;
     private const int c_VertexSizeInBytes = c_VertexSize * sizeof(float);
 
-    private readonly SpriteRenderer[] sprites;
+    private readonly SpriteLightRenderer[] sprites;
     private int spriteCount;
     public bool HasRoom => spriteCount < c_MaxBatchSize;
 
@@ -329,21 +305,9 @@ internal class RenderBatch: IComparable<RenderBatch>
 
     private readonly Shader _shader;
 
-    private readonly Texture[] _textures;
+    private readonly List<Texture> _textures = new();
+
     private readonly int[] _textureUnits;
 
-    public int ZIndex = 0;
-
     #endregion
-
-    public int CompareTo(RenderBatch? other)
-    {
-        if (this.ZIndex < other.ZIndex)
-            return -1;
-            
-        if (this.ZIndex == other.ZIndex)
-            return 0;
-            
-        return 1;
-    }
 }

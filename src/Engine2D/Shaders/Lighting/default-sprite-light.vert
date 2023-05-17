@@ -21,7 +21,6 @@ void main()
     fTexCoords = aTexCoords;
     fTexId = aTexId;
     
-    fFragPos = aPos;
-    
+    fFragPos = aPos;    
     gl_Position = uProjection * uView * vec4(aPos, 1.0);
 }

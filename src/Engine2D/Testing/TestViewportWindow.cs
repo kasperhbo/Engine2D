@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using System.Runtime.InteropServices;
 using Engine2D.Core;
+using Engine2D.Rendering;
 using ImGuiNET;
 using KDBEngine.Core;
 
@@ -11,8 +12,49 @@ internal class TestViewportWindow
     private static Vector2 viewportPos;
     private static Vector2 viewportSize;
 
+    private TestFrameBuffer frameBufferToRenderer = null;
+
+    private void CreateFrameBufferDebugger()
+    {
+        var windowSize = getLargestSizeForViewport();
+        var windowPos = getCenteredPositionForViewport(windowSize);
+
+        //Vector2 topLeft = new Vector2();
+        var topLeft = ImGui.GetCursorScreenPos();
+        topLeft.X -= ImGui.GetScrollX();
+        topLeft.Y -= ImGui.GetScrollY();
+
+        //leftX = topLeft.X;
+        //bottomY = topLeft.Y;
+        //rightX = topLeft.X + windowSize.X;
+        //topY = topLeft.Y + windowSize.Y;
+
+        viewportPos = new Vector2(topLeft.X, topLeft.Y);
+        viewportSize = new Vector2(windowSize.X, windowSize.Y);
+
+
+        var textureId = GameRenderer.SceneFrameBuffer.GetTextureID;
+        ImGui.Text("Scene");
+        ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+        
+        textureId = GameRenderer.LightFrameBuffer.GetTextureID;
+        ImGui.Text("Lighting");
+        ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+        
+        textureId = GameRenderer.FrameBuffer.GetTextureID;
+        ImGui.Text("Game");
+        ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+
+    }
+
     public void OnGui()
     {
+        if (frameBufferToRenderer == null) frameBufferToRenderer = GameRenderer.FrameBuffer;
+        
+        ImGui.Begin("Frame buffers");
+        CreateFrameBufferDebugger();
+        ImGui.End();
+        
         ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
                                                                   | ImGuiWindowFlags.MenuBar);
 
@@ -45,34 +87,10 @@ internal class TestViewportWindow
         viewportSize = new Vector2(windowSize.X, windowSize.Y);
 
 
-        var textureId = Engine.Get().getFramebuffer().GetTextureID;
+        var textureId = GameRenderer.FrameBuffer.GetTextureID;
+        
         ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
-        //if (ImGui.BeginDragDropTarget())
-        //{
-        //    ImGuiPayloadPtr ptr = ImGui.AcceptDragDropPayload("ASSET_BROWSER_ITEM");
-        //    Console.WriteLine(ptr);
-
-        //    if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
-        //    {
-        //        SaveLoad.LoadScene(AssetBrowser.CurrentDraggingFileName);
-        //    }
-
-        //    ImGui.EndDragDropTarget();
-        //}
-        //if (ImGui.BeginDragDropTarget())
-        //{
-        //    ImGuiPayloadPtr payload = ImGui.AcceptDragDropPayload("Scene_Drop");
-        //    if (payload.Data != null)
-        //    {
-        //        string filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
-        //        Console.WriteLine("Opening scene: " + filename);
-        //        SaveLoad.LoadScene(AssetBrowser.CurrentDraggingFileName);
-        //        //Window.Get().ChangeScene(new LevelEditorScene(), filename);
-        //    }
-
-        //    ImGui.EndDragDropTarget();
-        //}
-
+        
         if (ImGui.BeginDragDropTarget())
         {
             var payload = ImGui.AcceptDragDropPayload("Scene_Drop");

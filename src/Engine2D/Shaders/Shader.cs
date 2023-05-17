@@ -320,4 +320,10 @@ public class Shader
         var varLocation = GL.GetUniformLocation(shaderProgramID, v);
         GL.Uniform1(varLocation, values.Length, values);
     }
+
+    public int GetAttribLocation(string attribName)
+    {
+        return GL.GetAttribLocation(shaderProgramID, attribName);
+    }
+
 }

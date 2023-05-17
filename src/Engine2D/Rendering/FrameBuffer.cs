@@ -5,7 +5,7 @@ namespace Engine2D.Rendering;
 public class FrameBuffer
 {
     private readonly int _fboID;
-    private readonly Texture _texture;
+    public Texture Texture { get; private set; }
 
     internal FrameBuffer(int width, int height)
     {
@@ -13,11 +13,11 @@ public class FrameBuffer
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, _fboID);
 
         // Create the texture to render the data to, and attach it to our framebuffer
-        _texture = new Texture(width, height);
+        Texture = new Texture(width, height);
 
         GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
             TextureTarget.Texture2D,
-            _texture.TexID, 0);
+            Texture.TexID, 0);
 
         // Create renderbuffer store the depth info
         var rboID = GL.GenRenderbuffer();
@@ -30,7 +30,7 @@ public class FrameBuffer
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
 
-    public int TextureID => _texture.TexID;
+    public int TextureID => Texture.TexID;
 
     internal void Bind()
     {
