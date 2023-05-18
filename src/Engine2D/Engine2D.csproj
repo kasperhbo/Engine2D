@@ -27,18 +27,6 @@
 
 
     <ItemGroup>
-      <None Update="Shaders\default-unlit.frag">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\default-unlit.vert">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\default-lit.frag">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\default-lit.vert">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="Shaders\default-unlit-lighting.frag">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -57,18 +45,17 @@
       <None Update="Shaders\Lighting\FrameBuffer.vert">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Shaders\default.frag">
+      <None Update="Shaders\default-lit.frag">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Shaders\default.vert">
+      <None Update="Shaders\default-lit.vert">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Shaders\LightingTest\Lighting.vert">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Shaders\LightingTest\Lighting.frag">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Folder Include="Rendering\Lights" />
     </ItemGroup>
 
 </Project>

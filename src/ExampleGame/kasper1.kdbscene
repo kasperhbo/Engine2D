@@ -1,12 +1,25 @@
 [
   {
-    "components": [],
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.0,
+            "Y": 1.0,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
     "LinkedComponents": [],
-    "Name": "1",
+    "Name": "Point Light: 0",
     "transform": {
       "position": {
-        "X": 0.0,
-        "Y": 0.0
+        "X": -925.0,
+        "Y": -524.0
       },
       "rotation": 0.0,
       "size": {
@@ -20,24 +33,9560 @@
       {
         "Color": {
           "Color": {
-            "X": 1.0,
+            "X": 0.0051254905,
+            "Y": 0.9948745,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 1",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.010250981,
+            "Y": 0.98974895,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 2",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.015376471,
+            "Y": 0.98462343,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 3",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.020501962,
+            "Y": 0.9794979,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 4",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.025627453,
+            "Y": 0.9743724,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 5",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.030752944,
+            "Y": 0.9692469,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 6",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.03587843,
+            "Y": 0.9641214,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 7",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.041003924,
+            "Y": 0.9589959,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 8",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.046129413,
+            "Y": 0.95387036,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 9",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.051254906,
+            "Y": 0.94874483,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 10",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.056380395,
+            "Y": 0.9436193,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 11",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.061505888,
+            "Y": 0.9384938,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 12",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.06663138,
+            "Y": 0.93336827,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 13",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.07175686,
+            "Y": 0.92824274,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 14",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": -524.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.07688235,
+            "Y": 0.9231172,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 15",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.08200784,
+            "Y": 0.91799176,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 16",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.087133326,
+            "Y": 0.91286623,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 17",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.09225881,
+            "Y": 0.9077407,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 18",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.0973843,
+            "Y": 0.9026152,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 19",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.10250979,
+            "Y": 0.89748967,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 20",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.107635275,
+            "Y": 0.89236414,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 21",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.11276076,
+            "Y": 0.8872386,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 22",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.117886245,
+            "Y": 0.8821131,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 23",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.12301174,
+            "Y": 0.8769876,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 24",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.12813722,
+            "Y": 0.87186205,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 25",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.13326271,
+            "Y": 0.86673653,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 26",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.1383882,
+            "Y": 0.86161107,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 27",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.14351368,
+            "Y": 0.85648555,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 28",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.14863917,
+            "Y": 0.85136,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 29",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": -464.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.15376465,
+            "Y": 0.8462345,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 30",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.15889014,
+            "Y": 0.841109,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 31",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.16401564,
+            "Y": 0.83598346,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 32",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.16914111,
+            "Y": 0.83085793,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 33",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.1742666,
+            "Y": 0.8257324,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 34",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.1793921,
+            "Y": 0.8206069,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 35",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.18451758,
+            "Y": 0.81548136,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 36",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.18964307,
+            "Y": 0.81035584,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 37",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.19476855,
+            "Y": 0.8052304,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 38",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.19989404,
+            "Y": 0.80010486,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 39",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.20501953,
+            "Y": 0.79497933,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 40",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.21014501,
+            "Y": 0.7898538,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 41",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.2152705,
+            "Y": 0.7847283,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 42",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.22039598,
+            "Y": 0.77960277,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 43",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.22552148,
+            "Y": 0.77447724,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 44",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": -404.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.23064697,
+            "Y": 0.7693517,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 45",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.23577245,
+            "Y": 0.7642262,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 46",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.24089794,
+            "Y": 0.7591007,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 47",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.24602343,
+            "Y": 0.7539752,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 48",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.25114894,
+            "Y": 0.7488497,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 49",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.2562744,
+            "Y": 0.74372417,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 50",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.2613999,
+            "Y": 0.73859864,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 51",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.2665254,
+            "Y": 0.7334731,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 52",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.27165088,
+            "Y": 0.7283476,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 53",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.27677637,
+            "Y": 0.7232221,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 54",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.28190184,
+            "Y": 0.71809655,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 55",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.28702733,
+            "Y": 0.71297103,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 56",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.29215282,
+            "Y": 0.7078455,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 57",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.2972783,
+            "Y": 0.70272,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 58",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.3024038,
+            "Y": 0.6975945,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 59",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": -344.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.30752927,
+            "Y": 0.692469,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 60",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.31265476,
+            "Y": 0.6873435,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 61",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.31778026,
+            "Y": 0.68221796,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 62",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.32290575,
+            "Y": 0.67709243,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 63",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.32803124,
+            "Y": 0.6719669,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 64",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.33315673,
+            "Y": 0.6668414,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 65",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.3382822,
+            "Y": 0.66171587,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 66",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.3434077,
+            "Y": 0.65659034,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 67",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.34853318,
+            "Y": 0.6514648,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 68",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.35365868,
+            "Y": 0.6463393,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 69",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.35878417,
+            "Y": 0.64121383,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 70",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.36390963,
+            "Y": 0.6360883,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 71",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.36903512,
+            "Y": 0.6309628,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 72",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.37416062,
+            "Y": 0.62583727,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 73",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.3792861,
+            "Y": 0.62071174,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 74",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": -284.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.3844116,
+            "Y": 0.6155862,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 75",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.38953707,
+            "Y": 0.6104607,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 76",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.39466256,
+            "Y": 0.6053352,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 77",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.39978805,
+            "Y": 0.60020965,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 78",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.40491354,
+            "Y": 0.59508413,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 79",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.41003904,
+            "Y": 0.58995867,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 80",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.4151645,
+            "Y": 0.58483315,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 81",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.42029,
+            "Y": 0.5797076,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 82",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.4254155,
+            "Y": 0.5745821,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 83",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.43054098,
+            "Y": 0.5694566,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 84",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.43566647,
+            "Y": 0.56433105,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 85",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.44079193,
+            "Y": 0.55920553,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 86",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.44591743,
+            "Y": 0.55408,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 87",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.45104292,
+            "Y": 0.5489545,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 88",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.4561684,
+            "Y": 0.54382896,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 89",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": -224.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.4612939,
+            "Y": 0.53870344,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 90",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.4664194,
+            "Y": 0.533578,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 91",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.47154486,
+            "Y": 0.52845246,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 92",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.47667035,
+            "Y": 0.52332693,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 93",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.48179585,
+            "Y": 0.5182014,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 94",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.48692134,
+            "Y": 0.5130759,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 95",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.49204683,
+            "Y": 0.50795037,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 96",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.4971723,
+            "Y": 0.50282484,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 97",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5022978,
+            "Y": 0.49769935,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 98",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5074233,
+            "Y": 0.4925739,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 99",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5125488,
+            "Y": 0.4874484,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 100",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5176743,
+            "Y": 0.4823229,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 101",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.52279985,
+            "Y": 0.4771974,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 102",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5279254,
+            "Y": 0.47207192,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 103",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5330509,
+            "Y": 0.46694645,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 104",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": -164.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5381764,
+            "Y": 0.46182096,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 105",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.54330194,
+            "Y": 0.45669547,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 106",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.54842746,
+            "Y": 0.45156997,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 107",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.553553,
+            "Y": 0.44644448,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 108",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5586785,
+            "Y": 0.44131902,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 109",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.563804,
+            "Y": 0.43619353,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 110",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5689295,
+            "Y": 0.43106803,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 111",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.574055,
+            "Y": 0.42594254,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 112",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.57918054,
+            "Y": 0.42081705,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 113",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.58430606,
+            "Y": 0.41569158,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 114",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5894316,
+            "Y": 0.4105661,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 115",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5945571,
+            "Y": 0.4054406,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 116",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.5996826,
+            "Y": 0.4003151,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 117",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.60480815,
+            "Y": 0.3951896,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 118",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6099337,
+            "Y": 0.39006412,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 119",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": -104.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6150592,
+            "Y": 0.38493866,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 120",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.62018466,
+            "Y": 0.37981316,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 121",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6253102,
+            "Y": 0.37468767,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 122",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6304357,
+            "Y": 0.36956218,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 123",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6355612,
+            "Y": 0.3644367,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 124",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.64068675,
+            "Y": 0.35931122,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 125",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6458123,
+            "Y": 0.35418573,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 126",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6509378,
+            "Y": 0.34906024,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 127",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6560633,
+            "Y": 0.34393474,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 128",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.66118884,
+            "Y": 0.33880925,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 129",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.66631436,
+            "Y": 0.3336838,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 130",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6714398,
+            "Y": 0.3285583,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 131",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.67656535,
+            "Y": 0.3234328,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 132",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6816909,
+            "Y": 0.3183073,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 133",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6868164,
+            "Y": 0.31318182,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 134",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": -44.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.6919419,
+            "Y": 0.30805635,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 135",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.69706744,
+            "Y": 0.30293086,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 136",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.70219296,
+            "Y": 0.29780537,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 137",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7073185,
+            "Y": 0.29267988,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 138",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.712444,
+            "Y": 0.28755438,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 139",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.71756953,
+            "Y": 0.28242892,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 140",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.72269505,
+            "Y": 0.27730343,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 141",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7278205,
+            "Y": 0.27217793,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 142",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.73294604,
+            "Y": 0.26705244,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 143",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.73807156,
+            "Y": 0.26192695,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 144",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7431971,
+            "Y": 0.25680146,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 145",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7483226,
+            "Y": 0.251676,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 146",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7534481,
+            "Y": 0.2465505,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 147",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.75857365,
+            "Y": 0.24142501,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 148",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7636992,
+            "Y": 0.23629953,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 149",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 16.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7688247,
+            "Y": 0.23117404,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 150",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7739502,
+            "Y": 0.22604854,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 151",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.77907574,
+            "Y": 0.22092307,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 152",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7842012,
+            "Y": 0.21579757,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 153",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7893267,
+            "Y": 0.21067208,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 154",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.79445225,
+            "Y": 0.2055466,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 155",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.7995778,
+            "Y": 0.20042111,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 156",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8047033,
+            "Y": 0.19529563,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 157",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8098288,
+            "Y": 0.19017014,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 158",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.81495434,
+            "Y": 0.18504465,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 159",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.82007986,
+            "Y": 0.17991917,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 160",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8252054,
+            "Y": 0.17479368,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 161",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8303309,
+            "Y": 0.16966818,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 162",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8354564,
+            "Y": 0.1645427,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 163",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8405819,
+            "Y": 0.15941721,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 164",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 76.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8457074,
+            "Y": 0.15429173,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 165",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.85083294,
+            "Y": 0.14916624,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 166",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.85595846,
+            "Y": 0.14404075,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 167",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.861084,
+            "Y": 0.13891527,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 168",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8662095,
+            "Y": 0.13378978,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 169",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.871335,
+            "Y": 0.1286643,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 170",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.87646055,
+            "Y": 0.12353881,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 171",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8815861,
+            "Y": 0.11841332,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 172",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8867116,
+            "Y": 0.11328783,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 173",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.89183706,
+            "Y": 0.10816234,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 174",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8969626,
+            "Y": 0.10303686,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 175",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9020881,
+            "Y": 0.09791137,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 176",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9072136,
+            "Y": 0.09278589,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 177",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.91233915,
+            "Y": 0.087660395,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 178",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9174647,
+            "Y": 0.08253491,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 179",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 136.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9225902,
+            "Y": 0.077409424,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 180",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9277157,
+            "Y": 0.07228394,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 181",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.93284124,
+            "Y": 0.067158446,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 182",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.93796676,
+            "Y": 0.062032957,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 183",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9430922,
+            "Y": 0.056907468,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 184",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.94821775,
+            "Y": 0.051781975,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 185",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9533433,
+            "Y": 0.046656486,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 186",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9584688,
+            "Y": 0.041530993,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 187",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9635943,
+            "Y": 0.036405504,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 188",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.96871984,
+            "Y": 0.03128001,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 189",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.97384536,
+            "Y": 0.026154522,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 190",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9789709,
+            "Y": 0.02102903,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 191",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9840964,
+            "Y": 0.01590354,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 192",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.98922193,
+            "Y": 0.010778049,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 193",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.99434745,
+            "Y": 0.005652559,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 194",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 196.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9994729,
+            "Y": 0.0005270687,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 195",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0045985,
+            "Y": -0.0045984215,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 196",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.009724,
+            "Y": -0.009723912,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 197",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0148495,
+            "Y": -0.014849403,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 198",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0199751,
+            "Y": -0.019974893,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 199",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0251005,
+            "Y": -0.025100384,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 200",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.030226,
+            "Y": -0.030225875,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 201",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0353515,
+            "Y": -0.035351366,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 202",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.040477,
+            "Y": -0.040476855,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 203",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0456026,
+            "Y": -0.045602348,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 204",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0507281,
+            "Y": -0.050727837,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 205",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0558536,
+            "Y": -0.055853326,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 206",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0609791,
+            "Y": -0.06097882,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 207",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0661047,
+            "Y": -0.06610431,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 208",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0712302,
+            "Y": -0.07122979,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 209",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 256.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0763557,
+            "Y": -0.07635528,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 210",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0814812,
+            "Y": -0.081480764,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 211",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0866067,
+            "Y": -0.08660626,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 212",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0917323,
+            "Y": -0.09173174,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 213",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0968578,
+            "Y": -0.09685723,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 214",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1019833,
+            "Y": -0.10198271,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 215",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1071088,
+            "Y": -0.107108206,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 216",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1122344,
+            "Y": -0.11223369,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 217",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1173599,
+            "Y": -0.11735918,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 218",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1224854,
+            "Y": -0.12248466,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 219",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1276109,
+            "Y": -0.12761015,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 220",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1327364,
+            "Y": -0.13273564,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 221",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1378618,
+            "Y": -0.13786112,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 222",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1429874,
+            "Y": -0.14298661,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 223",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1481129,
+            "Y": -0.1481121,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 224",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 316.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1532384,
+            "Y": -0.15323758,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 225",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1583639,
+            "Y": -0.15836307,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 226",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1634895,
+            "Y": -0.16348857,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 227",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.168615,
+            "Y": -0.16861404,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 228",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1737405,
+            "Y": -0.17373954,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 229",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.178866,
+            "Y": -0.17886502,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 230",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1839916,
+            "Y": -0.18399051,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 231",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1891171,
+            "Y": -0.189116,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 232",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1942426,
+            "Y": -0.19424148,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 233",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.1993681,
+            "Y": -0.19936697,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 234",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2044936,
+            "Y": -0.20449245,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 235",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2096192,
+            "Y": -0.20961794,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 236",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2147447,
+            "Y": -0.21474344,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 237",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2198702,
+            "Y": -0.21986891,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 238",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2249957,
+            "Y": -0.2249944,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 239",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 376.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2301213,
+            "Y": -0.2301199,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 240",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2352468,
+            "Y": -0.23524538,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 241",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2403723,
+            "Y": -0.24037087,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 242",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2454977,
+            "Y": -0.24549635,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 243",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2506232,
+            "Y": -0.25062186,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 244",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2557487,
+            "Y": -0.25574732,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 245",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2608743,
+            "Y": -0.2608728,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 246",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2659998,
+            "Y": -0.2659983,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 247",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2711253,
+            "Y": -0.2711238,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 248",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2762508,
+            "Y": -0.2762493,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 249",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2813764,
+            "Y": -0.28137475,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 250",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2865019,
+            "Y": -0.28650025,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 251",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2916274,
+            "Y": -0.29162574,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 252",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.2967529,
+            "Y": -0.29675123,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 253",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3018785,
+            "Y": -0.30187672,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 254",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 436.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.307004,
+            "Y": -0.3070022,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 255",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3121295,
+            "Y": -0.31212768,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 256",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.317255,
+            "Y": -0.31725317,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 257",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3223805,
+            "Y": -0.32237867,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 258",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3275061,
+            "Y": -0.32750416,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 259",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3326316,
+            "Y": -0.33262962,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 260",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3377571,
+            "Y": -0.3377551,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 261",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3428826,
+            "Y": -0.3428806,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 262",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3480082,
+            "Y": -0.3480061,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 263",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3531336,
+            "Y": -0.3531316,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 264",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3582591,
+            "Y": -0.35825706,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 265",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3633846,
+            "Y": -0.36338255,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 266",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3685101,
+            "Y": -0.36850804,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 267",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3736356,
+            "Y": -0.37363353,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 268",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3787612,
+            "Y": -0.37875903,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 269",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 496.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3838867,
+            "Y": -0.38388452,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 270",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3890122,
+            "Y": -0.38900998,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 271",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3941377,
+            "Y": -0.39413548,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 272",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.3992633,
+            "Y": -0.39926097,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 273",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4043888,
+            "Y": -0.40438646,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 274",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4095143,
+            "Y": -0.40951195,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 275",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4146398,
+            "Y": -0.41463742,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 276",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4197654,
+            "Y": -0.4197629,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 277",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4248909,
+            "Y": -0.4248884,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 278",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4300164,
+            "Y": -0.4300139,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 279",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4351419,
+            "Y": -0.4351394,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 280",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4402674,
+            "Y": -0.44026485,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 281",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.445393,
+            "Y": -0.44539034,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 282",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4505185,
+            "Y": -0.45051584,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 283",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.455644,
+            "Y": -0.45564133,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 284",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 556.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4607694,
+            "Y": -0.46076682,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 285",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4658949,
+            "Y": -0.4658923,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 286",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4710205,
+            "Y": -0.47101778,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 287",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.476146,
+            "Y": -0.47614327,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 288",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4812715,
+            "Y": -0.48126876,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 289",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.486397,
+            "Y": -0.48639426,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 290",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4915226,
+            "Y": -0.49151972,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 291",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.4966481,
+            "Y": -0.4966452,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 292",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5017736,
+            "Y": -0.50177073,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 293",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5068991,
+            "Y": -0.5068962,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 294",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5120246,
+            "Y": -0.5120217,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 295",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5171502,
+            "Y": -0.51714724,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 296",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5222757,
+            "Y": -0.52227277,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 297",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5274012,
+            "Y": -0.5273983,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 298",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5325267,
+            "Y": -0.53252375,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 299",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 616.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5372549,
             "Y": 1.0,
             "Z": 1.0,
             "W": 1.0
           }
         },
-        "textureData": {
-          "flipped": true,
-          "magFilter": 9729,
-          "minFilter": 9729,
-          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\lightsource.png",
-          "Type": "TextureData"
-        },
-        "Type": "SpriteLightRenderer"
+        "Intensity": 7.5,
+        "Type": "PointLight"
       }
     ],
     "LinkedComponents": [],
-    "Name": "SpriteLight: 2",
+    "Name": "Point Light: 300",
+    "transform": {
+      "position": {
+        "X": -1124.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5427778,
+            "Y": -0.5427748,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 301",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5479033,
+            "Y": -0.5479003,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 302",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5530288,
+            "Y": -0.55302584,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 303",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5581543,
+            "Y": -0.55815136,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 304",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5632799,
+            "Y": -0.5632769,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 305",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5684054,
+            "Y": -0.5684024,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 306",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5735308,
+            "Y": -0.57352793,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 307",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5786563,
+            "Y": -0.57865345,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 308",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5837818,
+            "Y": -0.583779,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 309",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5889074,
+            "Y": -0.58890444,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 310",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5940329,
+            "Y": -0.59402996,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 311",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.5991584,
+            "Y": -0.5991555,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 312",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6042839,
+            "Y": -0.604281,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 313",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6094095,
+            "Y": -0.60940653,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 314",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 676.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.614535,
+            "Y": -0.61453205,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 315",
+    "transform": {
+      "position": {
+        "X": -925.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6196605,
+            "Y": -0.6196576,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 316",
+    "transform": {
+      "position": {
+        "X": -895.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.624786,
+            "Y": -0.6247831,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 317",
+    "transform": {
+      "position": {
+        "X": -865.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6299115,
+            "Y": -0.6299086,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 318",
+    "transform": {
+      "position": {
+        "X": -835.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6350371,
+            "Y": -0.63503414,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 319",
+    "transform": {
+      "position": {
+        "X": -805.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6401626,
+            "Y": -0.64015967,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 320",
+    "transform": {
+      "position": {
+        "X": -775.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6452881,
+            "Y": -0.6452851,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 321",
+    "transform": {
+      "position": {
+        "X": -745.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6504136,
+            "Y": -0.65041065,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 322",
+    "transform": {
+      "position": {
+        "X": -715.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6555392,
+            "Y": -0.6555362,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 323",
+    "transform": {
+      "position": {
+        "X": -685.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6606647,
+            "Y": -0.6606617,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 324",
+    "transform": {
+      "position": {
+        "X": -655.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6657902,
+            "Y": -0.6657872,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 325",
+    "transform": {
+      "position": {
+        "X": -625.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6709157,
+            "Y": -0.67091274,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 326",
+    "transform": {
+      "position": {
+        "X": -595.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6760412,
+            "Y": -0.67603827,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 327",
+    "transform": {
+      "position": {
+        "X": -565.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6811666,
+            "Y": -0.6811638,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 328",
+    "transform": {
+      "position": {
+        "X": -535.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.6862922,
+            "Y": -0.6862893,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "Intensity": 0.1,
+        "Type": "PointLight"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Point Light: 329",
+    "transform": {
+      "position": {
+        "X": -505.0,
+        "Y": 736.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.003921569,
+            "Y": 0.007843138,
+            "Z": 0.0,
+            "W": 0.9372549
+          }
+        },
+        "ZIndex": 0,
+        "textureData": null,
+        "Type": "SpriteRenderer"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Empty Sprite: 01",
     "transform": {
       "position": {
         "X": 0.0,
@@ -45,158 +9594,10 @@
       },
       "rotation": 0.0,
       "size": {
-        "X": 1195.0,
-        "Y": 616.0
-      }
-    }
-  },
-  {
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 1.0,
-            "Y": 1.0,
-            "Z": 1.0,
-            "W": 0.85490197
-          }
-        },
-        "textureData": {
-          "flipped": true,
-          "magFilter": 9729,
-          "minFilter": 9729,
-          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\lightsource.png",
-          "Type": "TextureData"
-        },
-        "Type": "SpriteLightRenderer"
-      }
-    ],
-    "LinkedComponents": [],
-    "Name": "SpriteLight: 3",
-    "transform": {
-      "position": {
-        "X": -645.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 100.0,
-        "Y": 100.0
-      }
-    }
-  },
-  {
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 0.9607843,
-            "Y": 1.0,
-            "Z": 1.0,
-            "W": 1.0
-          }
-        },
-        "ZIndex": 2,
-        "textureData": {
-          "flipped": true,
-          "magFilter": 9728,
-          "minFilter": 9728,
-          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
-          "Type": "TextureData"
-        },
-        "Type": "SpriteRenderer"
-      }
-    ],
-    "LinkedComponents": [],
-    "Name": "4",
-    "transform": {
-      "position": {
-        "X": -192.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 200.0,
-        "Y": 200.0
-      }
-    }
-  },
-  {
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 1.0,
-            "Y": 1.0,
-            "Z": 1.0,
-            "W": 0.8862745
-          }
-        },
-        "ZIndex": 1,
-        "textureData": null,
-        "Type": "SpriteRenderer"
-      }
-    ],
-    "LinkedComponents": [],
-    "Name": "5",
-    "transform": {
-      "position": {
-        "X": 131.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 10.0,
-        "Y": 10.0
-      }
-    }
-  },
-  {
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 1.0,
-            "Y": 0.0,
-            "Z": 0.0,
-            "W": 1.0
-          }
-        },
-        "ZIndex": 0,
-        "textureData": null,
-        "Type": "SpriteRenderer"
-      },
-      {
-        "FixedRotation": false,
-        "BodyType": 2,
-        "Type": "Rigidbody"
-      }
-    ],
-    "LinkedComponents": [],
-    "Name": "Rigidbody",
-    "transform": {
-      "position": {
-        "X": 284.0,
-        "Y": 40.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 100.0,
-        "Y": 100.0
+        "X": 10000.0,
+        "Y": 10000.0
       }
     }
   }
 ]
 ////GAMEOBJECTS////
-{
-  "ClearColor": {
-    "Color": {
-      "X": 0.90588236,
-      "Y": 1.0,
-      "Z": 1.0,
-      "W": 0.99607843
-    }
-  },
-  "GlobalLightIntensity": 0.08
-}
-////LightSettings////

@@ -39,10 +39,7 @@ internal static class SaveLoad
         var sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
         //So we can see where the go array stops when we deserialize the file
         sceneData += "\n////GAMEOBJECTS////\n";
-        //Save Light settings
-        sceneData += JsonConvert.SerializeObject(Engine.Get()._currentScene.LightSettings, Formatting.Indented);
-        sceneData += "\n////LightSettings////\n";
-
+        
         if (File.Exists(scene.ScenePath))
         {
             File.WriteAllText(scene.ScenePath, sceneData);
@@ -89,12 +86,11 @@ internal static class SaveLoad
             //Load gameobjects
             List<Gameobject?> objs = JsonConvert.DeserializeObject<List<Gameobject>>(gos)!;
 
-            //Load light settings
-            var lightSettings = JsonConvert.DeserializeObject<LightSettings>(lightSettingsStr);
+            // var lightSettings = JsonConvert.DeserializeObject<LightSettings>(lightSettingsStr);
 
             foreach (var t in objs!) Engine.Get()?._currentScene?.AddGameObjectToScene(t);
 
-            Engine.Get()._currentScene.LightSettings = lightSettings;
+            // Engine.Get()._currentScene.LightSettings = lightSettings;
         }
     }
 

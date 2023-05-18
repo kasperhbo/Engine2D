@@ -1,6 +1,5 @@
 ﻿using Box2DSharp.Dynamics;
 using Engine2D.Components;
-using Engine2D.Components.Lights;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using ImGuiNET;
@@ -70,12 +69,25 @@ internal class SceneHierachy : UIElemenet
                 {
                     if (ImGui.MenuItem("New GameObject"))
                     {
-                        var go = new Gameobject((Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                        var go = new Gameobject(("Gameobject: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
                             new Transform());
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
 
-                    if (ImGui.MenuItem("New SpriteRenderer"))
+                    if (ImGui.MenuItem("New Empty Sprite Renderer"))
+                    {
+                        var spriteRenderer = new SpriteRenderer();
+                        var components = new List<Component>
+                        {
+                            spriteRenderer
+                        };
+
+                        var go = new Gameobject(("Empty Sprite: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                            components, new Transform());
+                        Engine.Get()._currentScene?.AddGameObjectToScene(go);
+                    }
+                    
+                    if (ImGui.MenuItem("New Mario"))
                     {
                         var spriteRenderer = new SpriteRenderer();
                         spriteRenderer.textureData = new TextureData(
@@ -89,28 +101,7 @@ internal class SceneHierachy : UIElemenet
                             spriteRenderer
                         };
 
-                        var go = new Gameobject((Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
-                            components, new Transform());
-                        Engine.Get()._currentScene?.AddGameObjectToScene(go);
-                    }
-
-                    if (ImGui.MenuItem("New Sprite Light"))
-                    {
-                        var spriteRenderer = new SpriteLightRenderer
-                        {
-                            textureData = new TextureData(
-                                "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\lightsource.png",
-                                true,
-                                TextureMinFilter.Linear,
-                                TextureMagFilter.Linear
-                            )
-                        };
-                        var components = new List<Component>
-                        {
-                            spriteRenderer
-                        };
-
-                        var go = new Gameobject("SpriteLight: " + (Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                        var go = new Gameobject(("Mario: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
                             components, new Transform());
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
@@ -123,11 +114,42 @@ internal class SceneHierachy : UIElemenet
                             new RigidBody(BodyType.DynamicBody)
                         };
 
-                        var go = new Gameobject((Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                        var go = new Gameobject(("Rigidbody: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
                             components, new Transform());
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
 
+                    if (ImGui.BeginMenu("Lighting"))
+                    {
+                        if (ImGui.MenuItem("New Point Light"))
+                        {
+                            var pl = new PointLight();
+
+                            var components = new List<Component>
+                            {
+                                pl
+                            };
+                            var go = new Gameobject(("Point Light: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                                components, new Transform());
+        
+                            Engine.Get()._currentScene?.AddGameObjectToScene(go);
+                        }
+                        if (ImGui.MenuItem("New Global Light"))
+                        {
+                            var comp = new GlobalLight();
+
+                            var components = new List<Component>
+                            {
+                                comp
+                            };
+                            var go = new Gameobject(("GlobalLight: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                                components, new Transform());
+        
+                            Engine.Get()._currentScene?.AddGameObjectToScene(go);
+                        }
+                        ImGui.EndMenu();
+                    };
+                    
                     ImGui.EndPopup();
                 }
                 ImGui.EndChild();

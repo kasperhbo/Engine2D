@@ -1,5 +1,4 @@
-﻿using Engine2D.Components.Lights;
-using Engine2D.Core;
+﻿using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Newtonsoft.Json;
@@ -29,7 +28,7 @@ public class BaseSpecifiedConcreteClassConverter : DefaultContractResolver
 
 public class ComponentSerializer : JsonConverter
 {
-    private static readonly JsonSerializerSettings _specifiedSubclassConversion =
+    private static readonly JsonSerializerSettings? _specifiedSubclassConversion =
         new()
         {
             ContractResolver = new BaseSpecifiedConcreteClassConverter()
@@ -38,8 +37,8 @@ public class ComponentSerializer : JsonConverter
     private static Action actions;
 
     public static JObject currentType;
-    public static JsonSerializerSettings specifiedSubclassConversion;
-    public static object obj = null;
+    public static JsonSerializerSettings? specifiedSubclassConversion;
+    public static object? obj = null;
 
     public override bool CanWrite => false;
 
@@ -61,7 +60,7 @@ public class ComponentSerializer : JsonConverter
         actions = action;
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
         var jo = JObject.Load(reader);
         currentType = jo;
@@ -86,12 +85,14 @@ public class ComponentSerializer : JsonConverter
                 return null;
             case "SpriteRenderer":
                 return JsonConvert.DeserializeObject<SpriteRenderer>(jo.ToString(), _specifiedSubclassConversion);
-            case "SpriteLightRenderer":
-                return JsonConvert.DeserializeObject<SpriteLightRenderer>(jo.ToString(), _specifiedSubclassConversion);
             case "Rigidbody":
                 return JsonConvert.DeserializeObject<RigidBody>(jo.ToString(), _specifiedSubclassConversion);
             case "BoxCollider2D":
                 return JsonConvert.DeserializeObject<BoxCollider2D>(jo.ToString(), _specifiedSubclassConversion);
+            case "PointLight":
+                return JsonConvert.DeserializeObject<PointLight>(jo.ToString(), _specifiedSubclassConversion);
+            case "GlobalLight":
+                return JsonConvert.DeserializeObject<GlobalLight>(jo.ToString(), _specifiedSubclassConversion);
             case "TextureData":
                 return JsonConvert.DeserializeObject<TextureData>(jo.ToString(), _specifiedSubclassConversion);
             case "ScriptHolderComponent":

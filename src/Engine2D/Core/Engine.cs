@@ -22,11 +22,12 @@ namespace KDBEngine.Core
     public class Engine : GameWindow
     {
         private static Engine _instance;
-
+        
+        public static string DefaultTitle;
+        
         internal Scene? _currentScene;
 
         private readonly Dictionary<string, UIElemenet> _guiWindows = new();
-
         private TestContentBrowser cb;
 
         internal Asset? CurrentSelectedAsset;
@@ -35,8 +36,9 @@ namespace KDBEngine.Core
         private readonly EngineSettingsWindow engineSettingsWindow = new();
      
         internal ImGuiController ImGuiController;
+        //TODO:MOVE TO SCENE
         internal TestCamera testCamera;
-
+        //TODO:MOVE TO SCENE
         private TestViewportWindow viewportWindow;
 
         public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
@@ -58,6 +60,7 @@ namespace KDBEngine.Core
 
                 var window = new Engine(gameWindowSettings, ntwSettings);
                 _instance = window;
+                
             }
 
             return _instance;
@@ -102,12 +105,16 @@ namespace KDBEngine.Core
                 LoadGameWithoutEngine();
                 _currentScene.IsPlaying = true;
             };
+            DefaultTitle = Engine.Get().Title;
         }
 
+        private bool first = true;
+        
+        
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
-
+            
             //Input.Update(KeyboardState, MouseState);
             TestInput.mousePosCallback(MouseState, KeyboardState);
             
@@ -115,39 +122,25 @@ namespace KDBEngine.Core
             
             TestInput.endFrame();
         }
-
-        private readonly float[] _vertices =
-        {
-            // Position         Texture coordinates
-             1f,  1f, 0.0f, 1.0f, 1.0f, // top right
-             1f, -1f, 0.0f, 1.0f, 0.0f, // bottom right
-            -1f, -1f, 0.0f, 0.0f, 0.0f, // bottom left
-            -1f,  1f, 0.0f, 0.0f, 1.0f  // top left
-        };
-
-        private readonly uint[] _indices =
-        {
-            0, 1, 3,
-            1, 2, 3
-        };
-        
-        private int _vertexBufferObject;
-        private int _vertexArrayObject;
-        private Shader _shader;
-        private Texture _sceneTexture;
-        
-        // Add a handle for the EBO
-        private int _elementBufferObject;
         
         private void LoadGameWithoutEngine()
         {
             
         }
 
+        private int _frameCounter;
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
+            
+            var fps = 1.0f / e.Time;
+            _frameCounter++;
+            if (_frameCounter == 30)
+            {
+                Title = DefaultTitle + " | FPS: " + Math.Round(fps,0);
+                _frameCounter = 0;
+            }
+            
             if (Settings.s_IsEngine)
             {
                 if (TestViewportWindow.IsMouseInsideViewport() && TestInput.MousePressed(MouseButton.Left))
@@ -215,21 +208,7 @@ namespace KDBEngine.Core
                 SwapBuffers();
                 return;
             }
-
-            GameRenderer.Render();
-            
-            
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.BindVertexArray(_vertexArrayObject);
-            
-            _shader.use();
-
-            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
-
-            _currentScene.EditorUpdate(e.Time);
-            _currentScene?.GameUpdate(e.Time);
-            _currentScene?.Render(e.Time);
-            _sceneTexture.unbind();
+           
             SwapBuffers();
         }
 
@@ -332,6 +311,7 @@ public static class EngineSettings
 {
     public static float GlobalScale = 1;
     public static float DefaultFontSize = 18;
+    public static bool SaveOnClose = false;
 }
 
 public static class WindowSettings

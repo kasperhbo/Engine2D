@@ -12,7 +12,7 @@ public class BoxCollider2D : Component
     public Vector2 Offset = new();
     public float Restitution = 0.0f;
     public float RestitutionThreshold = 0.5f;
-    public Vector2 Size = new(0.5f, 0.5f);
+    public Vector2 HalfSize = new(0.5f, 0.5f);
 
     //public override void ImGuiFields()
     //{
@@ -20,7 +20,6 @@ public class BoxCollider2D : Component
 
     public override string GetItemType()
     {
-        Log.Warning("Getting type");
         return "BoxCollider2D";
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Components;
@@ -14,19 +15,10 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Engine2D.Scenes;
 
-internal class LightSettings
-{
-    public SpriteColor ClearColor = new(.19f, .19f, .19f, 1f);
-
-    public float GlobalLightIntensity = 1;
-    // public Vector4 ClearColor = new(.19f,.19f,.19f,1f);
-}
 
 internal class Scene
 {
     private bool _isPlaying;
-
-    public LightSettings LightSettings = new();
 
     #region onplay
 
@@ -36,7 +28,8 @@ internal class Scene
 
     internal string ScenePath { get; private set; } = "NoScene";
     internal List<Gameobject> Gameobjects { get; } = new();
-
+   
+    
     public bool IsPlaying
     {
         get => _isPlaying;
@@ -109,11 +102,49 @@ internal class Scene
     {
         ScenePath = scenePath;
         GameRenderer.Init();
+        
+        int count = 0;
+        float r = 0;
+        float g = 255;
+        float pos = -925;
+        float posy = -524;
+        
+        for (int i = 0; i < 22; i++)
+        {
+            for (int x = 0; x < 15; x++)
+            {
+                // Console.WriteLine(i);
+                var pl = new PointLight();
+                pl.Color = new SpriteColor(r/255,g/255,1,1);
+                pl.Intensity = .1f;
+                r += 1.307f;
+                g -= 1.307f;
+                var components = new List<Component>
+                {
+                    pl
+                };
+                Transform transform = new Transform();
+                transform.position = new Vector2(pos, posy);
+            
+                var go = new Gameobject(("Point Light: " + Gameobjects.Count).ToString(),
+                    components, transform);
+            
+                AddGameObjectToScene(go);
+                pos += 30;
+                count++;
+            }
+
+            pos = -925;
+            posy += 60;
+
+        }
+        
+        Console.WriteLine(count);
+        
     }
 
     internal virtual void EditorUpdate(double dt)
     {
-
         if (TestInput.KeyDown(Keys.LeftControl))
             if (TestInput.KeyPress(Keys.S))
             {
@@ -157,7 +188,9 @@ internal class Scene
 
     internal virtual void OnClose()
     {
-        SaveLoad.SaveScene(this);
+        if(EngineSettings.SaveOnClose)
+            SaveLoad.SaveScene(this);
+        
         GameRenderer.OnClose();
     }
 
@@ -165,12 +198,6 @@ internal class Scene
     {
         ImGui.Begin("Scene Settings");
 
-        OpenTKUIHelper.DrawComponentWindow("Light Settings", "Light Settings", () =>
-        {
-            OpenTKUIHelper.DrawProperty("Global Light Intensity", ref LightSettings.GlobalLightIntensity, 0, 1,
-                0.01f);
-            OpenTKUIHelper.DrawProperty("Enviroment Color", ref LightSettings.ClearColor);
-        });
 
         ImGui.End();
     }

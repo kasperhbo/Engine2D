@@ -40,16 +40,11 @@ internal class TestViewportWindow
         topLeft.X -= ImGui.GetScrollX();
         topLeft.Y -= ImGui.GetScrollY();
 
-        //leftX = topLeft.X;
-        //bottomY = topLeft.Y;
-        //rightX = topLeft.X + windowSize.X;
-        //topY = topLeft.Y + windowSize.Y;
-
         viewportPos = new Vector2(topLeft.X, topLeft.Y);
         viewportSize = new Vector2(windowSize.X, windowSize.Y);
 
 
-        var textureId = GameRenderer.FrameBuffer.GetTextureID;
+        var textureId = GameRenderer.FrameBufferToRenderer();
         
         ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
         
@@ -65,8 +60,7 @@ internal class TestViewportWindow
 
             ImGui.EndDragDropTarget();
         }
-
-
+        
         TestInput.setViewportPos(new OpenTK.Mathematics.Vector2(topLeft.X, topLeft.Y));
         TestInput.setViewportSize(new OpenTK.Mathematics.Vector2(windowSize.X, windowSize.Y));
 

@@ -27,8 +27,8 @@ internal class RenderBatch: IComparable<RenderBatch>
         for (var i = 0; i < _textureUnits.Length; i++) _textureUnits[i] = i;
 
         var dat = new ShaderData();
-        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default-unlit-lighting.vert";
-        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default-unlit-lighting.frag";
+        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default-lit.vert";
+        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default-lit.frag";
 
         _shader = ResourceManager.GetShader(dat);
         sprites = new SpriteRenderer[c_MaxBatchSize];
@@ -90,7 +90,7 @@ internal class RenderBatch: IComparable<RenderBatch>
 
         LoadVertexProperties(index);
     }
-
+    
     public void Render(Matrix4 projectionMatrix, Matrix4 viewMatrix)
     {
         // For now, we will rebuffer all data every frame
@@ -114,6 +114,33 @@ internal class RenderBatch: IComparable<RenderBatch>
         _shader.uploadMat4f("uProjection", projectionMatrix);
         _shader.uploadMat4f("uView", viewMatrix);
         
+        //LIGHTING
+        Vector2[] lightPositions = new Vector2[GameRenderer.PointLights.Count];
+        Vector3[] lightColors = new Vector3[GameRenderer.PointLights.Count];
+        float[] lightIntensities = new float[GameRenderer.PointLights.Count];
+
+        for (int i = 0; i < GameRenderer.PointLights.Count; i++)
+        {
+            PointLight light = GameRenderer.PointLights[i];
+            lightPositions[i] = new(light.LastTransform.position.X, light.LastTransform.position.Y);
+            lightColors[i] = new(light.Color.Color.X, light.Color.Color.Y, light.Color.Color.Z);
+            lightIntensities[i] = light.Intensity;
+        }
+
+        _shader.uploadVec2fArray("uLightPosition", lightPositions);
+        _shader.uploadVec3fArray("uLightColour", lightColors);
+        _shader.uploadFloatArray("uIntensity", lightIntensities);
+        
+        GlobalLight globalLight = GameRenderer.GlobalLight;
+        if(globalLight != null)
+            _shader.uploadFloat("uMinLighting", globalLight.Intensity);
+        else
+            _shader.uploadFloat("uMinLighting", 1);
+        
+        _shader.uploadInt("uNumLights",  GameRenderer.PointLights.Count);
+        
+        
+        //TEXTURES
         for (var i = 0; i < _textures.Length; i++)
         {
             if(_textures[i] != null){

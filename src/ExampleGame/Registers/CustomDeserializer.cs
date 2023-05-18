@@ -17,7 +17,7 @@ namespace ExampleGame.Registers
         {
             Console.WriteLine("Deserializing from main");
             JObject jo = ComponentSerializer.currentType;
-            JsonSerializerSettings _specifiedSubclassConversion = ComponentSerializer.specifiedSubclassConversion;
+            JsonSerializerSettings? _specifiedSubclassConversion = ComponentSerializer.specifiedSubclassConversion;
 
             switch (jo["Type"].Value<string>())
             {
