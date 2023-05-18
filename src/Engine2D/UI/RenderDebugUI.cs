@@ -23,14 +23,14 @@ public class RenderDebugUI : UIElemenet
         return () =>
         {
             var windowSize = TestViewportWindow.getLargestSizeForViewport()/3;
-            ImGui.Text("Draw calls: " + GameRenderer.DrawCalls);
-            ImGui.Text("Render Batches: " + GameRenderer.RenderBatches);
-            ImGui.Text("Light Frame Buffer");
-            ImGui.Image((IntPtr)GameRenderer.LightFrameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
-            ImGui.Text("Scene Frame Buffer");
-            ImGui.Image((IntPtr)GameRenderer.SceneFrameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
-            ImGui.Text("Game Frame Buffer");
-            ImGui.Image((IntPtr)GameRenderer.FrameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+            // ImGui.Text("Draw calls: " + GameRenderer.DrawCalls);
+            // ImGui.Text("Render Batches: " + GameRenderer.RenderBatches);
+            // ImGui.Text("Light Frame Buffer");
+            // ImGui.Image((IntPtr)GameRenderer.LightFrameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+            // ImGui.Text("Scene Frame Buffer");
+            // ImGui.Image((IntPtr)GameRenderer.SceneFrameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+            // ImGui.Text("Game Frame Buffer");
+            // ImGui.Image((IntPtr)GameRenderer.FrameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
         };
     }
 }

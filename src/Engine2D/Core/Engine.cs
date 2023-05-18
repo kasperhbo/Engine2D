@@ -136,9 +136,6 @@ namespace KDBEngine.Core
                 {
                 }
 
-
-                GameRenderer.Render();
-                
                 ImGuiController.Update(this, e.Time);
                 ImGui.BeginMainMenuBar();
                 if (ImGui.BeginMenu("Menu"))
@@ -163,33 +160,19 @@ namespace KDBEngine.Core
                     ImGui.EndMenu();
                 }
 
+                _currentScene?.Render(e.Time);
+                
                 ImGui.EndMainMenuBar();
                 ImGui.DockSpaceOverViewport();
                 ImGui.ShowDemoWindow();
 
                 //gameViewport.OnGui(_frameBuffer.TextureID, () => { });
                 viewportWindow.OnGui();
-                cb.OnGui();
-                ImGui.Begin("test");
-                //ImageTextIcon img = new ImageTextIcon();
-
-                //if (OpenTKUIHelper.DrawIconWithText("LABEL", dirTexture))
-                //    Console.WriteLine("double");
-                LightLocation = OpenTKUIHelper.DrawProperty("light1", LightLocation);
-                OpenTKUIHelper.DrawProperty("light1Intensity", ref intensity);
-                OpenTKUIHelper.DrawProperty("light1Color", ref LightColor);
-                LightLocation2 = OpenTKUIHelper.DrawProperty("light2", LightLocation2);
-                OpenTKUIHelper.DrawProperty("light2Intensity", ref intensity2);
-                OpenTKUIHelper.DrawProperty("light2Color", ref LightColor2);
-                
-                ImGui.End();
-
-                testCamera.CameraSettingsGUI();
-
                 foreach (var window in _guiWindows.Values) window.Render();
 
+                testCamera.CameraSettingsGUI();
+                cb.OnGui();
                 _currentScene.OnGui();
-
                 ImGuiController.Render();
 
                 ImGuiController.CheckGLError("End of frame");
@@ -211,7 +194,6 @@ namespace KDBEngine.Core
             _currentScene?.OnResized(e);
 
             testCamera.adjustProjection();
-            GameRenderer.OnResize(e);
             // testFB = new TestFrameBuffer(ClientSize.X, ClientSize.Y);
         }
 
@@ -238,7 +220,6 @@ namespace KDBEngine.Core
 
         internal void SwitchScene(string sceneName)
         {
-            GameRenderer.Flush();
             Title = WindowSettings.s_Title + " | " + sceneName;
             Scene newScene = new();
             _currentScene = newScene;
@@ -247,7 +228,6 @@ namespace KDBEngine.Core
 
         internal void NewScene(string sceneName)
         {
-            GameRenderer.Flush();
             Title = WindowSettings.s_Title + " | " + sceneName;
             Scene newScene = new();
             newScene.Init(this, sceneName, Size.X, Size.Y);

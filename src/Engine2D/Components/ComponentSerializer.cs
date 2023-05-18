@@ -1,5 +1,4 @@
-﻿using Engine2D.Components.Lights;
-using Engine2D.Core;
+﻿using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Newtonsoft.Json;
@@ -86,8 +85,6 @@ public class ComponentSerializer : JsonConverter
                 return null;
             case "SpriteRenderer":
                 return JsonConvert.DeserializeObject<SpriteRenderer>(jo.ToString(), _specifiedSubclassConversion);
-            case "SpriteLightRenderer":
-                return JsonConvert.DeserializeObject<SpriteLightRenderer>(jo.ToString(), _specifiedSubclassConversion);
             case "Rigidbody":
                 return JsonConvert.DeserializeObject<RigidBody>(jo.ToString(), _specifiedSubclassConversion);
             case "BoxCollider2D":

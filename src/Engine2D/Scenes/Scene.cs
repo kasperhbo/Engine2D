@@ -108,7 +108,6 @@ internal class Scene
     internal virtual void Init(Engine engine, string scenePath, int width, int height)
     {
         ScenePath = scenePath;
-        GameRenderer.Init();
     }
 
     internal virtual void EditorUpdate(double dt)
@@ -144,7 +143,6 @@ internal class Scene
 
     internal virtual void Render(double dt)
     {
-        GameRenderer.Render();
     }
 
     internal void AddGameObjectToScene(Gameobject go)
@@ -158,7 +156,6 @@ internal class Scene
     internal virtual void OnClose()
     {
         SaveLoad.SaveScene(this);
-        GameRenderer.OnClose();
     }
 
     internal void OnGui()
@@ -179,7 +176,6 @@ internal class Scene
 
     internal virtual void OnResized(ResizeEventArgs newSize)
     {
-        GameRenderer.OnResize(newSize);
         Engine.Get().ImGuiController.WindowResized(newSize.Size.X, newSize.Size.Y);
     }
 

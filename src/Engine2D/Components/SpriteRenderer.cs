@@ -62,8 +62,8 @@ public class SpriteRenderer : Component
             Console.WriteLine("has texture data, loading texture...." + textureData.texturePath);
             texture = ResourceManager.GetTexture(textureData);
         }
-        if(_addToRendererAsSprite)
-            GameRenderer.AddSpriteRenderer(this);
+        if(_addToRendererAsSprite)throw new NotImplementedException();
+            //TODO: ADD TO RENDERER
     }
 
     public override void Start()
@@ -88,8 +88,9 @@ public class SpriteRenderer : Component
         if (!_prevZIndex.Equals(ZIndex))
         {
             _prevZIndex = ZIndex;
-            GameRenderer.RemoveSprite(this);
-            GameRenderer.AddSpriteRenderer(this);
+            //TODO: REMOVE FROM RENDERER
+            // GameRenderer.RemoveSprite(this);
+            // GameRenderer.AddSpriteRenderer(this);
             this.IsDirty = true;
         }
     }

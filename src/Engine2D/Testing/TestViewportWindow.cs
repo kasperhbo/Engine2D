@@ -11,10 +11,7 @@ internal class TestViewportWindow
 {
     private static Vector2 viewportPos;
     private static Vector2 viewportSize;
-
-    private TestFrameBuffer frameBufferToRenderer = null;
-    
-    
+   
     public void OnGui()
     {
         ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
@@ -49,9 +46,9 @@ internal class TestViewportWindow
         viewportSize = new Vector2(windowSize.X, windowSize.Y);
 
 
-        var textureId = GameRenderer.FrameBuffer.GetTextureID;
-        
-        ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+        //var textureId = GameRenderer.FrameBuffer.GetTextureID;
+        //TODO: ADD TEXTURE ID OF FRAME BUFFER HERE
+        //ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
         
         if (ImGui.BeginDragDropTarget())
         {
