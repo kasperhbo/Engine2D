@@ -7,6 +7,7 @@ using Engine2D.Scenes;
 using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
+using KDBEngine.Shaders;
 using KDBEngine.UI;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -38,13 +39,6 @@ namespace KDBEngine.Core
 
         private TestViewportWindow viewportWindow;
 
-        public Vector2 LightLocation = new(0, 0);
-        public SpriteColor LightColor = new(0, 0, 0,0);
-        public float intensity = 0;
-        public Vector2 LightLocation2 = new(0, 0);
-        public float intensity2 = 0;
-        public SpriteColor LightColor2 = new(0, 0, 0,0);
-        
         public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
             gameWindowSettings, nativeWindowSettings)
         {
@@ -103,8 +97,11 @@ namespace KDBEngine.Core
             viewportWindow = new TestViewportWindow();
             cb = new TestContentBrowser();
 
-
-            if (!Settings.s_IsEngine) _currentScene.IsPlaying = true;
+            if (!Settings.s_IsEngine)
+            {
+                LoadGameWithoutEngine();
+                _currentScene.IsPlaying = true;
+            };
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -113,10 +110,39 @@ namespace KDBEngine.Core
 
             //Input.Update(KeyboardState, MouseState);
             TestInput.mousePosCallback(MouseState, KeyboardState);
+            
             _currentScene?.EditorUpdate(args.Time);
+            
             TestInput.endFrame();
         }
 
+        private readonly float[] _vertices =
+        {
+            // Position         Texture coordinates
+             1f,  1f, 0.0f, 1.0f, 1.0f, // top right
+             1f, -1f, 0.0f, 1.0f, 0.0f, // bottom right
+            -1f, -1f, 0.0f, 0.0f, 0.0f, // bottom left
+            -1f,  1f, 0.0f, 0.0f, 1.0f  // top left
+        };
+
+        private readonly uint[] _indices =
+        {
+            0, 1, 3,
+            1, 2, 3
+        };
+        
+        private int _vertexBufferObject;
+        private int _vertexArrayObject;
+        private Shader _shader;
+        private Texture _sceneTexture;
+        
+        // Add a handle for the EBO
+        private int _elementBufferObject;
+        
+        private void LoadGameWithoutEngine()
+        {
+            
+        }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -136,70 +162,74 @@ namespace KDBEngine.Core
                 {
                 }
 
-
+                //Render the game
                 GameRenderer.Render();
                 
-                ImGuiController.Update(this, e.Time);
-                ImGui.BeginMainMenuBar();
-                if (ImGui.BeginMenu("Menu"))
+                //ImGui
                 {
-                    if (ImGui.MenuItem("Save Scene")) SaveLoad.SaveScene(_currentScene);
-                    if (ImGui.MenuItem("Load Scene"))
+                    ImGuiController.Update(this, e.Time);
+                    ImGui.BeginMainMenuBar();
+                    if (ImGui.BeginMenu("Menu"))
                     {
+                        if (ImGui.MenuItem("Save Scene")) SaveLoad.SaveScene(_currentScene);
+                        if (ImGui.MenuItem("Load Scene"))
+                        {
+                        }
+
+                        ImGui.EndMenu();
                     }
 
-                    ImGui.EndMenu();
+                    if (ImGui.BeginMenu("Help"))
+                    {
+                        if (ImGui.MenuItem("Website")) Utils.TryOpenUrl("https://github.com/kasperhbo/Engine2D");
+                        ImGui.EndMenu();
+                    }
+
+                    if (ImGui.BeginMenu("Settings"))
+                    {
+                        if (ImGui.MenuItem("Engine Settings")) engineSettingsWindow.SetVisibility(true);
+                        ImGui.EndMenu();
+                    }
+
+                    ImGui.EndMainMenuBar();
+                    ImGui.DockSpaceOverViewport();
+                    ImGui.ShowDemoWindow();
+
+                    //gameViewport.OnGui(_frameBuffer.TextureID, () => { });
+                    viewportWindow.OnGui();
+                    cb.OnGui();
+                    ImGui.Begin("test");
+
+                    ImGui.End();
+
+                    testCamera.CameraSettingsGUI();
+
+                    foreach (var window in _guiWindows.Values) window.Render();
+
+                    _currentScene.OnGui();
+
+                    ImGuiController.Render();
+
+                    ImGuiController.CheckGLError("End of frame");
                 }
-
-                if (ImGui.BeginMenu("Help"))
-                {
-                    if (ImGui.MenuItem("Website")) Utils.TryOpenUrl("https://github.com/kasperhbo/Engine2D");
-                    ImGui.EndMenu();
-                }
-
-                if (ImGui.BeginMenu("Settings"))
-                {
-                    if (ImGui.MenuItem("Engine Settings")) engineSettingsWindow.SetVisibility(true);
-                    ImGui.EndMenu();
-                }
-
-                ImGui.EndMainMenuBar();
-                ImGui.DockSpaceOverViewport();
-                ImGui.ShowDemoWindow();
-
-                //gameViewport.OnGui(_frameBuffer.TextureID, () => { });
-                viewportWindow.OnGui();
-                cb.OnGui();
-                ImGui.Begin("test");
-                //ImageTextIcon img = new ImageTextIcon();
-
-                //if (OpenTKUIHelper.DrawIconWithText("LABEL", dirTexture))
-                //    Console.WriteLine("double");
-                LightLocation = OpenTKUIHelper.DrawProperty("light1", LightLocation);
-                OpenTKUIHelper.DrawProperty("light1Intensity", ref intensity);
-                OpenTKUIHelper.DrawProperty("light1Color", ref LightColor);
-                LightLocation2 = OpenTKUIHelper.DrawProperty("light2", LightLocation2);
-                OpenTKUIHelper.DrawProperty("light2Intensity", ref intensity2);
-                OpenTKUIHelper.DrawProperty("light2Color", ref LightColor2);
-                
-                ImGui.End();
-
-                testCamera.CameraSettingsGUI();
-
-                foreach (var window in _guiWindows.Values) window.Render();
-
-                _currentScene.OnGui();
-
-                ImGuiController.Render();
-
-                ImGuiController.CheckGLError("End of frame");
                 SwapBuffers();
                 return;
             }
 
+            GameRenderer.Render();
+            
+            
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.BindVertexArray(_vertexArrayObject);
+            
+            _shader.use();
+
+            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+
+            _currentScene.EditorUpdate(e.Time);
             _currentScene?.GameUpdate(e.Time);
             _currentScene?.Render(e.Time);
-
+            _sceneTexture.unbind();
             SwapBuffers();
         }
 
@@ -212,7 +242,6 @@ namespace KDBEngine.Core
 
             testCamera.adjustProjection();
             GameRenderer.OnResize(e);
-            // testFB = new TestFrameBuffer(ClientSize.X, ClientSize.Y);
         }
 
         protected override void OnTextInput(TextInputEventArgs e)

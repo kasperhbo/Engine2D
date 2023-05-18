@@ -144,7 +144,7 @@ internal class Scene
 
     internal virtual void Render(double dt)
     {
-        GameRenderer.Render();
+        
     }
 
     internal void AddGameObjectToScene(Gameobject go)

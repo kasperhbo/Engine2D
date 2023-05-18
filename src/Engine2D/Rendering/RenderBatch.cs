@@ -123,12 +123,7 @@ internal class RenderBatch: IComparable<RenderBatch>
         }
         
         _shader.UploadIntArray("uTextures", _textureUnits);
-        //
-        // GL.BindTexture(TextureTarget.Texture2D, 18);
-        // GL.ActiveTexture(TextureUnit.Texture18);
-        // _shader.use();
-        // _shader.uploadTexture("uLightTexture", 18);
-        
+
         GL.BindVertexArray(_vaoID);
         GL.EnableVertexAttribArray(0);
         GL.EnableVertexAttribArray(1);

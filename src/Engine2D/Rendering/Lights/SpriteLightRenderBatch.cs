@@ -29,7 +29,7 @@ internal class SpriteLightRenderBatch
         dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/Lighting/default-sprite-light.frag";
 
         _shader = ResourceManager.GetShader(dat);
-        sprites = new SpriteLightRenderer[c_MaxBatchSize];
+        Lights = new SpriteLightRenderer[c_MaxBatchSize];
 
         _vertices = new float[c_MaxBatchSize * c_VertexSize * 4];
     }
@@ -70,7 +70,7 @@ internal class SpriteLightRenderBatch
     public void AddSprite(SpriteLightRenderer spr)
     {
         var index = spriteCount;
-        sprites[index] = spr;
+        Lights[index] = spr;
         spriteCount++;
 
         if (spr.texture != null)
@@ -86,9 +86,9 @@ internal class SpriteLightRenderBatch
         var rebufferData = false;
 
         for (var i = 0; i < spriteCount; i++)
-            if (sprites[i].IsDirty)
+            if (Lights[i].IsDirty)
             {
-                sprites[i].IsDirty = false;
+                Lights[i].IsDirty = false;
                 LoadVertexProperties(i);
                 rebufferData = true;
             }
@@ -131,7 +131,7 @@ internal class SpriteLightRenderBatch
 
     private void LoadVertexProperties(int index)
     {
-        var sprite = sprites[index];
+        var sprite = Lights[index];
 
         // Find offset within array (4 vertices per sprite)
         var offset = index * 4 * c_VertexSize;
@@ -265,12 +265,12 @@ internal class SpriteLightRenderBatch
     public void RemoveSprite(SpriteLightRenderer spr)
     {
         for (var i = 0; i < spriteCount; i++)
-            if (sprites[i] == spr)
+            if (Lights[i] == spr)
             {
                 for (var j = i; j < spriteCount - 1; j++)
                 {
-                    sprites[j] = sprites[j + 1];
-                    sprites[j].IsDirty = true;
+                    Lights[j] = Lights[j + 1];
+                    Lights[j].IsDirty = true;
                 }
 
                 spriteCount--;
@@ -295,16 +295,14 @@ internal class SpriteLightRenderBatch
     private const int c_VertexSize = 9;
     private const int c_VertexSizeInBytes = c_VertexSize * sizeof(float);
 
-    private readonly SpriteLightRenderer[] sprites;
+    public readonly SpriteLightRenderer[] Lights;
     private int spriteCount;
     public bool HasRoom => spriteCount < c_MaxBatchSize;
 
     private readonly float[] _vertices = new float[c_MaxBatchSize * c_VertexSize];
 
     private int _vaoID, _vboID;
-
     private readonly Shader _shader;
-
     private readonly List<Texture> _textures = new();
 
     private readonly int[] _textureUnits;

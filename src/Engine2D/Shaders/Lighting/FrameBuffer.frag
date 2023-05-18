@@ -7,18 +7,17 @@ in vec2 texCoord;
 uniform sampler2D lightTexture;
 uniform sampler2D sceneTexture;
 
-uniform vec4 ClearColor;
+uniform float uGlobalLightIntensity = .3;
 
 vec4 end;
 
 void main()
 {
-    vec4 tempColor = vec4(1,0,0,1);
     vec4 lightColor = texture2D(lightTexture, texCoord);
     vec4 sceneColor = texture2D(sceneTexture, texCoord);
     
-    vec4 endColor = sceneColor * vec4(lightColor.r, lightColor.g, lightColor.b, 1);
-        
-    outColor = endColor;
+    float lightIntensity = lightColor.r;
+    lightIntensity += uGlobalLightIntensity;
+    outColor = vec4(sceneColor.rgb, lightIntensity);
 }
  //   outputColor = mix(texture(texture0, texCoord), texture(texture1, texCoord), 0.2);

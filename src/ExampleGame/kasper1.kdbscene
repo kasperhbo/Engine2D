@@ -1,36 +1,17 @@
 [
   {
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 1.0,
-            "Y": 1.0,
-            "Z": 1.0,
-            "W": 0.0
-          }
-        },
-        "textureData": {
-          "flipped": true,
-          "magFilter": 9728,
-          "minFilter": 9728,
-          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
-          "Type": "TextureData"
-        },
-        "Type": "SpriteRenderer"
-      }
-    ],
+    "components": [],
     "LinkedComponents": [],
-    "Name": "big-mario",
+    "Name": "1",
     "transform": {
       "position": {
-        "X": -53.0,
+        "X": 0.0,
         "Y": 0.0
       },
       "rotation": 0.0,
       "size": {
-        "X": 230.0,
-        "Y": 397.0
+        "X": 1.0,
+        "Y": 1.0
       }
     }
   },
@@ -39,9 +20,9 @@
       {
         "Color": {
           "Color": {
-            "X": 0.6862745,
+            "X": 1.0,
             "Y": 1.0,
-            "Z": 0.9882353,
+            "Z": 1.0,
             "W": 1.0
           }
         },
@@ -59,13 +40,13 @@
     "Name": "SpriteLight: 2",
     "transform": {
       "position": {
-        "X": 760.0,
+        "X": 0.0,
         "Y": 0.0
       },
       "rotation": 0.0,
       "size": {
-        "X": 1880.0,
-        "Y": 1892.0
+        "X": 1195.0,
+        "Y": 616.0
       }
     }
   },
@@ -74,48 +55,12 @@
       {
         "Color": {
           "Color": {
-            "X": 0.972549,
+            "X": 1.0,
             "Y": 1.0,
-            "Z": 0.003921569,
-            "W": 1.0
+            "Z": 1.0,
+            "W": 0.85490197
           }
         },
-        "ZIndex": 0,
-        "textureData": null,
-        "Type": "SpriteRenderer"
-      },
-      {
-        "FixedRotation": false,
-        "BodyType": 2,
-        "Type": "Rigidbody"
-      }
-    ],
-    "LinkedComponents": [],
-    "Name": "square rb",
-    "transform": {
-      "position": {
-        "X": -112.0,
-        "Y": 1.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 10000.0,
-        "Y": 10000.0
-      }
-    }
-  },
-  {
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 0.0,
-            "Y": 0.0,
-            "Z": 0.96862745,
-            "W": 1.0
-          }
-        },
-        "ZIndex": 3,
         "textureData": {
           "flipped": true,
           "magFilter": 9729,
@@ -130,13 +75,114 @@
     "Name": "SpriteLight: 3",
     "transform": {
       "position": {
-        "X": -2.0,
+        "X": -645.0,
         "Y": 0.0
       },
       "rotation": 0.0,
       "size": {
-        "X": 561.0,
-        "Y": 830.0
+        "X": 100.0,
+        "Y": 100.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9607843,
+            "Y": 1.0,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "ZIndex": 2,
+        "textureData": {
+          "flipped": true,
+          "magFilter": 9728,
+          "minFilter": 9728,
+          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
+          "Type": "TextureData"
+        },
+        "Type": "SpriteRenderer"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "4",
+    "transform": {
+      "position": {
+        "X": -192.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 200.0,
+        "Y": 200.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0,
+            "Y": 1.0,
+            "Z": 1.0,
+            "W": 0.8862745
+          }
+        },
+        "ZIndex": 1,
+        "textureData": null,
+        "Type": "SpriteRenderer"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "5",
+    "transform": {
+      "position": {
+        "X": 131.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 10.0,
+        "Y": 10.0
+      }
+    }
+  },
+  {
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0,
+            "Y": 0.0,
+            "Z": 0.0,
+            "W": 1.0
+          }
+        },
+        "ZIndex": 0,
+        "textureData": null,
+        "Type": "SpriteRenderer"
+      },
+      {
+        "FixedRotation": false,
+        "BodyType": 2,
+        "Type": "Rigidbody"
+      }
+    ],
+    "LinkedComponents": [],
+    "Name": "Rigidbody",
+    "transform": {
+      "position": {
+        "X": 284.0,
+        "Y": 40.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 100.0,
+        "Y": 100.0
       }
     }
   }
@@ -145,12 +191,12 @@
 {
   "ClearColor": {
     "Color": {
-      "X": 1.0,
+      "X": 0.90588236,
       "Y": 1.0,
       "Z": 1.0,
       "W": 0.99607843
     }
   },
-  "GlobalLightIntensity": 0.77
+  "GlobalLightIntensity": 0.08
 }
 ////LightSettings////

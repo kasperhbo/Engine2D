@@ -13,7 +13,7 @@ internal class TestFrameBuffer
         // Generate framebuffer
         fboId = GL.GenFramebuffer();
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
-
+        
         Texture = new Texture(width, height);
         GL.FramebufferTexture2D(
             FramebufferTarget.Framebuffer,
@@ -34,6 +34,7 @@ internal class TestFrameBuffer
         );
         GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer,
             FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, rboId);
+        //GL.GetNamedFramebufferAttachmentParameter(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, );
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
 

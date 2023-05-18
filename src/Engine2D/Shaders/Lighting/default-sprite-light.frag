@@ -117,6 +117,9 @@ void main()
     } else {
         color = fColor;
     }
-     
-    outColor = color;
+    vec4 shadowColor = vec4(1,1,1,1);
+
+    float lightIntensity = 1.0 - shadowColor.r;
+//    gl_FragColor = vec4(lightColor.rgb, lightIntensity); 
+    outColor = vec4(color.rgb, lightIntensity); ;
 }
