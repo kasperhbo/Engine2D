@@ -19,7 +19,19 @@ public class Transform
         to.size = size;
         to.rotation = rotation;
     }
+    
+    public Transform()
+    {
+        position = new Vector2();
+        size = new Vector2();
+    }
 
+    public Transform (float x, float y, float w, float h)
+    {
+        position = (new Vector2(x, y));
+        size = new Vector2(w, h);
+    }
+    
     public override bool Equals(object o)
     {
         if (o == null) return false;

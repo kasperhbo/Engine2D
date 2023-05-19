@@ -13,7 +13,7 @@ public class SpriteColor
 
     public SpriteColor()
     {
-        Color = new Vector4();
+        Color = new Vector4(1,1,1,1);
     }
 
     public SpriteColor(Vector4 color)
@@ -46,10 +46,10 @@ public class SpriteRenderer : Component
     
     internal Vector2[] TextureCoords =
     {
-        new(1, 1),
-        new(1, 0),
-        new(0, 0),
-        new(0, 1)
+        new Vector2(0, 0),
+        new Vector2(0, 1),
+        new Vector2(1, 1),
+        new Vector2(1, 0)
     };
 
     public TextureData? textureData;
@@ -62,8 +62,8 @@ public class SpriteRenderer : Component
             Console.WriteLine("has texture data, loading texture...." + textureData.texturePath);
             texture = ResourceManager.GetTexture(textureData);
         }
-        if(_addToRendererAsSprite)
-            GameRenderer.AddSpriteRenderer(this);
+        if(_addToRendererAsSprite){
+        }
     }
 
     public override void Start()
@@ -88,8 +88,9 @@ public class SpriteRenderer : Component
         if (!_prevZIndex.Equals(ZIndex))
         {
             _prevZIndex = ZIndex;
-            GameRenderer.RemoveSprite(this);
-            GameRenderer.AddSpriteRenderer(this);
+            //TODO: REMOVE FROM RENDERER
+            // GameRenderer.RemoveSprite(this);
+            // GameRenderer.AddSpriteRenderer(this);
             this.IsDirty = true;
         }
     }

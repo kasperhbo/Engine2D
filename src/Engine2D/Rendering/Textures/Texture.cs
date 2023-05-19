@@ -73,18 +73,22 @@ public class Texture
         GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
     }
 
+    private Texture(int id) {
+        this.TexID = id;
+        this.Width = -1;
+        this.Height = -1;
+        Filepath = "==== Wrapper ====";
+    }
+
+    public static Texture Wrap(int id) {
+        return new Texture(id);
+    }
+    
     public Texture(int width, int height)
     {
         Height = height;
         Width = width;
         Filepath = "Generated";
-
-        //    // Generate texture on GPU
-        //    TexID = GetHas;
-        //    GL.BindTexture(TextureTarget.Texture2D, TexID);
-
-        //    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, 0);
-
 
         // Generate handle
         TexID = GL.GenTexture();
@@ -98,7 +102,6 @@ public class Texture
             (int)TextureMinFilter.Linear);
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
             (int)TextureMagFilter.Linear);
-
         GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgb,
             PixelType.UnsignedByte, nullPtr);
     }
@@ -132,9 +135,9 @@ public class Texture
                && oTex.Filepath.Equals(Filepath);
     }
 
-    public void Use(TextureUnit unit)
+    public void Use(int unit)
     {
-        GL.ActiveTexture(unit);
+        GL.ActiveTexture((TextureUnit)(int)OpenTK.Graphics.OpenGL.TextureUnit.Texture0 + unit);
         GL.BindTexture(TextureTarget.Texture2D, TexID);
     }
 }

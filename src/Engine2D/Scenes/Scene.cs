@@ -3,6 +3,7 @@ using System.Numerics;
 using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Components;
+using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
@@ -10,6 +11,7 @@ using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -98,51 +100,70 @@ internal class Scene
         SaveLoad.LoadScene(this.ScenePath);
     }
 
+    private bool createdefault = false;
     internal virtual void Init(Engine engine, string scenePath, int width, int height)
     {
+        TestRenderer t = new TestRenderer();
+        t.Init();
+        t.Render();
+        
         ScenePath = scenePath;
-        GameRenderer.Init();
-        
-        int count = 0;
-        float r = 0;
-        float g = 255;
-        float pos = -925;
-        float posy = -524;
-        
-        for (int i = 0; i < 22; i++)
         {
-            for (int x = 0; x < 15; x++)
+            var SpriteRenderer = new SpriteRenderer();
+            
+            Texture wrapTexture = Texture.Wrap(t.FetchColorAttachment(0));
+            
+            SpriteRenderer.texture = wrapTexture;
+            var components = new List<Component>
             {
-                // Console.WriteLine(i);
+                SpriteRenderer
+            };
+
+            Gameobject pepper = new Gameobject("Pepper", components,
+                new Transform(0,  0, 10, 10));
+            AddGameObjectToScene(pepper);
+        }
+        
+        if(createdefault)
+        {
+            {
                 var pl = new PointLight();
-                pl.Color = new SpriteColor(r/255,g/255,1,1);
-                pl.Intensity = .1f;
-                r += 1.307f;
-                g -= 1.307f;
+                pl.Color = new SpriteColor(1, 1, 0, 1);
                 var components = new List<Component>
                 {
                     pl
                 };
-                Transform transform = new Transform();
-                transform.position = new Vector2(pos, posy);
-            
-                var go = new Gameobject(("Point Light: " + Gameobjects.Count).ToString(),
-                    components, transform);
-            
-                AddGameObjectToScene(go);
-                pos += 30;
-                count++;
+                var go = new Gameobject(
+                    ("Point Light: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                    components, new Transform());
+                Engine.Get()._currentScene?.AddGameObjectToScene(go);
+            }
+            {
+                var spriteRenderer = new SpriteRenderer();
+                spriteRenderer.textureData = new TextureData(
+                    "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
+                    true,
+                    TextureMinFilter.Nearest,
+                    TextureMagFilter.Nearest
+                );
+                var components2 = new List<Component>
+                {
+                    spriteRenderer
+                };
+
+                var go2 = new Gameobject(("Mario: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                    components2, new Transform());
+                Engine.Get()._currentScene?.AddGameObjectToScene(go2);
             }
 
-            pos = -925;
-            posy += 60;
-
+            
         }
         
-        Console.WriteLine(count);
-        
+        renderer.Init();
     }
 
+    private DefaultRenderer renderer = new DefaultRenderer(); 
+    
     internal virtual void EditorUpdate(double dt)
     {
         if (TestInput.KeyDown(Keys.LeftControl))
@@ -175,7 +196,7 @@ internal class Scene
 
     internal virtual void Render(double dt)
     {
-        
+        renderer.Render();
     }
 
     internal void AddGameObjectToScene(Gameobject go)
@@ -184,6 +205,7 @@ internal class Scene
         go.Init();
         go.Start();
         Engine.Get().CurrentSelectedAsset = go;
+        renderer.Add(go);
     }
 
     internal virtual void OnClose()
@@ -191,7 +213,6 @@ internal class Scene
         if(EngineSettings.SaveOnClose)
             SaveLoad.SaveScene(this);
         
-        GameRenderer.OnClose();
     }
 
     internal void OnGui()
@@ -206,7 +227,6 @@ internal class Scene
 
     internal virtual void OnResized(ResizeEventArgs newSize)
     {
-        GameRenderer.OnResize(newSize);
         Engine.Get().ImGuiController.WindowResized(newSize.Size.X, newSize.Size.Y);
     }
 

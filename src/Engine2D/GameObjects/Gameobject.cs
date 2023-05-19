@@ -84,7 +84,7 @@ public class Gameobject : Asset
 
     public void AddComponent(Component component)
     {
-        _componentsToAddEndOfFrame.Add(component);
+        components.Add(component);
     }
 
     private void ActualAddComponent(Component component)
@@ -98,6 +98,19 @@ public class Gameobject : Asset
         component.Init(this);
         LinkedComponents.Add(component);
     }
+    
+        
+    public virtual T GetComponent<T>() where T : Component
+    {
+        foreach (var component in components)
+        {
+            if (typeof(T) == component.GetType()) return 
+                (component as T)!;
+        }
+
+        return null;
+    }
+    
 
     public bool AABB(Vector2 point)
     {

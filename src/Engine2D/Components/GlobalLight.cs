@@ -14,7 +14,8 @@ public class GlobalLight : Component
     public override void Init(Gameobject parent)
     {
         base.Init(parent);
-        GameRenderer.AddGlobalLight(this);
+        //TODO:ADD TO GAME RENDERER
+        // GameRenderer.AddGlobalLight(this);
     }
 
     public override void Start()
