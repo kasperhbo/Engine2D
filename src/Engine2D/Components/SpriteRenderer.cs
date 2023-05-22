@@ -42,7 +42,7 @@ public class SpriteRenderer : Component
     
     [JsonIgnore] internal Texture texture;
 
-    [JsonIgnore] protected bool _addToRendererAsSprite = true;
+    [JsonIgnore] public bool AddToRendererAsSprite = true;
     
     internal Vector2[] TextureCoords =
     {
@@ -62,8 +62,9 @@ public class SpriteRenderer : Component
             Console.WriteLine("has texture data, loading texture...." + textureData.texturePath);
             texture = ResourceManager.GetTexture(textureData);
         }
-        if(_addToRendererAsSprite)
-            GameRenderer.AddSpriteRenderer(this);
+        Console.WriteLine("initialize");
+        if(AddToRendererAsSprite)
+            Renderer.AddSpriteRenderer(this);
     }
 
     public override void Start()
@@ -88,8 +89,8 @@ public class SpriteRenderer : Component
         if (!_prevZIndex.Equals(ZIndex))
         {
             _prevZIndex = ZIndex;
-            GameRenderer.RemoveSprite(this);
-            GameRenderer.AddSpriteRenderer(this);
+            Renderer.RemoveSprite(this);
+            Renderer.AddSpriteRenderer(this);
             this.IsDirty = true;
         }
     }

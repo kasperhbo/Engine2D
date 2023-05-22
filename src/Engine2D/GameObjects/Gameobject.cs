@@ -14,7 +14,6 @@ public class Gameobject : Asset
 {
     private readonly List<Component> _componentsToAddEndOfFrame = new();
     public List<Component> components = new();
-    public List<Component> LinkedComponents = new();
 
     public string Name = "";
 
@@ -30,7 +29,6 @@ public class Gameobject : Asset
         Name = name;
         this.transform = transform;
         components = new List<Component>();
-        LinkedComponents = new List<Component>();
     }
 
 
@@ -39,7 +37,6 @@ public class Gameobject : Asset
         Name = name;
         this.transform = transform;
         this.components = components;
-        LinkedComponents = new List<Component>();
     }
 
 
@@ -48,43 +45,38 @@ public class Gameobject : Asset
         Name = name;
         this.transform = transform;
         this.components = components;
-        LinkedComponents = linked;
     }
 
 
     public void Init()
     {
         foreach (var component in components) component.Init(this);
-        foreach (var component in LinkedComponents) component?.Init(this);
     }
 
     public void Start()
     {
         foreach (var component in components) component.Start();
-        foreach (var component in LinkedComponents) component?.Start();
     }
 
     public void EditorUpdate(double dt)
     {
         foreach (var component in components) component.EditorUpdate(dt);
-        foreach (var component in LinkedComponents) component?.EditorUpdate(dt);
     }
 
     public void GameUpdate(double dt)
     {
         foreach (var component in components) component.GameUpdate(dt);
-        foreach (var component in LinkedComponents) component?.GameUpdate(dt);
     }
 
     public void Destroy()
     {
         foreach (var component in components) component.Destroy();
-        foreach (var component in LinkedComponents) component?.Destroy();
     }
 
     public void AddComponent(Component component)
     {
-        _componentsToAddEndOfFrame.Add(component);
+        component.Init(this);
+        components.Add(component);
     }
 
     private void ActualAddComponent(Component component)
@@ -96,7 +88,6 @@ public class Gameobject : Asset
     public void AddLinkedComponent(Component component)
     {
         component.Init(this);
-        LinkedComponents.Add(component);
     }
 
     public bool AABB(Vector2 point)
@@ -221,14 +212,21 @@ public class Gameobject : Asset
         _componentsToAddEndOfFrame.Clear();
     }
 
+    public T GetComponent<T>() where T : Component
+    {
+        foreach (var component in components)
+        {
+            if (typeof(T) == component.GetType()) return 
+                (component as T)!;
+        }
+
+        return null;
+    }
+    
 
     private void RemoveComponents(Component comp)
     {
         components.Remove(comp);
     }
 
-    private void RemoveLinkedComponents(Component comp)
-    {
-        LinkedComponents.Remove(comp);
-    }
 }

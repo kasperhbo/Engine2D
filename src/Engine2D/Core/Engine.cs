@@ -156,7 +156,7 @@ namespace KDBEngine.Core
                 }
 
                 //Render the game
-                GameRenderer.Render();
+                Renderer.Render();
                 
                 //ImGui
                 {
@@ -220,7 +220,7 @@ namespace KDBEngine.Core
             _currentScene?.OnResized(e);
 
             testCamera.adjustProjection();
-            GameRenderer.OnResize(e);
+            Renderer.OnResize(e);
         }
 
         protected override void OnTextInput(TextInputEventArgs e)
@@ -246,7 +246,7 @@ namespace KDBEngine.Core
 
         internal void SwitchScene(string sceneName)
         {
-            GameRenderer.Flush();
+            Renderer.Flush();
             Title = WindowSettings.s_Title + " | " + sceneName;
             Scene newScene = new();
             _currentScene = newScene;
@@ -255,7 +255,7 @@ namespace KDBEngine.Core
 
         internal void NewScene(string sceneName)
         {
-            GameRenderer.Flush();
+            Renderer.Flush();
             Title = WindowSettings.s_Title + " | " + sceneName;
             Scene newScene = new();
             newScene.Init(this, sceneName, Size.X, Size.Y);

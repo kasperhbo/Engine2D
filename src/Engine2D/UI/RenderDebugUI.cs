@@ -20,6 +20,6 @@ public class RenderDebugUI : UIElemenet
 
     protected override Action SetWindowContent()
     {
-        return GameRenderer.GetDebugGUI();
+        return Renderer.GetDebugGUI();
     }
 }

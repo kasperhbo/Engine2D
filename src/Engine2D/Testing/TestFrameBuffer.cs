@@ -1,14 +1,26 @@
-﻿using Engine2D.Rendering;
+﻿using System.Security.Cryptography;
+using Engine2D.Rendering;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 
 namespace Engine2D.Testing;
 
 internal class TestFrameBuffer
 {
-    private readonly int fboId;
+    private int fboId;
     public Texture Texture { get; private set; }
 
+    public TestFrameBuffer(Vector2i size)
+    {
+        Init(size.X, size.Y);
+    }    
+    
     public TestFrameBuffer(int width, int height)
+    {
+        Init(width, height);
+    }
+
+    private void Init(int width, int height)
     {
         // Generate framebuffer
         fboId = GL.GenFramebuffer();
@@ -50,4 +62,9 @@ internal class TestFrameBuffer
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
 
+    public void BindToSlot(int unit)
+    {
+        GL.ActiveTexture(TextureUnit.Texture0 + unit);
+        GL.BindTexture(TextureTarget.Texture2D, GetTextureID);
+    }
 }

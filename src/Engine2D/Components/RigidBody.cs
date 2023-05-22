@@ -7,11 +7,13 @@ namespace Engine2D.Components;
 public class RigidBody : Component
 {
     public bool FixedRotation = false;
+    public BodyType BodyType { get; set; }
 
     [JsonIgnore] public Body runtimeBody = null;
 
     public RigidBody()
     {
+        
     }
 
     public RigidBody(BodyType bodyType)
@@ -19,27 +21,6 @@ public class RigidBody : Component
         BodyType = bodyType;
     }
 
-    public BodyType BodyType { get; set; }
-
-    //public override void ImGuiFields()
-    //{
-    //    if(ImGui.BeginCombo("##combo", BodyType.ToString()))
-    //    {
-    //        if (ImGui.Selectable("Dynamic"))
-    //        {
-    //            BodyType = BodyType.DynamicBody;
-    //        }
-    //        if (ImGui.Selectable("Static"))
-    //        {
-    //            BodyType = BodyType.StaticBody;
-    //        }
-    //        if (ImGui.Selectable("Kinematic"))
-    //        {
-    //            BodyType = BodyType.KinematicBody;
-    //        }
-    //        ImGui.EndCombo();
-    //    }
-    //}
 
     public override void GameUpdate(double dt)
     {

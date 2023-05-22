@@ -28,7 +28,9 @@ internal class Scene
 
     internal string ScenePath { get; private set; } = "NoScene";
     internal List<Gameobject> Gameobjects { get; } = new();
-   
+
+    public GlobalLight GlobalLight { get; set; } = null;
+    
     
     public bool IsPlaying
     {
@@ -101,46 +103,7 @@ internal class Scene
     internal virtual void Init(Engine engine, string scenePath, int width, int height)
     {
         ScenePath = scenePath;
-        GameRenderer.Init();
-        
-        int count = 0;
-        float r = 0;
-        float g = 255;
-        float pos = -925;
-        float posy = -524;
-        
-        for (int i = 0; i < 22; i++)
-        {
-            for (int x = 0; x < 15; x++)
-            {
-                // Console.WriteLine(i);
-                var pl = new PointLight();
-                pl.Color = new SpriteColor(r/255,g/255,1,1);
-                pl.Intensity = .1f;
-                r += 1.307f;
-                g -= 1.307f;
-                var components = new List<Component>
-                {
-                    pl
-                };
-                Transform transform = new Transform();
-                transform.position = new Vector2(pos, posy);
-            
-                var go = new Gameobject(("Point Light: " + Gameobjects.Count).ToString(),
-                    components, transform);
-            
-                AddGameObjectToScene(go);
-                pos += 30;
-                count++;
-            }
-
-            pos = -925;
-            posy += 60;
-
-        }
-        
-        Console.WriteLine(count);
-        
+        Renderer.Init();
     }
 
     internal virtual void EditorUpdate(double dt)
@@ -191,7 +154,7 @@ internal class Scene
         if(EngineSettings.SaveOnClose)
             SaveLoad.SaveScene(this);
         
-        GameRenderer.OnClose();
+        Renderer.OnClose();
     }
 
     internal void OnGui()
@@ -206,7 +169,7 @@ internal class Scene
 
     internal virtual void OnResized(ResizeEventArgs newSize)
     {
-        GameRenderer.OnResize(newSize);
+        Renderer.OnResize(newSize);
         Engine.Get().ImGuiController.WindowResized(newSize.Size.X, newSize.Size.Y);
     }
 

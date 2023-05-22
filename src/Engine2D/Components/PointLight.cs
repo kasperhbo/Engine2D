@@ -19,7 +19,7 @@ public class PointLight : Component
     public override void Init(Gameobject parent)
     {
         base.Init(parent);
-        GameRenderer. AddPointLight(this);
+        Renderer.AddPointLight(this);
     }
 
     public override void Start()

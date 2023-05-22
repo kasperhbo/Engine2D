@@ -21,14 +21,14 @@ internal class RenderBatch: IComparable<RenderBatch>
     internal RenderBatch(int zIndex)
     {
         this.ZIndex = zIndex;
-        _textureUnits = new int[GL.GetInteger(GetPName.MaxTextureImageUnits)];
-        _textures = new Texture[GL.GetInteger(GetPName.MaxTextureImageUnits)];
+        _textureUnits = new int[7];
+        _textures = new Texture[7];
         
         for (var i = 0; i < _textureUnits.Length; i++) _textureUnits[i] = i;
 
         var dat = new ShaderData();
-        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default-lit.vert";
-        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default-lit.frag";
+        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default.vert";
+        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default.frag";
 
         _shader = ResourceManager.GetShader(dat);
         sprites = new SpriteRenderer[c_MaxBatchSize];
@@ -91,8 +91,11 @@ internal class RenderBatch: IComparable<RenderBatch>
         LoadVertexProperties(index);
     }
     
-    public void Render(Matrix4 projectionMatrix, Matrix4 viewMatrix)
+    public void Render(TestCamera camera)
     {
+        Matrix4 projectionMatrix = camera.getProjectionMatrix();
+        Matrix4 viewMatrix = camera.getViewMatrix();
+        
         // For now, we will rebuffer all data every frame
         var rebufferData = false;
 
@@ -113,32 +116,7 @@ internal class RenderBatch: IComparable<RenderBatch>
         _shader.use();
         _shader.uploadMat4f("uProjection", projectionMatrix);
         _shader.uploadMat4f("uView", viewMatrix);
-        
-        //LIGHTING
-        Vector2[] lightPositions = new Vector2[GameRenderer.PointLights.Count];
-        Vector3[] lightColors = new Vector3[GameRenderer.PointLights.Count];
-        float[] lightIntensities = new float[GameRenderer.PointLights.Count];
-
-        for (int i = 0; i < GameRenderer.PointLights.Count; i++)
-        {
-            PointLight light = GameRenderer.PointLights[i];
-            lightPositions[i] = new(light.LastTransform.position.X, light.LastTransform.position.Y);
-            lightColors[i] = new(light.Color.Color.X, light.Color.Color.Y, light.Color.Color.Z);
-            lightIntensities[i] = light.Intensity;
-        }
-
-        _shader.uploadVec2fArray("uLightPosition", lightPositions);
-        _shader.uploadVec3fArray("uLightColour", lightColors);
-        _shader.uploadFloatArray("uIntensity", lightIntensities);
-        
-        GlobalLight globalLight = GameRenderer.GlobalLight;
-        if(globalLight != null)
-            _shader.uploadFloat("uMinLighting", globalLight.Intensity);
-        else
-            _shader.uploadFloat("uMinLighting", 1);
-        
-        _shader.uploadInt("uNumLights",  GameRenderer.PointLights.Count);
-        
+        _shader.uploadInt("uLightmap", 10);
         
         //TEXTURES
         for (var i = 0; i < _textures.Length; i++)
@@ -155,8 +133,6 @@ internal class RenderBatch: IComparable<RenderBatch>
         GL.EnableVertexAttribArray(0);
         GL.EnableVertexAttribArray(1);
         
-        
-
         GL.DrawElements(PrimitiveType.Triangles, SpriteCount * 6, DrawElementsType.UnsignedInt, 0);
 
         for (var i = 0; i < _textures.Length; i++)

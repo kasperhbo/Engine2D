@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using System.Runtime.InteropServices;
 using Engine2D.Core;
+using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using ImGuiNET;
 using KDBEngine.Core;
@@ -10,7 +11,7 @@ namespace Engine2D.Testing;
 internal class TestViewportWindow
 {
     private static Vector2 viewportPos;
-    private static Vector2 viewportSize;
+    public static Vector2 ViewportSize;
 
     private TestFrameBuffer frameBufferToRenderer = null;
     
@@ -41,12 +42,18 @@ internal class TestViewportWindow
         topLeft.Y -= ImGui.GetScrollY();
 
         viewportPos = new Vector2(topLeft.X, topLeft.Y);
-        viewportSize = new Vector2(windowSize.X, windowSize.Y);
+        ViewportSize = new Vector2(windowSize.X, windowSize.Y);
 
 
-        var textureId = GameRenderer.FrameBufferToRenderer();
-        
-        ImGui.Image((IntPtr)textureId, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+        // var textureId = GameRenderer.FrameBufferToRenderer();
+        if(Renderer.GameBuffer != null)
+            ImGui.Image((IntPtr)Renderer.GameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+        else
+        {
+            //TODO: MAKE ERROR TEXTUYRE
+            ImGui.Image((IntPtr)0, new Vector2(windowSize.X, windowSize.Y),
+                new Vector2(0, 1), new Vector2(1, 0));
+        }
         
         if (ImGui.BeginDragDropTarget())
         {
@@ -102,8 +109,8 @@ internal class TestViewportWindow
     {
         return
             TestInput.getX() >= viewportPos.X
-            && TestInput.getX() <= viewportPos.X + viewportSize.X
+            && TestInput.getX() <= viewportPos.X + ViewportSize.X
             && TestInput.getY() >= viewportPos.Y
-            && TestInput.getY() <= viewportPos.Y + viewportSize.Y;
+            && TestInput.getY() <= viewportPos.Y + ViewportSize.Y;
     }
 }
