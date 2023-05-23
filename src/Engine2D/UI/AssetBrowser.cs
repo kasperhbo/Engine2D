@@ -53,11 +53,11 @@ internal class AssetBrowser : UIElemenet
 
     private void LoadIcons()
     {
-        texDataDir = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\directoryIcon.png", false,
+        texDataDir = new TextureData("dirTextureICON",Utils.GetBaseEngineDir() + "\\icons\\directoryIcon.png", false,
             TextureMinFilter.Linear, TextureMagFilter.Linear);
-        texDataFile = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\fileicon.png", false,
+        texDataFile = new TextureData("fileTextureICON",Utils.GetBaseEngineDir() + "\\icons\\fileicon.png", false,
             TextureMinFilter.Linear, TextureMagFilter.Linear);
-        texDataScene = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\mapIcon.png", false,
+        texDataScene = new TextureData("sceneTextureICON",Utils.GetBaseEngineDir() + "\\icons\\mapIcon.png", false,
             TextureMinFilter.Linear, TextureMagFilter.Linear);
 
         dirTexture = (IntPtr)ResourceManager.GetTexture(texDataDir).TexID;

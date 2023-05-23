@@ -11,7 +11,7 @@ public class Sprite : Asset
 
     public Vector2 TextureCoords = new(1, 1);
 
-    public TextureData TextureData = new();
+    public TextureData TextureData;
 
     public string Type = "Sprite";
 

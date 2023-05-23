@@ -6,62 +6,110 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace Engine2D.Core;
 
-internal struct ShaderData
+public class ShaderData
 {
-    internal string FragPath;
-    internal string VertexPath;
+    public string Identifier;
+    private string _vertexPath;
+    private string _fragPath;
+
+    public Shader Shader;
+
+    public ShaderData(string identifier, string vertexPath, string fragPath)
+    {
+        Identifier = identifier;
+        _vertexPath = vertexPath;
+        _fragPath = fragPath;
+    }
+
+    public ShaderData(string identifier, string vertexPath, string fragPath, Shader shader)
+    {
+        Identifier = identifier;
+        _vertexPath = vertexPath;
+        _fragPath = fragPath;
+        Shader = shader;
+    }
+
+    public void CreateShader()
+    {
+        Shader = new Shader(_vertexPath, _fragPath);
+    }
 }
 
 [JsonConverter(typeof(ComponentSerializer))]
 public class TextureData
 {
-    public bool flipped;
-    public TextureMagFilter magFilter;
-    public TextureMinFilter minFilter;
-    public string texturePath;
+    public string ItemType = "TextureData";
+    public string Identifier;
+    public string _filePath;
+    public bool _flipped;
+    public TextureMinFilter _textureMinFilter;
+    public TextureMagFilter _textureMagFilter;
 
-    public string Type = "TextureData";
-
-    public TextureData()
+    [JsonIgnore]public Texture Texture;
+    
+    public TextureData(string identifier, string filePath, bool flipped,TextureMinFilter textureMinFilter,TextureMagFilter textureMagFilter)
     {
+        Identifier = identifier;
+        _filePath = filePath;
+        _flipped = flipped;
+        _textureMagFilter = textureMagFilter;
+        _textureMinFilter = textureMinFilter;
     }
 
-    public TextureData(string texturePath, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
+    public void CreateTexture()
     {
-        this.texturePath = texturePath;
-        this.flipped = flipped;
-        this.minFilter = minFilter;
-        this.magFilter = magFilter;
+        Texture = new Texture(
+            _filePath,
+            _flipped,
+            _textureMinFilter,
+            _textureMagFilter
+        );
     }
 }
 
-internal static class ResourceManager
+public static class ResourceManager
 {
-    private static readonly Dictionary<ShaderData, Shader> _shaders = new();
-    private static readonly Dictionary<TextureData, Texture> _textures = new();
+    private static Dictionary<string, ShaderData> s_shaders = new Dictionary<string, ShaderData>();
+    private static Dictionary<string, TextureData> s_textures = new Dictionary<string, TextureData>();
 
-    internal static Shader GetShader(ShaderData shaderLocations)
+
+    public static Texture GetTexture(TextureData textureData)
     {
-        Shader shader;
-        if (!_shaders.TryGetValue(shaderLocations, out shader))
+        TextureData data;
+        if (s_textures.TryGetValue(textureData.Identifier, out data ))
         {
-            shader = new Shader(shaderLocations.VertexPath, shaderLocations.FragPath);
-            _shaders.Add(shaderLocations, shader);
+            return data.Texture;
+        }
+        
+        textureData.CreateTexture();
+        s_textures.Add(textureData.Identifier, textureData);
+        
+        return textureData.Texture;
+    }  
+    
+    public static Texture GetTexture(string identifier)
+    {
+        TextureData data;
+        if (s_textures.TryGetValue(identifier, out data ))
+        {
+            return data.Texture;
         }
 
-        return shader;
-    }
-
-    internal static Texture GetTexture(TextureData textureData)
+        throw new Exception("ONLY CALL THIS WHEN YOU ARE SURE YOU CREATED THE TEXTURE BEFORE");
+    }  
+    
+    public static Shader GetShader(ShaderData shaderData)
     {
-        Texture tex;
-        if (!_textures.TryGetValue(textureData, out tex))
+        ShaderData data;
+        if (s_shaders.TryGetValue(shaderData.Identifier, out data ))
         {
-            tex = new Texture(textureData.texturePath, textureData.flipped, textureData.minFilter,
-                textureData.magFilter);
-            _textures.Add(textureData, tex);
+            return data.Shader;
         }
+        
+        shaderData.CreateShader();
+        s_shaders.Add(shaderData.Identifier, shaderData);
+        
+        return shaderData.Shader;
+    }  
 
-        return tex;
-    }
 }

@@ -21,12 +21,17 @@ public class TestContentBrowser
 
     public TestContentBrowser()
     {
-        texDataDir = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\directoryicon.png", false,
+        texDataDir = new TextureData("dirtexture",Utils.GetBaseEngineDir() + "\\icons\\directoryicon.png", false,
             TextureMinFilter.Linear, TextureMagFilter.Linear);
-        texDataFile = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\fileicon.png", false,
+        texDataFile = new TextureData("fileTexture",Utils.GetBaseEngineDir() + "\\icons\\fileicon.png",
+            false,
+            TextureMinFilter.Linear,
+            TextureMagFilter.Linear);
+        texDataScene = new TextureData("sceneTexture",
+            Utils.GetBaseEngineDir() + "\\icons\\mapIcon.png", 
+            false,
             TextureMinFilter.Linear, TextureMagFilter.Linear);
-        texDataScene = new TextureData(Utils.GetBaseEngineDir() + "\\icons\\mapIcon.png", false,
-            TextureMinFilter.Linear, TextureMagFilter.Linear);
+        
         dirTexture = ResourceManager.GetTexture(texDataDir).TexID;
         fileTexture = ResourceManager.GetTexture(texDataFile).TexID;
         sceneTexture = ResourceManager.GetTexture(texDataScene).TexID;

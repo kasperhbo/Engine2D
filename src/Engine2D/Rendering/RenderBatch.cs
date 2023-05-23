@@ -52,9 +52,8 @@ internal class RenderBatch : IComparable<RenderBatch>
 
         for (var i = 0; i < _textureUnits.Length; i++) _textureUnits[i] = i;
 
-        var dat = new ShaderData();
-        dat.VertexPath = Utils.GetBaseEngineDir() + "/Shaders/default.vert";
-        dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default.frag";
+        var dat = new ShaderData("default", Utils.GetBaseEngineDir() + "/Shaders/default.vert",
+            Utils.GetBaseEngineDir() + "/Shaders/default.frag");
 
         _shader = ResourceManager.GetShader(dat);
         _sprites = new SpriteRenderer[c_maxBatchSize];

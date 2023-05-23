@@ -169,8 +169,9 @@ namespace KDBEngine.Core
                     if(Engine.Get()._currentScene.GameCamera == null)
                     {
                         Log.Error("No Camera");
-                        TextureData data = new TextureData();
-                        data.texturePath = Utils.GetBaseEngineDir() + "\\Images\\NoCameraInCurrentScene.png";
+                        TextureData data = new TextureData("NoCameraInCurrentScene", 
+                            Utils.GetBaseEngineDir() + "\\Images\\NoCameraInCurrentScene.png", true,
+                            TextureMinFilter.Linear, TextureMagFilter.Linear);
                         gameViewPort.OnGui("Game Viewport",ResourceManager.GetTexture(data));
                     }else{
                         gameViewPort.OnGui("Game Viewport",Renderer.GameBufferGame.Texture);

@@ -70,11 +70,8 @@ public class LightMapRenderer
             BufferUsageHint.StaticDraw);
         // The EBO has now been properly setup. Go to the Render function to see how we draw our rectangle now!
 
-        var shaderData = new ShaderData
-        {
-            FragPath = Utils.GetBaseEngineDir() + "/Shaders/lightmap.frag",
-            VertexPath = Utils.GetBaseEngineDir() + "/Shaders/lightmap.vert"
-        };
+        var shaderData = new ShaderData("lightmap", Utils.GetBaseEngineDir() + "/Shaders/lightmap.frag",
+            Utils.GetBaseEngineDir() + "/Shaders/lightmap.frag");
 
         _shader = ResourceManager.GetShader(shaderData);
         _shader.use();

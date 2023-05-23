@@ -40,6 +40,7 @@ public class SpriteRenderer : Component
     [ShowUI(show = false)] internal bool IsDirty = true;
 
     [JsonIgnore] internal Texture texture;
+    public TextureData? textureData;
 
     internal Vector2[] TextureCoords =
     {
@@ -49,7 +50,6 @@ public class SpriteRenderer : Component
         new(0, 1)
     };
 
-    public TextureData? textureData;
 
     public int ZIndex = 0;
 
@@ -58,10 +58,10 @@ public class SpriteRenderer : Component
         base.Init(parent);
         if (textureData != null)
         {
+            Console.WriteLine("initialize");
             texture = ResourceManager.GetTexture(textureData);
         }
 
-        Console.WriteLine("initialize");
         if (AddToRendererAsSprite)
             Renderer.AddSpriteRenderer(this);
     }

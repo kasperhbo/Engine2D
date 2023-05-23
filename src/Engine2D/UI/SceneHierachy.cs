@@ -91,6 +91,7 @@ internal class SceneHierachy : UIElemenet
                     {
                         var spriteRenderer = new SpriteRenderer();
                         spriteRenderer.textureData = new TextureData(
+                            "testImage",
                             "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
                             true,
                             TextureMinFilter.Nearest,
