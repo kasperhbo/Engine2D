@@ -12,7 +12,7 @@ namespace Engine2D.Components;
 public abstract class Component
 {
     [JsonIgnore] private bool _initialized;
-    [JsonIgnore] public Gameobject Parent;
+    [JsonIgnore] public GameObject Parent;
 
     protected float sizeYGUI;
     public string Type => GetItemType();
@@ -21,7 +21,7 @@ public abstract class Component
     public abstract string GetItemType();
 
 
-    public virtual void Init(Gameobject parent)
+    public virtual void Init(GameObject parent)
     {
         if (_initialized) return;
         _initialized = true;

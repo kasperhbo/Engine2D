@@ -10,7 +10,7 @@ public class ScriptHolderComponent : Component
     //public string refFile = "";
     public Component component = null;
 
-    public override void Init(Gameobject parent)
+    public override void Init(GameObject parent)
     {
         base.Init(parent);
     }

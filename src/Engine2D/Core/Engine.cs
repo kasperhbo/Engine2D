@@ -113,12 +113,9 @@ namespace KDBEngine.Core
         {
             base.OnUpdateFrame(args);
 
-            //Input.Update(KeyboardState, MouseState);
             TestInput.mousePosCallback(MouseState, KeyboardState);
 
             _currentScene?.EditorUpdate(args.Time);
-
-            TestInput.endFrame();
         }
 
         private void LoadGameWithoutEngine()

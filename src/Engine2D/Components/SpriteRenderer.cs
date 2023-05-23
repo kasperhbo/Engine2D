@@ -53,7 +53,7 @@ public class SpriteRenderer : Component
 
     public int ZIndex = 0;
 
-    public override void Init(Gameobject parent)
+    public override void Init(GameObject parent)
     {
         base.Init(parent);
         if (textureData != null)

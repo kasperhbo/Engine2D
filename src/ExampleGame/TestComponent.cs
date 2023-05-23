@@ -29,7 +29,7 @@ namespace ExampleGame
         [ShowUI(show = false)]public float Z = 0;
         [ShowUI(show = false)] public float x = 0;
 
-        public override void Init(Gameobject parent)
+        public override void Init(GameObject parent)
         {
             base.Init(parent);
             Console.WriteLine("init");

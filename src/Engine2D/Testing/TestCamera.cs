@@ -5,11 +5,15 @@ using KDBEngine.Core;
 using Newtonsoft.Json;
 using OpenTK.Mathematics;
 
+using Vector2 = System.Numerics.Vector2;
+
 namespace Engine2D.Testing;
 
 public class TestCamera : Component
 {
-    private readonly Vector2 projectionSize = new(Engine.Get().getWidth(), Engine.Get().getHeight());
+    public float Zoom = 1.0f;
+    
+    private Vector2 projectionSize = new(1920,1080);
 
     // The inverse projection matrix
     private Matrix4 inverseProjectionMatrix;
@@ -18,6 +22,7 @@ public class TestCamera : Component
     private Matrix4 inverseViewMatrix;
 
     [JsonIgnore]public Vector2 position;
+    
 
 
     // Projection matrix say how big the screen is going to be.
@@ -25,7 +30,6 @@ public class TestCamera : Component
 
     // View Matrix says where the camera is in relation to our world.
     private Matrix4 viewMatrix;
-    public float zoom = 1.0f;
     private float _lastZoom = 1.0f;
 
 
@@ -45,9 +49,9 @@ public class TestCamera : Component
         
         if (Parent != null)
         {
-            if (_lastZoom != zoom)
+            if (_lastZoom != Zoom)
             {
-                _lastZoom = zoom;
+                _lastZoom = Zoom;
                 adjustProjection();
             }
             position = new(Parent.transform.position.X, Parent.transform.position.Y);
@@ -71,10 +75,10 @@ public class TestCamera : Component
         // Somehow this defines how many tiles are visible on the screen (40 * 21).
         //projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0, 32.0f * 21.0f, 0, 100);
         projectionMatrix = Matrix4.CreateOrthographicOffCenter(
-            -(projectionSize.X * zoom / 2),
-            projectionSize.X * zoom / 2,
-            -(projectionSize.Y * zoom / 2),
-            projectionSize.Y * zoom / 2,
+            -(projectionSize.X * Zoom / 2),
+            projectionSize.X * Zoom / 2,
+            -(projectionSize.Y * Zoom / 2),
+            projectionSize.Y * Zoom / 2,
             0,
             100
         );
@@ -125,19 +129,19 @@ public class TestCamera : Component
 
     public float getZoom()
     {
-        return zoom;
+        return Zoom;
     }
 
 
     public void setZoom(float zoom)
     {
-        this.zoom = zoom;
+        this.Zoom = zoom;
         adjustProjection();
     }
 
     public void addZoom(float value)
     {
-        zoom += value;
+        Zoom += value;
     }
 
     public void CameraSettingsGUI()
@@ -149,8 +153,16 @@ public class TestCamera : Component
                 new System.Numerics.Vector2(position.X, position.Y);
             OpenTKUIHelper.DrawProperty("Position: ", ref tempPos);
             position = new Vector2(tempPos.X, tempPos.Y);
+            
+            var projectionSize = new System.Numerics.Vector2(this.projectionSize.X, this.projectionSize.Y);
+            if (OpenTKUIHelper.DrawProperty("Projection Size: ", ref projectionSize))
+            {
+                this.projectionSize = new(projectionSize.X, projectionSize.Y);
+                adjustProjection();
+            }
+            
 
-            if (OpenTKUIHelper.DrawProperty("Zoom", ref zoom)) adjustProjection();
+            if (OpenTKUIHelper.DrawProperty("Zoom", ref Zoom)) adjustProjection();
         });
         ImGui.End();
     }

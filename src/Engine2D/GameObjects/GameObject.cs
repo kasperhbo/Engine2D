@@ -10,7 +10,7 @@ using OpenTK.Mathematics;
 
 namespace Engine2D.GameObjects;
 
-public class Gameobject : Asset
+public class GameObject : Asset
 {
     private readonly List<Component> _componentsToAddEndOfFrame = new();
     public List<Component> components = new();
@@ -20,11 +20,11 @@ public class Gameobject : Asset
     public Transform transform = new();
 
 
-    public Gameobject()
+    public GameObject()
     {
     }
     
-    public Gameobject(string name)
+    public GameObject(string name)
     {
         Name = name;
         transform = new Transform();
@@ -32,7 +32,7 @@ public class Gameobject : Asset
     }
 
 
-    public Gameobject(string name, Transform transform)
+    public GameObject(string name, Transform transform)
     {
         Name = name;
         this.transform = transform;
@@ -40,7 +40,7 @@ public class Gameobject : Asset
     }
 
 
-    public Gameobject(string name, Transform transform, List<Component> components)
+    public GameObject(string name, Transform transform, List<Component> components)
     {
         Name = name;
         this.transform = transform;
@@ -48,7 +48,7 @@ public class Gameobject : Asset
     }
 
 
-    public Gameobject(string name, List<Component> components, List<Component> linked, Transform transform)
+    public GameObject(string name, List<Component> components, List<Component> linked, Transform transform)
     {
         Name = name;
         this.transform = transform;
@@ -56,7 +56,7 @@ public class Gameobject : Asset
     }
 
 
-    public void Init()
+    public virtual void Init()
     {
         foreach (var component in components) component.Init(this);
     }
@@ -188,7 +188,7 @@ public class Gameobject : Asset
                 if (ImGui.MenuItem("ScriptComponent"))
                 {
                     var rb = new ScriptHolderComponent();
-                    var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+                    var go = (GameObject)Engine.Get().CurrentSelectedAsset;
                     go?.AddComponent(rb);
                     ImGui.CloseCurrentPopup();
                 }
@@ -196,7 +196,7 @@ public class Gameobject : Asset
                 if (ImGui.MenuItem("RigidBody"))
                 {
                     var rb = new RigidBody(BodyType.DynamicBody);
-                    var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+                    var go = (GameObject)Engine.Get().CurrentSelectedAsset;
                     go?.AddComponent(rb);
                     ImGui.CloseCurrentPopup();
                 }
@@ -204,7 +204,7 @@ public class Gameobject : Asset
                 if (ImGui.MenuItem("Sprite Renderer"))
                 {
                     var spr = new SpriteRenderer();
-                    var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+                    var go = (GameObject)Engine.Get().CurrentSelectedAsset;
                     go?.AddComponent(spr);
                     ImGui.CloseCurrentPopup();
                 }

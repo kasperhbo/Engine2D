@@ -2,6 +2,8 @@
 using Engine2D.Core;
 using ExampleGame.Registers;
 using KDBEngine.Core;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 
 public class Program
 {
@@ -13,7 +15,13 @@ public class Program
         CustomComponentRegister.StartRegister();
 
         Console.WriteLine(Utils.GetAllScriptFiles());
-        Settings.s_IsEngine = true;        
-        Engine.Get().Run();
+        
+        Settings.s_IsEngine = true;
+        GameWindowSettings gws = new GameWindowSettings();
+        NativeWindowSettings nws = new NativeWindowSettings();
+
+        nws.Vsync = VSyncMode.On;
+        
+        Engine.Get(gws, nws).Run();
     }
 }

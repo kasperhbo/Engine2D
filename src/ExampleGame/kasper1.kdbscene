@@ -2,20 +2,11 @@
   {
     "components": [
       {
-        "Color": {
-          "Color": {
-            "X": 0.5764706,
-            "Y": 0.0,
-            "Z": 0.0,
-            "W": 0.0
-          }
-        },
-        "textureData": null,
-        "ZIndex": 0,
-        "Type": "SpriteRenderer"
+        "Intensity": 1.0,
+        "Type": "GlobalLight"
       }
     ],
-    "Name": "Mario: 01",
+    "Name": "GlobalLight: 01",
     "transform": {
       "position": {
         "X": 0.0,
@@ -23,8 +14,8 @@
       },
       "rotation": 0.0,
       "size": {
-        "X": 100.0,
-        "Y": 100.0
+        "X": 1.0,
+        "Y": 1.0
       }
     }
   },
@@ -33,10 +24,10 @@
       {
         "Color": {
           "Color": {
-            "X": 0.0,
-            "Y": 0.7529412,
-            "Z": 0.7176471,
-            "W": 0.0
+            "X": 1.0,
+            "Y": 0.93333334,
+            "Z": 0.16078432,
+            "W": 1.0
           }
         },
         "textureData": null,
@@ -44,7 +35,7 @@
         "Type": "SpriteRenderer"
       }
     ],
-    "Name": "Empty Sprite: 11",
+    "Name": "GameObject: 11",
     "transform": {
       "position": {
         "X": 0.0,
@@ -52,8 +43,8 @@
       },
       "rotation": 0.0,
       "size": {
-        "X": 100.0,
-        "Y": 100.0
+        "X": 10000.0,
+        "Y": 10000.0
       }
     }
   },
@@ -62,15 +53,27 @@
       {
         "Color": {
           "Color": {
-            "X": 0.6784314,
-            "Y": 0.72156864,
-            "Z": 0.0,
-            "W": 0.41568628
+            "X": 1.0,
+            "Y": 0.90588236,
+            "Z": 0.3254902,
+            "W": 1.0
           }
         },
-        "textureData": null,
-        "ZIndex": 1,
+        "textureData": {
+          "ItemType": "TextureData",
+          "Identifier": "testImage",
+          "_filePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
+          "_flipped": true,
+          "_textureMinFilter": 9729,
+          "_textureMagFilter": 9729
+        },
+        "ZIndex": 0,
         "Type": "SpriteRenderer"
+      },
+      {
+        "FixedRotation": false,
+        "BodyType": 2,
+        "Type": "Rigidbody"
       }
     ],
     "Name": "Mario: 21",
@@ -81,7 +84,7 @@
       },
       "rotation": 0.0,
       "size": {
-        "X": 1900.0,
+        "X": 100.0,
         "Y": 100.0
       }
     }
@@ -89,65 +92,20 @@
   {
     "components": [
       {
-        "Color": {
-          "Color": {
-            "X": 0.89411765,
-            "Y": 0.0,
-            "Z": 0.0,
-            "W": 0.03529412
-          }
-        },
-        "textureData": null,
-        "ZIndex": -27,
-        "Type": "SpriteRenderer"
+        "Zoom": 1.0,
+        "Type": "Camera"
       }
     ],
-    "Name": "Mario: 31",
+    "Name": "Main Camera 31",
     "transform": {
       "position": {
-        "X": 239.0,
+        "X": 0.0,
         "Y": 0.0
       },
       "rotation": 0.0,
       "size": {
-        "X": 229.0,
-        "Y": 81.0
-      }
-    }
-  },
-  {
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 1.0,
-            "Y": 1.0,
-            "Z": 0.85882354,
-            "W": 1.0
-          }
-        },
-        "textureData": {
-          "ItemType": "TextureData",
-          "Identifier": "testImage",
-          "_filePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
-          "_flipped": true,
-          "_textureMinFilter": 9728,
-          "_textureMagFilter": 9728
-        },
-        "ZIndex": 0,
-        "Type": "SpriteRenderer"
-      }
-    ],
-    "Name": "Mario: 41",
-    "transform": {
-      "position": {
-        "X": 496.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 93.0,
-        "Y": 106.0
+        "X": 1.0,
+        "Y": 1.0
       }
     }
   }

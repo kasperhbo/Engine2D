@@ -381,21 +381,5 @@ internal class ImageTextIcon
         ImGui.PopStyleVar(); // ItemSpacing
 
         ImGui.EndChild();
-
-
-//        if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
-        //     if (ImGui.IsItemHovered())
-        //         doubleClick = true;
-        // if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
-        //     if (ImGui.IsItemHovered())
-        //         singleClick = true;
-        // if (ImGui.BeginPopupContextWindow("test"))
-        // {
-        //     if (ImGui.MenuItem("New Child"))
-        //     {
-        //         Console.WriteLine("c");
-        //     }
-        //     ImGui.EndPopup();
-        // }
     }
 }

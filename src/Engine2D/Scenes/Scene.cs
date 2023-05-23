@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Net.Mime;
+using System.Numerics;
 using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Components;
@@ -6,6 +7,7 @@ using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.Testing;
+using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
 using OpenTK.Windowing.Common;
@@ -24,7 +26,7 @@ internal class Scene
     #endregion
 
     internal string ScenePath { get; private set; } = "NoScene";
-    internal List<Gameobject> Gameobjects { get; } = new();
+    internal List<GameObject> Gameobjects { get; } = new();
 
     public GlobalLight GlobalLight { get; set; } = null;
 
@@ -120,7 +122,7 @@ internal class Scene
                 new TestCamera()
             };
         
-            Gameobject gameCamera = new Gameobject("Main Camera", new Transform(),components);
+            GameObject gameCamera = new GameObject("Main Camera", new Transform(),components);
             AddGameObjectToScene(gameCamera);
         }
         
@@ -132,7 +134,7 @@ internal class Scene
                 globalLight
             };
             
-            Gameobject go = new Gameobject("Global Light", new Transform(), defaultComponents);
+            GameObject go = new GameObject("Global Light", new Transform(), defaultComponents);
             AddGameObjectToScene(go);
         }
     }
@@ -149,13 +151,14 @@ internal class Scene
                 }
         }
         
-        if(TestInput.Focussed && !TestInput.KeyDown(Keys.LeftControl) && !_isPlaying){
-            if (TestInput.KeyDown(Keys.A)) EditorCamera.position.X -= 100 * (float)dt;
-            if (TestInput.KeyDown(Keys.D)) EditorCamera.position.X += 100 * (float)dt;
-            if (TestInput.KeyDown(Keys.W)) EditorCamera.position.Y += 100 * (float)dt;
-            if (TestInput.KeyDown(Keys.S)) EditorCamera.position.Y -= 100 * (float)dt;
+        if(TestInput.MouseDown(MouseButton.Right))
+        {
+            float difX = TestInput.xPos - TestInput.lastX;
+            float difY = TestInput.yPos - TestInput.lastY;
+
+            EditorCamera.position += new Vector2(difX, difY);
         }
-        
+
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
         if (IsPlaying) GameUpdate(dt);
     }
@@ -170,7 +173,7 @@ internal class Scene
     //     AddGameObjectToScene((Gameobject)go);
     // }
     //
-    internal void AddGameObjectToScene(Gameobject go)
+    internal void AddGameObjectToScene(GameObject go)
     {
         if (go.GetComponent<TestCamera>() != null)
         {

@@ -20,7 +20,7 @@ public class BaseSpecifiedConcreteClassConverter : DefaultContractResolver
                 //typeof(BoxCollider2D).IsAssignableFrom(objectType) ||
                 //typeof(TextureData).IsAssignableFrom(objectType) ||
                 //typeof(ScriptHolderComponent).IsAssignableFrom(objectType) ||
-                typeof(Gameobject).IsAssignableFrom(objectType) ||
+                typeof(GameObject).IsAssignableFrom(objectType) ||
                 typeof(TextureData).IsAssignableFrom(objectType))
             && !objectType.IsAbstract)
             return null;
@@ -53,7 +53,7 @@ public class ComponentSerializer : JsonConverter
             //objectType == typeof(BoxCollider2D) ||
             //objectType == typeof(TextureData) ||
             //objectType == typeof(ScriptHolderComponent) ||
-            objectType == typeof(Gameobject) ||
+            objectType == typeof(GameObject) ||
             objectType == typeof(TextureData);
     }
 

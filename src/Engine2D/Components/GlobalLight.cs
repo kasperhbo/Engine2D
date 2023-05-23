@@ -9,7 +9,7 @@ public class GlobalLight : Component
 {
     public float Intensity = 1;
 
-    public override void Init(Gameobject parent)
+    public override void Init(GameObject parent)
     {
         base.Init(parent);
         Engine.Get()._currentScene.GlobalLight = this;

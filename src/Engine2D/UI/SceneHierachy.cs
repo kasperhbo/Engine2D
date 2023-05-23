@@ -69,41 +69,28 @@ internal class SceneHierachy : UIElemenet
                 {
                     if (ImGui.MenuItem("New GameObject"))
                     {
-                        var go = new Gameobject("Gameobject: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
+                        var go = new GameObject("Gameobject: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
                             new Transform());
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
 
                     if (ImGui.MenuItem("New Empty Sprite Renderer"))
                     {
-                        var spriteRenderer = new SpriteRenderer();
-                        var components = new List<Component>
-                        {
-                            spriteRenderer
-                        };
-
-                        var go = new Gameobject("Empty Sprite: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
-                            new Transform(), components);
+                        var go = new SpriteRendererGamObject( "GameObject: " + Engine.Get()._currentScene.Gameobjects.Count + 1);
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
 
                     if (ImGui.MenuItem("New Mario"))
                     {
-                        var spriteRenderer = new SpriteRenderer();
-                        spriteRenderer.textureData = new TextureData(
+                        var textureData = new TextureData(
                             "testImage",
                             "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
                             true,
-                            TextureMinFilter.Nearest,
-                            TextureMagFilter.Nearest
+                            TextureMinFilter.Linear,
+                            TextureMagFilter.Linear
                         );
-                        var components = new List<Component>
-                        {
-                            spriteRenderer
-                        };
-
-                        var go = new Gameobject("Mario: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
-                            new Transform(), components);
+                        var go = new SpriteRendererGamObject("Mario: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
+                            textureData);
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
 
@@ -115,7 +102,7 @@ internal class SceneHierachy : UIElemenet
                             new RigidBody(BodyType.DynamicBody)
                         };
 
-                        var go = new Gameobject("Rigidbody: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
+                        var go = new GameObject("Rigidbody: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
                             new Transform(), components);
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
@@ -130,7 +117,7 @@ internal class SceneHierachy : UIElemenet
                             {
                                 pl
                             };
-                            var go = new Gameobject(
+                            var go = new GameObject(
                                 "Point Light: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
                                 new Transform(),components);
 
@@ -145,7 +132,7 @@ internal class SceneHierachy : UIElemenet
                             {
                                 comp
                             };
-                            var go = new Gameobject(
+                            var go = new GameObject(
                                 "GlobalLight: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
                                 new Transform(), components);
 
@@ -154,9 +141,18 @@ internal class SceneHierachy : UIElemenet
 
                         ImGui.EndMenu();
                     }
-
-                    ;
-
+                    
+                    if(ImGui.BeginMenu("Camera's"))
+                    {
+                        if (ImGui.MenuItem("Main Camera"))
+                        {
+                            CameraGameObject go =
+                                new CameraGameObject("Main Camera " + Engine.Get()._currentScene.Gameobjects.Count + 1);
+                            
+                            Engine.Get()._currentScene?.AddGameObjectToScene(go);
+                        }
+                        ImGui.EndMenu();
+                    }
                     ImGui.EndPopup();
                 }
 

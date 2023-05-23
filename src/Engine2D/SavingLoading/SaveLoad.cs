@@ -86,7 +86,7 @@ internal static class SaveLoad
             }
 
             //Load gameobjects
-            List<Gameobject?> objs = JsonConvert.DeserializeObject<List<Gameobject>>(gos)!;
+            List<GameObject?> objs = JsonConvert.DeserializeObject<List<GameObject>>(gos)!;
 
             // var lightSettings = JsonConvert.DeserializeObject<LightSettings>(lightSettingsStr);
 

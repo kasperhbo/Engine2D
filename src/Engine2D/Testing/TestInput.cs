@@ -10,19 +10,21 @@ internal class TestInput
     private static double worldX;
     private static double worldY;
     private static Vector2 world;
+    
     private static double lastWorldX;
     private static double lastWorldY;
+    
     private static Vector2 lastWorld;
 
     public static Vector2 viewportPos;
     public static Vector2 viewportSize;
 
-    private static double xPos;
-    private static double yPos;
-    private static Vector2 pos;
+    public static float xPos;
+    public static float yPos;
+    public static Vector2 pos;
 
-    private static double lastX;
-    private static double lastY;
+    public static float lastX;
+    public static float lastY;
 
     private static KeyboardState? keyboardState;
     private static MouseState? mouseState;
@@ -30,20 +32,20 @@ internal class TestInput
 
     public static void Init()
     {
-        xPos = 0.0;
-        yPos = 0.0;
+        xPos = 0.0f;
+        yPos = 0.0f;
         pos = new Vector2(0.0f, 0.0f);
 
-        lastX = 0.0;
-        lastY = 0.0;
+        lastX = 0.0f;
+        lastY = 0.0f;
         lastPos = new Vector2(0.0f, 0.0f);
 
-        worldX = 0.0;
-        worldY = 0.0;
+        worldX = 0.0f;
+        worldY = 0.0f;
         world = new Vector2(0.0f, 0.0f);
 
-        lastWorldX = 0.0;
-        lastWorldY = 0.0;
+        lastWorldX = 0.0f;
+        lastWorldY = 0.0f;
         lastWorld = new Vector2(0.0f, 0.0f);
 
         viewportPos = new Vector2();
@@ -52,43 +54,24 @@ internal class TestInput
 
     public static void mousePosCallback(MouseState mouse, KeyboardState keyboard)
     {
-        //if (.mouseButtonDown > 0)
-        //{
-        //    isDragging = true;
-        //}
         keyboardState = keyboard;
         mouseState = mouse;
 
-        lastPos = pos; // Useless since endFrame() ??
-        lastX = xPos; // Useless since endFrame() ??
-        lastY = yPos; // Useless since endFrame() ??
+        lastPos = pos;
+        lastX = xPos; 
+        lastY = yPos; 
 
-        lastPos = pos; // Useless since endFrame() ??
-        lastWorldX = worldX; // Useless since endFrame() ??
-        lastWorldY = worldY; // Useless since endFrame() ??
+        lastWorldX = worldX; 
+        lastWorldY = worldY; 
 
         pos = new Vector2(mouseState.Position.X, mouseState.Position.Y);
-
-        // float currentY = getY();
-        //
-        // Console.WriteLine();
 
         xPos = mouseState.Position.X; // Delete
         yPos = mouseState.Position.Y; // Delete
 
         calcOrtho();
     }
-
-    public static void endFrame()
-    {
-        lastPos = pos;
-        lastX = xPos; // Delete
-        lastY = yPos; // Delete
-
-        lastWorld = world;
-        lastWorldX = worldX; // Delete
-        lastWorldY = worldY; // Delete
-    }
+    
 
     public static bool KeyPress(Keys key)
     {
@@ -168,5 +151,10 @@ internal class TestInput
     {
         if (mouseState == null) return false;
         return mouseState!.IsButtonDown(button);
+    }
+
+    public static void SetMousePos(Vector2 position)
+    {
+        Engine.Get().MousePosition = position;
     }
 }
