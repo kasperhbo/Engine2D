@@ -218,10 +218,10 @@ internal class ImageTextIcon
     private readonly string _label;
     private readonly IntPtr _texture;
     private readonly IntPtr _textureHovered;
+    private readonly FileType _type;
     private GCHandle? _currentlyDraggedHandle;
     private bool _currentlyDragging;
     private IntPtr _textureActive;
-    private readonly FileType _type;
 
     public bool IsSelected = false;
 

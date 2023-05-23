@@ -12,6 +12,7 @@ namespace Engine2D.Rendering;
 
 internal class RenderBatch : IComparable<RenderBatch>
 {
+    //Constants
     private const int c_maxBatchSize = 20000;
 
     private const int c_posSize = 2;
@@ -26,6 +27,8 @@ internal class RenderBatch : IComparable<RenderBatch>
 
     private const int c_vertexSize = 9;
     private const int c_vertexSizeInBytes = c_vertexSize * sizeof(float);
+    
+    //Readonly
     private readonly Shader _shader;
 
     private readonly SpriteRenderer[] _sprites = new SpriteRenderer[c_maxBatchSize];
@@ -34,8 +37,14 @@ internal class RenderBatch : IComparable<RenderBatch>
     private readonly int[] _textureUnits = new int[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
     private readonly float[] _vertices = new float[c_maxBatchSize * c_vertexSize];
 
+    //Private
     private int _vaoId, _vboId;
+    private int _spriteCount = 0;
+    
+    //Public
     public int ZIndex;
+    public bool HasRoom => _spriteCount < c_maxBatchSize;
+
 
     internal RenderBatch(int zIndex)
     {
@@ -53,16 +62,14 @@ internal class RenderBatch : IComparable<RenderBatch>
         _vertices = new float[c_maxBatchSize * c_vertexSize * 4];
     }
 
-    public bool HasRoom => _spriteCount < c_maxBatchSize;
-    private int _spriteCount { get; set; }
 
 
     public int CompareTo(RenderBatch? other)
     {
-        if (ZIndex < other.ZIndex)
+        if (other != null && ZIndex < other.ZIndex)
             return -1;
 
-        if (ZIndex == other.ZIndex)
+        if (other != null && ZIndex == other.ZIndex)
             return 0;
 
         return 1;
@@ -107,14 +114,13 @@ internal class RenderBatch : IComparable<RenderBatch>
         _sprites[index] = spr;
         _spriteCount++;
 
-        if (spr.texture != null)
-            if (!_textures.Contains(spr.texture))
-                for (var i = 0; i < _textures.Length; i++)
-                    if (_textures[i] == null)
-                    {
-                        _textures[i] = spr.texture;
-                        break;
-                    }
+        if (!_textures.Contains(spr.texture))
+            for (var i = 0; i < _textures.Length; i++)
+                if (_textures[i] == null)
+                {
+                    _textures[i] = spr.texture;
+                    break;
+                }
 
         LoadVertexProperties(index);
     }
@@ -179,65 +185,29 @@ internal class RenderBatch : IComparable<RenderBatch>
     {
         var sprite = _sprites[index];
 
-        // Find offset within array (4 vertices per sprite)
         var offset = index * 4 * c_vertexSize;
 
         Vector4 color = new(sprite.Color.Color.X, sprite.Color.Color.Y, sprite.Color.Color.Z, sprite.Color.Color.W);
 
-        var texID = -1;
+        var texId = -1;
         var texCoords = sprite.TextureCoords;
 
         //Find texture
-        if (sprite.texture != null)
-            for (var i = 0; i < _textures.Length; i++)
+        for (var i = 0; i < _textures.Length; i++)
+            if(_textures[i]!=null)
+            {
                 if (_textures[i].Equals(sprite.texture))
                 {
-                    texID = i + 1;
+                    texId = i + 1;
                     break;
                 }
-
-
-        // Add vertices with the appropriate properties
-        var xAdd = 0.5f;
-        var yAdd = 0.5f;
-
+            }
+        
         var transform = sprite.Parent.transform;
 
-        var t = Matrix4x4.Identity;
-        t = Matrix4x4.CreateTranslation(transform.position.X, transform.position.Y, 0);
-        t = t * Matrix4x4.CreateRotationZ(-MathHelper.DegreesToRadians(transform.rotation));
-
-        t.M41 = transform.position.X;
-        t.M42 = transform.position.Y;
-
-        var m11 = t.M11 * transform.size.X;
-        var m12 = t.M12 * transform.size.X;
-        var m13 = t.M13 * transform.size.X;
-        var m14 = t.M14 * transform.size.X;
-
-        var m21 = t.M21 * transform.size.Y;
-        var m22 = t.M22 * transform.size.Y;
-        var m23 = t.M23 * transform.size.Y;
-        var m24 = t.M24 * transform.size.Y;
-
-        var m31 = t.M31 * 1;
-        var m32 = t.M32 * 1;
-        var m33 = t.M33 * 1;
-        var m34 = t.M34 * 1;
-
-        var m41 = t.M41;
-        var m42 = t.M42;
-        var m43 = t.M43;
-        var m44 = t.M44;
-
-
-        t = new Matrix4x4(
-            m11, m12, m13, m14,
-            m21, m22, m23, m24,
-            m31, m32, m33, m34,
-            m41, m42, m43, m44
-        );
-
+        var xAdd = 0.5f;
+        var yAdd = 0.5f;
+        
         for (var i = 0; i < 4; i++)
         {
             if (i == 1)
@@ -246,14 +216,27 @@ internal class RenderBatch : IComparable<RenderBatch>
                 xAdd = -0.5f;
             else if (i == 3) yAdd = 0.5f;
 
-            var currentPos = new Vector4(
-                transform.position.X +
-                xAdd * transform.size.X,
-                transform.position.Y +
-                yAdd * transform.size.Y,
-                0, 1);
-
-            if (transform.rotation != 0) currentPos = MathUtils.Multiply(t, new Vector4(xAdd, yAdd, 0, 0));
+            Vector4 currentPos;
+            
+            if (transform.rotation != 0)
+            {
+                var t = Matrix4x4.Identity;
+                t = Matrix4x4.CreateTranslation(transform.position.X, transform.position.Y, 0);
+                t *= Matrix4x4.CreateScale(transform.size.X, transform.size.Y, 1);
+                t *=Matrix4x4.CreateRotationZ(-MathHelper.DegreesToRadians(transform.rotation));
+                
+                currentPos = MathUtils.Multiply(t, new Vector4(xAdd, yAdd, 0, 0));
+            }
+            else
+            {
+                currentPos = new Vector4(
+                    transform.position.X +
+                    xAdd * transform.size.X,
+                    transform.position.Y +
+                    yAdd * transform.size.Y,
+                    0, 1);
+            }
+            
             // Load position
             _vertices[offset] = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
@@ -269,7 +252,7 @@ internal class RenderBatch : IComparable<RenderBatch>
             _vertices[offset + 7] = texCoords[i].Y;
 
             //Load tex id
-            _vertices[offset + 8] = texID;
+            _vertices[offset + 8] = texId;
 
             offset += c_vertexSize;
         }
@@ -280,12 +263,12 @@ internal class RenderBatch : IComparable<RenderBatch>
         // 6 indices per quad (3 per triangle)
         var elements = new int[6 * c_maxBatchSize];
 
-        for (var i = 0; i < c_maxBatchSize; i++) loadElementIndices(elements, i);
+        for (var i = 0; i < c_maxBatchSize; i++) LoadElementIndices(elements, i);
 
         return elements;
     }
 
-    private void loadElementIndices(int[] elements, int index)
+    private void LoadElementIndices(int[] elements, int index)
     {
         var offsetArrayIndex = 6 * index;
         var offset = 4 * index;

@@ -30,7 +30,7 @@
   {
     "components": [
       {
-        "Intensity": 0.0,
+        "Intensity": 1.0,
         "Type": "GlobalLight"
       }
     ],
@@ -53,12 +53,11 @@
         "Color": {
           "Color": {
             "X": 1.0,
-            "Y": 0.74509805,
-            "Z": 0.80784315,
+            "Y": 1.0,
+            "Z": 1.0,
             "W": 1.0
           }
         },
-        "ZIndex": 1,
         "textureData": {
           "flipped": true,
           "magFilter": 9728,
@@ -66,6 +65,7 @@
           "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
           "Type": "TextureData"
         },
+        "ZIndex": 1,
         "Type": "SpriteRenderer"
       }
     ],
@@ -93,8 +93,8 @@
             "W": 1.0
           }
         },
-        "ZIndex": 0,
         "textureData": null,
+        "ZIndex": 0,
         "Type": "SpriteRenderer"
       }
     ],
