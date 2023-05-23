@@ -9,16 +9,13 @@ namespace Engine2D.Testing;
 
 internal class TestViewportWindow
 {
-    private static Vector2 viewportPos;
-    public static Vector2 ViewportSize;
+    private Vector2 viewportPos;
+    public  Vector2 ViewportSize;
 
-    private TestFrameBuffer frameBufferToRenderer = null;
-
-
-    public void OnGui()
+    public void OnGui(string title, Texture framebufferToRender)
     {
-        ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
-                                                                  | ImGuiWindowFlags.MenuBar);
+        ImGui.Begin(title, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
+                                                        | ImGuiWindowFlags.MenuBar);
 
         ImGui.BeginMenuBar();
         if (!Engine.Get()._currentScene.IsPlaying)
@@ -45,14 +42,13 @@ internal class TestViewportWindow
 
 
         // var textureId = GameRenderer.FrameBufferToRenderer();
-        if (Renderer.GameBuffer != null)
-            ImGui.Image((IntPtr)Renderer.GameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y),
+        if (framebufferToRender != null)
+            ImGui.Image((IntPtr)framebufferToRender.TexID, new Vector2(windowSize.X, windowSize.Y),
                 new Vector2(0, 1), new Vector2(1, 0));
         else
-            //TODO: MAKE ERROR TEXTUYRE
             ImGui.Image((IntPtr)0, new Vector2(windowSize.X, windowSize.Y),
                 new Vector2(0, 1), new Vector2(1, 0));
-
+        
         if (ImGui.BeginDragDropTarget())
         {
             var payload = ImGui.AcceptDragDropPayload("Scene_Drop");
@@ -103,7 +99,7 @@ internal class TestViewportWindow
         return new Vector2(aspectWidth, aspectHeight);
     }
 
-    public static bool IsMouseInsideViewport()
+    public bool IsMouseInsideViewport()
     {
         return
             TestInput.getX() >= viewportPos.X

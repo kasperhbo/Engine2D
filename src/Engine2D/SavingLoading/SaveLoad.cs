@@ -1,5 +1,6 @@
 ﻿using Engine2D.Core;
 using Engine2D.GameObjects;
+using Engine2D.Logging;
 using Engine2D.Scenes;
 using KDBEngine.Core;
 using Newtonsoft.Json;
@@ -37,9 +38,10 @@ internal static class SaveLoad
         var gameObjectArray = scene.Gameobjects.ToArray();
 
         var sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
-        //So we can see where the go array stops when we deserialize the file
+        //Identifier so we can see where the go array stops when we deserialize the file
         sceneData += "\n////GAMEOBJECTS////\n";
-
+        Log.Message("Saving Scene At: " + scene.ScenePath);
+        
         if (File.Exists(scene.ScenePath))
         {
             File.WriteAllText(scene.ScenePath, sceneData);
@@ -58,7 +60,7 @@ internal static class SaveLoad
     internal static void LoadScene(string sceneToLoad)
     {
         Engine.Get().SwitchScene(sceneToLoad);
-
+        Log.Message("Loading Scene: " + sceneToLoad);
         if (File.Exists(sceneToLoad))
         {
             var lines = File.ReadAllLines(sceneToLoad);

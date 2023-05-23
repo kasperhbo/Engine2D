@@ -125,7 +125,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         LoadVertexProperties(index);
     }
 
-    public void Render(TestCamera camera, Texture lightmapTexture)
+    public void Render(TestCamera camera, Texture? lightmapTexture)
     {
         var projectionMatrix = camera.getProjectionMatrix();
         var viewMatrix = camera.getViewMatrix();

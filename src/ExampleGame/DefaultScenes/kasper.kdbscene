@@ -1,0 +1,23 @@
+[
+  {
+    "components": [
+      {
+        "Intensity": 1.0,
+        "Type": "GlobalLight"
+      }
+    ],
+    "Name": "Global Light",
+    "transform": {
+      "position": {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  }
+]
+////GAMEOBJECTS////

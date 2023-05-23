@@ -1,11 +1,13 @@
-﻿using Engine2D.UI;
+﻿using Engine2D.Components;
+using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
+using Newtonsoft.Json;
 using OpenTK.Mathematics;
 
 namespace Engine2D.Testing;
 
-public class TestCamera
+public class TestCamera : Component
 {
     private readonly Vector2 projectionSize = new(Engine.Get().getWidth(), Engine.Get().getHeight());
 
@@ -15,7 +17,7 @@ public class TestCamera
     // The inverse view matrix
     private Matrix4 inverseViewMatrix;
 
-    public Vector2 position;
+    [JsonIgnore]public Vector2 position;
 
 
     // Projection matrix say how big the screen is going to be.
@@ -24,6 +26,7 @@ public class TestCamera
     // View Matrix says where the camera is in relation to our world.
     private Matrix4 viewMatrix;
     public float zoom = 1.0f;
+    private float _lastZoom = 1.0f;
 
 
     public TestCamera()
@@ -34,6 +37,21 @@ public class TestCamera
     public TestCamera(Vector2 position)
     {
         init(position);
+    }
+
+    public override void EditorUpdate(double dt)
+    {
+        base.EditorUpdate(dt);
+        
+        if (Parent != null)
+        {
+            if (_lastZoom != zoom)
+            {
+                _lastZoom = zoom;
+                adjustProjection();
+            }
+            position = new(Parent.transform.position.X, Parent.transform.position.Y);
+        }
     }
 
     private void init(Vector2 position)
@@ -135,5 +153,10 @@ public class TestCamera
             if (OpenTKUIHelper.DrawProperty("Zoom", ref zoom)) adjustProjection();
         });
         ImGui.End();
+    }
+
+    public override string GetItemType()
+    {
+        return "Camera";
     }
 }

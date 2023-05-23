@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using Engine2D.Components;
 using Engine2D.GameObjects;
+using Engine2D.Testing;
 using ImGuiNET;
 using Vector4 = OpenTK.Mathematics.Vector4;
 
@@ -42,6 +44,26 @@ internal static class OpenTKUIHelper
         return changed;
     }
 
+    public static void BeginPopup()
+    {
+        TestInput.Focussed = false;
+    }
+
+    public static void EndPopup()
+    {
+        TestInput.Focussed = true;
+    }
+
+    public static bool DrawProperty(string name, ref string property)
+    {
+        var changed = false;
+        ImGui.TableNextColumn();
+        ImGui.Text(name);
+        ImGui.TableNextColumn();
+        if (ImGui.InputText("##" + name, ref property, 256)) changed = true;
+        return changed;
+    }
+    
     public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector2 property)
     {
         var changed = false;
@@ -65,6 +87,19 @@ internal static class OpenTKUIHelper
         return changed;
     }
 
+    public static bool DrawProperty(string name, ref LightColor property)
+    {
+        var changed = false;
+        ImGui.TableNextColumn();
+        ImGui.Text(name);
+        ImGui.TableNextColumn();
+        Vector3 data = new(property.R, property.G, property.B);
+        if (ImGui.ColorEdit3("##" + name, ref data)) changed = true;
+        property = new LightColor(data.X, data.Y, data.Z);
+        return changed;
+    }
+
+    
     public static bool DrawProperty(string name, ref bool property)
     {
         var changed = false;
@@ -215,7 +250,9 @@ internal class ImageTextIcon
 {
     private static System.Numerics.Vector4 _defaultCol = new(1f, 0f, .0f, 1);
 
-    private readonly string _label;
+    internal  string Label { get; private set; }
+    internal string Path { get; private set;}
+    
     private readonly IntPtr _texture;
     private readonly IntPtr _textureHovered;
     private readonly FileType _type;
@@ -228,15 +265,15 @@ internal class ImageTextIcon
     public ImageTextIcon(string label, IntPtr texture, IntPtr textureHovered, IntPtr textureActive, string path,
         FileType type)
     {
-        _label = label;
+        Label = label;
+        Path = path;
         _texture = texture;
         _textureHovered = textureHovered;
         _textureActive = textureActive;
         _type = type;
-        Path = path;
     }
 
-    internal string Path { get; }
+    
 
     public unsafe void Draw(out bool doubleClick, out bool singleClick, out bool rightClick)
     {
@@ -316,7 +353,7 @@ internal class ImageTextIcon
 
 
         //UI::RectExpanded(UI::GetItemRect(), -6.0f, -6.0f));
-        ImGui.Text(_label);
+        ImGui.Text(Label);
         if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             if (ImGui.IsItemHovered())
                 doubleClick = true;

@@ -87,6 +87,17 @@ public abstract class Component
 
                     field.SetValue(this, val);
                 }
+                
+                if (type == typeof(LightColor))
+                {
+                    var val = (LightColor)value;
+
+                    sizeYGUI += y;
+
+                    OpenTKUIHelper.DrawProperty(name, ref val);
+
+                    field.SetValue(this, val);
+                }
 
                 if (type == typeof(int))
                 {

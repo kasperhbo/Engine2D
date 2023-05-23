@@ -18,7 +18,7 @@ internal class TestFrameBuffer
         Init(width, height);
     }
 
-    public Texture Texture { get; private set; }
+    public Texture? Texture { get; private set; }
 
     public int GetTextureID => Texture.TexID;
 

@@ -5,11 +5,32 @@ using Newtonsoft.Json;
 
 namespace Engine2D.Components;
 
+public class LightColor
+{
+    public float R;
+    public float G;
+    public float B;
+
+    public LightColor()
+    {
+        this.R = 1;
+        this.G = 1;
+        this.B = 1;
+    }
+    
+    public LightColor(float r, float g, float b)
+    {
+        this.R = r;
+        this.G = g;
+        this.B = b;
+    }
+}
+
 [JsonConverter(typeof(ComponentSerializer))]
 public class PointLight : Component
 {
-    [ShowUI(show = false)] private SpriteColor _lastColor = new();
-    public SpriteColor Color = new();
+    
+    public LightColor Color = new();
     public float Intensity = 1;
 
     [JsonIgnore] public Transform LastTransform { get; } = new();
@@ -28,15 +49,11 @@ public class PointLight : Component
     {
         //Console.WriteLine(this.texture?.TexID);
         if (!LastTransform.Equals(Parent.transform)) Parent.transform.Copy(LastTransform);
-
-        if (!_lastColor.Color.Equals(Color.Color)) _lastColor = new SpriteColor(Color.Color);
     }
 
     public override void GameUpdate(double dt)
     {
         if (!LastTransform.Equals(Parent.transform)) Parent.transform.Copy(LastTransform);
-
-        if (!_lastColor.Color.Equals(Color.Color)) _lastColor = new SpriteColor(Color.Color);
     }
 
     public override string GetItemType()

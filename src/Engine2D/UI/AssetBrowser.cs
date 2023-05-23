@@ -21,9 +21,10 @@ public enum FileType
 
 internal class AssetBrowser : UIElemenet
 {
+    public DirectoryInfo CurrentDirectory { get; private set; } 
+    
     private static GCHandle? _currentlyDraggedHandle;
 
-    private DirectoryInfo _currentDirectory;
     private List<ImageTextIcon> _currentFiles = new();
 
     private List<ImageTextIcon> _currentFolders = new();
@@ -68,7 +69,7 @@ internal class AssetBrowser : UIElemenet
     {
         _currentFolders = new List<ImageTextIcon>();
         _currentFiles = new List<ImageTextIcon>();
-        _currentDirectory = new DirectoryInfo(newDir);
+        CurrentDirectory = new DirectoryInfo(newDir);
 
         GetDirectories();
         GetFiles();
@@ -76,7 +77,7 @@ internal class AssetBrowser : UIElemenet
 
     private void GetDirectories()
     {
-        var dirs = _currentDirectory.GetDirectories();
+        var dirs = CurrentDirectory.GetDirectories();
         foreach (var dir in dirs)
         {
             var icon = new ImageTextIcon(dir.Name, dirTexture, dirTexture, dirTexture, dir.FullName, FileType.Folder);
@@ -86,7 +87,7 @@ internal class AssetBrowser : UIElemenet
 
     private void GetFiles()
     {
-        var files = _currentDirectory.GetFiles();
+        var files = CurrentDirectory.GetFiles();
         foreach (var file in files)
         {
             ImageTextIcon icon = null;
@@ -118,11 +119,11 @@ internal class AssetBrowser : UIElemenet
         return () =>
         {
             var currentlyDragging = false;
-            if (_currentDirectory.FullName != ProjectSettings.s_FullProjectPath)
+            if (CurrentDirectory.FullName != ProjectSettings.s_FullProjectPath)
             {
                 ImGui.BeginMenuBar();
-                if (ImGui.MenuItem("Back")) SwitchDirectory(_currentDirectory.Parent.FullName);
-                ImGui.Text(_currentDirectory.FullName);
+                if (ImGui.MenuItem("Back")) SwitchDirectory(CurrentDirectory.Parent.FullName);
+                ImGui.Text(CurrentDirectory.FullName);
                 ImGui.EndMenuBar();
             }
 
@@ -174,4 +175,18 @@ internal class AssetBrowser : UIElemenet
             ImGui.Columns(1);
         };
     }
+
+    internal bool CurrentDirContainsFile(string fileName)
+    {
+        foreach (var file in _currentFiles)
+        {
+            if (file.Label == fileName)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
 }

@@ -80,7 +80,7 @@ public class LightMapRenderer
         _shader.use();
     }
 
-    public Texture Render()
+    public Texture? Render(TestCamera cam)
     {
         _lightMap.Bind();
 
@@ -91,7 +91,7 @@ public class LightMapRenderer
         //Draw a fullscreen quad
 
         _shader.use();
-        UploadUniforms();
+        UploadUniforms(cam);
         GL.BindVertexArray(_vertexArrayObject);
         GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
@@ -105,10 +105,10 @@ public class LightMapRenderer
         _lightMap = new TestFrameBuffer(Engine.Get().Size.X, Engine.Get().Size.Y);
     }
 
-    private void UploadUniforms()
+    private void UploadUniforms(TestCamera cam)
     {
-        _shader.uploadMat4f("uProjection", Engine.Get().testCamera.getProjectionMatrix());
-        _shader.uploadVec2f("uCameraOffset", Engine.Get().testCamera.getPosition());
+        _shader.uploadMat4f("uProjection", cam.getProjectionMatrix());
+        _shader.uploadVec2f("uCameraOffset", cam.getPosition());
 
         var lightsToRenderer = Renderer.GetPointLightsToRender();
 
@@ -121,7 +121,7 @@ public class LightMapRenderer
         {
             var light = lightsToRenderer[i];
             lightPositions[i] = new Vector2(light.LastTransform.position.X, light.LastTransform.position.Y);
-            lightColors[i] = new Vector3(light.Color.Color.X, light.Color.Color.Y, light.Color.Color.Z);
+            lightColors[i] = new Vector3(light.Color.R, light.Color.G, light.Color.B);
             lightIntensities[i] = light.Intensity;
         }
 
@@ -136,7 +136,7 @@ public class LightMapRenderer
         }
         else
         {
-            Log.Warning("No Global Light In Scene");
+            //Log.Warning("No Global Light In Scene");
             _shader.uploadFloat("uMinLighting", .6f);
         }
 

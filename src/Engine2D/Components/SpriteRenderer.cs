@@ -58,7 +58,6 @@ public class SpriteRenderer : Component
         base.Init(parent);
         if (textureData != null)
         {
-            Console.WriteLine("has texture data, loading texture...." + textureData.texturePath);
             texture = ResourceManager.GetTexture(textureData);
         }
 

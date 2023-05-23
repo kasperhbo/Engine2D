@@ -4,7 +4,7 @@ using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.Rendering;
 
-internal class OrthographicCamera : Gameobject
+public class OrthographicCamera : Gameobject
 {
     private readonly Vector3 _front = -Vector3.UnitZ;
     private readonly Vector3 _up = Vector3.UnitY;

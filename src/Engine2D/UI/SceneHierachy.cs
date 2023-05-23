@@ -83,7 +83,7 @@ internal class SceneHierachy : UIElemenet
                         };
 
                         var go = new Gameobject("Empty Sprite: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
-                            components, new Transform());
+                            new Transform(), components);
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
 
@@ -102,7 +102,7 @@ internal class SceneHierachy : UIElemenet
                         };
 
                         var go = new Gameobject("Mario: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
-                            components, new Transform());
+                            new Transform(), components);
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
 
@@ -115,7 +115,7 @@ internal class SceneHierachy : UIElemenet
                         };
 
                         var go = new Gameobject("Rigidbody: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
-                            components, new Transform());
+                            new Transform(), components);
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
 
@@ -131,7 +131,7 @@ internal class SceneHierachy : UIElemenet
                             };
                             var go = new Gameobject(
                                 "Point Light: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
-                                components, new Transform());
+                                new Transform(),components);
 
                             Engine.Get()._currentScene?.AddGameObjectToScene(go);
                         }
@@ -146,7 +146,7 @@ internal class SceneHierachy : UIElemenet
                             };
                             var go = new Gameobject(
                                 "GlobalLight: " + Engine.Get()._currentScene?.Gameobjects.Count + 1,
-                                components, new Transform());
+                                new Transform(), components);
 
                             Engine.Get()._currentScene?.AddGameObjectToScene(go);
                         }

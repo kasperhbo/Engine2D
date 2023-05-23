@@ -23,6 +23,14 @@ public class Gameobject : Asset
     public Gameobject()
     {
     }
+    
+    public Gameobject(string name)
+    {
+        Name = name;
+        transform = new Transform();
+        components = new List<Component>();
+    }
+
 
     public Gameobject(string name, Transform transform)
     {
@@ -32,7 +40,7 @@ public class Gameobject : Asset
     }
 
 
-    public Gameobject(string name, List<Component> components, Transform transform)
+    public Gameobject(string name, Transform transform, List<Component> components)
     {
         Name = name;
         this.transform = transform;

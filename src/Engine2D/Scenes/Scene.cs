@@ -28,7 +28,11 @@ internal class Scene
 
     public GlobalLight GlobalLight { get; set; } = null;
 
+    public TestCamera EditorCamera;
+    public TestCamera GameCamera = null;
 
+    private List<TestCamera> _cameras = new();
+    
     public bool IsPlaying
     {
         get => _isPlaying;
@@ -97,26 +101,61 @@ internal class Scene
         SaveLoad.LoadScene(ScenePath);
     }
 
-    internal virtual void Init(Engine engine, string scenePath, int width, int height)
+    internal virtual void Init(string scenePath)
     {
+        EditorCamera = new TestCamera();
+       
+        _cameras.Add(EditorCamera);
+        
         ScenePath = scenePath;
         Renderer.Init();
     }
 
+    internal virtual void CreateDefaultGameObjects()
+    {
+        //Create main camera
+        {
+            List<Component> components = new List<Component>
+            {
+                new TestCamera()
+            };
+        
+            Gameobject gameCamera = new Gameobject("Main Camera", new Transform(),components);
+            AddGameObjectToScene(gameCamera);
+        }
+        
+        //Create global light
+        {
+            GlobalLight globalLight = new GlobalLight();
+            
+            List<Component> defaultComponents =new List<Component> {
+                globalLight
+            };
+            
+            Gameobject go = new Gameobject("Global Light", new Transform(), defaultComponents);
+            AddGameObjectToScene(go);
+        }
+    }
+    
     internal virtual void EditorUpdate(double dt)
     {
-        if (TestInput.KeyDown(Keys.LeftControl))
-            if (TestInput.KeyPress(Keys.S))
-            {
-                if (IsPlaying) return;
-                SaveLoad.SaveScene(this);
-            }
-
-        if (TestInput.KeyDown(Keys.A)) Engine.Get().testCamera.position.X -= 100 * (float)dt;
-        if (TestInput.KeyDown(Keys.D)) Engine.Get().testCamera.position.X += 100 * (float)dt;
-        if (TestInput.KeyDown(Keys.W)) Engine.Get().testCamera.position.Y += 100 * (float)dt;
-        if (TestInput.KeyDown(Keys.S)) Engine.Get().testCamera.position.Y -= 100 * (float)dt;
-
+        if(TestInput.Focussed)
+        {
+            if (TestInput.KeyDown(Keys.LeftControl))
+                if (TestInput.KeyPress(Keys.S))
+                {
+                    if (IsPlaying) return;
+                    SaveLoad.SaveScene(this);
+                }
+        }
+        
+        if(TestInput.Focussed && !TestInput.KeyDown(Keys.LeftControl) && !_isPlaying){
+            if (TestInput.KeyDown(Keys.A)) EditorCamera.position.X -= 100 * (float)dt;
+            if (TestInput.KeyDown(Keys.D)) EditorCamera.position.X += 100 * (float)dt;
+            if (TestInput.KeyDown(Keys.W)) EditorCamera.position.Y += 100 * (float)dt;
+            if (TestInput.KeyDown(Keys.S)) EditorCamera.position.Y -= 100 * (float)dt;
+        }
+        
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
         if (IsPlaying) GameUpdate(dt);
     }
@@ -124,9 +163,21 @@ internal class Scene
     internal virtual void Render(double dt)
     {
     }
-
+    
+    // internal void AddGameObjectToScene(GameCamera go)
+    // {
+    //     GameCamera = go;
+    //     AddGameObjectToScene((Gameobject)go);
+    // }
+    //
     internal void AddGameObjectToScene(Gameobject go)
     {
+        if (go.GetComponent<TestCamera>() != null)
+        {
+            _cameras.Add(go.GetComponent<TestCamera>());
+            GameCamera = go.GetComponent<TestCamera>();
+        }
+        
         Gameobjects.Add(go);
         go.Init();
         go.Start();
@@ -143,6 +194,8 @@ internal class Scene
 
     internal void OnGui()
     {
+        EditorCamera.CameraSettingsGUI();
+        
         ImGui.Begin("Scene Settings");
 
 
@@ -155,6 +208,10 @@ internal class Scene
     {
         Renderer.OnResize(newSize);
         Engine.Get().ImGuiController.WindowResized(newSize.Size.X, newSize.Size.Y);
+        foreach (var cam in _cameras)
+        {
+            cam.adjustProjection();
+        }
     }
 
     internal virtual void OnMouseWheel(MouseWheelEventArgs mouseWheelEventArgs)

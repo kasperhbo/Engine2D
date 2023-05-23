@@ -26,6 +26,7 @@ internal class TestInput
 
     private static KeyboardState? keyboardState;
     private static MouseState? mouseState;
+    public static bool Focussed { get; set; } = true;
 
     public static void Init()
     {
@@ -128,7 +129,7 @@ internal class TestInput
         // vec.w must be 1! (Vector multiplication)
         var tmp = new Vector4(currentX, currentY, 0.0f, 1.0f);
 
-        var camera = Engine.Get().testCamera;
+        var camera = Engine.Get()._currentScene.EditorCamera;
         var viewProjection = new Matrix4();
 
         viewProjection = Matrix4.Mult(camera.getInverseViewMatrix(), camera.getInverseProjection());
