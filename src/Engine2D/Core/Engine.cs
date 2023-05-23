@@ -1,5 +1,4 @@
 ﻿using Engine2D.Core;
-using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
@@ -7,7 +6,6 @@ using Engine2D.Scenes;
 using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
-using KDBEngine.Shaders;
 using KDBEngine.UI;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -22,22 +20,28 @@ namespace KDBEngine.Core
     public class Engine : GameWindow
     {
         private static Engine _instance;
-        
+
         public static string DefaultTitle;
-        
-        internal Scene? _currentScene;
 
         private readonly Dictionary<string, UIElemenet> _guiWindows = new();
+
+        //TODO: MAKE THIS STATIC AND SAVABLE
+        private readonly EngineSettingsWindow engineSettingsWindow = new();
+
+        internal Scene? _currentScene;
+
+        private int _frameCounter;
         private TestContentBrowser cb;
 
         internal Asset? CurrentSelectedAsset;
 
-        //TODO: MAKE THIS STATIC AND SAVABLE
-        private readonly EngineSettingsWindow engineSettingsWindow = new();
-     
+        private bool first = true;
+
         internal ImGuiController ImGuiController;
+
         //TODO:MOVE TO SCENE
         internal TestCamera testCamera;
+
         //TODO:MOVE TO SCENE
         private TestViewportWindow viewportWindow;
 
@@ -60,7 +64,6 @@ namespace KDBEngine.Core
 
                 var window = new Engine(gameWindowSettings, ntwSettings);
                 _instance = window;
-                
             }
 
             return _instance;
@@ -104,43 +107,41 @@ namespace KDBEngine.Core
             {
                 LoadGameWithoutEngine();
                 _currentScene.IsPlaying = true;
-            };
-            DefaultTitle = Engine.Get().Title;
+            }
+
+            ;
+            DefaultTitle = Get().Title;
         }
 
-        private bool first = true;
-        
-        
+
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
-            
+
             //Input.Update(KeyboardState, MouseState);
             TestInput.mousePosCallback(MouseState, KeyboardState);
-            
+
             _currentScene?.EditorUpdate(args.Time);
-            
+
             TestInput.endFrame();
         }
-        
+
         private void LoadGameWithoutEngine()
         {
-            
         }
 
-        private int _frameCounter;
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-            
+
             var fps = 1.0f / e.Time;
             _frameCounter++;
             if (_frameCounter == 30)
             {
-                Title = DefaultTitle + " | FPS: " + Math.Round(fps,0);
+                Title = DefaultTitle + " | FPS: " + Math.Round(fps, 0);
                 _frameCounter = 0;
             }
-            
+
             if (Settings.s_IsEngine)
             {
                 if (TestViewportWindow.IsMouseInsideViewport() && TestInput.MousePressed(MouseButton.Left))
@@ -157,7 +158,7 @@ namespace KDBEngine.Core
 
                 //Render the game
                 Renderer.Render();
-                
+
                 //ImGui
                 {
                     ImGuiController.Update(this, e.Time);
@@ -208,7 +209,7 @@ namespace KDBEngine.Core
                 SwapBuffers();
                 return;
             }
-           
+
             SwapBuffers();
         }
 
@@ -282,7 +283,7 @@ namespace KDBEngine.Core
 
             var hierarch = new SceneHierachy();
             _guiWindows.Add(hierarch.Title, hierarch);
-            
+
             var renderDebug = new RenderDebugUI();
             _guiWindows.Add(renderDebug.Title, renderDebug);
 

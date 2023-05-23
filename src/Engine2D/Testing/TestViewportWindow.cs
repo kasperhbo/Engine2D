@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 using System.Runtime.InteropServices;
 using Engine2D.Core;
-using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using ImGuiNET;
 using KDBEngine.Core;
@@ -14,8 +13,8 @@ internal class TestViewportWindow
     public static Vector2 ViewportSize;
 
     private TestFrameBuffer frameBufferToRenderer = null;
-    
-    
+
+
     public void OnGui()
     {
         ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
@@ -46,15 +45,14 @@ internal class TestViewportWindow
 
 
         // var textureId = GameRenderer.FrameBufferToRenderer();
-        if(Renderer.GameBuffer != null)
-            ImGui.Image((IntPtr)Renderer.GameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+        if (Renderer.GameBuffer != null)
+            ImGui.Image((IntPtr)Renderer.GameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y),
+                new Vector2(0, 1), new Vector2(1, 0));
         else
-        {
             //TODO: MAKE ERROR TEXTUYRE
             ImGui.Image((IntPtr)0, new Vector2(windowSize.X, windowSize.Y),
                 new Vector2(0, 1), new Vector2(1, 0));
-        }
-        
+
         if (ImGui.BeginDragDropTarget())
         {
             var payload = ImGui.AcceptDragDropPayload("Scene_Drop");
@@ -67,7 +65,7 @@ internal class TestViewportWindow
 
             ImGui.EndDragDropTarget();
         }
-        
+
         TestInput.setViewportPos(new OpenTK.Mathematics.Vector2(topLeft.X, topLeft.Y));
         TestInput.setViewportSize(new OpenTK.Mathematics.Vector2(windowSize.X, windowSize.Y));
 

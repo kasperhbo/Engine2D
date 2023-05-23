@@ -67,11 +67,11 @@ internal class TestInput
         lastWorldY = worldY; // Useless since endFrame() ??
 
         pos = new Vector2(mouseState.Position.X, mouseState.Position.Y);
-        
+
         // float currentY = getY();
         //
         // Console.WriteLine();
-        
+
         xPos = mouseState.Position.X; // Delete
         yPos = mouseState.Position.Y; // Delete
 

@@ -215,18 +215,16 @@ public class Gameobject : Asset
     public T GetComponent<T>() where T : Component
     {
         foreach (var component in components)
-        {
-            if (typeof(T) == component.GetType()) return 
-                (component as T)!;
-        }
+            if (typeof(T) == component.GetType())
+                return
+                    (component as T)!;
 
         return null;
     }
-    
+
 
     private void RemoveComponents(Component comp)
     {
         components.Remove(comp);
     }
-
 }

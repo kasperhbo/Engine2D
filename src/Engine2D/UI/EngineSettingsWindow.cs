@@ -6,16 +6,14 @@ namespace Engine2D.UI;
 
 internal class EngineSettingsWindow : UIElemenet
 {
-    private bool showRestartBar;
     private UIElemenet _uiElemenetImplementation;
+    private bool showRestartBar;
 
     internal EngineSettingsWindow()
     {
         _flags = ImGuiWindowFlags.None;
-        
-        SetVisibility(false);
 
- 
+        SetVisibility(false);
     }
 
     protected override string SetWindowTitle()

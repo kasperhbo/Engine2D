@@ -19,6 +19,8 @@ public class ImGuiController
 {
     private static bool KHRDebugAvailable;
 
+    private readonly Vector2 _scaleFactor = Vector2.One;
+
     private readonly List<char> PressedChars = new();
 
     //private Texture _fontTexture;
@@ -26,8 +28,6 @@ public class ImGuiController
     private bool _frameBegun;
     private int _indexBuffer;
     private int _indexBufferSize;
-
-    private readonly Vector2 _scaleFactor = Vector2.One;
 
     private int _shader;
     private int _shaderFontTextureLocation;

@@ -5,7 +5,6 @@ namespace Engine2D.Rendering;
 public class FrameBuffer
 {
     private readonly int _fboID;
-    public Texture Texture { get; private set; }
 
     internal FrameBuffer(int width, int height)
     {
@@ -29,6 +28,8 @@ public class FrameBuffer
 
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
+
+    public Texture Texture { get; }
 
     public int TextureID => Texture.TexID;
 

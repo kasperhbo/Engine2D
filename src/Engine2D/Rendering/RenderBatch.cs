@@ -1,29 +1,46 @@
-﻿using System.Net.Mime;
-using System.Threading.Channels;
-using Engine2D.Components;
+﻿using System.Numerics;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Testing;
-using KDBEngine.Core;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.GraphicsLibraryFramework;
+using TextureUnit = OpenTK.Graphics.OpenGL4.TextureUnit;
+using Vector4 = OpenTK.Mathematics.Vector4;
 
 namespace Engine2D.Rendering;
 
-/// <summary>
-///     Old code that I got from following GAMES WITH GABE'S How to create a game engine in Java Series!
-///     Thanks Gabe, your code is now my property;)
-/// </summary>
-internal class RenderBatch: IComparable<RenderBatch>
+internal class RenderBatch : IComparable<RenderBatch>
 {
+    private const int c_maxBatchSize = 20000;
+
+    private const int c_posSize = 2;
+    private const int c_colorSize = 4;
+    private const int c_texCoordSize = 2;
+    private const int c_texIdSize = 1;
+
+    private const int c_posOffset = 0;
+    private const int c_colorOffset = c_posOffset + c_posSize * sizeof(float);
+    private const int c_texCoordOffset = c_colorOffset + c_colorSize * sizeof(float);
+    private const int c_texIdOffset = c_texCoordOffset + c_texCoordSize * sizeof(float);
+
+    private const int c_vertexSize = 9;
+    private const int c_vertexSizeInBytes = c_vertexSize * sizeof(float);
+    private readonly Shader _shader;
+
+    private readonly SpriteRenderer[] _sprites = new SpriteRenderer[c_maxBatchSize];
+
+    private readonly Texture[] _textures = new Texture[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
+    private readonly int[] _textureUnits = new int[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
+    private readonly float[] _vertices = new float[c_maxBatchSize * c_vertexSize];
+
+    private int _vaoId, _vboId;
+    public int ZIndex;
+
     internal RenderBatch(int zIndex)
     {
-        this.ZIndex = zIndex;
-        _textureUnits = new int[7];
-        _textures = new Texture[7];
-        
+        ZIndex = zIndex;
+
         for (var i = 0; i < _textureUnits.Length; i++) _textureUnits[i] = i;
 
         var dat = new ShaderData();
@@ -31,18 +48,33 @@ internal class RenderBatch: IComparable<RenderBatch>
         dat.FragPath = Utils.GetBaseEngineDir() + "/Shaders/default.frag";
 
         _shader = ResourceManager.GetShader(dat);
-        sprites = new SpriteRenderer[c_MaxBatchSize];
+        _sprites = new SpriteRenderer[c_maxBatchSize];
 
-        _vertices = new float[c_MaxBatchSize * c_VertexSize * 4];
+        _vertices = new float[c_maxBatchSize * c_vertexSize * 4];
+    }
+
+    public bool HasRoom => _spriteCount < c_maxBatchSize;
+    private int _spriteCount { get; set; }
+
+
+    public int CompareTo(RenderBatch? other)
+    {
+        if (ZIndex < other.ZIndex)
+            return -1;
+
+        if (ZIndex == other.ZIndex)
+            return 0;
+
+        return 1;
     }
 
     internal void Init()
     {
-        _vaoID = GL.GenVertexArray();
-        GL.BindVertexArray(_vaoID);
+        _vaoId = GL.GenVertexArray();
+        GL.BindVertexArray(_vaoId);
 
-        _vboID = GL.GenBuffer();
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _vboID);
+        _vboId = GL.GenBuffer();
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _vboId);
         GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices,
             BufferUsageHint.DynamicDraw);
 
@@ -53,95 +85,87 @@ internal class RenderBatch: IComparable<RenderBatch>
             BufferUsageHint.StaticDraw);
 
         // Enable the buffer attribute pointers
-        GL.VertexAttribPointer(0, c_PosSize, VertexAttribPointerType.Float, false, c_VertexSizeInBytes, c_PosOffset);
+        GL.VertexAttribPointer(0, c_posSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes, c_posOffset);
         GL.EnableVertexAttribArray(0);
 
-        GL.VertexAttribPointer(1, c_ColorSize, VertexAttribPointerType.Float, false, c_VertexSizeInBytes,
-            c_ColorOffset);
+        GL.VertexAttribPointer(1, c_colorSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes,
+            c_colorOffset);
         GL.EnableVertexAttribArray(1);
 
-        GL.VertexAttribPointer(2, c_TexCoordSize, VertexAttribPointerType.Float, false, c_VertexSizeInBytes,
-            c_TexCoordOffset);
+        GL.VertexAttribPointer(2, c_texCoordSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes,
+            c_texCoordOffset);
         GL.EnableVertexAttribArray(2);
 
-        GL.VertexAttribPointer(3, c_TexIDSize, VertexAttribPointerType.Float, false, c_VertexSizeInBytes,
-            c_TexIDOffset);
+        GL.VertexAttribPointer(3, c_texIdSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes,
+            c_texIdOffset);
         GL.EnableVertexAttribArray(3);
     }
 
     public void AddSprite(SpriteRenderer spr)
     {
-        var index = SpriteCount;
-        sprites[index] = spr;
-        SpriteCount++;
+        var index = _spriteCount;
+        _sprites[index] = spr;
+        _spriteCount++;
 
         if (spr.texture != null)
             if (!_textures.Contains(spr.texture))
-            {
-                for (int i = 0; i < _textures.Length; i++)
-                {
+                for (var i = 0; i < _textures.Length; i++)
                     if (_textures[i] == null)
                     {
                         _textures[i] = spr.texture;
                         break;
                     }
-                }
-            }
 
         LoadVertexProperties(index);
     }
-    
-    public void Render(TestCamera camera)
+
+    public void Render(TestCamera camera, Texture lightmapTexture)
     {
-        Matrix4 projectionMatrix = camera.getProjectionMatrix();
-        Matrix4 viewMatrix = camera.getViewMatrix();
-        
+        var projectionMatrix = camera.getProjectionMatrix();
+        var viewMatrix = camera.getViewMatrix();
+
         // For now, we will rebuffer all data every frame
         var rebufferData = false;
 
-        for (var i = 0; i < SpriteCount; i++)
-            if (sprites[i].IsDirty)
+        for (var i = 0; i < _spriteCount; i++)
+            if (_sprites[i].IsDirty)
             {
-                sprites[i].IsDirty = false;
+                _sprites[i].IsDirty = false;
                 LoadVertexProperties(i);
                 rebufferData = true;
             }
 
         if (rebufferData)
         {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vboID);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vboId);
             GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, _vertices.Length * sizeof(float), _vertices);
         }
-        
+
         _shader.use();
         _shader.uploadMat4f("uProjection", projectionMatrix);
         _shader.uploadMat4f("uView", viewMatrix);
-        _shader.uploadInt("uLightmap", 10);
-        
+        lightmapTexture.Use(TextureUnit.Texture0 + (int)ShaderDefaultSlots.LIGHTMAPTEXTURESLOT);
+        _shader.uploadInt("uLightmap", (int)ShaderDefaultSlots.LIGHTMAPTEXTURESLOT);
+
         //TEXTURES
         for (var i = 0; i < _textures.Length; i++)
-        {
-            if(_textures[i] != null){
-                GL.ActiveTexture(TextureUnit.Texture0 + i + 1);
-                _textures[i].bind();
-            }
-        }
-        
-        _shader.UploadIntArray("uTextures", _textureUnits);
-
-        GL.BindVertexArray(_vaoID);
-        GL.EnableVertexAttribArray(0);
-        GL.EnableVertexAttribArray(1);
-        
-        GL.DrawElements(PrimitiveType.Triangles, SpriteCount * 6, DrawElementsType.UnsignedInt, 0);
-
-        for (var i = 0; i < _textures.Length; i++)
-        {
             if (_textures[i] != null)
             {
-                _textures[i].unbind();
+                GL.ActiveTexture(OpenTK.Graphics.OpenGL.TextureUnit.Texture0 + i + 1);
+                _textures[i].bind();
             }
-        }
+
+        _shader.UploadIntArray("uTextures", _textureUnits);
+
+        GL.BindVertexArray(_vaoId);
+        GL.EnableVertexAttribArray(0);
+        GL.EnableVertexAttribArray(1);
+
+        GL.DrawElements(PrimitiveType.Triangles, _spriteCount * 6, DrawElementsType.UnsignedInt, 0);
+
+        for (var i = 0; i < _textures.Length; i++)
+            if (_textures[i] != null)
+                _textures[i].unbind();
 
         GL.DisableVertexAttribArray(0);
         GL.DisableVertexAttribArray(1);
@@ -153,10 +177,10 @@ internal class RenderBatch: IComparable<RenderBatch>
 
     private void LoadVertexProperties(int index)
     {
-        var sprite = sprites[index];
+        var sprite = _sprites[index];
 
         // Find offset within array (4 vertices per sprite)
-        var offset = index * 4 * c_VertexSize;
+        var offset = index * 4 * c_vertexSize;
 
         Vector4 color = new(sprite.Color.Color.X, sprite.Color.Color.Y, sprite.Color.Color.Z, sprite.Color.Color.W);
 
@@ -177,20 +201,20 @@ internal class RenderBatch: IComparable<RenderBatch>
         var xAdd = 0.5f;
         var yAdd = 0.5f;
 
-        Transform transform = sprite.Parent.transform;
+        var transform = sprite.Parent.transform;
 
-        System.Numerics.Matrix4x4 t = System.Numerics.Matrix4x4.Identity;
-        t =     System.Numerics.Matrix4x4.CreateTranslation(transform.position.X, transform.position.Y,0);
-        t = t * System.Numerics.Matrix4x4.CreateRotationZ(-MathHelper.DegreesToRadians(transform.rotation));
-        
-        t.M41 = transform.position.X; 
+        var t = Matrix4x4.Identity;
+        t = Matrix4x4.CreateTranslation(transform.position.X, transform.position.Y, 0);
+        t = t * Matrix4x4.CreateRotationZ(-MathHelper.DegreesToRadians(transform.rotation));
+
+        t.M41 = transform.position.X;
         t.M42 = transform.position.Y;
-            
+
         var m11 = t.M11 * transform.size.X;
         var m12 = t.M12 * transform.size.X;
         var m13 = t.M13 * transform.size.X;
         var m14 = t.M14 * transform.size.X;
-            
+
         var m21 = t.M21 * transform.size.Y;
         var m22 = t.M22 * transform.size.Y;
         var m23 = t.M23 * transform.size.Y;
@@ -200,20 +224,20 @@ internal class RenderBatch: IComparable<RenderBatch>
         var m32 = t.M32 * 1;
         var m33 = t.M33 * 1;
         var m34 = t.M34 * 1;
-            
+
         var m41 = t.M41;
         var m42 = t.M42;
         var m43 = t.M43;
         var m44 = t.M44;
-                              
-            
-        t = new System.Numerics.Matrix4x4(
-            m11,m12,m13,m14,
-            m21,m22,m23,m24,
-            m31,m32,m33,m34,
-            m41,m42,m43,m44
+
+
+        t = new Matrix4x4(
+            m11, m12, m13, m14,
+            m21, m22, m23, m24,
+            m31, m32, m33, m34,
+            m41, m42, m43, m44
         );
-        
+
         for (var i = 0; i < 4; i++)
         {
             if (i == 1)
@@ -222,19 +246,14 @@ internal class RenderBatch: IComparable<RenderBatch>
                 xAdd = -0.5f;
             else if (i == 3) yAdd = 0.5f;
 
-            Vector4 currentPos = new Vector4(
+            var currentPos = new Vector4(
                 transform.position.X +
-                (xAdd * transform.size.X),
-                    
+                xAdd * transform.size.X,
                 transform.position.Y +
-                (yAdd * transform.size.Y),
-                    
+                yAdd * transform.size.Y,
                 0, 1);
 
-            if (transform.rotation != 0)
-            {
-                currentPos = MathUtils.Multiply(t, new(xAdd, yAdd, 0, 0));
-            }
+            if (transform.rotation != 0) currentPos = MathUtils.Multiply(t, new Vector4(xAdd, yAdd, 0, 0));
             // Load position
             _vertices[offset] = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
@@ -252,16 +271,16 @@ internal class RenderBatch: IComparable<RenderBatch>
             //Load tex id
             _vertices[offset + 8] = texID;
 
-            offset += c_VertexSize;
+            offset += c_vertexSize;
         }
     }
 
     private int[] GenerateIndices()
     {
         // 6 indices per quad (3 per triangle)
-        var elements = new int[6 * c_MaxBatchSize];
+        var elements = new int[6 * c_maxBatchSize];
 
-        for (var i = 0; i < c_MaxBatchSize; i++) loadElementIndices(elements, i);
+        for (var i = 0; i < c_maxBatchSize; i++) loadElementIndices(elements, i);
 
         return elements;
     }
@@ -286,62 +305,16 @@ internal class RenderBatch: IComparable<RenderBatch>
 
     public void RemoveSprite(SpriteRenderer spr)
     {
-        for (var i = 0; i < SpriteCount; i++)
-            if (sprites[i] == spr)
+        for (var i = 0; i < _spriteCount; i++)
+            if (_sprites[i] == spr)
             {
-                for (var j = i; j < SpriteCount - 1; j++)
+                for (var j = i; j < _spriteCount - 1; j++)
                 {
-                    sprites[j] = sprites[j + 1];
-                    sprites[j].IsDirty = true;
+                    _sprites[j] = _sprites[j + 1];
+                    _sprites[j].IsDirty = true;
                 }
 
-                SpriteCount--;
+                _spriteCount--;
             }
-    }
-
-    #region fields
-
-    private const int c_MaxBatchSize = 20000;
-
-
-    private const int c_PosSize = 2;
-    private const int c_ColorSize = 4;
-    private const int c_TexCoordSize = 2;
-    private const int c_TexIDSize = 1;
-
-    private const int c_PosOffset = 0;
-    private const int c_ColorOffset = c_PosOffset + c_PosSize * sizeof(float);
-    private const int c_TexCoordOffset = c_ColorOffset + c_ColorSize * sizeof(float);
-    private const int c_TexIDOffset = c_TexCoordOffset + c_TexCoordSize * sizeof(float);
-
-    private const int c_VertexSize = 9;
-    private const int c_VertexSizeInBytes = c_VertexSize * sizeof(float);
-
-    private readonly SpriteRenderer[] sprites;
-    public int SpriteCount { get; private set; }
-    public bool HasRoom => SpriteCount < c_MaxBatchSize;
-
-    private readonly float[] _vertices = new float[c_MaxBatchSize * c_VertexSize];
-
-    private int _vaoID, _vboID;
-
-    private readonly Shader _shader;
-
-    private readonly Texture[] _textures;
-    private readonly int[] _textureUnits;
-
-    public int ZIndex = 0;
-
-    #endregion
-
-    public int CompareTo(RenderBatch? other)
-    {
-        if (this.ZIndex < other.ZIndex)
-            return -1;
-            
-        if (this.ZIndex == other.ZIndex)
-            return 0;
-            
-        return 1;
     }
 }

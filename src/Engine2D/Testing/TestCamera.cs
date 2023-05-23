@@ -7,6 +7,8 @@ namespace Engine2D.Testing;
 
 public class TestCamera
 {
+    private readonly Vector2 projectionSize = new(Engine.Get().getWidth(), Engine.Get().getHeight());
+
     // The inverse projection matrix
     private Matrix4 inverseProjectionMatrix;
 
@@ -18,7 +20,6 @@ public class TestCamera
 
     // Projection matrix say how big the screen is going to be.
     private Matrix4 projectionMatrix;
-    private readonly Vector2 projectionSize = new(Engine.Get().getWidth(), Engine.Get().getHeight());
 
     // View Matrix says where the camera is in relation to our world.
     private Matrix4 viewMatrix;

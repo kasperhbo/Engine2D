@@ -50,8 +50,8 @@ internal class SceneHierachy : UIElemenet
                 {
                     if (ImGui.MenuItem("New Child"))
                     {
-                        
                     }
+
                     ImGui.EndPopup();
                 }
 
@@ -69,7 +69,7 @@ internal class SceneHierachy : UIElemenet
                 {
                     if (ImGui.MenuItem("New GameObject"))
                     {
-                        var go = new Gameobject(("Gameobject: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                        var go = new Gameobject(("Gameobject: " + Engine.Get()._currentScene?.Gameobjects.Count + 1),
                             new Transform());
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
@@ -82,11 +82,11 @@ internal class SceneHierachy : UIElemenet
                             spriteRenderer
                         };
 
-                        var go = new Gameobject(("Empty Sprite: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                        var go = new Gameobject(("Empty Sprite: " + Engine.Get()._currentScene?.Gameobjects.Count + 1),
                             components, new Transform());
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
-                    
+
                     if (ImGui.MenuItem("New Mario"))
                     {
                         var spriteRenderer = new SpriteRenderer();
@@ -101,11 +101,11 @@ internal class SceneHierachy : UIElemenet
                             spriteRenderer
                         };
 
-                        var go = new Gameobject(("Mario: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                        var go = new Gameobject(("Mario: " + Engine.Get()._currentScene?.Gameobjects.Count + 1),
                             components, new Transform());
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
-                    
+
                     if (ImGui.MenuItem("New RB"))
                     {
                         var components = new List<Component>
@@ -114,7 +114,7 @@ internal class SceneHierachy : UIElemenet
                             new RigidBody(BodyType.DynamicBody)
                         };
 
-                        var go = new Gameobject(("Rigidbody: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                        var go = new Gameobject(("Rigidbody: " + Engine.Get()._currentScene?.Gameobjects.Count + 1),
                             components, new Transform());
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }
@@ -129,11 +129,13 @@ internal class SceneHierachy : UIElemenet
                             {
                                 pl
                             };
-                            var go = new Gameobject(("Point Light: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                            var go = new Gameobject(
+                                ("Point Light: " + Engine.Get()._currentScene?.Gameobjects.Count + 1),
                                 components, new Transform());
-        
+
                             Engine.Get()._currentScene?.AddGameObjectToScene(go);
                         }
+
                         if (ImGui.MenuItem("New Global Light"))
                         {
                             var comp = new GlobalLight();
@@ -142,16 +144,21 @@ internal class SceneHierachy : UIElemenet
                             {
                                 comp
                             };
-                            var go = new Gameobject(("GlobalLight: " + Engine.Get()._currentScene?.Gameobjects.Count + 1).ToString(),
+                            var go = new Gameobject(
+                                ("GlobalLight: " + Engine.Get()._currentScene?.Gameobjects.Count + 1),
                                 components, new Transform());
-        
+
                             Engine.Get()._currentScene?.AddGameObjectToScene(go);
                         }
+
                         ImGui.EndMenu();
-                    };
-                    
+                    }
+
+                    ;
+
                     ImGui.EndPopup();
                 }
+
                 ImGui.EndChild();
             }
         };

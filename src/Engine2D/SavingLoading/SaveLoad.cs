@@ -39,7 +39,7 @@ internal static class SaveLoad
         var sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
         //So we can see where the go array stops when we deserialize the file
         sceneData += "\n////GAMEOBJECTS////\n";
-        
+
         if (File.Exists(scene.ScenePath))
         {
             File.WriteAllText(scene.ScenePath, sceneData);

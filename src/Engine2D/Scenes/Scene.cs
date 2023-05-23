@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Numerics;
+﻿using System.Numerics;
 using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Components;
@@ -7,14 +6,12 @@ using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.Testing;
-using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Engine2D.Scenes;
-
 
 internal class Scene
 {
@@ -30,8 +27,8 @@ internal class Scene
     internal List<Gameobject> Gameobjects { get; } = new();
 
     public GlobalLight GlobalLight { get; set; } = null;
-    
-    
+
+
     public bool IsPlaying
     {
         get => _isPlaying;
@@ -54,7 +51,7 @@ internal class Scene
     private void StartPlay()
     {
         SaveLoad.SaveScene(this);
-        
+
         physicsWorld = new World(new Vector2(0, -9.8f));
         foreach (var gameobject in Gameobjects)
         foreach (var item in gameobject.components)
@@ -68,7 +65,7 @@ internal class Scene
                 var body = physicsWorld.CreateBody(bodyDef);
                 body.IsFixedRotation = rb.FixedRotation;
 
-                rb.runtimeBody = body;
+                rb.RuntimeBody = body;
 
 
                 var shape = new PolygonShape();
@@ -97,7 +94,7 @@ internal class Scene
 
     private void StopPlay()
     {
-        SaveLoad.LoadScene(this.ScenePath);
+        SaveLoad.LoadScene(ScenePath);
     }
 
     internal virtual void Init(Engine engine, string scenePath, int width, int height)
@@ -115,30 +112,17 @@ internal class Scene
                 SaveLoad.SaveScene(this);
             }
 
-        if (TestInput.KeyDown(Keys.A))
-        {
-            Engine.Get().testCamera.position.X -= 100 * (float)dt;
-        }
-        if (TestInput.KeyDown(Keys.D))
-        {
-            Engine.Get().testCamera.position.X += 100 * (float)dt;
-        }
-        if (TestInput.KeyDown(Keys.W))
-        {
-            Engine.Get().testCamera.position.Y += 100 * (float)dt;
-        }
-        if (TestInput.KeyDown(Keys.S))
-        {
-            Engine.Get().testCamera.position.Y -= 100 * (float)dt;
-        }
-        
+        if (TestInput.KeyDown(Keys.A)) Engine.Get().testCamera.position.X -= 100 * (float)dt;
+        if (TestInput.KeyDown(Keys.D)) Engine.Get().testCamera.position.X += 100 * (float)dt;
+        if (TestInput.KeyDown(Keys.W)) Engine.Get().testCamera.position.Y += 100 * (float)dt;
+        if (TestInput.KeyDown(Keys.S)) Engine.Get().testCamera.position.Y -= 100 * (float)dt;
+
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
         if (IsPlaying) GameUpdate(dt);
     }
 
     internal virtual void Render(double dt)
     {
-        
     }
 
     internal void AddGameObjectToScene(Gameobject go)
@@ -151,9 +135,9 @@ internal class Scene
 
     internal virtual void OnClose()
     {
-        if(EngineSettings.SaveOnClose)
+        if (EngineSettings.SaveOnClose)
             SaveLoad.SaveScene(this);
-        
+
         Renderer.OnClose();
     }
 

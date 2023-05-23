@@ -41,7 +41,7 @@ internal static class OpenTKUIHelper
         if (ImGui.DragFloat2("##" + name, ref property)) changed = true;
         return changed;
     }
-    
+
     public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector2 property)
     {
         var changed = false;
@@ -50,7 +50,7 @@ internal static class OpenTKUIHelper
         ImGui.TableNextColumn();
         Vector2 data = new(property.X, property.Y);
         if (ImGui.DragFloat2("##" + name, ref data)) changed = true;
-        property = new(data.X, data.Y);
+        property = new OpenTK.Mathematics.Vector2(data.X, data.Y);
         return changed;
     }
 
@@ -184,8 +184,7 @@ internal static class OpenTKUIHelper
     {
         var result = rect;
 
-        
-        
+
         result.X -= x;
         result.Y -= y;
 
@@ -202,7 +201,7 @@ internal static class OpenTKUIHelper
         ImGui.TableNextColumn();
         ImGui.Text(name);
         ImGui.TableNextColumn();
-        System.Numerics.Vector2 copy = new(property.X, property.Y);
+        Vector2 copy = new(property.X, property.Y);
 
         if (ImGui.DragFloat2("##" + name, ref copy, 0.1f)) changed = true;
 
@@ -218,15 +217,16 @@ internal class ImageTextIcon
 
     private readonly string _label;
     private readonly IntPtr _texture;
-    private IntPtr _textureActive;
     private readonly IntPtr _textureHovered;
-
-    public bool IsSelected = false;
     private GCHandle? _currentlyDraggedHandle;
     private bool _currentlyDragging;
-    private FileType _type;
+    private IntPtr _textureActive;
+    private readonly FileType _type;
 
-    public ImageTextIcon(string label, IntPtr texture, IntPtr textureHovered, IntPtr textureActive, string path, FileType type)
+    public bool IsSelected = false;
+
+    public ImageTextIcon(string label, IntPtr texture, IntPtr textureHovered, IntPtr textureActive, string path,
+        FileType type)
     {
         _label = label;
         _texture = texture;
@@ -256,7 +256,8 @@ internal class ImageTextIcon
         else
             ImGui.PushStyleColor(ImGuiCol.ChildBg, new System.Numerics.Vector4(1f, .19f, .19f, 1));
 
-        ImGui.BeginChild("##transform_c", new Vector2(thumbnailSize + 32, thumbnailSize + 32), false, ImGuiWindowFlags.NoScrollbar); // Leave ~100
+        ImGui.BeginChild("##transform_c", new Vector2(thumbnailSize + 32, thumbnailSize + 32), false,
+            ImGuiWindowFlags.NoScrollbar); // Leave ~100
         ImGui.PopStyleColor();
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
 
@@ -268,7 +269,7 @@ internal class ImageTextIcon
         Vector2 thumbBottomRight = new(topLeft.X + thumbnailSize - 14, topLeft.Y + thumbnailSize - 14);
         Vector2 infoTopLeft = new(topLeft.X - 16, topLeft.Y + thumbnailSize - 14);
         Vector2 bottomRight = new(topLeft.X - 14 + thumbnailSize, topLeft.Y + thumbnailSize + infoPanelHeight);
-        
+
 
         var isFocused = ImGui.IsWindowFocused();
 
@@ -293,8 +294,8 @@ internal class ImageTextIcon
                 -6
             )
         );
-        
-        if(_type == FileType.Scene){
+
+        if (_type == FileType.Scene)
             if (ImGui.BeginDragDropSource())
             {
                 _currentlyDragging = true;
@@ -305,15 +306,13 @@ internal class ImageTextIcon
 
                 ImGui.EndDragDropSource();
             }
-        }
-        
+
         if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             if (ImGui.IsItemHovered())
                 doubleClick = true;
         if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
             if (ImGui.IsItemHovered())
                 singleClick = true;
-
 
 
         //UI::RectExpanded(UI::GetItemRect(), -6.0f, -6.0f));
@@ -331,13 +330,11 @@ internal class ImageTextIcon
             {
                 Console.WriteLine(Path);
                 var proc = Process.Start("explorer.exe", "/select, " + Path);
-                
             }
+
             if (ImGui.MenuItem("Delete"))
-            {
                 //TODO: MAKE SURE WINDOW
                 throw new NotImplementedException();
-            }
             ImGui.EndPopup();
         }
 
@@ -345,10 +342,10 @@ internal class ImageTextIcon
         // End of the Item Group
         //======================
         ImGui.PopStyleVar(); // ItemSpacing
-        
+
         ImGui.EndChild();
-        
-        
+
+
 //        if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
         //     if (ImGui.IsItemHovered())
         //         doubleClick = true;

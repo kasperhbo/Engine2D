@@ -8,10 +8,6 @@ internal class Inspector : UIElemenet
 {
     //internal Gameobject CurrentSelectedGameObject;
 
-    internal Inspector()
-    {
-    }
-
     protected override string SetWindowTitle()
     {
         return "Inspector";

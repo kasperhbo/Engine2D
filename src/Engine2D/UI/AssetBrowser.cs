@@ -21,13 +21,14 @@ public enum FileType
 
 internal class AssetBrowser : UIElemenet
 {
-    public static float ThumbnailSize { get; } = 128;
-    public static bool DisplayAssetType { get; } = true;
+    private static GCHandle? _currentlyDraggedHandle;
 
     private DirectoryInfo _currentDirectory;
+    private List<ImageTextIcon> _currentFiles = new();
 
     private List<ImageTextIcon> _currentFolders = new();
-    private List<ImageTextIcon> _currentFiles = new();
+
+    private bool _currentlyDragging;
     private ImageTextIcon currentSelected;
     private IntPtr dirTexture;
     private IntPtr fileTexture;
@@ -38,7 +39,6 @@ internal class AssetBrowser : UIElemenet
     private TextureData texDataFile;
 
     private TextureData texDataScene;
-    
 
 
     internal AssetBrowser()
@@ -46,6 +46,9 @@ internal class AssetBrowser : UIElemenet
         LoadIcons();
         SwitchDirectory(ProjectSettings.s_FullProjectPath);
     }
+
+    public static float ThumbnailSize { get; } = 128;
+    public static bool DisplayAssetType { get; } = true;
 
     private void LoadIcons()
     {
@@ -60,11 +63,11 @@ internal class AssetBrowser : UIElemenet
         fileTexture = (IntPtr)ResourceManager.GetTexture(texDataFile).TexID;
         sceneTexture = (IntPtr)ResourceManager.GetTexture(texDataScene).TexID;
     }
-    
+
     private void SwitchDirectory(string newDir)
     {
         _currentFolders = new List<ImageTextIcon>();
-        _currentFiles = new();
+        _currentFiles = new List<ImageTextIcon>();
         _currentDirectory = new DirectoryInfo(newDir);
 
         GetDirectories();
@@ -81,27 +84,23 @@ internal class AssetBrowser : UIElemenet
         }
     }
 
-    private bool _currentlyDragging;
-    private static GCHandle? _currentlyDraggedHandle;
-    private unsafe void GetFiles()
+    private void GetFiles()
     {
         var files = _currentDirectory.GetFiles();
         foreach (var file in files)
         {
             ImageTextIcon icon = null;
-            if(file.Extension == ".cs" || file.Extension == ".csproj")
-                icon = new ImageTextIcon(file.Name, fileTexture, fileTexture, fileTexture, file.FullName, FileType.Script);
+            if (file.Extension == ".cs" || file.Extension == ".csproj")
+                icon = new ImageTextIcon(file.Name, fileTexture, fileTexture, fileTexture, file.FullName,
+                    FileType.Script);
             if (file.Extension == ".kdbscene")
-            {
-                icon = new ImageTextIcon(file.Name, sceneTexture, sceneTexture, sceneTexture, file.FullName, FileType.Scene);
-                
-            }
+                icon = new ImageTextIcon(file.Name, sceneTexture, sceneTexture, sceneTexture, file.FullName,
+                    FileType.Scene);
 
-            if(icon != null)
+            if (icon != null)
                 _currentFiles.Add(icon);
         }
     }
-
 
 
     protected override string SetWindowTitle()
@@ -147,7 +146,7 @@ internal class AssetBrowser : UIElemenet
                 folder.Draw(out var doublec, out var single, out var rightClick);
                 if (doublec) SwitchDirectory(folder.Path);
                 if (single) currentSelected = folder;
-                
+
 
                 ImGui.NextColumn();
             }
@@ -159,7 +158,6 @@ internal class AssetBrowser : UIElemenet
                 file.Draw(out var doublec, out var single, out var rightClick);
 
                 if (doublec)
-                {
                     new Process
                     {
                         StartInfo = new ProcessStartInfo(file.Path)
@@ -167,9 +165,8 @@ internal class AssetBrowser : UIElemenet
                             UseShellExecute = true
                         }
                     }.Start();
-                }
                 if (single) currentSelected = file;
-                
+
                 ImGui.NextColumn();
             }
 
@@ -177,7 +174,4 @@ internal class AssetBrowser : UIElemenet
             ImGui.Columns(1);
         };
     }
-
-    
-    
 }

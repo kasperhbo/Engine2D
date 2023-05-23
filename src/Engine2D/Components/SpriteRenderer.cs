@@ -30,20 +30,17 @@ public class SpriteColor
 [JsonConverter(typeof(ComponentSerializer))]
 public class SpriteRenderer : Component
 {
-    [ShowUI(show = false)] private SpriteColor _lastColor = new();
-
     [ShowUI(show = false)] private readonly Transform _lastTransform = new();
-    public SpriteColor Color = new();
-    
-    [ShowUI(show = false)] internal bool IsDirty = true;
-    
-    public int ZIndex = 0;
-    [JsonIgnore][ShowUI(show = false)]int _prevZIndex = 0;
-    
-    [JsonIgnore] internal Texture texture;
+    [ShowUI(show = false)] private SpriteColor _lastColor = new();
+    [JsonIgnore] [ShowUI(show = false)] private int _prevZIndex;
 
     [JsonIgnore] public bool AddToRendererAsSprite = true;
-    
+    public SpriteColor Color = new();
+
+    [ShowUI(show = false)] internal bool IsDirty = true;
+
+    [JsonIgnore] internal Texture texture;
+
     internal Vector2[] TextureCoords =
     {
         new(1, 1),
@@ -54,6 +51,8 @@ public class SpriteRenderer : Component
 
     public TextureData? textureData;
 
+    public int ZIndex = 0;
+
     public override void Init(Gameobject parent)
     {
         base.Init(parent);
@@ -62,8 +61,9 @@ public class SpriteRenderer : Component
             Console.WriteLine("has texture data, loading texture...." + textureData.texturePath);
             texture = ResourceManager.GetTexture(textureData);
         }
+
         Console.WriteLine("initialize");
-        if(AddToRendererAsSprite)
+        if (AddToRendererAsSprite)
             Renderer.AddSpriteRenderer(this);
     }
 
@@ -91,7 +91,7 @@ public class SpriteRenderer : Component
             _prevZIndex = ZIndex;
             Renderer.RemoveSprite(this);
             Renderer.AddSpriteRenderer(this);
-            this.IsDirty = true;
+            IsDirty = true;
         }
     }
 

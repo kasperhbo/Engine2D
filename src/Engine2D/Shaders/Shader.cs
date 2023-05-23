@@ -318,32 +318,36 @@ public class Shader
         var varLocation = GL.GetUniformLocation(shaderProgramID, v);
         GL.Uniform1(varLocation, values.Length, values);
     }
-    
+
     public void uploadVec2fArray(string varName, Vector2[] vec)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
-        float[] vals = new float[vec.Length * 2];
-        for (int i = 0; i < vec.Length; i++) {
+        var vals = new float[vec.Length * 2];
+        for (var i = 0; i < vec.Length; i++)
+        {
             vals[i * 2] = vec[i].X;
             vals[i * 2 + 1] = vec[i].Y;
         }
-        
-        GL.Uniform2(varLocation, (int)vec.Length, vals);
+
+        GL.Uniform2(varLocation, vec.Length, vals);
     }
 
-    public void uploadVec3fArray(String varName, Vector3[] vec) {
-        int varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+    public void uploadVec3fArray(string varName, Vector3[] vec)
+    {
+        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
         use();
-        float[] vals = new float[vec.Length * 3];
-        for (int i = 0; i < vec.Length; i++) {
+        var vals = new float[vec.Length * 3];
+        for (var i = 0; i < vec.Length; i++)
+        {
             vals[i * 3] = vec[i].X;
             vals[i * 3 + 1] = vec[i].Y;
             vals[i * 3 + 2] = vec[i].Z;
         }
-        GL.Uniform3(varLocation, (int)vec.Length, vals);
+
+        GL.Uniform3(varLocation, vec.Length, vals);
     }
-    
+
     public int GetAttribLocation(string attribName)
     {
         return GL.GetAttribLocation(shaderProgramID, attribName);
