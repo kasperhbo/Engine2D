@@ -27,6 +27,7 @@ internal class Scene
 
     internal string ScenePath { get; private set; } = "NoScene";
     internal List<GameObject> Gameobjects { get; } = new();
+    internal List<GameObject> GameObjectsHierachy { get; } = new();
 
     public GlobalLight GlobalLight { get; set; } = null;
 
@@ -60,13 +61,13 @@ internal class Scene
 
         physicsWorld = new World(new Vector2(0, -9.8f));
         foreach (var gameobject in Gameobjects)
-        foreach (var item in gameobject.components)
+        foreach (var item in gameobject.Components)
             if (item.Type == "Rigidbody")
             {
                 var bodyDef = new BodyDef();
                 var rb = (RigidBody)item;
                 bodyDef.BodyType = rb.BodyType;
-                bodyDef.Position = rb.Parent.transform.position;
+                bodyDef.Position = rb.Parent.Transform.position;
 
                 var body = physicsWorld.CreateBody(bodyDef);
                 body.IsFixedRotation = rb.FixedRotation;
@@ -76,7 +77,7 @@ internal class Scene
 
                 var shape = new PolygonShape();
 
-                shape.SetAsBox(gameobject.transform.size.X * .5f, gameobject.transform.size.Y * .5f);
+                shape.SetAsBox(gameobject.Transform.size.X * .5f, gameobject.Transform.size.Y * .5f);
                 var fixtureDef = new FixtureDef();
                 fixtureDef.Shape = shape;
                 fixtureDef.Density = 1.0f;
@@ -110,33 +111,21 @@ internal class Scene
         _cameras.Add(EditorCamera);
         
         ScenePath = scenePath;
+        
         Renderer.Init();
+    }
+
+    public void Start()
+    {
+        foreach (var go in Gameobjects)
+        {
+            go.SetParent(go.ParentUIID);
+        }
     }
 
     internal virtual void CreateDefaultGameObjects()
     {
-        //Create main camera
-        {
-            List<Component> components = new List<Component>
-            {
-                new TestCamera()
-            };
         
-            GameObject gameCamera = new GameObject("Main Camera", new Transform(),components);
-            AddGameObjectToScene(gameCamera);
-        }
-        
-        //Create global light
-        {
-            GlobalLight globalLight = new GlobalLight();
-            
-            List<Component> defaultComponents =new List<Component> {
-                globalLight
-            };
-            
-            GameObject go = new GameObject("Global Light", new Transform(), defaultComponents);
-            AddGameObjectToScene(go);
-        }
     }
     
     internal virtual void EditorUpdate(double dt)
@@ -160,6 +149,7 @@ internal class Scene
         }
 
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
+        
         if (IsPlaying) GameUpdate(dt);
     }
 
@@ -167,12 +157,6 @@ internal class Scene
     {
     }
     
-    // internal void AddGameObjectToScene(GameCamera go)
-    // {
-    //     GameCamera = go;
-    //     AddGameObjectToScene((Gameobject)go);
-    // }
-    //
     internal void AddGameObjectToScene(GameObject go)
     {
         if (go.GetComponent<TestCamera>() != null)
@@ -182,6 +166,7 @@ internal class Scene
         }
         
         Gameobjects.Add(go);
+        GameObjectsHierachy.Add(go);
         go.Init();
         go.Start();
         Engine.Get().CurrentSelectedAsset = go;
@@ -228,4 +213,26 @@ internal class Scene
     }
 
     #endregion
+
+    public void RemoveGameObjectFromScene(GameObject child)
+    {
+        Gameobjects.Remove(child);
+        GameObjectsHierachy.Remove(child);
+        
+        if(child.GetComponent<SpriteRenderer>() != null)
+            Renderer.RemoveSprite(child.GetComponent<SpriteRenderer>());
+    }
+
+    public GameObject FindObjectByUID(int uid)
+    {
+        foreach (var go in Gameobjects)
+        {
+            if (go.UID == uid)
+            {
+                return go;
+            }
+        }
+
+        throw new Exception(string.Format("Gameobject with {0} not found", uid));
+    }
 }

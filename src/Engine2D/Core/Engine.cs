@@ -90,6 +90,7 @@ namespace KDBEngine.Core
             if (Settings.s_IsEngine) CreateUIWindows();
 
             SaveLoad.LoadScene(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
+            _currentScene.Start();
             TestInput.Init();
 
             // testFB = new TestFrameBuffer((int)width, (int)height);
@@ -106,6 +107,8 @@ namespace KDBEngine.Core
                 LoadGameWithoutEngine();
                 _currentScene.IsPlaying = true;
             }
+            
+            
         }
 
 
@@ -138,11 +141,11 @@ namespace KDBEngine.Core
             {
                 if (editorViewPort.IsMouseInsideViewport() && TestInput.MousePressed(MouseButton.Left))
                     foreach (var go in _currentScene?.Gameobjects)
-                        if (go.AABB(TestInput.getWorld()))
-                        {
-                            Get().CurrentSelectedAsset = go;
-                            break;
-                        }
+                        // if (go.AABB(TestInput.getWorld()))
+                        // {
+                        //     Get().CurrentSelectedAsset = go;
+                        //     break;
+                        // }
 
                 if (CurrentSelectedAsset != null)
                 {
@@ -165,7 +168,7 @@ namespace KDBEngine.Core
                     
                     if(Engine.Get()._currentScene.GameCamera == null)
                     {
-                        Log.Error("No Camera");
+                        //Log.Error("No Camera");
                         TextureData data = new TextureData("NoCameraInCurrentScene", 
                             Utils.GetBaseEngineDir() + "\\Images\\NoCameraInCurrentScene.png", true,
                             TextureMinFilter.Linear, TextureMagFilter.Linear);

@@ -40,6 +40,11 @@ public abstract class Component
     {
     }
 
+    public void Update(double dt)
+    {
+        
+    }
+    
     public virtual void Destroy()
     {
     }
@@ -151,4 +156,6 @@ public abstract class Component
 
         return sizeYGUI;
     }
+
+
 }

@@ -48,12 +48,12 @@ public class PointLight : Component
     public override void EditorUpdate(double dt)
     {
         //Console.WriteLine(this.texture?.TexID);
-        if (!LastTransform.Equals(Parent.transform)) Parent.transform.Copy(LastTransform);
+        if (!LastTransform.Equals(Parent.Transform)) Parent.Transform.Copy(LastTransform);
     }
 
     public override void GameUpdate(double dt)
     {
-        if (!LastTransform.Equals(Parent.transform)) Parent.transform.Copy(LastTransform);
+        if (!LastTransform.Equals(Parent.Transform)) Parent.Transform.Copy(LastTransform);
     }
 
     public override string GetItemType()

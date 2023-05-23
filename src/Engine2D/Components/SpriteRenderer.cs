@@ -73,10 +73,10 @@ public class SpriteRenderer : Component
     public override void EditorUpdate(double dt)
     {
         //Console.WriteLine(this.texture?.TexID);
-        if (!_lastTransform.Equals(Parent.transform))
+        if (!_lastTransform.Equals(Parent.Transform))
         {
             IsDirty = true;
-            Parent.transform.Copy(_lastTransform);
+            Parent.Transform.Copy(_lastTransform);
         }
 
         if (!_lastColor.Color.Equals(Color.Color))
@@ -96,10 +96,10 @@ public class SpriteRenderer : Component
 
     public override void GameUpdate(double dt)
     {
-        if (!_lastTransform.Equals(Parent.transform))
+        if (!_lastTransform.Equals(Parent.Transform))
         {
             IsDirty = true;
-            Parent.transform.Copy(_lastTransform);
+            Parent.Transform.Copy(_lastTransform);
         }
 
         if (!_lastColor.Color.Equals(Color.Color))

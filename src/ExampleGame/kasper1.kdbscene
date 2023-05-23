@@ -1,13 +1,10 @@
 [
   {
-    "components": [
-      {
-        "Intensity": 1.0,
-        "Type": "GlobalLight"
-      }
-    ],
-    "Name": "GlobalLight: 01",
-    "transform": {
+    "UID": 0,
+    "ParentUIID": -1,
+    "Type": "GameObject",
+    "Name": "2",
+    "Transform": {
       "position": {
         "X": 0.0,
         "Y": 0.0
@@ -17,87 +14,15 @@
         "X": 1.0,
         "Y": 1.0
       }
-    }
+    },
+    "Components": []
   },
   {
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 1.0,
-            "Y": 0.93333334,
-            "Z": 0.16078432,
-            "W": 1.0
-          }
-        },
-        "textureData": null,
-        "ZIndex": 0,
-        "Type": "SpriteRenderer"
-      }
-    ],
-    "Name": "GameObject: 11",
-    "transform": {
-      "position": {
-        "X": 0.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 10000.0,
-        "Y": 10000.0
-      }
-    }
-  },
-  {
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 1.0,
-            "Y": 0.90588236,
-            "Z": 0.3254902,
-            "W": 1.0
-          }
-        },
-        "textureData": {
-          "ItemType": "TextureData",
-          "Identifier": "testImage",
-          "_filePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
-          "_flipped": true,
-          "_textureMinFilter": 9729,
-          "_textureMagFilter": 9729
-        },
-        "ZIndex": 0,
-        "Type": "SpriteRenderer"
-      },
-      {
-        "FixedRotation": false,
-        "BodyType": 2,
-        "Type": "Rigidbody"
-      }
-    ],
-    "Name": "Mario: 21",
-    "transform": {
-      "position": {
-        "X": 0.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 100.0,
-        "Y": 100.0
-      }
-    }
-  },
-  {
-    "components": [
-      {
-        "Zoom": 1.0,
-        "Type": "Camera"
-      }
-    ],
-    "Name": "Main Camera 31",
-    "transform": {
+    "UID": 1,
+    "ParentUIID": -1,
+    "Type": "GameObject",
+    "Name": "1",
+    "Transform": {
       "position": {
         "X": 0.0,
         "Y": 0.0
@@ -107,7 +32,44 @@
         "X": 1.0,
         "Y": 1.0
       }
-    }
+    },
+    "Components": []
+  },
+  {
+    "UID": 2,
+    "ParentUIID": 1,
+    "Type": "GameObject",
+    "Name": "3",
+    "Transform": {
+      "position": {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    },
+    "Components": []
+  },
+  {
+    "UID": 3,
+    "ParentUIID": 2,
+    "Type": "GameObject",
+    "Name": "4",
+    "Transform": {
+      "position": {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    },
+    "Components": []
   }
 ]
 ////GAMEOBJECTS////

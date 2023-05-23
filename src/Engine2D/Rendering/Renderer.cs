@@ -61,7 +61,9 @@ internal static class Renderer
     internal static void Render()
     {
         _drawCalls = 0;
-        {
+        
+        //IF ENGINE RENDER EDITOR VIEWPORT
+        if(Settings.s_IsEngine){
             Texture? LightmapTextureEditor;
             
             //Render Lights

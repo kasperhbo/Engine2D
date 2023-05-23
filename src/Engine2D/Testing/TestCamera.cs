@@ -54,7 +54,7 @@ public class TestCamera : Component
                 _lastZoom = Zoom;
                 adjustProjection();
             }
-            position = new(Parent.transform.position.X, Parent.transform.position.Y);
+            position = new(Parent.Transform.position.X, Parent.Transform.position.Y);
         }
     }
 

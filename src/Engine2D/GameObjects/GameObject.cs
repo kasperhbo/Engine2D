@@ -1,153 +1,122 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
 using Box2DSharp.Dynamics;
 using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.Logging;
+using Engine2D.Managers;
+using Engine2D.SavingLoading;
+using Engine2D.Scenes;
 using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
-using OpenTK.Mathematics;
+using Newtonsoft.Json;
+using OpenTK.Graphics.OpenGL;
+
 
 namespace Engine2D.GameObjects;
 
+[JsonConverter(typeof(ComponentSerializer))]
 public class GameObject : Asset
 {
-    private readonly List<Component> _componentsToAddEndOfFrame = new();
-    public List<Component> components = new();
+    public int UID = -1;
+    public int ParentUIID = -1;
+    
+    public readonly string Type = "GameObject";
 
     public string Name = "";
+    public Transform Transform = new Transform();
 
-    public Transform transform = new();
+    public List<Component> Components { get; private set; } = new List<Component>();
+    
+    [JsonIgnore]public GameObject? Parent = null;
+    [JsonIgnore]public List<GameObject> Childs = new List<GameObject>();
 
-
-    public GameObject()
+    public List<GameObject>  GetChildren()
     {
+        return Childs;
     }
     
     public GameObject(string name)
     {
         Name = name;
-        transform = new Transform();
-        components = new List<Component>();
     }
-
-
-    public GameObject(string name, Transform transform)
+    
+    [JsonConstructor]
+    public GameObject(string name, GameObject parent)
     {
         Name = name;
-        this.transform = transform;
-        components = new List<Component>();
+        Parent = parent;
+        Init();
     }
 
-
-    public GameObject(string name, Transform transform, List<Component> components)
+    public void Init()
     {
-        Name = name;
-        this.transform = transform;
-        this.components = components;
+        if (UID == -1) UID = UIDManager.GetNewUID();
+        
+        foreach (var component in Components)
+        {
+           component.Init(this);
+        }
+        
     }
-
-
-    public GameObject(string name, List<Component> components, List<Component> linked, Transform transform)
-    {
-        Name = name;
-        this.transform = transform;
-        this.components = components;
-    }
-
-
-    public virtual void Init()
-    {
-        foreach (var component in components) component.Init(this);
-    }
-
+    
+    
     public void Start()
     {
-        foreach (var component in components) component.Start();
+        foreach (var component in Components)
+        {
+            component.Start();
+        }
+    }
+
+
+    public void Update(double dt)
+    {
+        foreach (var component in Components)
+        {
+            component.Update(dt);
+        }
     }
 
     public void EditorUpdate(double dt)
     {
-        foreach (var component in components) component.EditorUpdate(dt);
+        foreach (var component in Components)
+        {
+            component.EditorUpdate(dt);
+        }
     }
 
     public void GameUpdate(double dt)
     {
-        foreach (var component in components) component.GameUpdate(dt);
+        foreach (var component in Components)
+        {
+            component.GameUpdate(dt);
+        }
     }
-
-    public void Destroy()
-    {
-        foreach (var component in components) component.Destroy();
-    }
-
-    public void AddComponent(Component component)
-    {
-        component.Init(this);
-        components.Add(component);
-    }
-
-    private void ActualAddComponent(Component component)
-    {
-        component.Init(this);
-        components.Add(component);
-    }
-
-    public void AddLinkedComponent(Component component)
-    {
-        component.Init(this);
-    }
-
-    public bool AABB(Vector2 point)
-    {
-        return point.X >= transform.position.X - transform.size.X * .5
-               && point.X <= transform.position.X + transform.size.X * .5
-               && point.Y >= transform.position.Y - transform.size.Y * .5
-               && point.Y <= transform.position.Y + transform.size.Y * .5;
-    }
-
+    
     public override void OnGui()
     {
         ImGui.InputText("##name", ref Name, 256);
         ImGui.SameLine();
         ImGui.Separator();
 
-        var componentsToRemove = new List<Component>();
-
         OpenTKUIHelper.DrawComponentWindow("transform" + Name, "Transform", () =>
         {
-            OpenTKUIHelper.DrawProperty("Position: ", ref transform.position);
-            OpenTKUIHelper.DrawProperty("Rotation: ", ref transform.rotation);
-            OpenTKUIHelper.DrawProperty("Scale: ", ref transform.size);
+            OpenTKUIHelper.DrawProperty("Position: ", ref Transform.position);
+            OpenTKUIHelper.DrawProperty("Rotation: ", ref Transform.rotation);
+            OpenTKUIHelper.DrawProperty("Scale: ",    ref Transform.size);
         });
 
-        for (var i = 0; i < components.Count; i++)
+        for (var i = 0; i < Components.Count; i++)
         {
             ImGui.PushID(i);
 
 
-            OpenTKUIHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
-                () => { components[i].ImGuiFields(); }, components[i].WindowSize().Y
+            OpenTKUIHelper.DrawComponentWindow(i.ToString(), Components[i].GetItemType(),
+                () => { Components[i].ImGuiFields(); }, Components[i].WindowSize().Y
             );
 
-
-            //if (ImGui.CollapsingHeader(components[i].GetItemType(), ImGuiTreeNodeFlags.DefaultOpen))
-            //{
-            //    ImGui.PushStyleColor(ImGuiCol.ChildBg, new System.Numerics.Vector4(0.19f, .19f, .19f, 1)); //For visibility
-
-            //    ImGui.BeginChild("##", new System.Numerics.Vector2(0, components[i].WindowSize().Y), false, 0); ; // Leave ~100
-            //    ImGui.PopStyleColor(3);
-
-            //    //ImGui.BeginGroup();
-
-            //    components[i].ImGuiFields();
-            //    //ImGui.EndGroup();
-            //    //ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), (int)ImGuiCol.ChildBg);
-            //    ImGui.GetForegroundDrawList().AddRect(
-            //        ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), 3);
-
-            //    ImGui.EndChild();
-            //}
             ImGui.PopID();
         }
 
@@ -177,14 +146,8 @@ public class GameObject : Asset
 
             ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y));
 
-
-            //TODO: ADD COMPONENT TO GOP
             if (ImGui.BeginPopup("AddComponent"))
             {
-                //if (ImGui.MenuItem("Camera"))
-                //{                    
-                //    ImGui.CloseCurrentPopup();
-                //}
                 if (ImGui.MenuItem("ScriptComponent"))
                 {
                     var rb = new ScriptHolderComponent();
@@ -212,17 +175,31 @@ public class GameObject : Asset
                 ImGui.EndPopup();
             }
         }
-
-
-        foreach (var component in componentsToRemove) RemoveComponents(component);
-
-        foreach (var component in _componentsToAddEndOfFrame) ActualAddComponent(component);
-        _componentsToAddEndOfFrame.Clear();
     }
 
+    public bool RemoveComponent<T>() where T : Component
+    {
+        for (int i = 0; i < Components.Count(); i++)
+        {
+            if (typeof(T) == Components[i].GetType())
+            {
+                Components.RemoveAt(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void AddComponent(Component component)
+    {
+        Components.Add(component);
+        component.Init(this);
+    }
+    
     public T GetComponent<T>() where T : Component
     {
-        foreach (var component in components)
+        foreach (var component in Components)
             if (typeof(T) == component.GetType())
                 return
                     (component as T)!;
@@ -231,8 +208,22 @@ public class GameObject : Asset
     }
 
 
-    private void RemoveComponents(Component comp)
+    public void SetParent(int parentUID)
     {
-        components.Remove(comp);
+        if (parentUID == -1) return;
+        Scene currentScene = Engine.Get()._currentScene;
+        if(Parent != null)
+            Parent.Childs.Remove(this);
+        
+        ParentUIID = parentUID;
+        GameObject parent = currentScene.FindObjectByUID(parentUID);
+        currentScene.GameObjectsHierachy.Remove(this);
+        parent.AddGameObjectChild(this);
+    }
+
+    private void AddGameObjectChild(GameObject gameObject)
+    {
+        gameObject.Parent = this;
+        Childs.Add(gameObject);
     }
 }

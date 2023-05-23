@@ -202,7 +202,7 @@ internal class RenderBatch : IComparable<RenderBatch>
                 }
             }
         
-        var transform = sprite.Parent.transform;
+        var transform = sprite.Parent.Transform;
 
         var xAdd = 0.5f;
         var yAdd = 0.5f;
