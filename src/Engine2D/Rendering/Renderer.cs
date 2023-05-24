@@ -3,6 +3,7 @@ using Engine2D.Components;
 using Engine2D.GameObjects;
 using Engine2D.Testing;
 using ImGuiNET;
+using ImGuizmoNET;
 using KDBEngine.Core;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
@@ -67,7 +68,13 @@ public class Renderer
             GL.Clear(ClearBufferMask.ColorBufferBit);
             OpenTK.Graphics.OpenGL.GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
+            ImGuizmo.Enable(true);
+            ImGuizmo.SetOrthographic(true);
+            ImGuizmo.SetDrawlist();
+            ImGuizmo.SetRect(10,10,10,10);
+            
             foreach (var batch in _renderBatches) batch.Render(camera, LightmapTexture);
+            
             GameBuffer.UnBind();
         }
         

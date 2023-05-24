@@ -16,15 +16,17 @@
         <PackageReference Include="SoapFormatter" Version="1.1.9" />
         <PackageReference Include="StbImageSharp" Version="2.27.13" />
     </ItemGroup>
-
-
     <ItemGroup>
-        <ProjectReference Include="..\..\vendor\ImGui.NET\src\ImGui.NET\ImGui.NET.csproj" />
-        <ProjectReference Include="..\..\vendor\ImGui.NET\src\ImGuizmo.NET\ImGuizmo.NET.csproj" />
-        <ProjectReference Include="..\..\vendor\ImGui.NET\src\ImNodes.NET\ImNodes.NET.csproj" />
-        <ProjectReference Include="..\..\vendor\ImGui.NET\src\ImPlot.NET\ImPlot.NET.csproj" />
+        <Compile Include="Lib\ImGui.Net\src\ImGui.NET\**\*.cs">
+            <Link>Lib\ImGui\ImGui.NET\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+        </Compile>
+        <Compile Remove="Lib\ImGui.Net\src\CodeGenerator\**" />
+        <Compile Remove="Lib\ImGui.Net\src\ImGui.NET\**" />
+        <Compile Remove="Lib\ImGui.Net\src\ImGuizmo.NET\**" />
+        <Compile Remove="Lib\ImGui.Net\src\ImNodes.NET\**" />
+        <Compile Remove="Lib\ImGui.Net\src\ImPlot.NET\**" />
+        <Compile Remove="Lib\ImGui.Net\src\**" />
     </ItemGroup>
-
 
     <ItemGroup>
         <None Update="Shaders\Lighting\default-sprite-light.frag">
@@ -51,11 +53,27 @@
         <None Update="Shaders\Lightmap.vert">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Remove="Lib\ImGui.Net\src\CodeGenerator\**" />
+        <None Remove="Lib\ImGui.Net\src\ImGui.NET\**" />
+        <None Remove="Lib\ImGui.Net\src\ImGuizmo.NET\**" />
+        <None Remove="Lib\ImGui.Net\src\ImNodes.NET\**" />
+        <None Remove="Lib\ImGui.Net\src\ImPlot.NET\**" />
+        <None Remove="Lib\ImGui.Net\src\**" />
     </ItemGroup>
 
 
     <ItemGroup>
         <Folder Include="Rendering\Lights" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Lib\ImGui.Net\src\CodeGenerator\**" />
+      <EmbeddedResource Remove="Lib\ImGui.Net\src\ImGui.NET\**" />
+      <EmbeddedResource Remove="Lib\ImGui.Net\src\ImGuizmo.NET\**" />
+      <EmbeddedResource Remove="Lib\ImGui.Net\src\ImNodes.NET\**" />
+      <EmbeddedResource Remove="Lib\ImGui.Net\src\ImPlot.NET\**" />
+      <EmbeddedResource Remove="Lib\ImGui.Net\src\**" />
     </ItemGroup>
 
 </Project>

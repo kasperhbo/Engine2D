@@ -12,7 +12,7 @@ public class Program
         ComponentSerializer.AddAction(() => { CustomDeserializer.Deserialize(); });
         CustomComponentRegister.StartRegister();
 
-        Console.WriteLine(Utils.GetAllScriptFiles());
+            // Console.WriteLine(Utils.GetAllScriptFiles());
         Settings.s_IsEngine = true;        
         Engine.Get().Run();
     }

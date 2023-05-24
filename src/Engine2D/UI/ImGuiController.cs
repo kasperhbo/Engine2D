@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using Engine2D;
 using Engine2D.Core;
 using ImGuiNET;
+using ImGuizmoNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
@@ -57,6 +58,9 @@ public class ImGuiController
         var context = ImGui.CreateContext();
         ImGui.SetCurrentContext(context);
         var io = ImGui.GetIO();
+        
+        ImGuizmo.SetImGuiContext(context);
+        
         //io.Fonts.AddFontDefault();
         //io.Fonts.AddFontFromFileTTF("C:/Windows/Fonts/LEELAWUI.TTF", 25f);
 
@@ -140,8 +144,7 @@ public class ImGuiController
         SetPerFrameImGuiData(1f / 60f);
 
         ImGui.NewFrame();
-        //ImGuizmo.BeginFrame();
-
+        ImGuizmo.BeginFrame();
         _frameBegun = true;
     }
 
@@ -413,6 +416,7 @@ public class ImGuiController
         {
             _frameBegun = false;
             ImGui.Render();
+         
             RenderImDrawData(ImGui.GetDrawData());
         }
     }
@@ -423,15 +427,18 @@ public class ImGuiController
     public void Update(GameWindow wnd, double deltaSeconds)
     {
         //SetupDockspace();
-
+        ImGuizmo.SetImGuiContext(ImGui.GetCurrentContext());
+        
         if (_frameBegun) ImGui.Render();
 
         SetPerFrameImGuiData((float)deltaSeconds);
         UpdateImGuiInput(wnd);
 
         _frameBegun = true;
+   
 
         ImGui.NewFrame();
+        ImGuizmo.BeginFrame();
     }
 
     /// <summary>
@@ -534,9 +541,13 @@ public class ImGuiController
         var prevCullFaceEnabled = GL.GetBoolean(GetPName.CullFace);
         var prevDepthTestEnabled = GL.GetBoolean(GetPName.DepthTest);
         var prevActiveTexture = GL.GetInteger(GetPName.ActiveTexture);
+        
         GL.ActiveTexture(TextureUnit.Texture0);
+        
         var prevTexture2D = GL.GetInteger(GetPName.TextureBinding2D);
+        
         Span<int> prevScissorBox = stackalloc int[4];
+        
         unsafe
         {
             fixed (int* iptr = &prevScissorBox[0])
