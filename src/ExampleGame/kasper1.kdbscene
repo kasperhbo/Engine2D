@@ -26,7 +26,7 @@
     "Name": "Mario: 01",
     "transform": {
       "position": {
-        "X": 324.0,
+        "X": -235.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -35,21 +35,14 @@
         "Y": 843.0
       }
     },
-    "localTransform": {
-      "position": {
-        "X": 372.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 1.0,
-        "Y": 1.0
-      }
+    "localPosition": {
+      "X": -414.0,
+      "Y": 0.0
     }
   },
   {
     "UID": 1,
-    "PARENT_UID": -1,
+    "PARENT_UID": 0,
     "components": [
       {
         "Color": {
@@ -67,7 +60,7 @@
     "Name": "Point Light: 11",
     "transform": {
       "position": {
-        "X": 0.0,
+        "X": 276.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -76,31 +69,24 @@
         "Y": 1.0
       }
     },
-    "localTransform": {
-      "position": {
-        "X": 0.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 1.0,
-        "Y": 1.0
-      }
+    "localPosition": {
+      "X": 511.0,
+      "Y": 0.0
     }
   },
   {
     "UID": 2,
-    "PARENT_UID": -1,
+    "PARENT_UID": 1,
     "components": [
       {
-        "Intensity": 1.0,
+        "Intensity": 0.1,
         "Type": "GlobalLight"
       }
     ],
     "Name": "GlobalLight: 21",
     "transform": {
       "position": {
-        "X": 0.0,
+        "X": 276.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -109,16 +95,9 @@
         "Y": 1.0
       }
     },
-    "localTransform": {
-      "position": {
-        "X": 0.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 1.0,
-        "Y": 1.0
-      }
+    "localPosition": {
+      "X": 0.0,
+      "Y": 0.0
     }
   },
   {
@@ -142,7 +121,7 @@
     "Name": "Empty Sprite: 31",
     "transform": {
       "position": {
-        "X": -48.0,
+        "X": 179.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -151,16 +130,9 @@
         "Y": 100.0
       }
     },
-    "localTransform": {
-      "position": {
-        "X": 0.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 1.0,
-        "Y": 1.0
-      }
+    "localPosition": {
+      "X": -17.0,
+      "Y": 0.0
     }
   }
 ]

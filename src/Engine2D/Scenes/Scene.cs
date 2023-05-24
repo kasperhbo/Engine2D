@@ -24,8 +24,9 @@ internal class Scene
     #endregion
 
     internal string ScenePath { get; private set; } = "NoScene";
-    internal List<Gameobject> Gameobjects { get; } = new();
-
+    
+    public List<Gameobject> Gameobjects = new List<Gameobject>();
+    
     public GlobalLight GlobalLight { get; set; } = null;
 
 

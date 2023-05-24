@@ -24,10 +24,10 @@ public class Gameobject : Asset
     public List<Component> components = new();
     public string Name = "";
     public Transform transform = new();
-    public Vector2 localPosition = new();
+    public System.Numerics.Vector2 localPosition = new();
 
 
-    [JsonIgnore] private List<Gameobject> _childs = new List<Gameobject>();
+    [JsonIgnore] public List<Gameobject> Childs = new List<Gameobject>();
     [JsonIgnore] private Gameobject _parent = null;
 
     public Gameobject()
@@ -127,6 +127,7 @@ public class Gameobject : Asset
             if(_parent == null)
                 OpenTKUIHelper.DrawProperty("Position: ", ref transform.position);
             else
+                OpenTKUIHelper.DrawProperty("Position: ", ref transform.position);
                 OpenTKUIHelper.DrawProperty("Local Position: ", ref localPosition);
             
             OpenTKUIHelper.DrawProperty("Rotation: ", ref transform.rotation);
@@ -233,7 +234,7 @@ public class Gameobject : Asset
         Scene currentScene = Engine.Get()._currentScene;
 
         if (this._parent != null)
-            this._parent._childs.Remove(this);
+            this._parent.Childs.Remove(this);
 
         this.PARENT_UID = parentUID;
         Gameobject parent = currentScene.FindObjectByUID(parentUID);
@@ -246,6 +247,6 @@ public class Gameobject : Asset
     private void AddGameObjectChild(Gameobject gameObject)
     {
         gameObject._parent = this;
-        _childs.Add(gameObject);
+        Childs.Add(gameObject);
     }
 }
