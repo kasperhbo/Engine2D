@@ -39,9 +39,6 @@ void main () {
         case 7:
         texColor = fColor * texture(uTextures[7], fTexCoords);
         break;
-        default :
-        texColor = fColor;
-        break;
     }
 
     // Sample from lightmap and multiply with current fragment color

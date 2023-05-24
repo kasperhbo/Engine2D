@@ -40,7 +40,10 @@ internal static class SaveLoad
         var sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
         //Identifier so we can see where the go array stops when we deserialize the file
         sceneData += "\n////GAMEOBJECTS////\n";
+<<<<<<< HEAD
         Log.Message("Saving Scene At: " + scene.ScenePath);
+=======
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
         
         if (File.Exists(scene.ScenePath))
         {

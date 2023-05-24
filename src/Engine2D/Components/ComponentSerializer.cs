@@ -62,8 +62,7 @@ public class ComponentSerializer : JsonConverter
         actions = action;
     }
 
-    public override object? ReadJson(JsonReader reader, Type objectType, object existingValue,
-        JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
         var jo = JObject.Load(reader);
         currentType = jo;

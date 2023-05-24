@@ -1,4 +1,5 @@
 ﻿using Engine2D.Core;
+using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
@@ -6,6 +7,7 @@ using Engine2D.Scenes;
 using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
+using KDBEngine.Shaders;
 using KDBEngine.UI;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -20,21 +22,37 @@ namespace KDBEngine.Core
     public class Engine : GameWindow
     {
         private static Engine _instance;
+<<<<<<< HEAD
 
         private readonly Dictionary<string, UIElemenet> _guiWindows = new();
 
         //TODO: MAKE THIS STATIC AND SAVABLE
         private readonly EngineSettingsWindow engineSettingsWindow = new();
 
+=======
+        
+        public static string DefaultTitle;
+        
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
         internal Scene? _currentScene;
 
-        private int _frameCounter;
+        private readonly Dictionary<string, UIElemenet> _guiWindows = new();
         private TestContentBrowser cb;
         
         internal AssetBrowser AssetBrowser;
         internal Asset? CurrentSelectedAsset;
+<<<<<<< HEAD
         internal ImGuiController ImGuiController;
         
+=======
+
+        //TODO: MAKE THIS STATIC AND SAVABLE
+        private readonly EngineSettingsWindow engineSettingsWindow = new();
+     
+        internal ImGuiController ImGuiController;
+        //TODO:MOVE TO SCENE
+        internal TestCamera testCamera;
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
         //TODO:MOVE TO SCENE
         private TestViewportWindow editorViewPort;
         private TestViewportWindow gameViewPort;
@@ -58,6 +76,7 @@ namespace KDBEngine.Core
 
                 var window = new Engine(gameWindowSettings, ntwSettings);
                 _instance = window;
+                
             }
 
             return _instance;
@@ -106,37 +125,60 @@ namespace KDBEngine.Core
             {
                 LoadGameWithoutEngine();
                 _currentScene.IsPlaying = true;
+<<<<<<< HEAD
             }
             
             
+=======
+            };
+            DefaultTitle = Engine.Get().Title;
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
         }
 
-
+        private bool first = true;
+        
+        
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
+<<<<<<< HEAD
 
+=======
+            
+            //Input.Update(KeyboardState, MouseState);
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
             TestInput.mousePosCallback(MouseState, KeyboardState);
-
+            
             _currentScene?.EditorUpdate(args.Time);
+<<<<<<< HEAD
+=======
+            
+            TestInput.endFrame();
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
         }
-
+        
         private void LoadGameWithoutEngine()
         {
+            
         }
 
+        private int _frameCounter;
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
+            
             var fps = 1.0f / e.Time;
             _frameCounter++;
             if (_frameCounter == 30)
             {
+<<<<<<< HEAD
                 Title = "Engine: " + "KDBENGINE V0.0001" + " | Scene: " + _currentScene.ScenePath + " | FPS: " + Math.Round(fps, 0);
+=======
+                Title = DefaultTitle + " | FPS: " + Math.Round(fps,0);
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
                 _frameCounter = 0;
             }
-
+            
             if (Settings.s_IsEngine)
             {
                 if (editorViewPort.IsMouseInsideViewport() && TestInput.MousePressed(MouseButton.Left))
@@ -153,7 +195,7 @@ namespace KDBEngine.Core
 
                 //Render the game
                 Renderer.Render();
-
+                
                 //ImGui
                 {
                     ImGuiController.Update(this, e.Time);
@@ -193,7 +235,11 @@ namespace KDBEngine.Core
                 SwapBuffers();
                 return;
             }
+<<<<<<< HEAD
             Renderer.Render();
+=======
+           
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
             SwapBuffers();
         }
 
@@ -263,7 +309,7 @@ namespace KDBEngine.Core
 
             var hierarch = new SceneHierachy();
             _guiWindows.Add(hierarch.Title, hierarch);
-
+            
             var renderDebug = new RenderDebugUI();
             _guiWindows.Add(renderDebug.Title, renderDebug);
 

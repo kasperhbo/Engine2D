@@ -1,4 +1,6 @@
-﻿namespace Engine2D.Logging;
+﻿using KDBEngine.UI;
+
+namespace Engine2D.Logging;
 //
 // public class EngineLog : UIElemenet
 // {

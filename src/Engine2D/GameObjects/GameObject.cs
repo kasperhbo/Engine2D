@@ -202,14 +202,22 @@ public class GameObject : Asset
     
     public T GetComponent<T>() where T : Component
     {
+<<<<<<< HEAD:src/Engine2D/GameObjects/GameObject.cs
         foreach (var component in Components)
             if (typeof(T) == component.GetType())
                 return
                     (component as T)!;
+=======
+        foreach (var component in components)
+        {
+            if (typeof(T) == component.GetType()) return 
+                (component as T)!;
+        }
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO:src/Engine2D/GameObjects/Gameobject.cs
 
         return null;
     }
-
+    
 
     public void SetParent(Int64 parentUID)
     {
@@ -229,4 +237,5 @@ public class GameObject : Asset
         gameObject.Parent = this;
         Childs.Add(gameObject);
     }
+
 }

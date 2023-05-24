@@ -7,7 +7,6 @@ in vec2 fPos;
  * MAX_LIGHTS can be changed here. If you want more lights make sure to change the RenderBatch::addPointLight fuction as well.
  */
 #define MAX_LIGHTS 10
-
 uniform vec2 uLightPosition[MAX_LIGHTS];
 uniform vec3 uLightColor[MAX_LIGHTS];
 uniform float uIntensity[MAX_LIGHTS];

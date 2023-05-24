@@ -21,15 +21,21 @@ public enum FileType
 
 internal class AssetBrowser : UIElemenet
 {
+<<<<<<< HEAD
     public DirectoryInfo CurrentDirectory { get; private set; } 
     
     private static GCHandle? _currentlyDraggedHandle;
 
     private List<ImageTextIcon> _currentFiles = new();
+=======
+    public static float ThumbnailSize { get; } = 128;
+    public static bool DisplayAssetType { get; } = true;
+
+    private DirectoryInfo _currentDirectory;
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
 
     private List<ImageTextIcon> _currentFolders = new();
-
-    private bool _currentlyDragging;
+    private List<ImageTextIcon> _currentFiles = new();
     private ImageTextIcon currentSelected;
     private IntPtr dirTexture;
     private IntPtr fileTexture;
@@ -40,6 +46,7 @@ internal class AssetBrowser : UIElemenet
     private TextureData texDataFile;
 
     private TextureData texDataScene;
+    
 
 
     internal AssetBrowser()
@@ -47,9 +54,6 @@ internal class AssetBrowser : UIElemenet
         LoadIcons();
         SwitchDirectory(ProjectSettings.s_FullProjectPath);
     }
-
-    public static float ThumbnailSize { get; } = 128;
-    public static bool DisplayAssetType { get; } = true;
 
     private void LoadIcons()
     {
@@ -64,12 +68,17 @@ internal class AssetBrowser : UIElemenet
         fileTexture = (IntPtr)ResourceManager.GetTexture(texDataFile).TexID;
         sceneTexture = (IntPtr)ResourceManager.GetTexture(texDataScene).TexID;
     }
-
+    
     private void SwitchDirectory(string newDir)
     {
         _currentFolders = new List<ImageTextIcon>();
+<<<<<<< HEAD
         _currentFiles = new List<ImageTextIcon>();
         CurrentDirectory = new DirectoryInfo(newDir);
+=======
+        _currentFiles = new();
+        _currentDirectory = new DirectoryInfo(newDir);
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
 
         GetDirectories();
         GetFiles();
@@ -85,23 +94,27 @@ internal class AssetBrowser : UIElemenet
         }
     }
 
-    private void GetFiles()
+    private bool _currentlyDragging;
+    private static GCHandle? _currentlyDraggedHandle;
+    private unsafe void GetFiles()
     {
         var files = CurrentDirectory.GetFiles();
         foreach (var file in files)
         {
             ImageTextIcon icon = null;
-            if (file.Extension == ".cs" || file.Extension == ".csproj")
-                icon = new ImageTextIcon(file.Name, fileTexture, fileTexture, fileTexture, file.FullName,
-                    FileType.Script);
+            if(file.Extension == ".cs" || file.Extension == ".csproj")
+                icon = new ImageTextIcon(file.Name, fileTexture, fileTexture, fileTexture, file.FullName, FileType.Script);
             if (file.Extension == ".kdbscene")
-                icon = new ImageTextIcon(file.Name, sceneTexture, sceneTexture, sceneTexture, file.FullName,
-                    FileType.Scene);
+            {
+                icon = new ImageTextIcon(file.Name, sceneTexture, sceneTexture, sceneTexture, file.FullName, FileType.Scene);
+                
+            }
 
-            if (icon != null)
+            if(icon != null)
                 _currentFiles.Add(icon);
         }
     }
+
 
 
     protected override string SetWindowTitle()
@@ -147,7 +160,7 @@ internal class AssetBrowser : UIElemenet
                 folder.Draw(out var doublec, out var single, out var rightClick);
                 if (doublec) SwitchDirectory(folder.Path);
                 if (single) currentSelected = folder;
-
+                
 
                 ImGui.NextColumn();
             }
@@ -159,6 +172,7 @@ internal class AssetBrowser : UIElemenet
                 file.Draw(out var doublec, out var single, out var rightClick);
 
                 if (doublec)
+                {
                     new Process
                     {
                         StartInfo = new ProcessStartInfo(file.Path)
@@ -166,8 +180,9 @@ internal class AssetBrowser : UIElemenet
                             UseShellExecute = true
                         }
                     }.Start();
+                }
                 if (single) currentSelected = file;
-
+                
                 ImGui.NextColumn();
             }
 
@@ -176,6 +191,7 @@ internal class AssetBrowser : UIElemenet
         };
     }
 
+<<<<<<< HEAD
     internal bool CurrentDirContainsFile(string fileName)
     {
         foreach (var file in _currentFiles)
@@ -188,5 +204,8 @@ internal class AssetBrowser : UIElemenet
 
         return false;
     }
+=======
+    
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
     
 }

@@ -25,9 +25,14 @@
             "W": 1.0
           }
         },
+<<<<<<< HEAD
         "textureData": null,
         "ZIndex": 1,
         "Type": "SpriteRenderer"
+=======
+        "Intensity": 68.9,
+        "Type": "PointLight"
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
       }
     ]
   },
@@ -38,7 +43,11 @@
     "Name": "GameObject 2",
     "Transform": {
       "position": {
+<<<<<<< HEAD
         "X": 0.0,
+=======
+        "X": -100.0,
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -50,6 +59,7 @@
     "Components": []
   },
   {
+<<<<<<< HEAD
     "UID": 2,
     "ParentUID": -1,
     "Type": "GameObject",
@@ -57,6 +67,26 @@
     "Transform": {
       "position": {
         "X": -109.0,
+=======
+    "components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.9843137,
+            "Y": 0.45882353,
+            "Z": 0.45882353,
+            "W": 0.7058824
+          }
+        },
+        "Intensity": 1.0,
+        "Type": "PointLight"
+      }
+    ],
+    "Name": "Point Light: 11",
+    "transform": {
+      "position": {
+        "X": 209.0,
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -67,6 +97,7 @@
     },
     "Components": [
       {
+<<<<<<< HEAD
         "Color": {
           "Color": {
             "X": 1.0,
@@ -87,18 +118,32 @@
     "Type": "GameObject",
     "Name": "GameObject 3",
     "Transform": {
+=======
+        "Intensity": 0.2,
+        "Type": "GlobalLight"
+      }
+    ],
+    "Name": "GlobalLight: 21",
+    "transform": {
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
       "position": {
         "X": 0.0,
         "Y": 0.0
       },
       "rotation": 0.0,
       "size": {
+<<<<<<< HEAD
         "X": 100.0,
         "Y": 100.0
+=======
+        "X": 1.0,
+        "Y": 1.0
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
       }
     },
     "Components": [
       {
+<<<<<<< HEAD
         "Zoom": 1.0,
         "Type": "Camera"
       }
@@ -110,12 +155,36 @@
     "Type": "GameObject",
     "Name": "GameObject 4",
     "Transform": {
+=======
+        "Color": {
+          "Color": {
+            "X": 1.0,
+            "Y": 0.74509805,
+            "Z": 0.80784315,
+            "W": 1.0
+          }
+        },
+        "ZIndex": 0,
+        "textureData": {
+          "flipped": true,
+          "magFilter": 9728,
+          "minFilter": 9728,
+          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
+          "Type": "TextureData"
+        },
+        "Type": "SpriteRenderer"
+      }
+    ],
+    "Name": "Mario: 31",
+    "transform": {
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
       "position": {
         "X": 0.0,
         "Y": 0.0
       },
       "rotation": 0.0,
       "size": {
+<<<<<<< HEAD
         "X": 100.0,
         "Y": 100.0
       }
@@ -152,6 +221,10 @@
         },
         "Intensity": 1.0,
         "Type": "PointLight"
+=======
+        "X": 1000.0,
+        "Y": 1000.0
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
       }
     ]
   }

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿using System.Net.Mime;
+=======
+﻿using System.Drawing;
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
 using System.Numerics;
 using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
@@ -15,6 +19,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Engine2D.Scenes;
 
+
 internal class Scene
 {
     private bool _isPlaying;
@@ -30,11 +35,15 @@ internal class Scene
     internal List<GameObject> GameObjectsHierachy { get; } = new();
 
     public GlobalLight GlobalLight { get; set; } = null;
+<<<<<<< HEAD
 
     public TestCamera EditorCamera;
     public TestCamera GameCamera = null;
 
     private List<TestCamera> _cameras = new();
+=======
+    
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
     
     public bool IsPlaying
     {
@@ -58,7 +67,7 @@ internal class Scene
     private void StartPlay()
     {
         SaveLoad.SaveScene(this);
-
+        
         physicsWorld = new World(new Vector2(0, -9.8f));
         foreach (var gameobject in Gameobjects)
         foreach (var item in gameobject.Components)
@@ -72,7 +81,7 @@ internal class Scene
                 var body = physicsWorld.CreateBody(bodyDef);
                 body.IsFixedRotation = rb.FixedRotation;
 
-                rb.RuntimeBody = body;
+                rb.runtimeBody = body;
 
 
                 var shape = new PolygonShape();
@@ -101,7 +110,7 @@ internal class Scene
 
     private void StopPlay()
     {
-        SaveLoad.LoadScene(ScenePath);
+        SaveLoad.LoadScene(this.ScenePath);
     }
 
     internal virtual void Init(string scenePath)
@@ -145,9 +154,29 @@ internal class Scene
             float difX = TestInput.xPos - TestInput.lastX;
             float difY = TestInput.yPos - TestInput.lastY;
 
+<<<<<<< HEAD
             EditorCamera.position += new Vector2(difX, difY);
         }
 
+=======
+        if (TestInput.KeyDown(Keys.A))
+        {
+            Engine.Get().testCamera.position.X -= 100 * (float)dt;
+        }
+        if (TestInput.KeyDown(Keys.D))
+        {
+            Engine.Get().testCamera.position.X += 100 * (float)dt;
+        }
+        if (TestInput.KeyDown(Keys.W))
+        {
+            Engine.Get().testCamera.position.Y += 100 * (float)dt;
+        }
+        if (TestInput.KeyDown(Keys.S))
+        {
+            Engine.Get().testCamera.position.Y -= 100 * (float)dt;
+        }
+        
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
         
         if (IsPlaying) GameUpdate(dt);
@@ -155,6 +184,7 @@ internal class Scene
 
     internal virtual void Render(double dt)
     {
+        
     }
     
     internal void AddGameObjectToScene(GameObject go)
@@ -174,9 +204,9 @@ internal class Scene
 
     internal virtual void OnClose()
     {
-        if (EngineSettings.SaveOnClose)
+        if(EngineSettings.SaveOnClose)
             SaveLoad.SaveScene(this);
-
+        
         Renderer.OnClose();
     }
 

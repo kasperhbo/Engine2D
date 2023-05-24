@@ -30,18 +30,21 @@ public class SpriteColor
 [JsonConverter(typeof(ComponentSerializer))]
 public class SpriteRenderer : Component
 {
-    [ShowUI(show = false)] private readonly Transform _lastTransform = new();
     [ShowUI(show = false)] private SpriteColor _lastColor = new();
-    [JsonIgnore] [ShowUI(show = false)] private int _prevZIndex;
 
-    [JsonIgnore] public bool AddToRendererAsSprite = true;
+    [ShowUI(show = false)] private readonly Transform _lastTransform = new();
     public SpriteColor Color = new();
-
+    
     [ShowUI(show = false)] internal bool IsDirty = true;
-
+    
+    public int ZIndex = 0;
+    [JsonIgnore][ShowUI(show = false)]int _prevZIndex = 0;
+    
     [JsonIgnore] internal Texture texture;
     public TextureData? textureData;
 
+    [JsonIgnore] public bool AddToRendererAsSprite = true;
+    
     internal Vector2[] TextureCoords =
     {
         new(1, 1),
@@ -51,9 +54,13 @@ public class SpriteRenderer : Component
     };
 
 
+<<<<<<< HEAD
     public int ZIndex = 0;
 
     public override void Init(GameObject parent)
+=======
+    public override void Init(Gameobject parent)
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
     {
         base.Init(parent);
         if (textureData != null)
@@ -61,8 +68,13 @@ public class SpriteRenderer : Component
             Console.WriteLine("initialize");
             texture = ResourceManager.GetTexture(textureData);
         }
+<<<<<<< HEAD
 
         if (AddToRendererAsSprite)
+=======
+        Console.WriteLine("initialize");
+        if(AddToRendererAsSprite)
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
             Renderer.AddSpriteRenderer(this);
     }
 
@@ -90,7 +102,7 @@ public class SpriteRenderer : Component
             _prevZIndex = ZIndex;
             Renderer.RemoveSprite(this);
             Renderer.AddSpriteRenderer(this);
-            IsDirty = true;
+            this.IsDirty = true;
         }
     }
 

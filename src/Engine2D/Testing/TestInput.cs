@@ -65,7 +65,15 @@ internal class TestInput
         lastWorldY = worldY; 
 
         pos = new Vector2(mouseState.Position.X, mouseState.Position.Y);
+<<<<<<< HEAD
 
+=======
+        
+        // float currentY = getY();
+        //
+        // Console.WriteLine();
+        
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
         xPos = mouseState.Position.X; // Delete
         yPos = mouseState.Position.Y; // Delete
 

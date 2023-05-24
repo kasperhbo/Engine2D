@@ -1,4 +1,6 @@
-﻿using Engine2D.Flags;
+﻿using System.Numerics;
+using Engine2D.Core;
+using Engine2D.Flags;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Newtonsoft.Json;
@@ -29,6 +31,7 @@ public class LightColor
 [JsonConverter(typeof(ComponentSerializer))]
 public class PointLight : Component
 {
+<<<<<<< HEAD
     
     public LightColor Color = new();
     public float Intensity = 1;
@@ -36,6 +39,15 @@ public class PointLight : Component
     [JsonIgnore] public Transform LastTransform { get; } = new();
 
     public override void Init(GameObject parent)
+=======
+    [ShowUI(show = false)] private SpriteColor _lastColor = new();
+    public SpriteColor Color = new();
+    public float Intensity = 100;
+    
+    [JsonIgnore]public Transform LastTransform { get; private set; } = new();
+    
+    public override void Init(Gameobject parent)
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
     {
         base.Init(parent);
         Renderer.AddPointLight(this);
@@ -48,12 +60,36 @@ public class PointLight : Component
     public override void EditorUpdate(double dt)
     {
         //Console.WriteLine(this.texture?.TexID);
+<<<<<<< HEAD
         if (!LastTransform.Equals(Parent.Transform)) Parent.Transform.Copy(LastTransform);
+=======
+        if (!LastTransform.Equals(Parent.transform))
+        {
+            Parent.transform.Copy(LastTransform);
+        }
+
+        if (!_lastColor.Color.Equals(Color.Color))
+        {
+            _lastColor = new SpriteColor(Color.Color);
+        }
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
     }
 
     public override void GameUpdate(double dt)
     {
+<<<<<<< HEAD
         if (!LastTransform.Equals(Parent.Transform)) Parent.Transform.Copy(LastTransform);
+=======
+        if (!LastTransform.Equals(Parent.transform))
+        {
+            Parent.transform.Copy(LastTransform);
+        }
+
+        if (!_lastColor.Color.Equals(Color.Color))
+        {
+            _lastColor = new SpriteColor(Color.Color);
+        }
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
     }
 
     public override string GetItemType()

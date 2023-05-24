@@ -1,4 +1,5 @@
-﻿using Engine2D.Rendering;
+﻿using System.Security.Cryptography;
+using Engine2D.Rendering;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
@@ -7,27 +8,31 @@ namespace Engine2D.Testing;
 internal class TestFrameBuffer
 {
     private int fboId;
+    public Texture Texture { get; private set; }
 
     public TestFrameBuffer(Vector2i size)
     {
         Init(size.X, size.Y);
-    }
-
+    }    
+    
     public TestFrameBuffer(int width, int height)
     {
         Init(width, height);
     }
 
+<<<<<<< HEAD
     public Texture? Texture { get; private set; }
 
     public int GetTextureID => Texture.TexID;
 
+=======
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
     private void Init(int width, int height)
     {
         // Generate framebuffer
         fboId = GL.GenFramebuffer();
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
-
+        
         Texture = new Texture(width, height);
         GL.FramebufferTexture2D(
             FramebufferTarget.Framebuffer,
@@ -51,6 +56,8 @@ internal class TestFrameBuffer
         //GL.GetNamedFramebufferAttachmentParameter(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, );
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
+
+    public int GetTextureID => Texture.TexID;
 
     public void Bind()
     {

@@ -8,13 +8,6 @@ public abstract class UIElemenet
     protected bool _visibility = true;
     protected Action _windowContents;
 
-    public UIElemenet()
-    {
-        _flags = SetWindowFlags();
-        Title = SetWindowTitle();
-        _windowContents = SetWindowContent();
-    }
-
     /// <summary>
     ///     An Simple UI Window
     /// </summary>
@@ -26,10 +19,17 @@ public abstract class UIElemenet
 
     public string Title { get; protected set; }
 
-    protected abstract string SetWindowTitle();
-    protected abstract ImGuiWindowFlags SetWindowFlags();
-    protected abstract Action SetWindowContent();
-
+    public UIElemenet()
+    {
+        _flags = SetWindowFlags();
+        Title = SetWindowTitle();
+        _windowContents = SetWindowContent();
+    }
+    
+    protected abstract  string SetWindowTitle();
+    protected abstract  ImGuiWindowFlags  SetWindowFlags();
+    protected abstract  Action SetWindowContent();
+    
     public void Render()
     {
         if (!_visibility) return;

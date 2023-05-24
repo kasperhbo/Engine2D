@@ -8,7 +8,7 @@ public class ComponentRegistry
 
     public static void Register(string path, Type type)
     {
-        types.Add(path, type);
+        types.Add(path, (Type)type);
     }
 
     public static Type? Get(string path)

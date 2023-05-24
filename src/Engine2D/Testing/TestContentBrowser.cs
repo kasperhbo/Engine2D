@@ -9,15 +9,15 @@ namespace Engine2D.UI;
 public class TestContentBrowser
 {
     private static GCHandle? _currentlyDraggedHandle;
-    private readonly int dirTexture;
+    private Directory currentDirectory = new("", ProjectSettings.s_FullProjectPath, "");
+    private readonly int dirTexture; 
     private readonly int fileTexture;
+    private List<ContentBrowserItemInfo> previous = new();
+    private int sceneTexture;
 
     private readonly TextureData texDataDir;
     private readonly TextureData texDataFile;
     private readonly TextureData texDataScene;
-    private Directory currentDirectory = new("", ProjectSettings.s_FullProjectPath, "");
-    private List<ContentBrowserItemInfo> previous = new();
-    private int sceneTexture;
 
     public TestContentBrowser()
     {

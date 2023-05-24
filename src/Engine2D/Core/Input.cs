@@ -1,5 +1,6 @@
 ﻿namespace Engine2D.Core;
 
+
 //internal static class Input
 //{
 //    static KeyboardState keyboardState;

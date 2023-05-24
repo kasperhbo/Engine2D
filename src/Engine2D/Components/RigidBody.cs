@@ -7,11 +7,13 @@ namespace Engine2D.Components;
 public class RigidBody : Component
 {
     public bool FixedRotation = false;
+    public BodyType BodyType { get; set; }
 
-    [JsonIgnore] public Body RuntimeBody = null;
+    [JsonIgnore] public Body runtimeBody = null;
 
     public RigidBody()
     {
+        
     }
 
     public RigidBody(BodyType bodyType)
@@ -19,12 +21,14 @@ public class RigidBody : Component
         BodyType = bodyType;
     }
 
-    public BodyType BodyType { get; set; }
-
 
     public override void GameUpdate(double dt)
     {
+<<<<<<< HEAD
         Parent.Transform.position = RuntimeBody.GetPosition();
+=======
+        Parent.transform.position = runtimeBody.GetPosition();
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
         base.GameUpdate(dt);
     }
 

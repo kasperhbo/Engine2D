@@ -27,6 +27,7 @@
 
 
     <ItemGroup>
+<<<<<<< HEAD
         <None Update="Shaders\Lighting\default-sprite-light.frag">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -54,11 +55,41 @@
         <None Update="Images\NoCameraInCurrentScene.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+=======
+      <None Update="Shaders\Lighting\default-sprite-light.frag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\Lighting\default-sprite-light.vert">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\Lighting\FrameBuffer.frag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\Lighting\FrameBuffer.vert">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\default.frag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\default.vert">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\Lightmap.frag">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Shaders\Lightmap.vert">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
     </ItemGroup>
 
 
     <ItemGroup>
+<<<<<<< HEAD
         <Folder Include="Rendering\Lights" />
+=======
+      <Folder Include="Rendering\Lights" />
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
     </ItemGroup>
 
 </Project>

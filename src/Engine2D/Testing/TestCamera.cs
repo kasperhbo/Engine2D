@@ -11,10 +11,13 @@ namespace Engine2D.Testing;
 
 public class TestCamera : Component
 {
+<<<<<<< HEAD
     public float Zoom = 1.0f;
     
     private Vector2 projectionSize = new(1920,1080);
 
+=======
+>>>>>>> parent of efcdaf4... AUTO REFACTORIO
     // The inverse projection matrix
     private Matrix4 inverseProjectionMatrix;
 
@@ -27,6 +30,7 @@ public class TestCamera : Component
 
     // Projection matrix say how big the screen is going to be.
     private Matrix4 projectionMatrix;
+    private readonly Vector2 projectionSize = new(Engine.Get().getWidth(), Engine.Get().getHeight());
 
     // View Matrix says where the camera is in relation to our world.
     private Matrix4 viewMatrix;
