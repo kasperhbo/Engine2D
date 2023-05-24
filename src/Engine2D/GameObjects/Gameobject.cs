@@ -3,21 +3,27 @@ using Box2DSharp.Dynamics;
 using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
+using Newtonsoft.Json;
 using OpenTK.Mathematics;
 
 namespace Engine2D.GameObjects;
 
 public class Gameobject : Asset
 {
+    //UIDS
+    public int UID = -1;
+    //
     private readonly List<Component> _componentsToAddEndOfFrame = new();
     public List<Component> components = new();
-
     public string Name = "";
-
     public Transform transform = new();
+    
+    
+    
 
 
     public Gameobject()
@@ -30,7 +36,6 @@ public class Gameobject : Asset
         this.transform = transform;
         components = new List<Component>();
     }
-
 
     public Gameobject(string name, List<Component> components, Transform transform)
     {
@@ -50,8 +55,9 @@ public class Gameobject : Asset
 
     public void Init()
     {
+        if (UID == -1)UID = UIDManager.GetUID();
         foreach (var component in components) component.Init(this);
-    }
+    } 
 
     public void Start()
     {
@@ -121,25 +127,7 @@ public class Gameobject : Asset
             OpenTKUIHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
                 () => { components[i].ImGuiFields(); }, components[i].WindowSize().Y
             );
-
-
-            //if (ImGui.CollapsingHeader(components[i].GetItemType(), ImGuiTreeNodeFlags.DefaultOpen))
-            //{
-            //    ImGui.PushStyleColor(ImGuiCol.ChildBg, new System.Numerics.Vector4(0.19f, .19f, .19f, 1)); //For visibility
-
-            //    ImGui.BeginChild("##", new System.Numerics.Vector2(0, components[i].WindowSize().Y), false, 0); ; // Leave ~100
-            //    ImGui.PopStyleColor(3);
-
-            //    //ImGui.BeginGroup();
-
-            //    components[i].ImGuiFields();
-            //    //ImGui.EndGroup();
-            //    //ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), (int)ImGuiCol.ChildBg);
-            //    ImGui.GetForegroundDrawList().AddRect(
-            //        ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), 3);
-
-            //    ImGui.EndChild();
-            //}
+            
             ImGui.PopID();
         }
 
