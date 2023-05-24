@@ -26,7 +26,7 @@
     "Name": "Mario: 01",
     "transform": {
       "position": {
-        "X": -235.0,
+        "X": -5.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -36,7 +36,7 @@
       }
     },
     "localPosition": {
-      "X": -414.0,
+      "X": -5.0,
       "Y": 0.0
     }
   },
@@ -53,14 +53,14 @@
             "W": 0.5019608
           }
         },
-        "Intensity": 7.4,
+        "Intensity": 17.7,
         "Type": "PointLight"
       }
     ],
     "Name": "Point Light: 11",
     "transform": {
       "position": {
-        "X": 276.0,
+        "X": -5.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -70,13 +70,13 @@
       }
     },
     "localPosition": {
-      "X": 511.0,
+      "X": 0.0,
       "Y": 0.0
     }
   },
   {
     "UID": 2,
-    "PARENT_UID": 1,
+    "PARENT_UID": 0,
     "components": [
       {
         "Intensity": 0.1,
@@ -86,7 +86,7 @@
     "Name": "GlobalLight: 21",
     "transform": {
       "position": {
-        "X": 276.0,
+        "X": -5.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -109,8 +109,8 @@
           "Color": {
             "X": 1.0,
             "Y": 1.0,
-            "Z": 0.0,
-            "W": 0.0
+            "Z": 1.0,
+            "W": 1.0
           }
         },
         "textureData": null,
@@ -121,7 +121,7 @@
     "Name": "Empty Sprite: 31",
     "transform": {
       "position": {
-        "X": 179.0,
+        "X": 0.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -131,7 +131,7 @@
       }
     },
     "localPosition": {
-      "X": -17.0,
+      "X": 0.0,
       "Y": 0.0
     }
   }

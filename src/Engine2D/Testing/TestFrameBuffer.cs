@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 
 namespace Engine2D.Testing;
 
-internal class TestFrameBuffer
+public class TestFrameBuffer
 {
     private int fboId;
 

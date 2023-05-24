@@ -53,18 +53,14 @@ public class SpriteRenderer : Component
 
     public int ZIndex = 0;
 
-    public override void Init(Gameobject parent)
+    public override void Init(Gameobject parent, Renderer renderer)
     {
-        base.Init(parent);
+        base.Init(parent, renderer);
         if (textureData != null)
         {
-            Console.WriteLine("has texture data, loading texture...." + textureData.texturePath);
             texture = ResourceManager.GetTexture(textureData);
         }
-
-        Console.WriteLine("initialize");
-        if (AddToRendererAsSprite)
-            Renderer.AddSpriteRenderer(this);
+        renderer.AddSpriteRenderer(this);
     }
 
     public override void Start()
@@ -89,8 +85,7 @@ public class SpriteRenderer : Component
         if (!_prevZIndex.Equals(ZIndex))
         {
             _prevZIndex = ZIndex;
-            Renderer.RemoveSprite(this);
-            Renderer.AddSpriteRenderer(this);
+            throw new NotImplementedException();
             IsDirty = true;
         }
     }

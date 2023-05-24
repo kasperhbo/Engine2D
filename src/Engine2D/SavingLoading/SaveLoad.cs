@@ -1,5 +1,6 @@
 ﻿using Engine2D.Core;
 using Engine2D.GameObjects;
+using Engine2D.Logging;
 using Engine2D.Scenes;
 using KDBEngine.Core;
 using Newtonsoft.Json;
@@ -53,12 +54,13 @@ internal static class SaveLoad
 
             File.WriteAllText(scene.ScenePath, sceneData);
         }
+        
+        Log.Succes("Succesfully saved: " + scene.ScenePath);
     }
 
-    internal static void LoadScene(string sceneToLoad)
+    internal static List<Gameobject> LoadScene(string sceneToLoad)
     {
-        Engine.Get().SwitchScene(sceneToLoad);
-
+        List<Gameobject?> objs = new List<Gameobject?>();
         if (File.Exists(sceneToLoad))
         {
             var lines = File.ReadAllLines(sceneToLoad);
@@ -84,14 +86,12 @@ internal static class SaveLoad
             }
 
             //Load gameobjects
-            List<Gameobject?> objs = JsonConvert.DeserializeObject<List<Gameobject>>(gos)!;
-
-            // var lightSettings = JsonConvert.DeserializeObject<LightSettings>(lightSettingsStr);
-
-            foreach (var t in objs!) Engine.Get()?._currentScene?.AddGameObjectToScene(t);
-
-            // Engine.Get()._currentScene.LightSettings = lightSettings;
+            objs = JsonConvert.DeserializeObject<List<Gameobject>>(gos)!;
+            
         }
+
+        Log.Succes("qloaded: " + sceneToLoad);
+        return objs;
     }
 
     #endregion

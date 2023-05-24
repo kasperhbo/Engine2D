@@ -10,7 +10,7 @@ using EnableCap = OpenTK.Graphics.OpenGL.EnableCap;
 
 namespace Engine2D.Rendering;
 
-internal static class Renderer
+public class Renderer
 {
     //  internal static OrthographicCamera S_CurrentCamera = new(0,0);
     private static readonly List<RenderBatch> _renderBatches = new();
@@ -18,46 +18,47 @@ internal static class Renderer
 
     #region Debugging
 
-    private static int _drawCalls;
+    private int _drawCalls;
 
     #endregion
 
-    private static LightMapRenderer _lightMapRenderer = new();
+    private LightMapRenderer _lightMapRenderer = new();
 
-    public static Texture LightmapTexture;
-    public static TestFrameBuffer GameBuffer;
+    public Texture LightmapTexture;
+    
+    public TestFrameBuffer GameBuffer;
 
-    private static List<PointLight> _pointLights = new();
-    private static readonly int _maxLights = 250;
+    private List<PointLight> _pointLights = new();
+    private readonly int _maxLights = 250;
 
-    private static Vector2 _maxLightDistance = new(960, 540);
+    public GlobalLight GlobalLight { get; set; }
 
-
-    public static GlobalLight GlobalLight { get; private set; }
-
-    internal static void Init()
+    internal void Init()
     {
         Flush();
     }
 
-
-    internal static void Flush()
+    internal void Flush()
     {
         _renderBatches.Clear();
         _spriteBatchDict.Clear();
+        
+        //Create light data
         _lightMapRenderer = new LightMapRenderer();
-        GameBuffer = new TestFrameBuffer(Engine.Get().Size);
         _lightMapRenderer.Init();
         _pointLights = new List<PointLight>();
-        GlobalLight = null;
+        
+        
+        //Create frame buffers
+        GameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
-    internal static void Render()
+    internal void Render(TestCamera camera)
     {
         _drawCalls = 0;
         //Render Lights
         {
-            LightmapTexture = _lightMapRenderer.Render();
+            LightmapTexture = _lightMapRenderer.Render(this, camera);
         }
         //Render the scene
         {
@@ -66,32 +67,34 @@ internal static class Renderer
             GL.Clear(ClearBufferMask.ColorBufferBit);
             OpenTK.Graphics.OpenGL.GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
-            foreach (var batch in _renderBatches) batch.Render(Engine.Get().testCamera, LightmapTexture);
+            foreach (var batch in _renderBatches) batch.Render(camera, LightmapTexture);
             GameBuffer.UnBind();
         }
+        
+        
     }
 
 
-    internal static void Update(double dt)
+    internal void Update(double dt)
     {
     }
 
-    internal static void OnClose()
+    internal void OnClose()
     {
     }
 
-    internal static void OnResize(ResizeEventArgs e)
+    internal void OnResize(ResizeEventArgs e)
     {
         _lightMapRenderer.Resize();
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
-    internal static void AddPointLight(PointLight light)
+    internal void AddPointLight(PointLight light)
     {
         _pointLights.Add(light);
     }
 
-    internal static void AddSpriteRenderer(SpriteRenderer spr)
+    internal void AddSpriteRenderer(SpriteRenderer spr)
     {
         var added = false;
         RenderBatch addedToBatch = null;
@@ -117,18 +120,18 @@ internal static class Renderer
         _spriteBatchDict.Add(spr, addedToBatch);
     }
 
-    internal static void RemoveSprite(SpriteRenderer spr)
+    internal void RemoveSprite(SpriteRenderer spr)
     {
         _spriteBatchDict[spr].RemoveSprite(spr);
         _spriteBatchDict.Remove(spr);
     }
 
-    public static Action GetDebugGUI()
+    public Action GetDebugGUI()
     {
         return NewDebugUI();
     }
 
-    private static Action NewDebugUI()
+    private Action NewDebugUI()
     {
         return () =>
         {
@@ -138,26 +141,15 @@ internal static class Renderer
         };
     }
 
-    public static List<PointLight> GetPointLightsToRender()
+    public List<PointLight> GetPointLightsToRender()
     {
         var pointLights = new List<PointLight>();
         var count = 0;
 
         for (var i = 0; i < _pointLights.Count; i++)
         {
-            var cam = Engine.Get().testCamera;
-            // float xDist = (cam.position.X + _pointLights[i].Intensity * 100) - (_pointLights[i].LastTransform.position.X);
-            // float yDist = cam.position.Y - _pointLights[i].LastTransform.position.Y;
-
-            // if(!IsInRange(new Vector2(
-            //        _pointLights[i].LastTransform.position.X +(_pointLights[i].Intensity * 100),
-            //        _pointLights[i].LastTransform.position.Y +(_pointLights[i].Intensity * 100)
-            //        ), cam.position, _maxLightDistance))
-            // {
             pointLights.Add(_pointLights[i]);
             count++;
-            //}
-
             if (count >= _maxLights)
                 break;
         }

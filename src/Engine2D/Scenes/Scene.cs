@@ -3,6 +3,7 @@ using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Components;
 using Engine2D.GameObjects;
+using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.Testing;
@@ -15,20 +16,11 @@ namespace Engine2D.Scenes;
 
 internal class Scene
 {
-    private bool _isPlaying;
+    public Renderer Renderer { get; private set; }
 
     #region onplay
-
-    private World physicsWorld;
-
-    #endregion
-
-    internal string ScenePath { get; private set; } = "NoScene";
     
-    public List<Gameobject> Gameobjects = new List<Gameobject>();
-    
-    public GlobalLight GlobalLight { get; set; } = null;
-
+    private bool _isPlaying;
 
     public bool IsPlaying
     {
@@ -48,7 +40,18 @@ internal class Scene
             _isPlaying = value;
         }
     }
+    
+    private World physicsWorld;
 
+    #endregion
+
+    internal string ScenePath { get; private set; } = "NoScene";
+    
+    public List<Gameobject> Gameobjects = new List<Gameobject>();
+    public GlobalLight GlobalLight { get; set; } = null;
+    
+    internal TestCamera? TestCamera = null;
+    
     private void StartPlay()
     {
         SaveLoad.SaveScene(this);
@@ -83,7 +86,7 @@ internal class Scene
             }
     }
 
-    internal void GameUpdate(double dt)
+    public void GameUpdate(double dt)
     {
         var velocityItterations = 6;
         var positionItterations = 2;
@@ -98,21 +101,58 @@ internal class Scene
         SaveLoad.LoadScene(ScenePath);
     }
 
-    internal virtual void Init(Engine engine, string scenePath, int width, int height)
+    /// <summary>
+    /// Runs before anything
+    /// </summary>
+    /// <param name="scenePath"></param>
+    internal virtual void Init(string scenePath)
     {
-        ScenePath = scenePath;
+        Renderer = new Renderer();
         Renderer.Init();
-    }
-    
-    public void Start()
-    {
+        
+        TestCamera = new TestCamera();
+        
+        ScenePath = scenePath;
+        LoadDataFromDisk();
+        
         foreach (var go in Gameobjects)
         {
-            go.SetParent(go.PARENT_UID);
+            go.Init(Renderer);
+        }
+        
+        Start();
+    }
+
+    private void LoadDataFromDisk()
+    {
+        if (File.Exists(ScenePath))
+        {
+            Log.Succes("found: " + ScenePath + " On Disk");
+            Gameobjects = SaveLoad.LoadScene(ScenePath);
         }
     }
 
-    internal virtual void EditorUpdate(double dt)
+    /// <summary>
+    /// Runs at scene start | NOT SCENE PLAY!
+    /// </summary>
+    /// <param name="dt"></param>
+
+    public virtual void Start()
+    {
+        foreach (var go in Gameobjects)
+        {
+            go.Start();
+        }
+
+        //Set childs to parents based on UID
+        foreach (var go in Gameobjects)
+        {
+            if (go.PARENT_UID == -1) return;
+            go.SetParent(go.PARENT_UID);
+        }
+    }
+    
+    public virtual void EditorUpdate(double dt)
     {
         if (TestInput.KeyDown(Keys.LeftControl))
             if (TestInput.KeyPress(Keys.S))
@@ -121,40 +161,45 @@ internal class Scene
                 SaveLoad.SaveScene(this);
             }
 
-        if (TestInput.KeyDown(Keys.A)) Engine.Get().testCamera.position.X -= 100 * (float)dt;
-        if (TestInput.KeyDown(Keys.D)) Engine.Get().testCamera.position.X += 100 * (float)dt;
-        if (TestInput.KeyDown(Keys.W)) Engine.Get().testCamera.position.Y += 100 * (float)dt;
-        if (TestInput.KeyDown(Keys.S)) Engine.Get().testCamera.position.Y -= 100 * (float)dt;
-
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
         if (IsPlaying) GameUpdate(dt);
     }
 
-    internal virtual void Render(double dt)
+    public virtual void Render()
     {
+        Renderer.Render(TestCamera);
     }
 
-    internal void AddGameObjectToScene(Gameobject go)
+    public void AddGameObjectToScene(Gameobject go)
     {
+        // SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
+        // PointLight pl = go.GetComponent<PointLight>();
+        // if (spr != null)
+        //     Renderer.AddSpriteRenderer(spr);
+        // if (pl != null)
+        //     Renderer.AddPointLight(pl);
+        
         Gameobjects.Add(go);
-        go.Init();
+        go.Init(Renderer);
         go.Start();
         Engine.Get().CurrentSelectedAsset = go;
     }
 
-    internal virtual void OnClose()
+    public virtual void OnClose()
     {
         if (EngineSettings.SaveOnClose)
             SaveLoad.SaveScene(this);
 
-        Renderer.OnClose();
+        // Renderer.OnClose();
     }
 
-    internal void OnGui()
+    public void OnGui(TestViewportWindow viewportWindow)
     {
+        TestCamera.CameraSettingsGUI();
+        
+        viewportWindow.OnGui(Renderer);
+        
         ImGui.Begin("Scene Settings");
-
-
         ImGui.End();
     }
 
@@ -162,18 +207,17 @@ internal class Scene
 
     internal virtual void OnResized(ResizeEventArgs newSize)
     {
+        TestCamera.adjustProjection();
         Renderer.OnResize(newSize);
-        Engine.Get().ImGuiController.WindowResized(newSize.Size.X, newSize.Size.Y);
     }
 
     internal virtual void OnMouseWheel(MouseWheelEventArgs mouseWheelEventArgs)
     {
-        Engine.Get().ImGuiController.MouseScroll(mouseWheelEventArgs.Offset);
     }
 
     internal virtual void OnTextInput(TextInputEventArgs inputEventArgs)
     {
-        Engine.Get().ImGuiController.PressChar((char)inputEventArgs.Unicode);
+        
     }
 
     #endregion

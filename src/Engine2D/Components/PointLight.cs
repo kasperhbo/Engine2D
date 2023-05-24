@@ -14,10 +14,10 @@ public class PointLight : Component
 
     [JsonIgnore] public Transform LastTransform { get; } = new();
 
-    public override void Init(Gameobject parent)
+    public override void Init(Gameobject parent, Renderer renderer)
     {
-        base.Init(parent);
-        Renderer.AddPointLight(this);
+        base.Init(parent, renderer);
+        renderer.AddPointLight(this);
     }
 
     public override void Start()

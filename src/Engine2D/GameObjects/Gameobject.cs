@@ -4,6 +4,7 @@ using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
+using Engine2D.Rendering;
 using Engine2D.Scenes;
 using Engine2D.UI;
 using ImGuiNET;
@@ -57,11 +58,11 @@ public class Gameobject : Asset
     }
 
 
-    public void Init()
+    public void Init(Renderer renderer)
     {
         if (UID == -1) UID = UIDManager.GetUID();
         UIDManager.TakenUIDS.Add(UID);
-        foreach (var component in components) component.Init(this);
+        foreach (var component in components) component.Init(this, renderer);
     }
 
     public void Start()
@@ -89,21 +90,21 @@ public class Gameobject : Asset
         foreach (var component in components) component.Destroy();
     }
 
-    public void AddComponent(Component component)
+    public void AddComponent(Component component, Renderer renderer)
     {
-        component.Init(this);
+        component.Init(this, renderer);
         components.Add(component);
     }
 
-    private void ActualAddComponent(Component component)
+    private void ActualAddComponent(Component component, Renderer renderer)
     {
-        component.Init(this);
+        component.Init(this, renderer);
         components.Add(component);
     }
 
-    public void AddLinkedComponent(Component component)
+    public void AddLinkedComponent(Component component, Renderer renderer)
     {
-        component.Init(this);
+        component.Init(this, renderer);
     }
 
     public bool AABB(Vector2 point)
@@ -147,67 +148,62 @@ public class Gameobject : Asset
         }
 
 
-        {
-            ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y - 80));
-            ImGui.Separator();
-
-            if (ImGui.Button("Add component", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, 26)))
-            {
-                if (ImGui.BeginDragDropTarget())
-                {
-                    var payload = ImGui.AcceptDragDropPayload("Script_Drop");
-                    if (payload.IsValidPayload())
-                    {
-                        var component = (string)GCHandle.FromIntPtr(payload.Data).Target;
-                        Log.Message("Dropped: " + component);
-                    }
-
-                    ImGui.EndDragDropTarget();
-                }
-
-                ImGui.OpenPopup("AddComponent");
-            }
-
-            ImGui.GetMousePos();
-
-            ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y));
-
-
-            //TODO: ADD COMPONENT TO GOP
-            if (ImGui.BeginPopup("AddComponent"))
-            {
-                if (ImGui.MenuItem("ScriptComponent"))
-                {
-                    var rb = new ScriptHolderComponent();
-                    var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
-                    go?.AddComponent(rb);
-                    ImGui.CloseCurrentPopup();
-                }
-
-                if (ImGui.MenuItem("RigidBody"))
-                {
-                    var rb = new RigidBody(BodyType.DynamicBody);
-                    var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
-                    go?.AddComponent(rb);
-                    ImGui.CloseCurrentPopup();
-                }
-
-                if (ImGui.MenuItem("Sprite Renderer"))
-                {
-                    var spr = new SpriteRenderer();
-                    var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
-                    go?.AddComponent(spr);
-                    ImGui.CloseCurrentPopup();
-                }
-
-                ImGui.EndPopup();
-            }
-        }
-
-
-        foreach (var component in componentsToRemove) RemoveComponents(component);
-
-        foreach (var component in _componentsToAddEndOfFrame) ActualAddComponent(component);
+        // {
+        //     ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y - 80));
+        //     ImGui.Separator();
+        //
+        //     if (ImGui.Button("Add component", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, 26)))
+        //     {
+        //         if (ImGui.BeginDragDropTarget())
+        //         {
+        //             var payload = ImGui.AcceptDragDropPayload("Script_Drop");
+        //             if (payload.IsValidPayload())
+        //             {
+        //                 var component = (string)GCHandle.FromIntPtr(payload.Data).Target;
+        //                 Log.Message("Dropped: " + component);
+        //             }
+        //
+        //             ImGui.EndDragDropTarget();
+        //         }
+        //
+        //         ImGui.OpenPopup("AddComponent");
+        //     }
+        //
+        //     ImGui.GetMousePos();
+        //
+        //     ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y));
+        //
+        //
+        //     //TODO: ADD COMPONENT TO GOP
+        //     if (ImGui.BeginPopup("AddComponent"))
+        //     {
+        //         if (ImGui.MenuItem("ScriptComponent"))
+        //         {
+        //             var rb = new ScriptHolderComponent();
+        //             var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+        //             go?.AddComponent(rb);
+        //             ImGui.CloseCurrentPopup();
+        //         }
+        //
+        //         if (ImGui.MenuItem("RigidBody"))
+        //         {
+        //             var rb = new RigidBody(BodyType.DynamicBody);
+        //             var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+        //             go?.AddComponent(rb);
+        //             ImGui.CloseCurrentPopup();
+        //         }
+        //
+        //         if (ImGui.MenuItem("Sprite Renderer"))
+        //         {
+        //             var spr = new SpriteRenderer();
+        //             var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+        //             go?.AddComponent(spr);
+        //             ImGui.CloseCurrentPopup();
+        //         }
+        //
+        //         ImGui.EndPopup();
+        //     }
+        // }
         _componentsToAddEndOfFrame.Clear();
     }
 

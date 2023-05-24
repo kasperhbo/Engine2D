@@ -46,10 +46,10 @@ internal class TestInput
         lastWorld = new Vector2(0.0f, 0.0f);
 
         viewportPos = new Vector2();
-        viewportSize = new Vector2(Engine.Get().getWidth(), Engine.Get().getHeight());
+        viewportSize = new Vector2(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y);
     }
 
-    public static void mousePosCallback(MouseState mouse, KeyboardState keyboard)
+    public static void mousePosCallback(MouseState mouse, KeyboardState keyboard, TestCamera camera)
     {
         //if (.mouseButtonDown > 0)
         //{
@@ -75,7 +75,7 @@ internal class TestInput
         xPos = mouseState.Position.X; // Delete
         yPos = mouseState.Position.Y; // Delete
 
-        calcOrtho();
+        calcOrtho(camera);
     }
 
     public static void endFrame()
@@ -117,7 +117,7 @@ internal class TestInput
         return pos.Y;
     }
 
-    private static void calcOrtho()
+    private static void calcOrtho(TestCamera camera)
     {
         var currentX = getX() - viewportPos.X;
         var currentY = getY() - viewportPos.Y;
@@ -128,7 +128,6 @@ internal class TestInput
         // vec.w must be 1! (Vector multiplication)
         var tmp = new Vector4(currentX, currentY, 0.0f, 1.0f);
 
-        var camera = Engine.Get().testCamera;
         var viewProjection = new Matrix4();
 
         viewProjection = Matrix4.Mult(camera.getInverseViewMatrix(), camera.getInverseProjection());

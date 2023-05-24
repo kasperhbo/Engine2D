@@ -20,31 +20,17 @@ namespace KDBEngine.Core
     public class Engine : GameWindow
     {
         private static Engine _instance;
-
-        public static string DefaultTitle;
-
+        
+        //UI
         private readonly Dictionary<string, UIElemenet> _guiWindows = new();
-
-        //TODO: MAKE THIS STATIC AND SAVABLE
         private readonly EngineSettingsWindow engineSettingsWindow = new();
-
-        internal Scene? _currentScene;
-
-        private int _frameCounter;
-        private TestContentBrowser cb;
-
-        internal Asset? CurrentSelectedAsset;
-
-        private bool first = true;
-
         internal ImGuiController ImGuiController;
-
-        //TODO:MOVE TO SCENE
-        internal TestCamera testCamera;
-
-        //TODO:MOVE TO SCENE
         private TestViewportWindow viewportWindow;
-
+        
+        internal Scene? _currentScene;
+        public Asset? CurrentSelectedAsset;
+        
+#region setup
         public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
             gameWindowSettings, nativeWindowSettings)
         {
@@ -79,40 +65,20 @@ namespace KDBEngine.Core
 
             return _instance;
         }
-
+#endregion
         protected override void OnLoad()
         {
             base.OnLoad();
-
-            Log.Message("Message", showFile: true, showLine: true, showFunction: true);
-            Log.Succes("Succes");
-            Log.Warning("Warning");
-            Log.Error("Error");
-
+            
             SaveLoad.LoadEngineSettings();
-
             ImGuiController = new ImGuiController(Size.X, Size.Y);
 
-            if (Settings.s_IsEngine) CreateUIWindows();
-
-            SaveLoad.LoadScene(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
-            _currentScene.Start();
-            TestInput.Init();
-
-            testCamera = new TestCamera();
             viewportWindow = new TestViewportWindow();
-            cb = new TestContentBrowser();
-
             
+            _currentScene = new Scene();
+            _currentScene.Init(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
             
-            if (!Settings.s_IsEngine)
-            {
-                LoadGameWithoutEngine();
-                _currentScene.IsPlaying = true;
-            }
-
-            
-            DefaultTitle = Get().Title;
+            if (Settings.s_IsEngine) CreateUIWindows();
         }
 
 
@@ -121,49 +87,31 @@ namespace KDBEngine.Core
             base.OnUpdateFrame(args);
 
             //Input.Update(KeyboardState, MouseState);
-            TestInput.mousePosCallback(MouseState, KeyboardState);
+            TestInput.mousePosCallback(MouseState, KeyboardState, _currentScene?.TestCamera);
 
             _currentScene?.EditorUpdate(args.Time);
 
             TestInput.endFrame();
         }
-
-        private void LoadGameWithoutEngine()
-        {
-        }
-
+        
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
-            var fps = 1.0f / e.Time;
-            _frameCounter++;
-            if (_frameCounter == 30)
+            
+            //Set title to fps + title
+            SetTitle((float)e.Time);
+            
+            _currentScene?.Render();
+            
+            //If engine render UI
+            if (Settings.s_IsEngine) 
             {
-                Title = DefaultTitle + " | FPS: " + Math.Round(fps, 0);
-                _frameCounter = 0;
-            }
-
-            if (Settings.s_IsEngine)
-            {
-                if (TestViewportWindow.IsMouseInsideViewport() && TestInput.MousePressed(MouseButton.Left))
-                    foreach (var go in _currentScene?.Gameobjects)
-                        if (go.AABB(TestInput.getWorld()))
-                        {
-                            Get().CurrentSelectedAsset = go;
-                            break;
-                        }
-
-                if (CurrentSelectedAsset != null)
-                {
-                }
-
-                //Render the game
-                Renderer.Render();
-
                 //ImGui
                 {
                     ImGuiController.Update(this, e.Time);
+
+                    #region Menu
+
                     ImGui.BeginMainMenuBar();
                     if (ImGui.BeginMenu("Menu"))
                     {
@@ -186,30 +134,22 @@ namespace KDBEngine.Core
                         if (ImGui.MenuItem("Engine Settings")) engineSettingsWindow.SetVisibility(true);
                         ImGui.EndMenu();
                     }
-
+                    
                     ImGui.EndMainMenuBar();
+                    
+                    #endregion
+                    
                     ImGui.DockSpaceOverViewport();
                     ImGui.ShowDemoWindow();
 
-                    //gameViewport.OnGui(_frameBuffer.TextureID, () => { });
-                    viewportWindow.OnGui();
-                    cb.OnGui();
-                    ImGui.Begin("test");
-
-                    ImGui.End();
-
-                    testCamera.CameraSettingsGUI();
 
                     foreach (var window in _guiWindows.Values) window.Render();
 
-                    _currentScene.OnGui();
-
+                    _currentScene?.OnGui(viewportWindow);
                     ImGuiController.Render();
 
                     ImGuiController.CheckGLError("End of frame");
                 }
-                SwapBuffers();
-                return;
             }
 
             SwapBuffers();
@@ -220,10 +160,13 @@ namespace KDBEngine.Core
             base.OnResize(e);
 
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
+            
             _currentScene?.OnResized(e);
-
-            testCamera.adjustProjection();
-            Renderer.OnResize(e);
+            
+            if (Settings.s_IsEngine)
+            {
+                ImGuiController.WindowResized(ClientSize.X, ClientSize.Y);
+            }
         }
 
         protected override void OnTextInput(TextInputEventArgs e)
@@ -231,6 +174,12 @@ namespace KDBEngine.Core
             base.OnTextInput(e);
 
             _currentScene?.OnTextInput(e);
+            
+            if (Settings.s_IsEngine)
+            {
+                //UPDATE UI
+                ImGuiController.PressChar((char)e.Unicode);
+            }
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -238,41 +187,23 @@ namespace KDBEngine.Core
             base.OnMouseWheel(e);
 
             _currentScene?.OnMouseWheel(e);
+            
+            if(Settings.s_IsEngine)
+            {
+                //UPDATE UI
+                ImGuiController.MouseScroll(e.Offset);
+            }
         }
 
         protected override void OnUnload()
         {
-            _currentScene.IsPlaying = false;
-            _currentScene.OnClose();
+            if (_currentScene != null)
+            {
+                _currentScene.IsPlaying = false;
+                _currentScene.OnClose();
+            }
+
             base.OnUnload();
-        }
-
-        internal void SwitchScene(string sceneName)
-        {
-            Renderer.Flush();
-            Title = WindowSettings.s_Title + " | " + sceneName;
-            Scene newScene = new();
-            _currentScene = newScene;
-            newScene.Init(this, sceneName, Size.X, Size.Y);
-        }
-
-        internal void NewScene(string sceneName)
-        {
-            Renderer.Flush();
-            Title = WindowSettings.s_Title + " | " + sceneName;
-            Scene newScene = new();
-            newScene.Init(this, sceneName, Size.X, Size.Y);
-            _currentScene = newScene;
-            SaveLoad.SaveScene(_currentScene);
-        }
-
-        internal static void CreateNewProject(string newProjectLocation, string newProjectName)
-        {
-            ProjectSettings.s_ProjectName = newProjectName;
-            ProjectSettings.s_ProjectLocation = newProjectLocation;
-            ProjectSettings.s_FullProjectPath = ProjectSettings.s_ProjectLocation + ProjectSettings.s_ProjectName;
-
-            SaveLoad.LoadScene(ProjectSettings.s_FullProjectPath + "\\defaultscenes\\example.kdbscene");
         }
 
         private void CreateUIWindows()
@@ -286,26 +217,25 @@ namespace KDBEngine.Core
             var hierarch = new SceneHierachy();
             _guiWindows.Add(hierarch.Title, hierarch);
 
-            var renderDebug = new RenderDebugUI();
-            _guiWindows.Add(renderDebug.Title, renderDebug);
-
-
             _guiWindows.Add(engineSettingsWindow.Title, engineSettingsWindow);
         }
 
-        internal float getWidth()
+        internal float TargetAspectRatio()
         {
-            return ClientSize.X;
+            var res = (float)ClientSize.X /(float)ClientSize.Y;
+            return res;
         }
-
-        internal float getHeight()
+        
+        private int _frameCounter;
+        private void SetTitle(float time)
         {
-            return ClientSize.Y;
-        }
-
-        internal float getTargetAspectRatio()
-        {
-            return getWidth() / getHeight();
+            var fps = 1.0f / time;
+            _frameCounter++;
+            if (_frameCounter == 30)
+            {
+                Title = string.Format("KDB ENGIN V{0} | Scene : {1} | FPS : {2}", 0.1, _currentScene.ScenePath, fps);
+                _frameCounter = 0;
+            }
         }
     }
 }

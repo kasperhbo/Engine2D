@@ -13,9 +13,8 @@ internal class TestViewportWindow
     public static Vector2 ViewportSize;
 
     private TestFrameBuffer frameBufferToRenderer = null;
-
-
-    public void OnGui()
+    
+    public void OnGui(Renderer renderer)
     {
         ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
                                                                   | ImGuiWindowFlags.MenuBar);
@@ -45,8 +44,8 @@ internal class TestViewportWindow
 
 
         // var textureId = GameRenderer.FrameBufferToRenderer();
-        if (Renderer.GameBuffer != null)
-            ImGui.Image((IntPtr)Renderer.GameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y),
+        if (renderer.GameBuffer != null)
+            ImGui.Image((IntPtr)renderer.GameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y),
                 new Vector2(0, 1), new Vector2(1, 0));
         else
             //TODO: MAKE ERROR TEXTUYRE
@@ -92,12 +91,12 @@ internal class TestViewportWindow
         windowSize.Y -= ImGui.GetScrollY();
 
         var aspectWidth = windowSize.X;
-        var aspectHeight = aspectWidth / Engine.Get().getTargetAspectRatio();
+        var aspectHeight = aspectWidth / Engine.Get().TargetAspectRatio();
         if (aspectHeight > windowSize.Y)
         {
             // We must switch to pillarbox mode
             aspectHeight = windowSize.Y;
-            aspectWidth = aspectHeight * Engine.Get().getTargetAspectRatio();
+            aspectWidth = aspectHeight * Engine.Get().TargetAspectRatio();
         }
 
         return new Vector2(aspectWidth, aspectHeight);

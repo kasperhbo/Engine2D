@@ -2,6 +2,7 @@
 using System.Reflection;
 using Engine2D.Flags;
 using Engine2D.GameObjects;
+using Engine2D.Rendering;
 using Engine2D.UI;
 using ImGuiNET;
 using Newtonsoft.Json;
@@ -21,7 +22,7 @@ public abstract class Component
     public abstract string GetItemType();
 
 
-    public virtual void Init(Gameobject parent)
+    public virtual void Init(Gameobject parent, Renderer renderer)
     {
         if (_initialized) return;
         _initialized = true;

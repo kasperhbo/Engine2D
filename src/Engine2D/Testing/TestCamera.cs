@@ -7,7 +7,7 @@ namespace Engine2D.Testing;
 
 public class TestCamera
 {
-    private readonly Vector2 projectionSize = new(Engine.Get().getWidth(), Engine.Get().getHeight());
+    private readonly Vector2 projectionSize = new(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y);
 
     // The inverse projection matrix
     private Matrix4 inverseProjectionMatrix;

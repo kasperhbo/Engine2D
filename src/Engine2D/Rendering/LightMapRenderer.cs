@@ -32,8 +32,11 @@ public class LightMapRenderer
 
     private int _vertexBufferObject;
 
+    private bool _firstRun = true;
+
     public void Init()
     {
+        _firstRun = false;
         var offset = 0;
         _vertices[offset] = Engine.Get().Size.X;
         ;
@@ -80,8 +83,10 @@ public class LightMapRenderer
         _shader.use();
     }
 
-    public Texture Render()
+    public Texture Render(Engine2D.Rendering.Renderer renderer, TestCamera camera)
     {
+        if(_firstRun)Init();
+        
         _lightMap.Bind();
 
         GL.ClearColor(1, 1, 1, 1);
@@ -91,7 +96,7 @@ public class LightMapRenderer
         //Draw a fullscreen quad
 
         _shader.use();
-        UploadUniforms();
+        UploadUniforms(renderer, camera);
         GL.BindVertexArray(_vertexArrayObject);
         GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
@@ -105,12 +110,12 @@ public class LightMapRenderer
         _lightMap = new TestFrameBuffer(Engine.Get().Size.X, Engine.Get().Size.Y);
     }
 
-    private void UploadUniforms()
+    private void UploadUniforms(Renderer renderer, TestCamera camera)
     {
-        _shader.uploadMat4f("uProjection", Engine.Get().testCamera.getProjectionMatrix());
-        _shader.uploadVec2f("uCameraOffset", Engine.Get().testCamera.getPosition());
+        _shader.uploadMat4f("uProjection", camera.getProjectionMatrix());
+        _shader.uploadVec2f("uCameraOffset", camera.getPosition());
 
-        var lightsToRenderer = Renderer.GetPointLightsToRender();
+        var lightsToRenderer = renderer.GetPointLightsToRender();
 
         var lightPositions = new Vector2[lightsToRenderer.Count];
         var lightColors = new Vector3[lightsToRenderer.Count];
@@ -128,16 +133,16 @@ public class LightMapRenderer
         _shader.uploadVec2fArray("uLightPosition", lightPositions);
         _shader.uploadVec3fArray("uLightColor", lightColors);
         _shader.uploadFloatArray("uIntensity", lightIntensities);
-        if (Engine.Get()._currentScene?.GlobalLight != null)
+        if (renderer.GlobalLight != null)
         {
             var currentScene = Engine.Get()._currentScene;
             if (currentScene != null)
-                _shader.uploadFloat("uMinLighting", currentScene.GlobalLight.Intensity);
+                _shader.uploadFloat("uMinLighting", renderer.GlobalLight.Intensity);
         }
         else
         {
             Log.Warning("No Global Light In Scene");
-            _shader.uploadFloat("uMinLighting", .6f);
+            _shader.uploadFloat("uMinLighting", 1f);
         }
 
         _shader.uploadInt("uNumLights", lightsToRenderer.Count);
