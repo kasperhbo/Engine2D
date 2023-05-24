@@ -119,7 +119,7 @@ internal class Scene
     {
         foreach (var go in Gameobjects)
         {
-            go.SetParent(go.ParentUIID);
+            go.SetParent(go.ParentUID);
         }
     }
 
@@ -223,7 +223,7 @@ internal class Scene
             Renderer.RemoveSprite(child.GetComponent<SpriteRenderer>());
     }
 
-    public GameObject FindObjectByUID(int uid)
+    public GameObject FindObjectByUID(Int64 uid)
     {
         foreach (var go in Gameobjects)
         {

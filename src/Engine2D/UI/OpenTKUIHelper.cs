@@ -382,4 +382,5 @@ internal class ImageTextIcon
 
         ImGui.EndChild();
     }
+    
 }

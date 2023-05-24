@@ -52,15 +52,17 @@ internal class SceneHierachy : UIElemenet
 
     private void DrawGameObjectNode(GameObject gameObject)
     {
+        
         bool selected = gameObject == Engine.Get().CurrentSelectedAsset;
         
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.FramePadding 
                     | ImGuiTreeNodeFlags.DefaultOpen 
-                    | (selected ? ImGuiTreeNodeFlags.Selected : 0);
+                    | (selected ? ImGuiTreeNodeFlags.Selected : 0)
+                    | ImGuiTreeNodeFlags.SpanAvailWidth
+                    | ImGuiTreeNodeFlags.OpenOnArrow;
         
-        ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(5, 5));
+        
         bool open = ImGui.TreeNodeEx(gameObject.UID.ToString(), flags, gameObject.Name);
-        ImGui.PopStyleVar();
             
         HandleDragDrop(gameObject);
         HandleItemClicked(gameObject);

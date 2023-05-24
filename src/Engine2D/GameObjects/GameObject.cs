@@ -19,8 +19,8 @@ namespace Engine2D.GameObjects;
 [JsonConverter(typeof(ComponentSerializer))]
 public class GameObject : Asset
 {
-    public int UID = -1;
-    public int ParentUIID = -1;
+    public Int64 UID = -1;
+    public Int64 ParentUID = -1;
     
     public readonly string Type = "GameObject";
 
@@ -208,14 +208,14 @@ public class GameObject : Asset
     }
 
 
-    public void SetParent(int parentUID)
+    public void SetParent(Int64 parentUID)
     {
         if (parentUID == -1) return;
         Scene currentScene = Engine.Get()._currentScene;
         if(Parent != null)
             Parent.Childs.Remove(this);
         
-        ParentUIID = parentUID;
+        ParentUID = parentUID;
         GameObject parent = currentScene.FindObjectByUID(parentUID);
         currentScene.GameObjectsHierachy.Remove(this);
         parent.AddGameObjectChild(this);

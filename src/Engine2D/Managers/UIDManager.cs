@@ -2,14 +2,14 @@
 
 public static class UIDManager
 {
-    private static int s_uidCounter = 0;
+    private static Int64 s_uidCounter = 0;
 
-    public static List<int> TakenUids = new List<int>();
+    public static List<Int64> TakenUids = new List<Int64>();
     
     
-    public static int GetNewUID()
+    public static Int64 GetNewUID()
     {
-        int uid = s_uidCounter;
+        Int64 uid = s_uidCounter;
         
         if (TakenUids.Contains(uid))
             return GetNewUID();
