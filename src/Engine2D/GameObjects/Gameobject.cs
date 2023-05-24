@@ -24,6 +24,7 @@ public class Gameobject : Asset
     public List<Component> components = new();
     public string Name = "";
     public Transform transform = new();
+    public Vector2 localPosition = new();
 
 
     [JsonIgnore] private List<Gameobject> _childs = new List<Gameobject>();
@@ -59,6 +60,7 @@ public class Gameobject : Asset
     public void Init()
     {
         if (UID == -1) UID = UIDManager.GetUID();
+        UIDManager.TakenUIDS.Add(UID);
         foreach (var component in components) component.Init(this);
     }
 
@@ -69,6 +71,11 @@ public class Gameobject : Asset
 
     public void EditorUpdate(double dt)
     {
+        if (_parent != null)
+        {
+            transform.position = new((localPosition.X + _parent.transform.position.X),
+                (localPosition.Y + _parent.transform.position.Y));
+        }
         foreach (var component in components) component.EditorUpdate(dt);
     }
 
@@ -117,7 +124,11 @@ public class Gameobject : Asset
 
         OpenTKUIHelper.DrawComponentWindow("transform" + Name, "Transform", () =>
         {
-            OpenTKUIHelper.DrawProperty("Position: ", ref transform.position);
+            if(_parent == null)
+                OpenTKUIHelper.DrawProperty("Position: ", ref transform.position);
+            else
+                OpenTKUIHelper.DrawProperty("Local Position: ", ref localPosition);
+            
             OpenTKUIHelper.DrawProperty("Rotation: ", ref transform.rotation);
             OpenTKUIHelper.DrawProperty("Scale: ", ref transform.size);
         });
@@ -164,10 +175,6 @@ public class Gameobject : Asset
             //TODO: ADD COMPONENT TO GOP
             if (ImGui.BeginPopup("AddComponent"))
             {
-                //if (ImGui.MenuItem("Camera"))
-                //{                    
-                //    ImGui.CloseCurrentPopup();
-                //}
                 if (ImGui.MenuItem("ScriptComponent"))
                 {
                     var rb = new ScriptHolderComponent();

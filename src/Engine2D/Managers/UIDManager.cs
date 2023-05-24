@@ -5,7 +5,7 @@ namespace Engine2D.Managers;
 public static class UIDManager
 {
     private static int s_uidcounter = 0;
-    private static List<int> s_takenUids = new();
+    public static List<int> TakenUIDS = new();
 
     public static int GetUID()
     {
@@ -13,10 +13,10 @@ public static class UIDManager
         s_uidcounter++;
 
         //Recursive call
-        if (s_takenUids.Contains(uid))
+        if (TakenUIDS.Contains(uid))
             GetUID();
 
-        s_takenUids.Add(uid);
+        TakenUIDS.Add(uid);
         Log.Message("uid: " + uid);
         return uid;
     }

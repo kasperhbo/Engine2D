@@ -1,7 +1,7 @@
 [
   {
     "UID": 0,
-    "PARENT_UID": 1,
+    "PARENT_UID": 4,
     "components": [
       {
         "Color": {
@@ -12,14 +12,32 @@
             "W": 1.0
           }
         },
-        "Intensity": 5.8,
-        "Type": "PointLight"
+        "textureData": {
+          "flipped": true,
+          "magFilter": 9728,
+          "minFilter": 9728,
+          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
+          "Type": "TextureData"
+        },
+        "ZIndex": 0,
+        "Type": "SpriteRenderer"
       }
     ],
-    "Name": "Point Light: 01",
+    "Name": "Mario: 01",
     "transform": {
       "position": {
-        "X": -135.0,
+        "X": 324.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 615.0,
+        "Y": 843.0
+      }
+    },
+    "localTransform": {
+      "position": {
+        "X": 372.0,
         "Y": 0.0
       },
       "rotation": 0.0,
@@ -34,7 +52,48 @@
     "PARENT_UID": -1,
     "components": [
       {
-        "Intensity": 0.0,
+        "Color": {
+          "Color": {
+            "X": 0.9882353,
+            "Y": 0.41568628,
+            "Z": 1.0,
+            "W": 0.5019608
+          }
+        },
+        "Intensity": 7.4,
+        "Type": "PointLight"
+      }
+    ],
+    "Name": "Point Light: 11",
+    "transform": {
+      "position": {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    },
+    "localTransform": {
+      "position": {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 1.0,
+        "Y": 1.0
+      }
+    }
+  },
+  {
+    "UID": 2,
+    "PARENT_UID": -1,
+    "components": [
+      {
+        "Intensity": 1.0,
         "Type": "GlobalLight"
       }
     ],
@@ -49,73 +108,16 @@
         "X": 1.0,
         "Y": 1.0
       }
-    }
-  },
-  {
-    "UID": 3,
-    "PARENT_UID": -1,
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 1.0,
-            "Y": 1.0,
-            "Z": 1.0,
-            "W": 1.0
-          }
-        },
-        "textureData": null,
-        "ZIndex": 0,
-        "Type": "SpriteRenderer"
-      }
-    ],
-    "Name": "Empty Sprite: YOU FUCK",
-    "transform": {
+    },
+    "localTransform": {
       "position": {
         "X": 0.0,
         "Y": 0.0
       },
       "rotation": 0.0,
       "size": {
-        "X": 10000.0,
-        "Y": 100000.0
-      }
-    }
-  },
-  {
-    "UID": 2,
-    "PARENT_UID": -1,
-    "components": [
-      {
-        "Color": {
-          "Color": {
-            "X": 1.0,
-            "Y": 0.74509805,
-            "Z": 0.80784315,
-            "W": 1.0
-          }
-        },
-        "textureData": {
-          "flipped": true,
-          "magFilter": 9728,
-          "minFilter": 9728,
-          "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\TestImage.png",
-          "Type": "TextureData"
-        },
-        "ZIndex": 1,
-        "Type": "SpriteRenderer"
-      }
-    ],
-    "Name": "Mario: 31",
-    "transform": {
-      "position": {
-        "X": 0.0,
-        "Y": 0.0
-      },
-      "rotation": 0.0,
-      "size": {
-        "X": 1000.0,
-        "Y": 1000.0
+        "X": 1.0,
+        "Y": 1.0
       }
     }
   },
@@ -128,18 +130,30 @@
           "Color": {
             "X": 1.0,
             "Y": 1.0,
-            "Z": 0.9647059,
+            "Z": 0.0,
             "W": 0.0
           }
         },
-        "Intensity": 1.0,
-        "Type": "PointLight"
+        "textureData": null,
+        "ZIndex": 0,
+        "Type": "SpriteRenderer"
       }
     ],
-    "Name": "Point Light: 41",
+    "Name": "Empty Sprite: 31",
     "transform": {
       "position": {
-        "X": 387.0,
+        "X": -48.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 100.0,
+        "Y": 100.0
+      }
+    },
+    "localTransform": {
+      "position": {
+        "X": 0.0,
         "Y": 0.0
       },
       "rotation": 0.0,
