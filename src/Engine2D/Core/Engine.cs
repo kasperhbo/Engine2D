@@ -1,4 +1,5 @@
-﻿using Engine2D.Core;
+﻿using Dear_ImGui_Sample;
+using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
@@ -11,7 +12,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
-using OpenTK.Windowing.GraphicsLibraryFramework;
+using ImGuiController = Dear_ImGui_Sample.ImGuiController;
 
 namespace KDBEngine.Core
 {
@@ -24,7 +25,7 @@ namespace KDBEngine.Core
         //UI
         private readonly Dictionary<string, UIElemenet> _guiWindows = new();
         private readonly EngineSettingsWindow engineSettingsWindow = new();
-        internal ImGuiController ImGuiController;
+        private ImGuiController ImGuiController;
         private TestViewportWindow viewportWindow;
         
         internal Scene? _currentScene;
@@ -71,7 +72,7 @@ namespace KDBEngine.Core
             base.OnLoad();
             
             SaveLoad.LoadEngineSettings();
-            ImGuiController = new ImGuiController(Size.X, Size.Y);
+            ImGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
 
             viewportWindow = new TestViewportWindow();
             
@@ -108,7 +109,7 @@ namespace KDBEngine.Core
             {
                 //ImGui
                 {
-                    ImGuiController.Update(this, e.Time);
+                    ImGuiController.Update(this,(float)e.Time);
 
                     #region Menu
 
@@ -147,8 +148,7 @@ namespace KDBEngine.Core
 
                     _currentScene?.OnGui(viewportWindow);
                     ImGuiController.Render();
-
-                    ImGuiController.CheckGLError("End of frame");
+                    
                 }
             }
 

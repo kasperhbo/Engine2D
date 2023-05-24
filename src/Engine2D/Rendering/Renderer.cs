@@ -68,11 +68,6 @@ public class Renderer
             GL.Clear(ClearBufferMask.ColorBufferBit);
             OpenTK.Graphics.OpenGL.GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
-            ImGuizmo.Enable(true);
-            ImGuizmo.SetOrthographic(true);
-            ImGuizmo.SetDrawlist();
-            ImGuizmo.SetRect(10,10,10,10);
-            
             foreach (var batch in _renderBatches) batch.Render(camera, LightmapTexture);
             
             GameBuffer.UnBind();

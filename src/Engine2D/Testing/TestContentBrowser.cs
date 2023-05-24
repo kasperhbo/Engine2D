@@ -96,7 +96,7 @@ public class TestContentBrowser
 
             ImGui.PushID(i);
 
-            ImGui.ImageButton("##" + i, (IntPtr)icon, new Vector2(thumbnailSize, thumbnailSize));
+            ImGui.ImageButton((IntPtr)icon, new Vector2(thumbnailSize, thumbnailSize));
 
 
             if (cInfo.FileType == FileType.File)

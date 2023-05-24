@@ -1,0 +1,3 @@
+[submodule "ImTool"]
+	path = ImTool
+	url = https://github.com/kasperhbo/ImTool.git

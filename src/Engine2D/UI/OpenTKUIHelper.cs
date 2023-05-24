@@ -38,7 +38,8 @@ internal static class OpenTKUIHelper
         ImGui.TableNextColumn();
         ImGui.Text(name);
         ImGui.TableNextColumn();
-        if (ImGui.DragFloat2("##" + name, ref property)) changed = true;
+        if (ImTool.Widgets.Vector2(ref property, name)) changed = true;
+        // if (ImGui.DragFloat2("##" + name, ref property)) changed = true;
         return changed;
     }
 
