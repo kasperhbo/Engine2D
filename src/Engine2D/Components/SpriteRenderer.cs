@@ -13,7 +13,7 @@ public class SpriteColor
 
     public SpriteColor()
     {
-        Color = new Vector4();
+        Color = new Vector4(1,1,1,1);
     }
 
     public SpriteColor(Vector4 color)

@@ -31,7 +31,8 @@ public class GameObject : Asset
     
     [JsonIgnore]public GameObject? Parent = null;
     [JsonIgnore]public List<GameObject> Childs = new List<GameObject>();
-
+    [JsonIgnore] private bool _isInitialized = false;
+    
     public List<GameObject>  GetChildren()
     {
         return Childs;
@@ -58,7 +59,8 @@ public class GameObject : Asset
         {
            component.Init(this);
         }
-        
+
+        _isInitialized = true;
     }
     
     
@@ -194,7 +196,8 @@ public class GameObject : Asset
     public void AddComponent(Component component)
     {
         Components.Add(component);
-        component.Init(this);
+        if(_isInitialized)
+            component.Init(this);
     }
     
     public T GetComponent<T>() where T : Component

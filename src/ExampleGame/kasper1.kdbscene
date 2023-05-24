@@ -1,1 +1,159 @@
-[]
+[
+  {
+    "UID": 0,
+    "ParentUID": -1,
+    "Type": "GameObject",
+    "Name": "GameObject 1",
+    "Transform": {
+      "position": {
+        "X": -175.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 100.0,
+        "Y": 100.0
+      }
+    },
+    "Components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 0.8980392,
+            "Y": 0.81960785,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "textureData": null,
+        "ZIndex": 1,
+        "Type": "SpriteRenderer"
+      }
+    ]
+  },
+  {
+    "UID": 1,
+    "ParentUID": 0,
+    "Type": "GameObject",
+    "Name": "GameObject 2",
+    "Transform": {
+      "position": {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 100.0,
+        "Y": 100.0
+      }
+    },
+    "Components": []
+  },
+  {
+    "UID": 2,
+    "ParentUID": -1,
+    "Type": "GameObject",
+    "Name": "GameObject 2",
+    "Transform": {
+      "position": {
+        "X": -109.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 100.0,
+        "Y": 100.0
+      }
+    },
+    "Components": [
+      {
+        "Color": {
+          "Color": {
+            "X": 1.0,
+            "Y": 1.0,
+            "Z": 1.0,
+            "W": 1.0
+          }
+        },
+        "textureData": null,
+        "ZIndex": 0,
+        "Type": "SpriteRenderer"
+      }
+    ]
+  },
+  {
+    "UID": 3,
+    "ParentUID": -1,
+    "Type": "GameObject",
+    "Name": "GameObject 3",
+    "Transform": {
+      "position": {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 100.0,
+        "Y": 100.0
+      }
+    },
+    "Components": [
+      {
+        "Zoom": 1.0,
+        "Type": "Camera"
+      }
+    ]
+  },
+  {
+    "UID": 4,
+    "ParentUID": -1,
+    "Type": "GameObject",
+    "Name": "GameObject 4",
+    "Transform": {
+      "position": {
+        "X": 0.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 100.0,
+        "Y": 100.0
+      }
+    },
+    "Components": [
+      {
+        "Intensity": 0.2,
+        "Type": "GlobalLight"
+      }
+    ]
+  },
+  {
+    "UID": 5,
+    "ParentUID": -1,
+    "Type": "GameObject",
+    "Name": "GameObject 5",
+    "Transform": {
+      "position": {
+        "X": 25.0,
+        "Y": 0.0
+      },
+      "rotation": 0.0,
+      "size": {
+        "X": 100.0,
+        "Y": 100.0
+      }
+    },
+    "Components": [
+      {
+        "Color": {
+          "R": 1.0,
+          "G": 1.0,
+          "B": 1.0
+        },
+        "Intensity": 1.0,
+        "Type": "PointLight"
+      }
+    ]
+  }
+]
+////GAMEOBJECTS////

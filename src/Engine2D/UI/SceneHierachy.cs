@@ -1,8 +1,10 @@
 ﻿using System.Numerics;
 using System.Runtime.InteropServices;
+using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
+using Engine2D.Testing;
 using ImGuiNET;
 using KDBEngine.Core;
 using KDBEngine.UI;
@@ -18,24 +20,80 @@ internal class SceneHierachy : UIElemenet
     {
         return () =>
         {
+            if (ImGui.BeginMenu("Create"))
+            {
+                bool create = false;
+                List<Component> componentsToAdd = null;
+                if (ImGui.MenuItem("New Gameobject"))
+                {
+                    create = true;
+                }
+                
+                if (ImGui.MenuItem("New Sprite Rendenderer"))
+                {
+                    componentsToAdd = new List<Component>();
+                    SpriteRenderer spr = new SpriteRenderer();
+                    componentsToAdd.Add(spr);
+                    create = true;
+                }
+                
+                if (ImGui.MenuItem("New Rigidbody"))
+                {
+                    componentsToAdd = new List<Component>();
+                    SpriteRenderer spr = new SpriteRenderer();
+                    componentsToAdd.Add(spr);
+                    RigidBody rb = new RigidBody();
+                    componentsToAdd.Add(rb);
+                    create = true;
+                }
+                
+                if (ImGui.MenuItem("New Camera"))
+                {
+                    componentsToAdd = new List<Component>();
+                    TestCamera camera = new TestCamera();
+                    componentsToAdd.Add(camera);
+                    create = true;
+                }
+                
+                if (ImGui.BeginMenu("Lighting"))
+                {
+                    if (ImGui.MenuItem("Global Light"))
+                    {
+                        componentsToAdd = new List<Component>();
+                        GlobalLight glbl = new GlobalLight();
+                        componentsToAdd.Add(glbl);
+                        create = true;
+                    }
+
+                    if (ImGui.MenuItem("Point Light"))
+                    {
+                        componentsToAdd = new List<Component>();
+                        PointLight pl = new PointLight();
+                        componentsToAdd.Add(pl);
+                        create = true;
+                    }
+                    ImGui.EndMenu();
+                }
+
+                if (create)
+                {
+                    GameObject go = new GameObject("GameObject " + (Engine.Get()._currentScene.GameObjectsHierachy.Count() + 1));
+                    if (componentsToAdd != null)
+                    {
+                        foreach (var c in componentsToAdd)
+                        {
+                            go.AddComponent(c);
+                        }
+                    }
+                    Engine.Get()._currentScene.AddGameObjectToScene(go);
+                }
+                ImGui.EndMenu();
+            }
+            
             for (var i = 0; i < Engine.Get()._currentScene?.GameObjectsHierachy.Count; i++)
             {
                 GameObject gameObject = Engine.Get()._currentScene?.GameObjectsHierachy[i];
                 DrawGameObjectNode(gameObject);
-            }
-            
-            if (ImGui.BeginMenu("Create"))
-            {
-                if (ImGui.MenuItem("New Gameobject"))
-                {
-                    GameObject go = new GameObject(
-                        "GameObject " + (Engine.Get()._currentScene.GameObjectsHierachy.Count() + 1) 
-                    );
-                    
-                    Engine.Get()._currentScene.AddGameObjectToScene(go);
-                }
-                
-                ImGui.EndMenu();
             }
         };
     }
