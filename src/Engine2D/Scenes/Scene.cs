@@ -102,6 +102,14 @@ internal class Scene
         ScenePath = scenePath;
         Renderer.Init();
     }
+    
+    public void Start()
+    {
+        foreach (var go in Gameobjects)
+        {
+            go.SetParent(go.PARENT_UID);
+        }
+    }
 
     internal virtual void EditorUpdate(double dt)
     {
@@ -168,4 +176,17 @@ internal class Scene
     }
 
     #endregion
+
+    public Gameobject FindObjectByUID(int uid)
+    {
+        foreach (var go in Gameobjects)
+        {
+            if (go.UID == uid)
+            {
+                return go;
+            }
+        }
+
+        throw new Exception(string.Format("Gameobject with {0} not found", uid));
+    }
 }

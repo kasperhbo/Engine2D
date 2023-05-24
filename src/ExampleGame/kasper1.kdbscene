@@ -1,6 +1,7 @@
 [
   {
     "UID": 0,
+    "PARENT_UID": 1,
     "components": [
       {
         "Color": {
@@ -30,6 +31,7 @@
   },
   {
     "UID": 1,
+    "PARENT_UID": -1,
     "components": [
       {
         "Intensity": 0.0,
@@ -51,6 +53,7 @@
   },
   {
     "UID": 3,
+    "PARENT_UID": -1,
     "components": [
       {
         "Color": {
@@ -81,6 +84,7 @@
   },
   {
     "UID": 2,
+    "PARENT_UID": -1,
     "components": [
       {
         "Color": {
@@ -117,6 +121,7 @@
   },
   {
     "UID": 4,
+    "PARENT_UID": -1,
     "components": [
       {
         "Color": {

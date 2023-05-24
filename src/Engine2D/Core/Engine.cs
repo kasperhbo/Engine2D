@@ -96,20 +96,22 @@ namespace KDBEngine.Core
             if (Settings.s_IsEngine) CreateUIWindows();
 
             SaveLoad.LoadScene(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
+            _currentScene.Start();
             TestInput.Init();
 
-            // testFB = new TestFrameBuffer((int)width, (int)height);
             testCamera = new TestCamera();
             viewportWindow = new TestViewportWindow();
             cb = new TestContentBrowser();
 
+            
+            
             if (!Settings.s_IsEngine)
             {
                 LoadGameWithoutEngine();
                 _currentScene.IsPlaying = true;
             }
 
-            ;
+            
             DefaultTitle = Get().Title;
         }
 
