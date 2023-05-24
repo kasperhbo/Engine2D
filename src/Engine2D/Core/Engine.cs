@@ -244,7 +244,7 @@ namespace KDBEngine.Core
             _currentScene.OnClose();
             base.OnUnload();
         }
-
+//test
         internal void SwitchScene(string sceneName)
         {
             Renderer.Flush();
