@@ -37,6 +37,9 @@ public class ViewportWindow
         OnGui();
     }
 
+    protected Vector2 origin = new();
+    protected Vector2 sz = new();
+    
     public void OnGui()
     {
         ImGui.Begin(_title);
@@ -51,8 +54,9 @@ public class ViewportWindow
         
         ImGui.SetCursorPos(ImGui.GetCursorPos() + (ImGui.GetContentRegionAvail() - _windowSize) * 0.5f);
         BeforeImageRender();
+
         ImGui.Image(GetImageToRender(), _windowSize, Vector2.UnitY, Vector2.UnitX);
-        
+
         AfterImageRender();
         
         ImGui.End();
@@ -104,7 +108,7 @@ public class ViewportWindow
         
     }
     
-    protected virtual void AfterImageRender()
+    protected virtual void AfterImageRender(bool recieveInput = true)
     {
         
     }

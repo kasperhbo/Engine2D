@@ -45,19 +45,20 @@ public class Transform : Component
         
         SetRotation(q);
     }
-    
-       public void SetRotationByDegrees(Vector3 degrees)
-       {
-           SetRotationByDegrees();
-       }
-    
+
+    public void SetRotationByDegrees(Vector3 degrees)
+    {
+        SetRotationByDegrees();
+    }
+
     public Matrix4 GetTranslation()
     {
         var t = Matrix4.Identity;
-        t =  Matrix4.CreateFromQuaternion(Quaternion.FromEulerAngles(
+        t = Matrix4.CreateScale(new OpenTK.Mathematics.Vector3(size.X, size.Y, 1));
+        t *=  Matrix4.CreateFromQuaternion(Quaternion.FromEulerAngles(
             eulerAngles
             ));
-        t *= Matrix4.CreateScale(new OpenTK.Mathematics.Vector3(size.X, size.Y, 1));
+        
         t *= Matrix4.CreateTranslation(position.X, position.Y, 0);
         return t;
     }

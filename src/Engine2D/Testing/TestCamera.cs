@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Engine2D.Components;
 using Engine2D.Flags;
+using Engine2D.GameObjects;
 using Engine2D.UI;
 using ImGuiNET;
 using ImTool;
@@ -23,6 +24,8 @@ public class TestCamera : Component
     
     // private Vector2 position;
     [JsonIgnore][ShowUI (show = false)]public Transform Transform = new();
+
+    public SpriteColor ClearColor = new SpriteColor(); 
 
     // Projection matrix say how big the screen is going to be.
 

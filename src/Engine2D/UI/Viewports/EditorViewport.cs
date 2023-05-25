@@ -2,14 +2,9 @@
 using ImGuiNET;
 using ImGuizmoNET;
 using KDBEngine.Core;
-using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using Vulkan;
-using MathHelper = Vortice.Mathematics.MathHelper;
 using Vector2 = System.Numerics.Vector2;
-using Vector3 = System.Numerics.Vector3;
-
 
 namespace Engine2D.UI.Viewports;
 
@@ -17,6 +12,9 @@ public class EditorViewport : ViewportWindow
 {
     
     OPERATION _currentOperation = OPERATION.TRANSLATE;
+    MODE _currentMode = MODE.WORLD;
+
+    private Vector2 _gridStart = new();
     
     public EditorViewport(string editorVp) : base(editorVp)
     {
@@ -31,13 +29,19 @@ public class EditorViewport : ViewportWindow
             if (_cameraToRender.projectionSize != (_windowSize.X, _windowSize.Y))
                 _cameraToRender.adjustProjection((_windowSize.X, _windowSize.Y));
         }
+
+        _gridStart = ImGui.GetCursorScreenPos();
     }
 
-    protected override void AfterImageRender()
+    protected override void AfterImageRender(bool recieveInput = true)
     {
         base.AfterImageRender();
-        //_cameraToRender.Transform.SetRotationByDegrees(new OpenTK.Mathematics.Vector3(90,180,90));
-
+        
+        // //Draw grid
+        // ImGui.GetWindowDrawList().AddLine(_gridStart, new(_gridStart.X + 50, _gridStart.Y + 50), 
+        //     ImGui.GetColorU32(ImGuiCol.Text), 3.0f);
+        
+        //Draw ImGuizmo
         Gameobject go = (Gameobject)Engine.Get().CurrentSelectedAsset;
         if (go != null)
         {
@@ -46,46 +50,42 @@ public class EditorViewport : ViewportWindow
             ImGuizmo.SetOrthographic(true);
             ImGuizmo.SetDrawlist();
 
-            var origin = ImGui.GetItemRectMin();
-            var sz = ImGui.GetItemRectSize();
+            origin = ImGui.GetItemRectMin() ;
+            sz =  ImGui.GetItemRectSize();
             
             ImGuizmo.SetRect(origin.X, origin.Y, sz.X, sz.Y);
             
             Matrix4 view = _cameraToRender.getViewMatrix();
             Matrix4 projection = _cameraToRender.getProjectionMatrix();
-
             Matrix4 translation = go.Transform.GetTranslation();
             
             ImGuizmo.Manipulate(ref view.Row0.X, ref projection.Row0.X, 
-                _currentOperation, MODE.WORLD, ref translation.Row0.X);
+                _currentOperation, _currentMode, ref translation.Row0.X);
+            if(recieveInput)
+            {
+                if (Engine.Get().IsKeyPressed(Keys.W))
+                {
+                    _currentOperation = OPERATION.TRANSLATE;
+                }
 
-            if (Engine.Get().IsKeyPressed(Keys.Q))
-            {
-                _currentOperation = OPERATION.BOUNDS;
-            }
-            
-            if (Engine.Get().IsKeyPressed(Keys.W))
-            {
-                _currentOperation = OPERATION.TRANSLATE;
-            }
-            
-            if (Engine.Get().IsKeyPressed(Keys.E))
-            {
-                _currentOperation = OPERATION.SCALE;
-            }
-            
-            if (Engine.Get().IsKeyPressed(Keys.R))
-            {
-                _currentOperation = OPERATION.ROTATE;
-            }
+                if (Engine.Get().IsKeyPressed(Keys.E))
+                {
+                    _currentOperation = OPERATION.SCALE;
+                }
 
-            if (ImGuizmo.IsUsing())
-            {
-                go.Transform.position = new(translation.ExtractTranslation().X, 
-                    translation.ExtractTranslation().Y);
-                _cameraToRender.Transform.position = go.Transform.position;
-                go.Transform.size = new(translation.ExtractScale().X, translation.ExtractScale().Y);
-                go.Transform.SetRotation(translation.ExtractRotation());
+                if (Engine.Get().IsKeyPressed(Keys.R))
+                {
+                    _currentOperation = OPERATION.ROTATE;
+                }
+
+                if (ImGuizmo.IsUsing())
+                {
+                    go.Transform.position = new(translation.ExtractTranslation().X,
+                        translation.ExtractTranslation().Y);
+                    
+                    go.Transform.size = new(translation.ExtractScale().X, translation.ExtractScale().Y);
+                    go.Transform.SetRotation(translation.ExtractRotation());
+                }
             }
         }
     }
