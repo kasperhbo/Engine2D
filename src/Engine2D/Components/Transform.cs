@@ -1,39 +1,64 @@
 ﻿using System.Numerics;
+using Engine2D.UI;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
+using Quaternion = OpenTK.Mathematics.Quaternion;
+using Vector3 = OpenTK.Mathematics.Vector3;
 using Vector2 = System.Numerics.Vector2;
+
 
 namespace Engine2D.Components;
 
 public class Transform : Component
 {
     public Vector2 position;
-    public float rotation;
+    
+    public Quaternion quaternion;
+    public Vector3 eulerAngles;
+    public Vector3 degrees;
+    
     public Vector2 size = new(1, 1);
 
+    public void SetRotation(Quaternion rotation)
+    {
+        quaternion = rotation;
+        eulerAngles = quaternion.ToEulerAngles();
+        degrees.X = (float)MathUtils.ConvertRadiansToDegrees((double)eulerAngles.X);
+        degrees.Y = (float)MathUtils.ConvertRadiansToDegrees((double)eulerAngles.Y);
+        degrees.Z = (float)MathUtils.ConvertRadiansToDegrees((double)eulerAngles.Z);
+    }
+
+    public void SetRotationByEuler()
+    {
+        Quaternion q = Quaternion.FromEulerAngles(eulerAngles);
+        
+        SetRotation(q);
+    }
+    
+    public void SetRotationByDegrees()
+    {
+        eulerAngles.X = (float)MathUtils.ConvertDegreesToRadians((double)degrees.X);
+        eulerAngles.Y = (float)MathUtils.ConvertDegreesToRadians((double)degrees.Y);
+        eulerAngles.Z = (float)MathUtils.ConvertDegreesToRadians((double)degrees.Z);
+
+        Quaternion q = Quaternion.FromEulerAngles(eulerAngles);
+        
+        SetRotation(q);
+    }
+    
+       public void SetRotationByDegrees(Vector3 degrees)
+       {
+           SetRotationByDegrees();
+       }
+    
     public Matrix4 GetTranslation()
     {
         var t = Matrix4.Identity;
-        t = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(rotation));
+        t =  Matrix4.CreateFromQuaternion(Quaternion.FromEulerAngles(
+            eulerAngles
+            ));
         t *= Matrix4.CreateScale(new OpenTK.Mathematics.Vector3(size.X, size.Y, 1));
         t *= Matrix4.CreateTranslation(position.X, position.Y, 0);
-        return t;
-    }
-    
-    public Matrix4x4 GetTranslationSYSTEM()
-    {
-        var t = Matrix4x4.Identity;
-        t = Matrix4x4.CreateRotationZ(MathHelper.DegreesToRadians(rotation));
-        t *= Matrix4x4.CreateScale(new System.Numerics.Vector3(size.X, size.Y, 1));
-        t *= Matrix4x4.CreateTranslation(position.X, position.Y, 0);
-        return t;
-    }
-    
-    public Matrix4 GetTranslation(Vector2 positionManipulations)
-    {
-        var t = Matrix4.Identity;
-        t = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(rotation));
-        t *= Matrix4.CreateScale(new OpenTK.Mathematics.Vector3(size.X, size.Y, 1));
-        t *= Matrix4.CreateTranslation(position.X + positionManipulations.X, position.Y + positionManipulations.Y, 0);
         return t;
     }
 
@@ -46,7 +71,7 @@ public class Transform : Component
     {
         to.position = position;
         to.size = size;
-        to.rotation = rotation;
+        to.eulerAngles = eulerAngles;
     }
 
     public override bool Equals(object o)
@@ -56,7 +81,7 @@ public class Transform : Component
 
         var t = (Transform)o;
 
-        return t.position.Equals(position) && t.size.Equals(size) && t.rotation.Equals(rotation);
+        return t.position.Equals(position) && t.size.Equals(size) && t.eulerAngles.Equals(eulerAngles);
     }
 
     public void SetPosition(OpenTK.Mathematics.Vector2 position)
@@ -67,5 +92,27 @@ public class Transform : Component
     public override string GetItemType()
     {
         return "Transform";
+    }
+
+    public void ImGui()
+    {
+        OpenTKUIHelper.DrawProperty("Position", ref position);
+        
+        ImGuiNET.ImGui.Separator();
+        ImGuiNET.ImGui.Text("Rotation");
+        if (OpenTKUIHelper.DrawProperty("Euler Angles", ref eulerAngles))
+        {
+            SetRotationByEuler();
+        }
+
+        if (OpenTKUIHelper.DrawProperty("Quaternion Angles", ref quaternion))
+        {
+            SetRotation(quaternion);
+        }
+
+        if (OpenTKUIHelper.DrawProperty("Radians Angles", ref degrees))
+        {
+            SetRotationByDegrees();
+        }
     }
 }

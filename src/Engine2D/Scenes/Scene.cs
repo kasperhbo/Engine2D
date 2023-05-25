@@ -114,7 +114,7 @@ internal class Scene
         
         if(Settings.s_IsEngine)
         {
-            EditorCamera = new TestCamera();
+            EditorCamera = new TestCamera(Engine.Get().Size);
         }
         
         ScenePath = scenePath;
@@ -165,6 +165,15 @@ internal class Scene
                 if (IsPlaying) return;
                 SaveLoad.SaveScene(this);
             }
+
+        if (Engine.Get().IsKeyPressed(Keys.F))
+        {
+            Gameobject go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+            if (go != null)
+            {
+                EditorCamera.Transform.position = go.Transform.position;
+            }
+        }
         
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
         if (IsPlaying) GameUpdate(dt);
@@ -183,7 +192,7 @@ internal class Scene
             CurrentMainGameCamera = go.GetComponent<TestCamera>();
             CurrentMainGameCamera.adjustProjection((1920, 1080));
         }
-        
+
         Gameobjects.Add(go);
         go.Init(Renderer);
         go.Start();

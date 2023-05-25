@@ -1,5 +1,7 @@
 ﻿using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 using Engine2D.Components;
+using Engine2D.Flags;
 using Engine2D.UI;
 using ImGuiNET;
 using ImTool;
@@ -10,39 +12,43 @@ namespace Engine2D.Testing;
 
 public class TestCamera : Component
 {
-    public Vector2 projectionSize = new(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y);
+    public Vector2 projectionSize { get; private set; } = new(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y);
 
     // The inverse projection matrix
+    private Matrix4 projectionMatrix;
     private Matrix4 inverseProjectionMatrix;
-
-    // The inverse view matrix
+    
+    private Matrix4 viewMatrix;
     private Matrix4 inverseViewMatrix;
-
-    public Vector2 position;
-
+    
+    // private Vector2 position;
+    [JsonIgnore][ShowUI (show = false)]public Transform Transform = new();
 
     // Projection matrix say how big the screen is going to be.
-    private Matrix4 projectionMatrix;
 
     // View Matrix says where the camera is in relation to our world.
-    private Matrix4 viewMatrix;
-    public float zoom = 1.0f;
+    public float zoom { get; private set; }= 1.0f;
 
 
-    public TestCamera()
+    public TestCamera(Vector2 projectionSize)
     {
-        init(new Vector2());
+        init(new Vector2(), projectionSize);
     }
 
     public TestCamera(Vector2 position, Vector2 projectionSize)
     {
-        this.projectionSize = projectionSize;
-        init(position);
+        init(position, projectionSize);
     }
 
-    private void init(Vector2 position)
+    private void init(OpenTK.Mathematics.Vector2 position, Vector2 projectionSize)
     {
-        this.position = position;
+        init(new System.Numerics.Vector2(position.X, position.Y), projectionSize);
+    }
+
+    private void init(System.Numerics.Vector2 position, Vector2 projectionSize)
+    {
+        this.projectionSize = projectionSize;
+        this.Transform.position = position;
         projectionMatrix = new Matrix4();
         inverseProjectionMatrix = new Matrix4();
         viewMatrix = new Matrix4();
@@ -86,8 +92,8 @@ public class TestCamera : Component
 
         viewMatrix = Matrix4.Identity;
         viewMatrix = Matrix4.LookAt(
-            new Vector3(position.X, position.Y, 20.0f), // Is the 20.0f something i want to scroll to zoom in and out?
-            cameraFront + (position.X, position.Y, 0.0f),
+            new Vector3(Transform.position.X, Transform.position.Y, 20.0f), // Is the 20.0f something i want to scroll to zoom in and out?
+            cameraFront + (Transform.position.X, Transform.position.Y, 0.0f),
             cameraUp
         );
         inverseViewMatrix = Matrix4.Invert(viewMatrix);
@@ -109,26 +115,25 @@ public class TestCamera : Component
         return projectionSize;
     }
 
-    public Vector2 getPosition()
+    public System.Numerics.Vector2 getPosition()
     {
-        return position;
+        if (Parent != null)
+        {
+            Transform = Parent.Transform;
+        };
+        return Transform.position;
     }
-
-    public float getZoom()
-    {
-        return zoom;
-    }
-
-
+    
+    
     public void setZoom(float zoom)
     {
         this.zoom = zoom;
         adjustProjection(this.projectionSize);
     }
-
+    
     public void addZoom(float value)
     {
-        zoom += value;
+        setZoom(zoom + value);
     }
 
     public void CameraSettingsGUI()
@@ -137,11 +142,18 @@ public class TestCamera : Component
         OpenTKUIHelper.DrawComponentWindow("camera_transform", "Camera Transform", () =>
         {
             var tempPos =
-                new System.Numerics.Vector2(position.X, position.Y);
+                new System.Numerics.Vector2(Transform.position.X, Transform.position.Y);
             OpenTKUIHelper.DrawProperty("Position: ", ref tempPos);
-            position = new Vector2(tempPos.X, tempPos.Y);
-        
-            if (OpenTKUIHelper.DrawProperty("Zoom", ref zoom)) adjustProjection(this.projectionSize);
+            Transform.position = new System.Numerics.Vector2(tempPos.X, tempPos.Y);
+
+            float zTemp = zoom;
+
+            if (OpenTKUIHelper.DrawProperty("Zoom", ref zTemp))
+            {
+                setZoom(zTemp);
+            };
+            
+            
         });
         ImGui.End();
     }

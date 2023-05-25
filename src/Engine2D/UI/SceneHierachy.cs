@@ -9,6 +9,7 @@ using ImGuiNET;
 using KDBEngine.Core;
 using KDBEngine.UI;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace Engine2D.UI;
@@ -153,7 +154,9 @@ internal class SceneHierachy : UIElemenet
                     {
                         List<Component> components = new List<Component>();
 
-                        var spr = new TestCamera();
+                        var spr = new TestCamera(
+                            new OpenTK.Mathematics.Vector2(1280,720)
+                            );
                         components.Add(spr);
                         
                         var go = new Gameobject(

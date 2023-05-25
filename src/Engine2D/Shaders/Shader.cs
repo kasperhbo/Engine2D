@@ -288,6 +288,16 @@ public class Shader
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
         GL.Uniform2(varLocation, vec);
     }
+    
+    /// <summary>
+    /// Overload for System.numerics
+    /// </summary>
+    /// <param name="varName"></param>
+    /// <param name="vec"></param>
+    public void uploadVec2f(string varName, System.Numerics.Vector2 vec)
+    {
+        uploadVec2f(varName, new Vector2(vec.X, vec.Y));
+    }
 
     public void uploadFloat(string varName, float val)
     {

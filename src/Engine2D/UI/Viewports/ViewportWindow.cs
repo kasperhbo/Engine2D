@@ -1,8 +1,9 @@
-﻿using System.Numerics;
-using Engine2D.Testing;
+﻿using Engine2D.Testing;
 using ImGuiNET;
 using KDBEngine.Core;
+using OpenTK.Mathematics;
 using Veldrid;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.UI.Viewports;
 
@@ -47,8 +48,9 @@ public class ViewportWindow
         topLeft.X -= ImGui.GetScrollX(); 
         topLeft.Y -= ImGui.GetScrollY(); 
         
-        BeforeImageRender();
         
+        ImGui.SetCursorPos(ImGui.GetCursorPos() + (ImGui.GetContentRegionAvail() - _windowSize) * 0.5f);
+        BeforeImageRender();
         ImGui.Image(GetImageToRender(), _windowSize, Vector2.UnitY, Vector2.UnitX);
         
         AfterImageRender();
@@ -69,7 +71,7 @@ public class ViewportWindow
 
         var viewportX = windowSize.X / 2.0f - aspectSize.X / 2.0f;
         var viewportY = windowSize.Y / 2.0f - aspectSize.Y / 2.0f;
-
+        
         return new Vector2(viewportX + ImGui.GetCursorPosX(),
             viewportY + ImGui.GetCursorPosY());
     }

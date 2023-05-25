@@ -74,8 +74,8 @@ public class SpriteRenderer : Component
         if (_lastTransform.position != Parent.Transform.position
             || 
             _lastTransform.size != Parent.Transform.size
-            ||
-            Math.Abs(_lastTransform.rotation - Parent.Transform.rotation) > .001f
+           ||
+            Math.Abs(_lastTransform.eulerAngles.Z - Parent.Transform.eulerAngles.Z) > .001f
             );
         {
             IsDirty = true;

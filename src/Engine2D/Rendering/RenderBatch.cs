@@ -194,12 +194,6 @@ internal class RenderBatch : IComparable<RenderBatch>
 
         var texID = -1;
         var texCoords = sprite.TextureCoords;
-
-        Vector3 position = new Vector3(_sprites[index].Parent.Transform.position.X,
-            _sprites[index].Parent.Transform.position.Y, 0);
-        
-        Vector3 size = new Vector3(_sprites[index].Parent.Transform.size.X,
-            _sprites[index].Parent.Transform.size.Y, 1);
         
         if (sprite.texture != null)
             for (var i = 0; i < _textures.Length; i++)
@@ -209,11 +203,7 @@ internal class RenderBatch : IComparable<RenderBatch>
                     break;
                 }
 
-
-
-        Matrix4 translation = Matrix4.CreateScale(size);
-        translation *= Matrix4.CreateTranslation(position);
-        
+        Matrix4 translation = sprite.Parent.Transform.GetTranslation();        
 
         {
             Vector4 currentPos = quadVertexPositions[0] * translation;

@@ -106,7 +106,7 @@ public class Gameobject : Asset
         ImGui.Separator();
         
         OpenTKUIHelper.DrawComponentWindow("Transform", "Transform",
-            () => { Transform.ImGuiFields(); }, Transform.WindowSize().Y
+            () => { Transform.ImGui(); }, Transform.WindowSize().Y
         );
         
         for (var i = 0; i < components.Count; i++)

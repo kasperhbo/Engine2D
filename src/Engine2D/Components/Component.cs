@@ -86,6 +86,17 @@ public abstract class Component
 
             if (!ignore)
             {
+                if (type == typeof(OpenTK.Mathematics.Vector3))
+                {
+                    var val = (OpenTK.Mathematics.Vector3)value;
+
+                    sizeYGUI += y;
+
+                    OpenTKUIHelper.DrawProperty(name, ref val);
+
+                    field.SetValue(this, val);
+                }
+                
                 if (type == typeof(SpriteColor))
                 {
                     var val = (SpriteColor)value;

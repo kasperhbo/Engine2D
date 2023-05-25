@@ -270,6 +270,52 @@ internal static class OpenTKUIHelper
         ImGui.PopID();
         return num7 != 0;
     }
+
+    public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector3 property)
+    {
+        ImGui.PushID(name);
+        var changed = false;
+        ImGui.TableNextColumn();
+        ImGui.Text(name);
+        ImGui.TableNextColumn();
+        
+        int num1 = 0 | (Widgets.FloatLabel(ref property.X, "X") ? 1 : 0);
+        ImGui.SameLine();
+        int num2 = Widgets.FloatLabel(ref property.Y, "Y", 4278235392U) ? 1 : 0;
+        int num3 = num1 | num2;
+        ImGui.SameLine();
+        int num4 = Widgets.FloatLabel(ref property.Z, "Z", 4289789952U) ? 1 : 0;
+        int num5 = num3 | num4;
+        ImGui.PopID();
+        return num5 != 0;
+    }
+    
+    public static bool DrawProperty(string name, ref OpenTK.Mathematics.Quaternion q)
+    {
+        ImGui.PushID(name);
+        var changed = false;
+        ImGui.TableNextColumn();
+        ImGui.Text(name);
+        ImGui.TableNextColumn();
+
+        System.Numerics.Quaternion quat = new System.Numerics.Quaternion(q.X, q.Y, q.Z, q.W);
+        
+        ImGui.PushID(name);
+        int num1 = 0 | (Widgets.FloatLabel(ref quat.X, "X") ? 1 : 0);
+        ImGui.SameLine();
+        int num2 = Widgets.FloatLabel(ref quat.Y, "Y", 4278235392U) ? 1 : 0;
+        int num3 = num1 | num2;
+        ImGui.SameLine();
+        int num4 = Widgets.FloatLabel(ref quat.Z, "Z", 4289789952U) ? 1 : 0;
+        int num5 = num3 | num4;
+        ImGui.SameLine();
+        int num6 = Widgets.FloatLabel(ref quat.W, "W", 4287299723U) ? 1 : 0;
+        int num7 = num5 | num6;
+        ImGui.PopID();
+        q = new Quaternion(quat.X, quat.Y, quat.Z, quat.W);
+        return num7 != 0;
+    }
+    
 }
 
 internal class ImageTextIcon

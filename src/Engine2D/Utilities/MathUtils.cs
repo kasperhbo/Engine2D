@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
 using OpenTK.Mathematics;
+using Quaternion = OpenTK.Mathematics.Quaternion;
 using Vector3 = OpenTK.Mathematics.Vector3;
 using Vector4 = OpenTK.Mathematics.Vector4;
 
@@ -115,5 +117,28 @@ public static class MathUtils
         Vector4 dest = new((float)xN, (float)yN, (float)zN, w);
 
         return dest;
+    }
+
+    public static Vector3 QuaternionToAngleAxis(Quaternion q)
+    {
+        float Θ = (float)Math.Acos(q.W)*2;
+        
+        float ax = (float)(q.X / Math.Sin(Math.Acos(Θ)));
+        float ay = (float)(q.Y / Math.Sin(Math.Acos(Θ)));
+        float az = (float)(q.Z / Math.Sin(Math.Acos(Θ)));
+
+        return new Vector3(ax, ay, az);
+    } 
+    
+    public static double ConvertRadiansToDegrees(double radians)
+    {
+        double degrees = (180f / Math.PI) * radians;
+        return (degrees);
+    }
+    
+    public static double ConvertDegreesToRadians (double degrees)
+    {
+        double radians = (Math.PI / 180) * degrees;
+        return (radians);
     }
 }
