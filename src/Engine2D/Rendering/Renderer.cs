@@ -28,6 +28,7 @@ public class Renderer
     public Texture LightmapTexture;
     
     public TestFrameBuffer GameBuffer;
+    public TestFrameBuffer EditorGameBuffer;
 
     private List<PointLight> _pointLights = new();
     private readonly int _maxLights = 250;
@@ -51,28 +52,51 @@ public class Renderer
         
         
         //Create frame buffers
+        EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
-    internal void Render(TestCamera camera)
+    internal void Render(TestCamera editorCamera, TestCamera gameCamera)
     {
         _drawCalls = 0;
         //Render Lights
         {
-            LightmapTexture = _lightMapRenderer.Render(this, camera);
+            LightmapTexture = _lightMapRenderer.Render(this, editorCamera);
         }
         //Render the scene
         {
-            GameBuffer.Bind();
+            EditorGameBuffer.Bind();
             
             GL.ClearColor(0, 0, 0, 0);
             GL.Clear(ClearBufferMask.ColorBufferBit);
             OpenTK.Graphics.OpenGL.GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
-            foreach (var batch in _renderBatches) batch.Render(camera, LightmapTexture);
+            foreach (var batch in _renderBatches) batch.Render(editorCamera, LightmapTexture);
             
-            GameBuffer.UnBind();
+            EditorGameBuffer.UnBind();
         }
+        
+        if(gameCamera != null)
+        {
+            _drawCalls = 0;
+            //Render Lights
+            {
+                LightmapTexture = _lightMapRenderer.Render(this, gameCamera);
+            }
+            //Render the scene
+            {
+                GameBuffer.Bind();
+
+                GL.ClearColor(0, 0, 0, 0);
+                GL.Clear(ClearBufferMask.ColorBufferBit);
+                OpenTK.Graphics.OpenGL.GL.Enable(EnableCap.Blend);
+                GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
+                foreach (var batch in _renderBatches) batch.Render(gameCamera, LightmapTexture);
+
+                GameBuffer.UnBind();
+            }
+        }
+
         
         
     }
@@ -90,6 +114,7 @@ public class Renderer
     {
         _lightMapRenderer.Resize();
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
+        EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
     internal void AddPointLight(PointLight light)
@@ -138,7 +163,6 @@ public class Renderer
     {
         return () =>
         {
-            var windowSize = TestViewportWindow.getLargestSizeForViewport() / 3;
             ImGui.Text("Draw calls: " + _drawCalls);
             ImGui.Text("Render Batches: " + _renderBatches.Count);
         };

@@ -1,0 +1,110 @@
+﻿using System.Numerics;
+using Engine2D.Testing;
+using ImGuiNET;
+using KDBEngine.Core;
+using Veldrid;
+
+namespace Engine2D.UI.Viewports;
+
+public class ViewportWindow
+{
+    private TestFrameBuffer? _testFrameBuffer = null;
+    protected TestCamera? _cameraToRender = null;
+    
+    protected Vector2 _windowSize = new();
+    protected Vector2 _windowPos = new();
+
+    private string _title = "Unnamed viewport";
+
+    public ViewportWindow(string title)
+    {
+        _title = title;
+    }
+
+
+    public ViewportWindow(TestFrameBuffer? testFrameBuffer, TestCamera? cameraToRender, string title)
+    {
+        _testFrameBuffer = testFrameBuffer;
+        _cameraToRender = cameraToRender;
+        _title = title;
+    }
+
+    public void OnGui(TestFrameBuffer testFrameBuffer, TestCamera camera)
+    {
+        _testFrameBuffer = testFrameBuffer;
+        _cameraToRender = camera;
+        OnGui();
+    }
+
+    public void OnGui()
+    {
+        ImGui.Begin(_title);
+
+        _windowSize = GetLargestSizeForVP();
+        _windowPos = GetCenteredViewportPos(_windowSize);
+
+        var topLeft = ImGui.GetCursorScreenPos();
+        topLeft.X -= ImGui.GetScrollX(); 
+        topLeft.Y -= ImGui.GetScrollY(); 
+        
+        BeforeImageRender();
+        
+        ImGui.Image(GetImageToRender(), _windowSize, Vector2.UnitY, Vector2.UnitX);
+        
+        AfterImageRender();
+        
+        ImGui.End();
+    }
+
+    protected IntPtr GetImageToRender()
+    {
+        return ((IntPtr)_testFrameBuffer?.Texture.TexID)!;
+    }
+    
+    private Vector2 GetCenteredViewportPos(Vector2 aspectSize)
+    {
+        var windowSize = ImGui.GetContentRegionAvail();
+        windowSize.X -= ImGui.GetScrollX();
+        windowSize.Y -= ImGui.GetScrollY();
+
+        var viewportX = windowSize.X / 2.0f - aspectSize.X / 2.0f;
+        var viewportY = windowSize.Y / 2.0f - aspectSize.Y / 2.0f;
+
+        return new Vector2(viewportX + ImGui.GetCursorPosX(),
+            viewportY + ImGui.GetCursorPosY());
+    }
+
+    private Vector2 GetLargestSizeForVP()
+    {
+        var windowSize = ImGui.GetContentRegionAvail();
+        windowSize.X -= ImGui.GetScrollX();
+        windowSize.Y -= ImGui.GetScrollY();
+        float targetAspectRatio = 16/9;
+        
+        if(_cameraToRender != null)
+            targetAspectRatio = _cameraToRender.projectionSize.X / _cameraToRender.projectionSize.Y;
+        
+        var aspectWidth = windowSize.X;
+        var aspectHeight = aspectWidth / targetAspectRatio;
+        if (aspectHeight > windowSize.Y)
+        {
+            // We must switch to pillarbox mode
+            aspectHeight = windowSize.Y;
+            aspectWidth = aspectHeight * targetAspectRatio;
+        }
+
+        return new Vector2(aspectWidth, aspectHeight);
+    }
+
+
+    protected virtual void BeforeImageRender()
+    {
+        
+    }
+    
+    protected virtual void AfterImageRender()
+    {
+        
+    }
+    
+}

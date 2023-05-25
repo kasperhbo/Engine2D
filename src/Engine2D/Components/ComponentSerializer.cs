@@ -1,6 +1,7 @@
 ﻿using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
+using Engine2D.Testing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -102,6 +103,10 @@ public class ComponentSerializer : JsonConverter
             case "Transform":
                 return JsonConvert.DeserializeObject<Transform>(jo.ToString(),
                     _specifiedSubclassConversion);
+            case "Camera":
+                return JsonConvert.DeserializeObject<TestCamera>(jo.ToString(),
+                    _specifiedSubclassConversion);
+
             default:
             {
                 Log.Error("Not Found" + jo["Type"].Value<string>());

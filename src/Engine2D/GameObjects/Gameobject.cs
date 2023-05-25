@@ -65,7 +65,6 @@ public class Gameobject : Asset
         if (UID == -1) UID = UIDManager.GetUID();
         UIDManager.TakenUIDS.Add(UID);
         foreach (var component in components) component.Init(this, renderer);
-        // Transform = this.GetComponent<Transform>();
     }
 
     public void Start()
@@ -75,12 +74,6 @@ public class Gameobject : Asset
 
     public void EditorUpdate(double dt)
     {
-        if (_parent != null)
-        {
-            //UPDATE CHILDS
-            // transform.position = new((localPosition.X + _parent.transform.position.X),
-            //     (localPosition.Y + _parent.transform.position.Y));
-        }
         foreach (var component in components) component.EditorUpdate(dt);
     }
 
@@ -105,46 +98,22 @@ public class Gameobject : Asset
         component.Init(this);
         components.Add(component);
     }
-
-
-    private void ActualAddComponent(Component component, Renderer renderer)
-    {
-        component.Init(this, renderer);
-        components.Add(component);
-    }
-
-    public void AddLinkedComponent(Component component, Renderer renderer)
-    {
-        component.Init(this, renderer);
-    }
-
-    public bool AABB(Vector2 point)
-    {
-        throw new NotImplementedException();
-        return false;
-        // return point.X >= transform.position.X - transform.size.X * .5
-        //        && point.X <= transform.position.X + transform.size.X * .5
-        //        && point.Y >= transform.position.Y - transform.size.Y * .5
-        //        && point.Y <= transform.position.Y + transform.size.Y * .5;
-    }
-
+    
     public override void OnGui()
     {
         ImGui.InputText("##name", ref Name, 256);
         ImGui.SameLine();
         ImGui.Separator();
-
-        var componentsToRemove = new List<Component>();
-
-        OpenTKUIHelper.DrawComponentWindow("transform" + Name, "Transform", () =>
-        {
-            
-        });
-
+        
+        OpenTKUIHelper.DrawComponentWindow("Transform", "Transform",
+            () => { Transform.ImGuiFields(); }, Transform.WindowSize().Y
+        );
+        
         for (var i = 0; i < components.Count; i++)
         {
+            if (components[i].GetType() == typeof(Transform)) return;
+            
             ImGui.PushID(i);
-
 
             OpenTKUIHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
                 () => { components[i].ImGuiFields(); }, components[i].WindowSize().Y

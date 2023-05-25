@@ -8,6 +8,7 @@ using Microsoft.Win32.SafeHandles;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using TextureUnit = OpenTK.Graphics.OpenGL4.TextureUnit;
+using Vector3 = OpenTK.Mathematics.Vector3;
 using Vector4 = OpenTK.Mathematics.Vector4;
 
 namespace Engine2D.Rendering;
@@ -176,8 +177,131 @@ internal class RenderBatch : IComparable<RenderBatch>
         _shader.detach();
     }
 
+    private Vector4[] quadVertexPositions =
+    {
+        new(-0.5f, -0.5f, 0.0f, 1.0f),
+        new(-0.5f,  0.5f, 0.0f, 1.0f),
+        new(0.5f,  0.5f, 0.0f, 1.0f ),
+        new(0.5f, -0.5f, 0.0f, 1.0f ),
+    };
 
     private void LoadVertexProperties(int index)
+    {
+        var sprite = _sprites[index];
+        var offset = index * 4 * c_vertexSize;
+        
+        Vector4 color = new(sprite.Color.Color.X, sprite.Color.Color.Y, sprite.Color.Color.Z, sprite.Color.Color.W);
+
+        var texID = -1;
+        var texCoords = sprite.TextureCoords;
+
+        Vector3 position = new Vector3(_sprites[index].Parent.Transform.position.X,
+            _sprites[index].Parent.Transform.position.Y, 0);
+        
+        Vector3 size = new Vector3(_sprites[index].Parent.Transform.size.X,
+            _sprites[index].Parent.Transform.size.Y, 1);
+        
+        if (sprite.texture != null)
+            for (var i = 0; i < _textures.Length; i++)
+                if (_textures[i].Equals(sprite.texture))
+                {
+                    texID = i + 1;
+                    break;
+                }
+
+
+
+        Matrix4 translation = Matrix4.CreateScale(size);
+        translation *= Matrix4.CreateTranslation(position);
+        
+
+        {
+            Vector4 currentPos = quadVertexPositions[0] * translation;
+            _vertices[offset + 0] = currentPos.X;
+            _vertices[offset + 1] = currentPos.Y;
+
+            // Load color
+            _vertices[offset + 2] = color.X;
+            _vertices[offset + 3] = color.Y;
+            _vertices[offset + 4] = color.Z;
+            _vertices[offset + 5] = color.W;
+
+            //Load tex coords
+            _vertices[offset + 6] = 0;
+            _vertices[offset + 7] = 0;
+
+            //Load tex id
+            _vertices[offset + 8] = texID;
+            offset += c_vertexSize;
+        }
+        
+        {
+            Vector4 currentPos = quadVertexPositions[1] * translation;
+            _vertices[offset + 0] = currentPos.X;
+            _vertices[offset + 1] = currentPos.Y;
+
+            // Load color
+            _vertices[offset + 2] = color.X;
+            _vertices[offset + 3] = color.Y;
+            _vertices[offset + 4] = color.Z;
+            _vertices[offset + 5] = color.W;
+
+            //Load tex coords
+            _vertices[offset + 6] = 1;
+            _vertices[offset + 7] = 0;
+
+            //Load tex id
+            _vertices[offset + 8] = texID;
+
+            offset += c_vertexSize;
+        }
+        
+        {
+            Vector4 currentPos = quadVertexPositions[2] * translation;
+            _vertices[offset + 0] = currentPos.X;
+            _vertices[offset + 1] = currentPos.Y;
+
+            // Load color
+            _vertices[offset + 2] = color.X;
+            _vertices[offset + 3] = color.Y;
+            _vertices[offset + 4] = color.Z;
+            _vertices[offset + 5] = color.W;
+
+            //Load tex coords
+            _vertices[offset + 6] = 1;
+            _vertices[offset + 7] = 1;
+
+            //Load tex id
+            _vertices[offset + 8] = texID;
+
+            offset += c_vertexSize;
+        }
+        
+        {
+            Vector4 currentPos = quadVertexPositions[3] * translation;
+            _vertices[offset + 0] = currentPos.X;
+            _vertices[offset + 1] = currentPos.Y;
+
+            // Load color
+            _vertices[offset + 2] = color.X;
+            _vertices[offset + 3] = color.Y;
+            _vertices[offset + 4] = color.Z;
+            _vertices[offset + 5] = color.W;
+
+            //Load tex coords
+            _vertices[offset + 6] = 0;
+            _vertices[offset + 7] = 1;
+
+            //Load tex id
+            _vertices[offset + 8] = texID;
+
+            offset += c_vertexSize;
+        }
+
+    }
+
+
+    /*private void LoadVertexProperties(int index)
     {
         var sprite = _sprites[index];
 
@@ -202,15 +326,20 @@ internal class RenderBatch : IComparable<RenderBatch>
         float yAdd = 0.5f;
         for (var i = 0; i < 4; i++)
         {
-            if (i == 1) {
-                yAdd = -0.5f;
-            } else if (i == 2) {
-                xAdd = -0.5f;
-            } else if (i == 3) {
-                yAdd = 0.5f;
-            }
+            // if (i == 1) {
+            //     yAdd = -0.5f;
+            // } else if (i == 2) {
+            //     xAdd = -0.5f;
+            // } else if (i == 3) {
+            //     yAdd = 0.5f;
+            // }
             
-            var currentPos = Engine2D.MathUtils.Multiply(sprite.Parent.Transform.GetTranslation(), new Vector4(xAdd, yAdd, 0, 1));
+            //Vector4 currentPos = new Vector4(xAdd, yAdd, 0, 1) * sprite.Parent.Transform.GetTranslation();
+
+            // float x = 
+            //
+            //
+            // Vector4 currentPos = new Vector4();
             
             
             _vertices[offset]     = currentPos.X;
@@ -232,7 +361,7 @@ internal class RenderBatch : IComparable<RenderBatch>
             offset += c_vertexSize;
         }
     }
-
+*/
     private int[] GenerateIndices()
     {
         // 6 indices per quad (3 per triangle)

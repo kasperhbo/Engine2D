@@ -4,6 +4,7 @@ using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
+using Engine2D.Testing;
 using ImGuiNET;
 using KDBEngine.Core;
 using KDBEngine.UI;
@@ -144,6 +145,21 @@ internal class SceneHierachy : UIElemenet
                             ("Gameobject: " + Engine.Get()._currentScene?.Gameobjects.Count + 1),
                             components
                             );
+                            
+                        Engine.Get()._currentScene?.AddGameObjectToScene(go);
+                    }
+                    
+                    if (ImGui.MenuItem("New Game Camera"))
+                    {
+                        List<Component> components = new List<Component>();
+
+                        var spr = new TestCamera();
+                        components.Add(spr);
+                        
+                        var go = new Gameobject(
+                            ("Game Camera: " + Engine.Get()._currentScene?.Gameobjects.Count + 1),
+                            components
+                        );
                             
                         Engine.Get()._currentScene?.AddGameObjectToScene(go);
                     }

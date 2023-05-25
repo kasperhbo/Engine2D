@@ -6,6 +6,7 @@ using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.Testing;
 using Engine2D.UI;
+using Engine2D.UI.Viewports;
 using ImGuiNET;
 using KDBEngine.UI;
 using OpenTK.Graphics.OpenGL4;
@@ -25,8 +26,10 @@ namespace KDBEngine.Core
         //UI
         private readonly Dictionary<string, UIElemenet> _guiWindows = new();
         private readonly EngineSettingsWindow engineSettingsWindow = new();
-        private ImGuiController ImGuiController;
-        private TestViewportWindow viewportWindow;
+        private ImGuiController _imGuiController;
+        private EditorViewport _editorViewport;
+        private ViewportWindow _gameViewport;
+        // private TestViewportWindow viewportWindow;
         
         internal Scene? _currentScene;
         public Asset? CurrentSelectedAsset;
@@ -72,23 +75,27 @@ namespace KDBEngine.Core
             base.OnLoad();
             
             SaveLoad.LoadEngineSettings();
-            ImGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
-            
-            viewportWindow = new TestViewportWindow();
-            
             _currentScene = new Scene();
             _currentScene.Init(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
             
-            if (Settings.s_IsEngine) CreateUIWindows();
+            if (Settings.s_IsEngine)
+                LoadEditor();
         }
 
+        private void LoadEditor()
+        {
+            _imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
+            _editorViewport = new("Editor VP");
+            _gameViewport = new("Game VP");
+            CreateUIWindows();
+        }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
 
             //Input.Update(KeyboardState, MouseState);
-            TestInput.mousePosCallback(MouseState, KeyboardState, _currentScene?.TestCamera);
+            TestInput.mousePosCallback(MouseState, KeyboardState, _currentScene?.EditorCamera);
 
             _currentScene?.EditorUpdate(args.Time);
 
@@ -109,7 +116,7 @@ namespace KDBEngine.Core
             {
                 //ImGui
                 {
-                    ImGuiController.Update(this,(float)e.Time);
+                    _imGuiController.Update(this,(float)e.Time);
 
                     #region Menu
 
@@ -143,11 +150,19 @@ namespace KDBEngine.Core
                     ImGui.DockSpaceOverViewport();
                     ImGui.ShowDemoWindow();
 
-
                     foreach (var window in _guiWindows.Values) window.Render();
 
-                    _currentScene?.OnGui(viewportWindow);
-                    ImGuiController.Render();
+                    
+                    _currentScene?.OnGui();
+                    TestCamera cam = _currentScene.EditorCamera;
+                    TestFrameBuffer frameBuffer = _currentScene.Renderer.EditorGameBuffer;
+                    _editorViewport.OnGui(frameBuffer, cam);
+                    
+                    cam = _currentScene.CurrentMainGameCamera;
+                    frameBuffer = _currentScene.Renderer.GameBuffer;
+                    _gameViewport.OnGui(frameBuffer, cam);
+                    
+                    _imGuiController.Render();
                     
                 }
             }
@@ -165,7 +180,7 @@ namespace KDBEngine.Core
             
             if (Settings.s_IsEngine)
             {
-                ImGuiController.WindowResized(ClientSize.X, ClientSize.Y);
+                _imGuiController.WindowResized(ClientSize.X, ClientSize.Y);
             }
         }
 
@@ -178,7 +193,7 @@ namespace KDBEngine.Core
             if (Settings.s_IsEngine)
             {
                 //UPDATE UI
-                ImGuiController.PressChar((char)e.Unicode);
+                _imGuiController.PressChar((char)e.Unicode);
             }
         }
 
@@ -191,7 +206,7 @@ namespace KDBEngine.Core
             if(Settings.s_IsEngine)
             {
                 //UPDATE UI
-                ImGuiController.MouseScroll(e.Offset);
+                _imGuiController.MouseScroll(e.Offset);
             }
         }
 

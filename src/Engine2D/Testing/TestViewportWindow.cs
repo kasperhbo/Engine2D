@@ -45,7 +45,7 @@ internal class TestViewportWindow
         var windowSize = getLargestSizeForViewport();
         var windowPos = getCenteredPositionForViewport(windowSize);
 
-        var cam = Engine.Get()._currentScene.TestCamera;
+        var cam = Engine.Get()._currentScene.EditorCamera;
         if(cam.projectionSize != (windowSize.X, windowSize.Y))
             cam.adjustProjection((windowSize.X, windowSize.Y));
         
@@ -60,6 +60,7 @@ internal class TestViewportWindow
         TestInput.setViewportPos(new OpenTK.Mathematics.Vector2(topLeft.X, topLeft.Y));
         TestInput.setViewportSize(new OpenTK.Mathematics.Vector2(windowSize.X, windowSize.Y));
 
+        
         ImGui.Image((IntPtr)renderer.GameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y),
             Vector2.UnitY, Vector2.UnitX);
 
@@ -78,7 +79,7 @@ internal class TestViewportWindow
                 Matrix4 view = cam.getViewMatrix();
                 Matrix4 projection = cam.getProjectionMatrix();
 
-                Matrix4 translation = go.Transform.GetTranslation(new Vector2(0,-50));
+                Matrix4 translation = go.Transform.GetTranslation(new Vector2(0,0));
                 
                  ImGuizmo.Manipulate(ref view.Row0.X, ref projection.Row0.X, 
                      operation, MODE.WORLD, ref translation.Row0.X);

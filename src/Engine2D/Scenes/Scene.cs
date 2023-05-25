@@ -50,7 +50,8 @@ internal class Scene
     public List<Gameobject> Gameobjects = new List<Gameobject>();
     public GlobalLight GlobalLight { get; set; } = null;
     
-    internal TestCamera? TestCamera = null;
+    internal TestCamera? EditorCamera = null;
+    internal TestCamera? CurrentMainGameCamera = null;
     
     private void StartPlay()
     {
@@ -111,7 +112,10 @@ internal class Scene
         Renderer = new Renderer();
         Renderer.Init();
         
-        TestCamera = new TestCamera();
+        if(Settings.s_IsEngine)
+        {
+            EditorCamera = new TestCamera();
+        }
         
         ScenePath = scenePath;
         LoadDataFromDisk();
@@ -134,7 +138,7 @@ internal class Scene
     }
 
     /// <summary>
-    /// Runs at scene start | NOT SCENE PLAY!
+    /// Runs at scene start | NOT GAME PLAY!
     /// </summary>
     /// <param name="dt"></param>
 
@@ -161,24 +165,24 @@ internal class Scene
                 if (IsPlaying) return;
                 SaveLoad.SaveScene(this);
             }
-
+        
         foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
         if (IsPlaying) GameUpdate(dt);
     }
 
     public virtual void Render()
     {
-        Renderer.Render(TestCamera);
+        Renderer.Render(EditorCamera, CurrentMainGameCamera);
     }
 
     public void AddGameObjectToScene(Gameobject go)
     {
-        // SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
-        // PointLight pl = go.GetComponent<PointLight>();
-        // if (spr != null)
-        //     Renderer.AddSpriteRenderer(spr);
-        // if (pl != null)
-        //     Renderer.AddPointLight(pl);
+        if (go.GetComponent<TestCamera>() != null)
+        {
+            Log.Succes("New Main Camera");
+            CurrentMainGameCamera = go.GetComponent<TestCamera>();
+            CurrentMainGameCamera.adjustProjection((1920, 1080));
+        }
         
         Gameobjects.Add(go);
         go.Init(Renderer);
@@ -190,15 +194,11 @@ internal class Scene
     {
         if (EngineSettings.SaveOnClose)
             SaveLoad.SaveScene(this);
-
-        // Renderer.OnClose();
     }
 
-    public void OnGui(TestViewportWindow viewportWindow)
+    public void OnGui()
     {
-        TestCamera.CameraSettingsGUI();
-        
-        viewportWindow.OnGui(Renderer);
+        EditorCamera.CameraSettingsGUI();
         
         ImGui.Begin("Scene Settings");
         ImGui.End();
@@ -208,12 +208,13 @@ internal class Scene
 
     internal virtual void OnResized(ResizeEventArgs newSize)
     {
-        TestCamera.adjustProjection();
         Renderer.OnResize(newSize);
     }
 
     internal virtual void OnMouseWheel(MouseWheelEventArgs mouseWheelEventArgs)
     {
+        EditorCamera?.addZoom(mouseWheelEventArgs.OffsetY/10);
+        EditorCamera?.adjustProjection();
     }
 
     internal virtual void OnTextInput(TextInputEventArgs inputEventArgs)

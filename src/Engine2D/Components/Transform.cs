@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+﻿using System.Numerics;
+using OpenTK.Mathematics;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.Components;
@@ -15,6 +16,15 @@ public class Transform : Component
         t = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(rotation));
         t *= Matrix4.CreateScale(new OpenTK.Mathematics.Vector3(size.X, size.Y, 1));
         t *= Matrix4.CreateTranslation(position.X, position.Y, 0);
+        return t;
+    }
+    
+    public Matrix4x4 GetTranslationSYSTEM()
+    {
+        var t = Matrix4x4.Identity;
+        t = Matrix4x4.CreateRotationZ(MathHelper.DegreesToRadians(rotation));
+        t *= Matrix4x4.CreateScale(new System.Numerics.Vector3(size.X, size.Y, 1));
+        t *= Matrix4x4.CreateTranslation(position.X, position.Y, 0);
         return t;
     }
     

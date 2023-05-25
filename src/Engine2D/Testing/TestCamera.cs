@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using Engine2D.Components;
 using Engine2D.UI;
 using ImGuiNET;
 using ImTool;
@@ -7,7 +8,7 @@ using OpenTK.Mathematics;
 
 namespace Engine2D.Testing;
 
-public class TestCamera
+public class TestCamera : Component
 {
     public Vector2 projectionSize = new(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y);
 
@@ -62,10 +63,10 @@ public class TestCamera
         // Somehow this defines how many tiles are visible on the screen (40 * 21).
         //projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0, 32.0f * 21.0f, 0, 100);
         projectionMatrix = Matrix4.CreateOrthographicOffCenter(
-            -(projectionSize.X * zoom / 2),
-            projectionSize.X * zoom / 2,
-            -(projectionSize.Y * zoom / 2),
-            projectionSize.Y * zoom / 2,
+            -(projectionSize.X * zoom),
+            projectionSize.X * zoom,
+            -(projectionSize.Y * zoom),
+            projectionSize.Y * zoom,
             0,
             100
         );
@@ -143,5 +144,10 @@ public class TestCamera
             if (OpenTKUIHelper.DrawProperty("Zoom", ref zoom)) adjustProjection(this.projectionSize);
         });
         ImGui.End();
+    }
+
+    public override string GetItemType()
+    {
+        return "Camera";
     }
 }
