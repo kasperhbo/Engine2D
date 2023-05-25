@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Transactions;
 using Box2DSharp.Dynamics;
 using Engine2D.Components;
 using Engine2D.Core;
@@ -24,45 +25,47 @@ public class Gameobject : Asset
     private readonly List<Component> _componentsToAddEndOfFrame = new();
     public List<Component> components = new();
     public string Name = "";
-    public Transform transform = new();
     public System.Numerics.Vector2 localPosition = new();
-
-
     [JsonIgnore] public List<Gameobject> Childs = new List<Gameobject>();
     [JsonIgnore] private Gameobject _parent = null;
-
+    [JsonIgnore] public Transform Transform { get; private set; }
+    
     public Gameobject()
     {
     }
 
-    public Gameobject(string name, Transform transform)
+    public Gameobject(string name)
     {
         Name = name;
-        this.transform = transform;
         components = new List<Component>();
     }
-
-    public Gameobject(string name, List<Component> components, Transform transform)
+    
+    public Gameobject(string name, List<Component> components)
     {
         Name = name;
-        this.transform = transform;
         this.components = components;
     }
 
-
-    public Gameobject(string name, List<Component> components, List<Component> linked, Transform transform)
-    {
-        Name = name;
-        this.transform = transform;
-        this.components = components;
-    }
 
 
     public void Init(Renderer renderer)
     {
+        if(Transform == null)
+        {
+            var t = new Transform();
+
+            t.size = new System.Numerics.Vector2(100, 100);
+            t.position = new System.Numerics.Vector2(0, 0);
+
+            AddComponent(t);
+            Transform = t;
+        }
+        Transform.Parent = this;
+        
         if (UID == -1) UID = UIDManager.GetUID();
         UIDManager.TakenUIDS.Add(UID);
         foreach (var component in components) component.Init(this, renderer);
+        // Transform = this.GetComponent<Transform>();
     }
 
     public void Start()
@@ -74,8 +77,9 @@ public class Gameobject : Asset
     {
         if (_parent != null)
         {
-            transform.position = new((localPosition.X + _parent.transform.position.X),
-                (localPosition.Y + _parent.transform.position.Y));
+            //UPDATE CHILDS
+            // transform.position = new((localPosition.X + _parent.transform.position.X),
+            //     (localPosition.Y + _parent.transform.position.Y));
         }
         foreach (var component in components) component.EditorUpdate(dt);
     }
@@ -95,6 +99,13 @@ public class Gameobject : Asset
         component.Init(this, renderer);
         components.Add(component);
     }
+    
+    public void AddComponent(Component component)
+    {
+        component.Init(this);
+        components.Add(component);
+    }
+
 
     private void ActualAddComponent(Component component, Renderer renderer)
     {
@@ -109,10 +120,12 @@ public class Gameobject : Asset
 
     public bool AABB(Vector2 point)
     {
-        return point.X >= transform.position.X - transform.size.X * .5
-               && point.X <= transform.position.X + transform.size.X * .5
-               && point.Y >= transform.position.Y - transform.size.Y * .5
-               && point.Y <= transform.position.Y + transform.size.Y * .5;
+        throw new NotImplementedException();
+        return false;
+        // return point.X >= transform.position.X - transform.size.X * .5
+        //        && point.X <= transform.position.X + transform.size.X * .5
+        //        && point.Y >= transform.position.Y - transform.size.Y * .5
+        //        && point.Y <= transform.position.Y + transform.size.Y * .5;
     }
 
     public override void OnGui()
@@ -125,14 +138,7 @@ public class Gameobject : Asset
 
         OpenTKUIHelper.DrawComponentWindow("transform" + Name, "Transform", () =>
         {
-            if(_parent == null)
-                OpenTKUIHelper.DrawProperty("Position: ", ref transform.position);
-            else
-                OpenTKUIHelper.DrawProperty("Position: ", ref transform.position);
-                OpenTKUIHelper.DrawProperty("Local Position: ", ref localPosition);
             
-            OpenTKUIHelper.DrawProperty("Rotation: ", ref transform.rotation);
-            OpenTKUIHelper.DrawProperty("Scale: ", ref transform.size);
         });
 
         for (var i = 0; i < components.Count; i++)

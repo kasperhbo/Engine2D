@@ -1,9 +1,20 @@
-﻿using System.Numerics;
+﻿using System.Drawing.Drawing2D;
+using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+using Engine2D.Components;
 using Engine2D.Core;
+using Engine2D.GameObjects;
+using Engine2D.Logging;
 using Engine2D.Rendering;
+using Engine2D.UI;
+using GlmSharp;
 using ImGuiNET;
+using ImGuizmoNET;
 using KDBEngine.Core;
+using OpenTK.Mathematics;
+using Quaternion = OpenTK.Mathematics.Quaternion;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.Testing;
 
@@ -34,6 +45,10 @@ internal class TestViewportWindow
         var windowSize = getLargestSizeForViewport();
         var windowPos = getCenteredPositionForViewport(windowSize);
 
+        var cam = Engine.Get()._currentScene.TestCamera;
+        if(cam.projectionSize != (windowSize.X, windowSize.Y))
+            cam.adjustProjection((windowSize.X, windowSize.Y));
+        
         //Vector2 topLeft = new Vector2();
         var topLeft = ImGui.GetCursorScreenPos();
         topLeft.X -= ImGui.GetScrollX();
@@ -42,31 +57,43 @@ internal class TestViewportWindow
         viewportPos = new Vector2(topLeft.X, topLeft.Y);
         ViewportSize = new Vector2(windowSize.X, windowSize.Y);
 
-
-        // var textureId = GameRenderer.FrameBufferToRenderer();
-        if (renderer.GameBuffer != null)
-            ImGui.Image((IntPtr)renderer.GameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y),
-                new Vector2(0, 1), new Vector2(1, 0));
-        else
-            //TODO: MAKE ERROR TEXTUYRE
-            ImGui.Image((IntPtr)0, new Vector2(windowSize.X, windowSize.Y),
-                new Vector2(0, 1), new Vector2(1, 0));
-
-        if (ImGui.BeginDragDropTarget())
-        {
-            var payload = ImGui.AcceptDragDropPayload("Scene_Drop");
-            if (payload.IsValidPayload())
-            {
-                var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
-                Console.WriteLine("Opening scene: " + filename);
-                //Window.Get().ChangeScene(new LevelEditorScene(), filename);
-            }
-
-            ImGui.EndDragDropTarget();
-        }
-
         TestInput.setViewportPos(new OpenTK.Mathematics.Vector2(topLeft.X, topLeft.Y));
         TestInput.setViewportSize(new OpenTK.Mathematics.Vector2(windowSize.X, windowSize.Y));
+
+        ImGui.Image((IntPtr)renderer.GameBuffer.GetTextureID, new Vector2(windowSize.X, windowSize.Y),
+            Vector2.UnitY, Vector2.UnitX);
+
+        //ImGuizmo
+        Gameobject go = (Gameobject)Engine.Get().CurrentSelectedAsset;
+        if (go != null)
+        {
+            {
+                ImGuizmo.Enable(true);
+                ImGuizmo.SetOrthographic(true);
+                ImGuizmo.SetDrawlist();
+                ImGuizmo.SetRect(ImGui.GetWindowPos().X, ImGui.GetWindowPos().Y,windowSize.X, windowSize.Y);
+                
+                var operation = OPERATION.SCALE;
+                
+                Matrix4 view = cam.getViewMatrix();
+                Matrix4 projection = cam.getProjectionMatrix();
+
+                Matrix4 translation = go.Transform.GetTranslation(new Vector2(0,-50));
+                
+                 ImGuizmo.Manipulate(ref view.Row0.X, ref projection.Row0.X, 
+                     operation, MODE.WORLD, ref translation.Row0.X);
+                
+                 
+                 if (ImGuizmo.IsUsing())
+                 {
+                     go.Transform.position = new(translation.ExtractTranslation().X, translation.ExtractTranslation().Y+50);
+                     go.Transform.size = new(translation.ExtractScale().X, translation.ExtractScale().Y);
+                 }
+                 
+                 ImGui.Begin("t");
+                 ImGui.End();
+            }
+        }
 
         ImGui.End();
     }
@@ -102,12 +129,12 @@ internal class TestViewportWindow
         return new Vector2(aspectWidth, aspectHeight);
     }
 
-    public static bool IsMouseInsideViewport()
+    public bool IsInViewport(Vector2 other)
     {
         return
-            TestInput.getX() >= viewportPos.X
-            && TestInput.getX() <= viewportPos.X + ViewportSize.X
-            && TestInput.getY() >= viewportPos.Y
-            && TestInput.getY() <= viewportPos.Y + ViewportSize.Y;
+               other.X >= viewportPos.X
+            && other.X <= viewportPos.X + ViewportSize.X
+            && other.Y >= viewportPos.Y
+            && other.Y <= viewportPos.Y + ViewportSize.Y;
     }
 }

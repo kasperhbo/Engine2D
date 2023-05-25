@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -16,6 +15,7 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
+using System.Drawing.Imaging;
 
 namespace Dear_ImGui_Sample
 {
@@ -57,6 +57,8 @@ namespace Dear_ImGui_Sample
             io.Fonts.AddFontDefault();
 
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
+            io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+            io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
 
             CreateDeviceResources();
             SetKeyMappings();
@@ -565,7 +567,7 @@ void main()
         public readonly int MipmapLevels;
         public readonly SizedInternalFormat InternalFormat;
 
-        public Texture(string name, Bitmap image, bool generateMipmaps, bool srgb)
+        public Texture(string name, System.Drawing.Bitmap image, bool generateMipmaps, bool srgb)
         {
             Name = name;
             Width = image.Width;

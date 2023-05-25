@@ -99,6 +99,9 @@ public class ComponentSerializer : JsonConverter
             case "ScriptHolderComponent":
                 return JsonConvert.DeserializeObject<ScriptHolderComponent>(jo.ToString(),
                     _specifiedSubclassConversion);
+            case "Transform":
+                return JsonConvert.DeserializeObject<Transform>(jo.ToString(),
+                    _specifiedSubclassConversion);
             default:
             {
                 Log.Error("Not Found" + jo["Type"].Value<string>());

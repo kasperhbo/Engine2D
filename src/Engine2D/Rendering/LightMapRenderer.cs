@@ -117,7 +117,7 @@ public class LightMapRenderer
 
         var lightsToRenderer = renderer.GetPointLightsToRender();
 
-        var lightPositions = new Vector2[lightsToRenderer.Count];
+        var lightPositions = new System.Numerics.Vector2[lightsToRenderer.Count];
         var lightColors = new Vector3[lightsToRenderer.Count];
 
         var lightIntensities = new float[lightsToRenderer.Count];
@@ -125,7 +125,7 @@ public class LightMapRenderer
         for (var i = 0; i < lightsToRenderer.Count; i++)
         {
             var light = lightsToRenderer[i];
-            lightPositions[i] = new Vector2(light.LastTransform.position.X, light.LastTransform.position.Y);
+            lightPositions[i] = light.LastTransform.position;
             lightColors[i] = new Vector3(light.Color.Color.X, light.Color.Color.Y, light.Color.Color.Z);
             lightIntensities[i] = light.Intensity;
         }
@@ -141,7 +141,6 @@ public class LightMapRenderer
         }
         else
         {
-            Log.Warning("No Global Light In Scene");
             _shader.uploadFloat("uMinLighting", 1f);
         }
 

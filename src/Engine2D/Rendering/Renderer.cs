@@ -64,6 +64,7 @@ public class Renderer
         //Render the scene
         {
             GameBuffer.Bind();
+            
             GL.ClearColor(0, 0, 0, 0);
             GL.Clear(ClearBufferMask.ColorBufferBit);
             OpenTK.Graphics.OpenGL.GL.Enable(EnableCap.Blend);

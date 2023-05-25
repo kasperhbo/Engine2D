@@ -73,7 +73,7 @@ namespace KDBEngine.Core
             
             SaveLoad.LoadEngineSettings();
             ImGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
-
+            
             viewportWindow = new TestViewportWindow();
             
             _currentScene = new Scene();

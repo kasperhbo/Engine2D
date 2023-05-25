@@ -61,10 +61,11 @@ internal class Scene
         foreach (var item in gameobject.components)
             if (item.Type == "Rigidbody")
             {
+                throw new NotImplementedException();
                 var bodyDef = new BodyDef();
                 var rb = (RigidBody)item;
                 bodyDef.BodyType = rb.BodyType;
-                bodyDef.Position = rb.Parent.transform.position;
+                //bodyDef.Position = rb.Parent.transform.position;
 
                 var body = physicsWorld.CreateBody(bodyDef);
                 body.IsFixedRotation = rb.FixedRotation;
@@ -74,7 +75,7 @@ internal class Scene
 
                 var shape = new PolygonShape();
 
-                shape.SetAsBox(gameobject.transform.size.X * .5f, gameobject.transform.size.Y * .5f);
+                // shape.SetAsBox(gameobject.transform.size.X * .5f, gameobject.transform.size.Y * .5f);
                 var fixtureDef = new FixtureDef();
                 fixtureDef.Shape = shape;
                 fixtureDef.Density = 1.0f;

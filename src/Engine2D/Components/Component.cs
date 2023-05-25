@@ -28,6 +28,14 @@ public abstract class Component
         _initialized = true;
         Parent = parent;
     }
+    
+    public virtual void Init(Gameobject parent)
+    {
+        if (_initialized) return;
+        _initialized = true;
+        Parent = parent;
+    }
+
 
     public virtual void Start()
     {

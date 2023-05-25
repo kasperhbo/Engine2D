@@ -332,6 +332,21 @@ public class Shader
 
         GL.Uniform2(varLocation, vec.Length, vals);
     }
+    
+    public void uploadVec2fArray(string varName, System.Numerics.Vector2[] vec)
+    {
+        use();
+        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var vals = new float[vec.Length * 2];
+        for (var i = 0; i < vec.Length; i++)
+        {
+            vals[i * 2] = vec[i].X;
+            vals[i * 2 + 1] = vec[i].Y;
+        }
+
+        GL.Uniform2(varLocation, vec.Length, vals);
+    }
+
 
     public void uploadVec3fArray(string varName, Vector3[] vec)
     {

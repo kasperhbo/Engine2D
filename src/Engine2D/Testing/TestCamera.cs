@@ -1,5 +1,7 @@
-﻿using Engine2D.UI;
+﻿using System.Runtime.InteropServices;
+using Engine2D.UI;
 using ImGuiNET;
+using ImTool;
 using KDBEngine.Core;
 using OpenTK.Mathematics;
 
@@ -7,7 +9,7 @@ namespace Engine2D.Testing;
 
 public class TestCamera
 {
-    private readonly Vector2 projectionSize = new(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y);
+    public Vector2 projectionSize = new(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y);
 
     // The inverse projection matrix
     private Matrix4 inverseProjectionMatrix;
@@ -31,8 +33,9 @@ public class TestCamera
         init(new Vector2());
     }
 
-    public TestCamera(Vector2 position)
+    public TestCamera(Vector2 position, Vector2 projectionSize)
     {
+        this.projectionSize = projectionSize;
         init(position);
     }
 
@@ -43,11 +46,17 @@ public class TestCamera
         inverseProjectionMatrix = new Matrix4();
         viewMatrix = new Matrix4();
         inverseViewMatrix = new Matrix4();
-        adjustProjection();
+        adjustProjection(this.projectionSize);
     }
 
     public void adjustProjection()
     {
+        adjustProjection(this.projectionSize);
+    }
+
+    public void adjustProjection(Vector2 projectionSize)
+    {
+        this.projectionSize = projectionSize;
         projectionMatrix = Matrix4.Identity;
 
         // Somehow this defines how many tiles are visible on the screen (40 * 21).
@@ -60,8 +69,7 @@ public class TestCamera
             0,
             100
         );
-        //projectionMatrix = this.createProjectionMatrix();
-        // Save the inverted matrix
+        
         inverseProjectionMatrix = Matrix4.Invert(projectionMatrix);
     }
 
@@ -114,7 +122,7 @@ public class TestCamera
     public void setZoom(float zoom)
     {
         this.zoom = zoom;
-        adjustProjection();
+        adjustProjection(this.projectionSize);
     }
 
     public void addZoom(float value)
@@ -131,8 +139,8 @@ public class TestCamera
                 new System.Numerics.Vector2(position.X, position.Y);
             OpenTKUIHelper.DrawProperty("Position: ", ref tempPos);
             position = new Vector2(tempPos.X, tempPos.Y);
-
-            if (OpenTKUIHelper.DrawProperty("Zoom", ref zoom)) adjustProjection();
+        
+            if (OpenTKUIHelper.DrawProperty("Zoom", ref zoom)) adjustProjection(this.projectionSize);
         });
         ImGui.End();
     }

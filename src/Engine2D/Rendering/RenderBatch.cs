@@ -2,7 +2,9 @@
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Testing;
+using GlmSharp;
 using KDBEngine.Shaders;
+using Microsoft.Win32.SafeHandles;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using TextureUnit = OpenTK.Graphics.OpenGL4.TextureUnit;
@@ -196,66 +198,22 @@ internal class RenderBatch : IComparable<RenderBatch>
                     break;
                 }
 
-
-        // Add vertices with the appropriate properties
-        var xAdd = 0.5f;
-        var yAdd = 0.5f;
-
-        var transform = sprite.Parent.transform;
-
-        var t = Matrix4x4.Identity;
-        t = Matrix4x4.CreateTranslation(transform.position.X, transform.position.Y, 0);
-        t = t * Matrix4x4.CreateRotationZ(-MathHelper.DegreesToRadians(transform.rotation));
-
-        t.M41 = transform.position.X;
-        t.M42 = transform.position.Y;
-
-        var m11 = t.M11 * transform.size.X;
-        var m12 = t.M12 * transform.size.X;
-        var m13 = t.M13 * transform.size.X;
-        var m14 = t.M14 * transform.size.X;
-
-        var m21 = t.M21 * transform.size.Y;
-        var m22 = t.M22 * transform.size.Y;
-        var m23 = t.M23 * transform.size.Y;
-        var m24 = t.M24 * transform.size.Y;
-
-        var m31 = t.M31 * 1;
-        var m32 = t.M32 * 1;
-        var m33 = t.M33 * 1;
-        var m34 = t.M34 * 1;
-
-        var m41 = t.M41;
-        var m42 = t.M42;
-        var m43 = t.M43;
-        var m44 = t.M44;
-
-
-        t = new Matrix4x4(
-            m11, m12, m13, m14,
-            m21, m22, m23, m24,
-            m31, m32, m33, m34,
-            m41, m42, m43, m44
-        );
-
+        float xAdd = 0.5f;
+        float yAdd = 0.5f;
         for (var i = 0; i < 4; i++)
         {
-            if (i == 1)
+            if (i == 1) {
                 yAdd = -0.5f;
-            else if (i == 2)
+            } else if (i == 2) {
                 xAdd = -0.5f;
-            else if (i == 3) yAdd = 0.5f;
-
-            var currentPos = new Vector4(
-                transform.position.X +
-                xAdd * transform.size.X,
-                transform.position.Y +
-                yAdd * transform.size.Y,
-                0, 1);
-
-            if (transform.rotation != 0) currentPos = MathUtils.Multiply(t, new Vector4(xAdd, yAdd, 0, 0));
-            // Load position
-            _vertices[offset] = currentPos.X;
+            } else if (i == 3) {
+                yAdd = 0.5f;
+            }
+            
+            var currentPos = Engine2D.MathUtils.Multiply(sprite.Parent.Transform.GetTranslation(), new Vector4(xAdd, yAdd, 0, 1));
+            
+            
+            _vertices[offset]     = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
 
             // Load color
@@ -316,5 +274,15 @@ internal class RenderBatch : IComparable<RenderBatch>
 
                 _spriteCount--;
             }
+    }
+    
+    public static Vector4 Multiply(Matrix4 matrix, Vector4 vector)
+    {
+        return new Vector4(
+            matrix.Row0.X * vector.X + matrix.Row0.Y * vector.Y + matrix.Row0.Z * vector.Z + matrix.Row0.W* vector.W,
+            matrix.Row1.X * vector.X + matrix.Row1.Y * vector.Y + matrix.Row1.Z * vector.Z + matrix.Row1.W* vector.W,
+            matrix.Row2.X * vector.X + matrix.Row2.Y * vector.Y + matrix.Row2.Z * vector.Z + matrix.Row2.W* vector.W,
+            matrix.Row3.X * vector.X + matrix.Row3.Y * vector.Y + matrix.Row3.Z * vector.Z + matrix.Row3.W * vector.W
+        );
     }
 }

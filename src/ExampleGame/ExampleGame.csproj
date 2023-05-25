@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Engine2D\Engine2D.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="GlmSharp" Version="0.9.8" />
+  </ItemGroup>
+
 </Project>

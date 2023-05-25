@@ -12,12 +12,13 @@ public class PointLight : Component
     public SpriteColor Color = new();
     public float Intensity = 1;
 
-    [JsonIgnore] public Transform LastTransform { get; } = new();
+    [JsonIgnore] public Transform LastTransform;
 
     public override void Init(Gameobject parent, Renderer renderer)
     {
         base.Init(parent, renderer);
         renderer.AddPointLight(this);
+        parent.Transform.Copy(this.LastTransform);
     }
 
     public override void Start()
@@ -27,14 +28,14 @@ public class PointLight : Component
     public override void EditorUpdate(double dt)
     {
         //Console.WriteLine(this.texture?.TexID);
-        if (!LastTransform.Equals(Parent.transform)) Parent.transform.Copy(LastTransform);
+        if (!LastTransform.Equals(Parent.Transform))Parent.Transform.Copy(this.LastTransform);
 
         if (!_lastColor.Color.Equals(Color.Color)) _lastColor = new SpriteColor(Color.Color);
     }
 
     public override void GameUpdate(double dt)
     {
-        if (!LastTransform.Equals(Parent.transform)) Parent.transform.Copy(LastTransform);
+        if (!LastTransform.Equals(Parent.Transform))Parent.Transform.Copy(this.LastTransform);
 
         if (!_lastColor.Color.Equals(Color.Color)) _lastColor = new SpriteColor(Color.Color);
     }

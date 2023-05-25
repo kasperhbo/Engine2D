@@ -24,7 +24,8 @@ public class RigidBody : Component
 
     public override void GameUpdate(double dt)
     {
-        Parent.transform.position = RuntimeBody.GetPosition();
+        throw new NotImplementedException();
+        //Parent.transform.position = RuntimeBody.GetPosition();
         base.GameUpdate(dt);
     }
 

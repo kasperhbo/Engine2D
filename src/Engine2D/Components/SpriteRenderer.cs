@@ -30,7 +30,7 @@ public class SpriteColor
 [JsonConverter(typeof(ComponentSerializer))]
 public class SpriteRenderer : Component
 {
-    [ShowUI(show = false)] private readonly Transform _lastTransform = new();
+    [ShowUI(show = false)] private Transform _lastTransform = new Transform();
     [ShowUI(show = false)] private SpriteColor _lastColor = new();
     [JsonIgnore] [ShowUI(show = false)] private int _prevZIndex;
 
@@ -56,6 +56,7 @@ public class SpriteRenderer : Component
     public override void Init(Gameobject parent, Renderer renderer)
     {
         base.Init(parent, renderer);
+       
         if (textureData != null)
         {
             texture = ResourceManager.GetTexture(textureData);
@@ -70,10 +71,15 @@ public class SpriteRenderer : Component
     public override void EditorUpdate(double dt)
     {
         //Console.WriteLine(this.texture?.TexID);
-        if (!_lastTransform.Equals(Parent.transform))
+        if (_lastTransform.position != Parent.Transform.position
+            || 
+            _lastTransform.size != Parent.Transform.size
+            ||
+            Math.Abs(_lastTransform.rotation - Parent.Transform.rotation) > .001f
+            );
         {
             IsDirty = true;
-            Parent.transform.Copy(_lastTransform);
+            Parent.Transform.Copy(_lastTransform);
         }
 
         if (!_lastColor.Color.Equals(Color.Color))
@@ -92,10 +98,10 @@ public class SpriteRenderer : Component
 
     public override void GameUpdate(double dt)
     {
-        if (!_lastTransform.Equals(Parent.transform))
+        if (!_lastTransform.Equals(Parent.Transform))
         {
             IsDirty = true;
-            Parent.transform.Copy(_lastTransform);
+            Parent.Transform.Copy(_lastTransform);
         }
 
         if (!_lastColor.Color.Equals(Color.Color))

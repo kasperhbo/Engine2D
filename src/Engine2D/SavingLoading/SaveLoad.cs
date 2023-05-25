@@ -35,6 +35,7 @@ internal static class SaveLoad
 
     internal static void SaveScene(Scene scene)
     {
+        return;
         var gameObjectArray = scene.Gameobjects.ToArray();
 
         var sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
@@ -60,6 +61,7 @@ internal static class SaveLoad
 
     internal static List<Gameobject> LoadScene(string sceneToLoad)
     {
+        return new List<Gameobject>();
         List<Gameobject?> objs = new List<Gameobject?>();
         if (File.Exists(sceneToLoad))
         {

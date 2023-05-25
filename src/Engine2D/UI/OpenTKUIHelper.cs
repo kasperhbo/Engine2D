@@ -1,8 +1,11 @@
 ﻿using System.Diagnostics;
-using System.Numerics;
 using System.Runtime.InteropServices;
 using Engine2D.GameObjects;
 using ImGuiNET;
+using ImTool;
+using OpenTK.Mathematics;
+using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
 using Vector4 = OpenTK.Mathematics.Vector4;
 
 namespace Engine2D.UI;
@@ -30,6 +33,50 @@ internal static class OpenTKUIHelper
 
         ImGui.PopID();
     }
+    
+    public static bool Matrix4(ref Matrix4 mat, string name)
+    {
+        ImGui.PushID(name);
+        int num1 = 0 | (Widgets.FloatLabel(ref mat.Row0.X, "M11") ? 1 : 0);
+        ImGui.SameLine();
+        int num2 = Widgets.FloatLabel(ref mat.Row0.Y, "M12", 4278235392U) ? 1 : 0;
+        int num3 = num1 | num2;
+        ImGui.SameLine();
+        int num4 = Widgets.FloatLabel(ref mat.Row0.Z, "M13", 4289789952U) ? 1 : 0;
+        int num5 = num3 | num4;
+        ImGui.SameLine();
+        int num6 = Widgets.FloatLabel(ref mat.Row0.W, "M14", 4287299723U) ? 1 : 0;
+        int num7 = num5 | num6 | (Widgets.FloatLabel(ref mat.Row1.X, "M21") ? 1 : 0);
+        ImGui.SameLine();
+        int num8 = Widgets.FloatLabel(ref mat.Row1.Y, "M22", 4278235392U) ? 1 : 0;
+        int num9 = num7 | num8;
+        ImGui.SameLine();
+        int num10 = Widgets.FloatLabel(ref mat.Row1.Z, "M23", 4289789952U) ? 1 : 0;
+        int num11 = num9 | num10;
+        ImGui.SameLine();
+        int num12 = Widgets.FloatLabel(ref mat.Row1.W, "M24", 4287299723U) ? 1 : 0;
+        int num13 = num11 | num12 | (Widgets.FloatLabel(ref mat.Row2.X, "M31") ? 1 : 0);
+        ImGui.SameLine();
+        int num14 = Widgets.FloatLabel(ref mat.Row2.Y, "M32", 4278235392U) ? 1 : 0;
+        int num15 = num13 | num14;
+        ImGui.SameLine();
+        int num16 = Widgets.FloatLabel(ref mat.Row2.Z, "M33", 4289789952U) ? 1 : 0;
+        int num17 = num15 | num16;
+        ImGui.SameLine();
+        int num18 = Widgets.FloatLabel(ref mat.Row2.W, "M34", 4287299723U) ? 1 : 0;
+        int num19 = num17 | num18 | (Widgets.FloatLabel(ref mat.Row3.X, "M41") ? 1 : 0);
+        ImGui.SameLine();
+        int num20 = Widgets.FloatLabel(ref mat.Row3.Y, "M42", 4278235392U) ? 1 : 0;
+        int num21 = num19 | num20;
+        ImGui.SameLine();
+        int num22 = Widgets.FloatLabel(ref mat.Row3.Z, "M43", 4289789952U) ? 1 : 0;
+        int num23 = num21 | num22;
+        ImGui.SameLine();
+        int num24 = Widgets.FloatLabel(ref mat.Row3.W, "M44", 4287299723U) ? 1 : 0;
+        int num25 = num23 | num24;
+        ImGui.PopID();
+        return num25 != 0;
+    }
 
 
     public static bool DrawProperty(string name, ref Vector2 property)
@@ -54,17 +101,7 @@ internal static class OpenTKUIHelper
         property = new OpenTK.Mathematics.Vector2(data.X, data.Y);
         return changed;
     }
-
-
-    public static bool DrawProperty(string name, ref SpriteColor property)
-    {
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        if (ImGui.ColorEdit4("##" + name, ref property.Color)) changed = true;
-        return changed;
-    }
+    
 
     public static bool DrawProperty(string name, ref bool property)
     {
@@ -126,7 +163,8 @@ internal static class OpenTKUIHelper
         ImGui.TableNextColumn();
         ImGui.Text(name);
         ImGui.TableNextColumn();
-        if (ImGui.DragFloat("##" + name, ref property, dragSpeed)) changed = true;
+        if (ImTool.Widgets.FloatLabel(ref property, "")) changed = true;
+        // if (ImGui.DragFloat("##" + name, ref property, dragSpeed)) changed = true;
         return changed;
     }
 
@@ -209,6 +247,28 @@ internal static class OpenTKUIHelper
         property = new OpenTK.Mathematics.Vector2(copy.X, copy.Y);
         return property;
         // return changed;
+    }
+    
+    public static bool DrawProperty(string name, ref SpriteColor color)
+    {
+        ImGui.PushID(name);
+        var changed = false;
+        ImGui.TableNextColumn();
+        ImGui.Text(name);
+        ImGui.TableNextColumn();
+        
+        int num1 = 0 | (Widgets.FloatLabel(ref color.Color.X, "R") ? 1 : 0);
+        ImGui.SameLine();
+        int num2 = Widgets.FloatLabel(ref color.Color.Y, "G", 4278235392U) ? 1 : 0;
+        int num3 = num1 | num2;
+        ImGui.SameLine();
+        int num4 = Widgets.FloatLabel(ref color.Color.Z, "B", 4289789952U) ? 1 : 0;
+        int num5 = num3 | num4;
+        ImGui.SameLine();
+        int num6 = Widgets.FloatLabel(ref color.Color.W, "A", 4287299723U) ? 1 : 0;
+        int num7 = num5 | num6;
+        ImGui.PopID();
+        return num7 != 0;
     }
 }
 

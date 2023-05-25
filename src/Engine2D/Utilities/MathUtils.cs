@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using System.Runtime.CompilerServices;
 using OpenTK.Mathematics;
+using Vector3 = OpenTK.Mathematics.Vector3;
 using Vector4 = OpenTK.Mathematics.Vector4;
 
 namespace Engine2D;
@@ -13,6 +14,13 @@ public static class MathUtils
         if (val.CompareTo(min) < 0) return min;
         if (val.CompareTo(max) > 0) return max;
         return val;
+    }
+    
+    public static Vector3 V3DegreToRadian(in this Vector3 from)
+    {
+        return new Vector3(MathHelper.DegreesToRadians(from.X),
+            MathHelper.DegreesToRadians(from.Y),
+            MathHelper.DegreesToRadians(from.Z));
     }
 
     public static Vector4 Multiply(Matrix4x4 matrix4, Vector4 vector4)
@@ -43,7 +51,6 @@ public static class MathUtils
 
 
         Vector4 dest = new((float)xN, (float)yN, (float)zN, w);
-
         return dest;
     }
 
