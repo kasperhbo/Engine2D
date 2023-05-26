@@ -4,7 +4,6 @@ using Engine2D.Flags;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Engine2D.UI;
-using ImGuiNET;
 using Newtonsoft.Json;
 
 namespace Engine2D.Components;
@@ -53,16 +52,10 @@ public abstract class Component
     {
     }
 
-    public virtual Vector2 WindowSize()
-    {
-        return new Vector2(0, sizeYGUI);
-    }
 
-
-    public virtual float ImGuiFields()
+    public virtual int ImGuiFields()
     {
-        sizeYGUI = 3;
-        var y = ImGui.GetFontSize() + 14;
+        int count = 0;
         var fields = GetType().GetFields(
             BindingFlags.DeclaredOnly
             | BindingFlags.Public
@@ -83,35 +76,27 @@ public abstract class Component
                 if (!attr.show)
                     ignore = true;
 
+            count++;
 
             if (!ignore)
             {
                 if (type == typeof(OpenTK.Mathematics.Vector3))
                 {
                     var val = (OpenTK.Mathematics.Vector3)value;
-
-                    sizeYGUI += y;
-
                     OpenTKUIHelper.DrawProperty(name, ref val);
-
                     field.SetValue(this, val);
                 }
                 
                 if (type == typeof(SpriteColor))
                 {
                     var val = (SpriteColor)value;
-
-                    sizeYGUI += y;
-
                     OpenTKUIHelper.DrawProperty(name, ref val);
-
                     field.SetValue(this, val);
                 }
 
                 if (type == typeof(int))
                 {
                     var val = (int)value;
-                    sizeYGUI += y;
                     OpenTKUIHelper.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
@@ -119,7 +104,6 @@ public abstract class Component
                 if (type == typeof(float))
                 {
                     var val = (float)value;
-                    sizeYGUI += y;
                     OpenTKUIHelper.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
@@ -127,7 +111,6 @@ public abstract class Component
                 if (type == typeof(bool))
                 {
                     var val = (bool)value;
-                    sizeYGUI += y;
                     OpenTKUIHelper.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
@@ -135,7 +118,6 @@ public abstract class Component
                 if (type == typeof(Vector2))
                 {
                     var val = (Vector2)value;
-                    sizeYGUI += y;
                     OpenTKUIHelper.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
@@ -143,7 +125,6 @@ public abstract class Component
                 if (type == typeof(Vector3))
                 {
                     var val = (Vector3)value;
-                    sizeYGUI += y;
                     OpenTKUIHelper.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
@@ -151,13 +132,12 @@ public abstract class Component
                 if (type == typeof(Vector4))
                 {
                     var val = (Vector4)value;
-                    sizeYGUI += y;
                     OpenTKUIHelper.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
             }
         }
 
-        return sizeYGUI;
+        return count;
     }
 }

@@ -12,28 +12,164 @@ namespace Engine2D.UI;
 
 internal static class OpenTKUIHelper
 {
-    public static void DrawComponentWindow(string id, string title, Action tablesToDraw, float size = 100)
+    public static void DrawComponentWindow(string id, string title, Action tablesToDraw, float isze = 100)
     {
         ImGui.PushID(id);
+        
+        
+        
         if (ImGui.CollapsingHeader(title, ImGuiTreeNodeFlags.DefaultOpen))
         {
-            ImGui.PushStyleColor(ImGuiCol.ChildBg, new System.Numerics.Vector4(.19f, .19f, .19f, 1)); //For visibility
-            ImGui.BeginChild("##transform_c", new Vector2(0, size), false, 0); // Leave ~100
-            ImGui.PopStyleColor();
+            ImGui.PushStyleColor(ImGuiCol.TableBorderStrong, new System.Numerics.Vector4(.19f, .19f, .19f, 1)); //For visibility
+            // ImGui.BeginChild("##transform_c"); // Leave ~100
+            
             //Position Table
             if (ImGui.BeginTable("##transform_t", 2, ImGuiTableFlags.Resizable))
             {
                 tablesToDraw.Invoke();
-
+        
                 ImGui.EndTable();
             }
-
-            ImGui.EndChild();
+        
+            
+            ImGui.PopStyleColor();
+            // ImGui.EndChild();
         }
-
         ImGui.PopID();
     }
     
+    
+
+    // public static void BeginGroupPanel(string name, Vector2 size)
+    // {
+    //     ImGui.BeginGroup();
+    //
+    //     var cursorPos = ImGui.GetCursorScreenPos();
+    //     Vector2 itemSpacing = ImGui.GetStyle().ItemSpacing;
+    //     ImGui.PushStyleVar(ImGuiStyleVar.FramePadding,new Vector2(0.0f, 0.0f));
+    //     ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0.0f, 0.0f));
+    //
+    //     float frameHeight = ImGui.GetFrameHeight();
+    //     ImGui.BeginGroup();
+    //
+    //     var effectiveSize = size;
+    //     if (size.X < 0.0f)
+    //         effectiveSize.X = ImGui.GetContentRegionAvail().X;
+    //     else
+    //         effectiveSize.X = size.X;
+    //     
+    //     ImGui.Dummy(new(effectiveSize.X, 0.0f));
+    //
+    //     ImGui.Dummy(new(frameHeight * 0.5f, 0.0f));
+    //     ImGui.SameLine(0.0f, 0.0f);
+    //     ImGui.BeginGroup();
+    //     ImGui.Dummy(new(frameHeight * 0.5f, 0.0f));
+    //     ImGui.SameLine(0.0f, 0.0f);
+    //     ImGui.TextUnformatted(name);
+    //     var labelMin = ImGui.GetItemRectMin();
+    //     var labelMax = ImGui.GetItemRectMax();
+    //     ImGui.SameLine(0.0f, 0.0f);
+    //     ImGui.Dummy(new(0.0f, frameHeight + itemSpacing.Y));
+    //     ImGui.BeginGroup();
+    //
+    //     //ImGui.GetWindowDrawList()->AddRect(labelMin, labelMax, IM_COL32(255, 0, 255, 255));
+    //
+    //     ImGui.PopStyleVar(2);
+    //
+    //     ImGui.GetCurrentWindow().ContentRegionRect.Max.X -= frameHeight * 0.5f;
+    //     ImGui.GetCurrentWindow().WorkRect.Max.X          -= frameHeight * 0.5f;
+    //     ImGui.GetCurrentWindow().InnerRect.Max.X         -= frameHeight * 0.5f;
+    //     ImGui.GetCurrentWindow().Size.X                   -= frameHeight;
+    //
+    //     var itemWidth = ImGui.CalcItemWidth();
+    //     ImGui.PushItemWidth( itemWidth - frameHeight);
+    //
+    //     // s_GroupPanelLabelStack.push_back(ImRect(labelMin, labelMax));
+    //
+    // }
+    //
+    // public void EndGroupPanel()
+    // {
+    //     ImGui::PopItemWidth();
+    //
+    //     var itemSpacing = ImGui.GetStyle().ItemSpacing;
+    //
+    //     ImGui.PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
+    //     ImGui.PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
+    //
+    //     var frameHeight = ImGui.GetFrameHeight();
+    //
+    //     ImGui.EndGroup();
+    //
+    //     //ImGui.GetWindowDrawList()->AddRectFilled(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), IM_COL32(0, 255, 0, 64), 4.0f);
+    //
+    //     ImGui.EndGroup();
+    //
+    //     ImGui.SameLine(0.0f, 0.0f);
+    //     ImGui.Dummy(new(frameHeight * 0.5f, 0.0f));
+    //     ImGui.Dummy(new(0.0, frameHeight - frameHeight * 0.5f - itemSpacing.y));
+    //
+    //     ImGui.EndGroup();
+    //
+    //     var itemMin = ImGui.GetItemRectMin();
+    //     var itemMax = ImGui.GetItemRectMax();
+    //     //ImGui.GetWindowDrawList()->AddRectFilled(itemMin, itemMax, IM_COL32(255, 0, 0, 64), 4.0f);
+    //
+    //     
+    //     
+    //
+    //     Vector2 halfFrame = new Vector2(frameHeight * 0.25f, frameHeight) * 0.5f;
+    //     
+    //     ImRect frameRect = new ImRect(itemMin + halfFrame, itemMax - (halfFrame.X, 0.0f));
+    //     
+    //     labelRect.Min.x -= itemSpacing.x;
+    //     labelRect.Max.x += itemSpacing.x;
+    //     for (int i = 0; i < 4; ++i)
+    //     {
+    //         switch (i)
+    //         {
+    //             // left half-plane
+    //             case 0:
+    //                 ImGui.PushClipRect(new(-FLT_MAX, -FLT_MAX), ImVec2(labelRect.Min.x, FLT_MAX), true);
+    //                 break;
+    //             // right half-plane
+    //             case 1:
+    //                 ImGui.PushClipRect(new(labelRect.Max.x, -FLT_MAX), ImVec2(FLT_MAX, FLT_MAX), true);
+    //                 break;
+    //             // top
+    //             case 2:
+    //                 ImGui.PushClipRect(new(labelRect.Min.x, -FLT_MAX), ImVec2(labelRect.Max.x, labelRect.Min.y),
+    //                     true);
+    //                 break;
+    //             // bottom
+    //             case 3:
+    //                 ImGui.PushClipRect(ImVec2(labelRect.Min.x, labelRect.Max.y), ImVec2(labelRect.Max.x, FLT_MAX),
+    //                     true);
+    //                 break;
+    //         }
+    //
+    //         ImGui.GetWindowDrawList()->AddRect(
+    //             frameRect.Min, frameRect.Max,
+    //             new ImColor(ImGui.GetStyleColorVec4(ImGuiCol_Border)),
+    //             halfFrame.x);
+    //
+    //         ImGui.PopClipRect();
+    //     }
+    //
+    //     ImGui.PopStyleVar(2);
+    //
+    //     ImGui.GetCurrentWindow().ContentRegionRect.Max.x += frameHeight * 0.5f;
+    //     ImGui.GetCurrentWindow().WorkRect.Max.x += frameHeight * 0.5f;
+    //     ImGui.GetCurrentWindow().InnerRect.Max.x += frameHeight * 0.5f;
+    //
+    //     ImGui.GetCurrentWindow().Size.x += frameHeight;
+    //
+    //     ImGui.Dummy(new(0.0f, 0.0f));
+    //
+    //     ImGui.EndGroup();
+    // }
+
+
     public static bool Matrix4(ref Matrix4 mat, string name)
     {
         ImGui.PushID(name);

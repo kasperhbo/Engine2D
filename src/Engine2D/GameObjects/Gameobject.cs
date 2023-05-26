@@ -7,11 +7,13 @@ using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.Scenes;
+using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
 using Newtonsoft.Json;
 using OpenTK.Mathematics;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.GameObjects;
 
@@ -104,8 +106,9 @@ public class Gameobject : Asset
         ImGui.SameLine();
         ImGui.Separator();
         
+        ;
         OpenTKUIHelper.DrawComponentWindow("Transform", "Transform",
-            () => { Transform.ImGui(); }, Transform.WindowSize().Y
+            () => { Transform.ImGuiFields(); }
         );
         
         for (var i = 0; i < components.Count; i++)
@@ -115,7 +118,7 @@ public class Gameobject : Asset
             ImGui.PushID(i);
 
             OpenTKUIHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
-                () => { components[i].ImGuiFields(); }, components[i].WindowSize().Y
+                () => { components[i].ImGuiFields(); }, 100
             );
 
             ImGui.PopID();

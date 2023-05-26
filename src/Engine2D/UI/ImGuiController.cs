@@ -567,9 +567,10 @@ void main()
         public readonly int MipmapLevels;
         public readonly SizedInternalFormat InternalFormat;
 
-        public Texture(string name, System.Drawing.Bitmap image, bool generateMipmaps, bool srgb)
+        public Texture(string name, Bitmap image, bool generateMipmaps, bool srgb)
         {
             Name = name;
+            
             Width = image.Width;
             Height = image.Height;
             InternalFormat = srgb ? Srgb8Alpha8 : SizedInternalFormat.Rgba8;

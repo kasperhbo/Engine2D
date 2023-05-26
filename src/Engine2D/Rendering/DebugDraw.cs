@@ -3,6 +3,7 @@ using Engine2D.Rendering.Lines;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL4;
 using Engine2D.GameObjects;
+using Engine2D.Logging;
 using Engine2D.Testing;
 using OpenTK.Mathematics;
 
@@ -47,8 +48,10 @@ public class DebugDraw
          3 * sizeof(float));
         GL.EnableVertexAttribArray(1);
 
-        GL.LineWidth(30f);
+        GL.LineWidth(2);
     }
+    
+    
     
     
     public void Render(TestCamera cam)
@@ -56,7 +59,7 @@ public class DebugDraw
         if (lines.Count <= 0) return;
         
         RemoveDeadLines();
-        
+
         int index = 0;
         foreach (Line2D line in lines) {
             for (int i=0; i < 2; i++) {

@@ -21,9 +21,4 @@ public class BoxCollider2D : Component
     {
         return "BoxCollider2D";
     }
-
-    public override Vector2 WindowSize()
-    {
-        return new Vector2(0, 100);
-    }
 }

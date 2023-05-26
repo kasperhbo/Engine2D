@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Engine2D.UI;
+using ImGuiNET;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using Quaternion = OpenTK.Mathematics.Quaternion;
@@ -95,25 +96,46 @@ public class Transform : Component
         return "Transform";
     }
 
-    public void ImGui()
+    private int _fieldCount = 0;
+    public float GetFieldSize()
     {
+        float sizeY = 0;
+        
+        for (int i = 0; i < _fieldCount; i++)
+        {
+            sizeY += 2;
+        }
+        
+        return sizeY;
+    }
+    
+    public override int ImGuiFields()
+    {
+        _fieldCount = 0;
+        
         OpenTKUIHelper.DrawProperty("Position", ref position);
         
         ImGuiNET.ImGui.Separator();
         ImGuiNET.ImGui.Text("Rotation");
+        
         if (OpenTKUIHelper.DrawProperty("Euler Angles", ref eulerAngles))
         {
+            _fieldCount++;
             SetRotationByEuler();
         }
 
         if (OpenTKUIHelper.DrawProperty("Quaternion Angles", ref quaternion))
         {
+            _fieldCount++;
             SetRotation(quaternion);
         }
 
         if (OpenTKUIHelper.DrawProperty("Radians Angles", ref degrees))
         {
+            _fieldCount++;
             SetRotationByDegrees();
         }
+
+        return _fieldCount;
     }
 }

@@ -16,7 +16,7 @@ public class ScriptHolderComponent : Component
         base.Init(parent, renderer);
     }
 
-    public override float ImGuiFields()
+    public override int ImGuiFields()
     {
         base.ImGuiFields();
         float f = 0;
@@ -26,8 +26,8 @@ public class ScriptHolderComponent : Component
         sizeYGUI += f;
         ImGui.TableNextColumn();
         //ImGui.ImageButton("", IntPtr.Zero, new System.Numerics.Vector2(56, 56));
-
-        return sizeYGUI;
+        throw new NotImplementedException();
+        return 0;
     }
 
     public override string GetItemType()

@@ -72,12 +72,13 @@ public class Renderer
         {
             EditorGameBuffer.Bind();
             
-            GL.ClearColor(1, 1, 1, 1);
             GL.Clear(ClearBufferMask.ColorBufferBit);
+            OpenTK.Graphics.OpenGL.GL.Disable(EnableCap.Blend);
+            AddGridLines(editorCamera);
             OpenTK.Graphics.OpenGL.GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
             foreach (var batch in _renderBatches) batch.Render(editorCamera, LightmapTexture);
-            AddGridLines(editorCamera);
+            
             _debugDraw.Render(editorCamera);
             
             EditorGameBuffer.UnBind();
@@ -94,7 +95,6 @@ public class Renderer
             {
                 GameBuffer.Bind();
 
-                GL.ClearColor(0, 0, 0, 0);
                 GL.Clear(ClearBufferMask.ColorBufferBit);
                 OpenTK.Graphics.OpenGL.GL.Enable(EnableCap.Blend);
                 GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);

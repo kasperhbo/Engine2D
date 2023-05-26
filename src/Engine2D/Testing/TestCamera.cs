@@ -7,6 +7,7 @@ using Engine2D.UI;
 using ImGuiNET;
 using ImTool;
 using KDBEngine.Core;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 namespace Engine2D.Testing;
@@ -147,6 +148,20 @@ public class TestCamera : Component
         setZoom(zoom + value);
     }
 
+    public override int ImGuiFields()
+    {
+        int count = 0;
+        
+
+        if (OpenTKUIHelper.DrawProperty("Clear Color: ", ref ClearColor))
+        {
+            count++;
+            GL.ClearColor(ClearColor.Color.X, ClearColor.Color.Y, ClearColor.Color.Z, ClearColor.Color.W);
+        };
+
+        return count;
+    }
+
     public void CameraSettingsGUI()
     {
         ImGui.Begin("Camera Settings");
@@ -154,7 +169,9 @@ public class TestCamera : Component
         {
             var tempPos =
                 new System.Numerics.Vector2(Transform.position.X, Transform.position.Y);
+            
             OpenTKUIHelper.DrawProperty("Position: ", ref tempPos);
+            
             Transform.position = new System.Numerics.Vector2(tempPos.X, tempPos.Y);
 
             float zTemp = zoom;

@@ -115,7 +115,7 @@ internal class Scene
         
         if(Settings.s_IsEngine)
         {
-            EditorCamera = new TestCamera(Engine.Get().Size);
+            EditorCamera = new TestCamera(new OpenTK.Mathematics.Vector2(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y));
         }
         
         ScenePath = scenePath;
