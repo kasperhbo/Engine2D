@@ -12,6 +12,31 @@ namespace Engine2D.UI;
 
 internal static class OpenTKUIHelper
 {
+    public static ImRect RectExpanded(ImRect rect, float x, float y)
+    {
+        ImRect result = rect;
+        result.Min.X -= x;
+        result.Min.Y -= y;
+        result.Max.X += x;
+        result.Max.Y += y;
+        return result;
+    }
+    
+    public static System.Numerics.Vector4 RectExpanded(System.Numerics.Vector4 rect, float x, float y)
+    {
+        var result = rect;
+
+
+        result.X -= x;
+        result.Y -= y;
+
+        result.Z += x;
+        result.W += y;
+
+        return result;
+    }
+
+    
     public static void DrawComponentWindow(string id, string title, Action tablesToDraw, float isze = 100)
     {
         ImGui.PushID(id);
@@ -355,19 +380,6 @@ internal static class OpenTKUIHelper
             ImGui.GetItemRectMax().X, ImGui.GetItemRectMax().Y);
     }
 
-    public static System.Numerics.Vector4 RectExpanded(System.Numerics.Vector4 rect, float x, float y)
-    {
-        var result = rect;
-
-
-        result.X -= x;
-        result.Y -= y;
-
-        result.Z += x;
-        result.W += y;
-
-        return result;
-    }
 
 
     public static OpenTK.Mathematics.Vector2 DrawProperty(string name, OpenTK.Mathematics.Vector2 property)

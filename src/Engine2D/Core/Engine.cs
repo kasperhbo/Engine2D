@@ -116,9 +116,13 @@ namespace KDBEngine.Core
             {
                 //ImGui
                 {
-                    _imGuiController.Update(this,(float)e.Time);
+                    _imGuiController.Update(this, (float)e.Time);
 
                     #region Menu
+
+                    TopMenu top = new TopMenu();
+                    //top.OnGui();
+
 
                     ImGui.BeginMainMenuBar();
                     if (ImGui.BeginMenu("Menu"))
@@ -142,9 +146,9 @@ namespace KDBEngine.Core
                         if (ImGui.MenuItem("Engine Settings")) engineSettingsWindow.SetVisibility(true);
                         ImGui.EndMenu();
                     }
-                    
                     ImGui.EndMainMenuBar();
                     
+
                     #endregion
                     
                     ImGui.DockSpaceOverViewport();
@@ -152,7 +156,7 @@ namespace KDBEngine.Core
 
                     foreach (var window in _guiWindows.Values) window.Render();
 
-                    
+      
                     _currentScene?.OnGui();
                     TestCamera cam = _currentScene.EditorCamera;
                     TestFrameBuffer frameBuffer = _currentScene.Renderer.EditorGameBuffer;

@@ -77,7 +77,7 @@ namespace Dear_ImGui_Sample
             style.AntiAliasedFill = true;
             style.AntiAliasedLines = true;
 
-            style.ChildRounding = 0;
+            style.ChildRounding = 65;
             
             style.Colors[(int)ImGuiCol.Text] = new System.Numerics.Vector4(0.88f, 0.88f, 0.88f, 1.00f);
             style.Colors[(int)ImGuiCol.TextDisabled] = new System.Numerics.Vector4(0.50f, 0.50f, 0.50f, 1.00f);

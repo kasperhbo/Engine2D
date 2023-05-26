@@ -39,7 +39,7 @@ public class ViewportWindow
 
     protected Vector2 origin = new();
     protected Vector2 sz = new();
-    
+    protected Vector2 cursorPos = new();
     public void OnGui()
     {
         ImGui.Begin(_title);
@@ -49,14 +49,16 @@ public class ViewportWindow
 
         var topLeft = ImGui.GetCursorScreenPos();
         topLeft.X -= ImGui.GetScrollX(); 
-        topLeft.Y -= ImGui.GetScrollY(); 
-        
-        
+        topLeft.Y -= ImGui.GetScrollY();
+
         ImGui.SetCursorPos(ImGui.GetCursorPos() + (ImGui.GetContentRegionAvail() - _windowSize) * 0.5f);
+        cursorPos = ImGui.GetCursorPos();
+        
         BeforeImageRender();
 
+        ImGui.SetCursorPos(cursorPos);
         ImGui.Image(GetImageToRender(), _windowSize, new Vector2(0,1), new Vector2(1,0));
-
+        
         AfterImageRender();
         
         ImGui.End();
@@ -110,7 +112,7 @@ public class ViewportWindow
     
     protected virtual void AfterImageRender(bool recieveInput = true)
     {
-        
     }
+    
     
 }
