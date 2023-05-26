@@ -53,7 +53,7 @@ public abstract class Component
     }
 
 
-    public virtual int ImGuiFields()
+    public virtual void ImGuiFields()
     {
         int count = 0;
         var fields = GetType().GetFields(
@@ -137,7 +137,10 @@ public abstract class Component
                 }
             }
         }
+    }
 
-        return count;
+    public virtual float GetFieldSize()
+    {
+        return 100;
     }
 }

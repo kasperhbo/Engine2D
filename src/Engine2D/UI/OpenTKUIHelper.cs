@@ -37,24 +37,24 @@ internal static class OpenTKUIHelper
     }
 
     
-    public static void DrawComponentWindow(string id, string title, Action tablesToDraw, float isze = 100)
+    public static void DrawComponentWindow(string id, string title, Action tablesToDraw, float size = 100)
     {
         ImGui.PushID(id);
         
-        
-        
-        if (ImGui.CollapsingHeader(title, ImGuiTreeNodeFlags.DefaultOpen))
+        if (ImGui.CollapsingHeader(title, ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.Framed))
         {
+            ImGui.BeginChild("##child", new Vector2(0, size + 10), true);
+            // ImGui.BeginChildFrame(1, new Vector2(0,size));
             ImGui.PushStyleColor(ImGuiCol.TableBorderStrong, new System.Numerics.Vector4(.19f, .19f, .19f, 1)); //For visibility
-            // ImGui.BeginChild("##transform_c"); // Leave ~100
             
-            //Position Table
-            if (ImGui.BeginTable("##transform_t", 2, ImGuiTableFlags.Resizable))
+            if (ImGui.BeginTable("##transform_t", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders))
             {
                 tablesToDraw.Invoke();
         
                 ImGui.EndTable();
             }
+
+            ImGui.EndChild();
         
             
             ImGui.PopStyleColor();

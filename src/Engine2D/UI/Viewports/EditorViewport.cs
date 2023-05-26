@@ -65,6 +65,8 @@ public class EditorViewport : ViewportWindow
             ImGui.SetCursorPos(new((size.X / 2) - div/3, 0));
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(1,0));
             ImGui.PushStyleColor(ImGuiCol.ChildBg, new System.Numerics.Vector4(0, 0, 0, 0));
+            ImGui.PushStyleColor(ImGuiCol.Button, new System.Numerics.Vector4(.2f,.2f,.2f,1));
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new System.Numerics.Vector4(.8f,.8f,.8f,1));
             if(ImGui.BeginChild("inner", new Vector2(s*3 + 40, s+30), false, ImGuiWindowFlags.NoScrollbar))
             {
                 //ImGui.PushStyleVar(ImGuiStyleVar.ChildRounding, 3);
@@ -78,9 +80,10 @@ public class EditorViewport : ViewportWindow
             ImGui.PopStyleColor();
             ImGui.PopStyleVar();
             
+            ImGui.EndChild();
         }
         ImGui.PopStyleColor();
-        
+        //
         //Draw ImGuizmo
         Gameobject go = (Gameobject)Engine.Get().CurrentSelectedAsset;
         if (go != null)
@@ -90,9 +93,9 @@ public class EditorViewport : ViewportWindow
             ImGuizmo.SetOrthographic(true);
             ImGuizmo.SetDrawlist();
 
-            origin = ImGui.GetItemRectMin() ;
-            sz =  ImGui.GetItemRectSize();
+            
             pos = ImGui.GetCursorStartPos();
+            
             ImGuizmo.SetRect(origin.X, origin.Y, sz.X, sz.Y);
             
             Matrix4 view = _cameraToRender.getViewMatrix();

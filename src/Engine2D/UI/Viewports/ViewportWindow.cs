@@ -58,6 +58,8 @@ public class ViewportWindow
 
         ImGui.SetCursorPos(cursorPos);
         ImGui.Image(GetImageToRender(), _windowSize, new Vector2(0,1), new Vector2(1,0));
+        origin = ImGui.GetItemRectMin();
+        sz = ImGui.GetItemRectSize();
         
         AfterImageRender();
         

@@ -148,7 +148,7 @@ public class TestCamera : Component
         setZoom(zoom + value);
     }
 
-    public override int ImGuiFields()
+    public override void ImGuiFields()
     {
         int count = 0;
         
@@ -159,7 +159,6 @@ public class TestCamera : Component
             GL.ClearColor(ClearColor.Color.X, ClearColor.Color.Y, ClearColor.Color.Z, ClearColor.Color.W);
         };
 
-        return count;
     }
 
     public void CameraSettingsGUI()

@@ -106,9 +106,12 @@ public class Gameobject : Asset
         ImGui.SameLine();
         ImGui.Separator();
         
-        ;
+        
         OpenTKUIHelper.DrawComponentWindow("Transform", "Transform",
-            () => { Transform.ImGuiFields(); }
+            () =>
+            {
+                Transform.ImGuiFields();
+            }, Transform.GetFieldSize()
         );
         
         for (var i = 0; i < components.Count; i++)
@@ -118,7 +121,7 @@ public class Gameobject : Asset
             ImGui.PushID(i);
 
             OpenTKUIHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
-                () => { components[i].ImGuiFields(); }, 100
+                () => { components[i].ImGuiFields(); }, components[i].GetFieldSize() 
             );
 
             ImGui.PopID();

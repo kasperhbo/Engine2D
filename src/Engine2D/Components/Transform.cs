@@ -96,23 +96,13 @@ public class Transform : Component
         return "Transform";
     }
 
-    private int _fieldCount = 0;
-    public float GetFieldSize()
+    public override float GetFieldSize()
     {
-        float sizeY = 0;
-        
-        for (int i = 0; i < _fieldCount; i++)
-        {
-            sizeY += 2;
-        }
-        
-        return sizeY;
+        return 120;
     }
     
-    public override int ImGuiFields()
+    public override void ImGuiFields()
     {
-        _fieldCount = 0;
-        
         OpenTKUIHelper.DrawProperty("Position", ref position);
         
         ImGuiNET.ImGui.Separator();
@@ -120,22 +110,17 @@ public class Transform : Component
         
         if (OpenTKUIHelper.DrawProperty("Euler Angles", ref eulerAngles))
         {
-            _fieldCount++;
             SetRotationByEuler();
         }
 
         if (OpenTKUIHelper.DrawProperty("Quaternion Angles", ref quaternion))
         {
-            _fieldCount++;
             SetRotation(quaternion);
         }
 
         if (OpenTKUIHelper.DrawProperty("Radians Angles", ref degrees))
         {
-            _fieldCount++;
             SetRotationByDegrees();
         }
-
-        return _fieldCount;
     }
 }
