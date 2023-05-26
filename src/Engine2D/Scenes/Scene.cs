@@ -7,6 +7,7 @@ using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.Testing;
+using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
 using OpenTK.Windowing.Common;
@@ -210,6 +211,12 @@ internal class Scene
         EditorCamera.CameraSettingsGUI();
         
         ImGui.Begin("Scene Settings");
+        ImGui.Begin("t");
+        ImGui.DragFloat("a", ref Renderer.Y);
+        Vector2 proj = new(EditorCamera.projectionSize.X, EditorCamera.projectionSize.Y);
+        ImGui.DragFloat2("project", ref proj);
+        ImGui.End();
+        
         ImGui.End();
     }
 

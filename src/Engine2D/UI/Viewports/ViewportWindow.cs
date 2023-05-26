@@ -55,7 +55,7 @@ public class ViewportWindow
         ImGui.SetCursorPos(ImGui.GetCursorPos() + (ImGui.GetContentRegionAvail() - _windowSize) * 0.5f);
         BeforeImageRender();
 
-        ImGui.Image(GetImageToRender(), _windowSize, Vector2.UnitY, Vector2.UnitX);
+        ImGui.Image(GetImageToRender(), _windowSize, new Vector2(0,1), new Vector2(1,0));
 
         AfterImageRender();
         

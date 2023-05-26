@@ -161,6 +161,8 @@ namespace KDBEngine.Core
                     cam = _currentScene.CurrentMainGameCamera;
                     frameBuffer = _currentScene.Renderer.GameBuffer;
                     _gameViewport.OnGui(frameBuffer, cam);
+
+
                     
                     _imGuiController.Render();
                     

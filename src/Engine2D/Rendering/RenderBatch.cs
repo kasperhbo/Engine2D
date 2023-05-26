@@ -189,12 +189,12 @@ internal class RenderBatch : IComparable<RenderBatch>
     {
         var sprite = _sprites[index];
         var offset = index * 4 * c_vertexSize;
-        
+
         Vector4 color = new(sprite.Color.Color.X, sprite.Color.Color.Y, sprite.Color.Color.Z, sprite.Color.Color.W);
 
         var texID = -1;
         var texCoords = sprite.TextureCoords;
-        
+
         if (sprite.texture != null)
             for (var i = 0; i < _textures.Length; i++)
                 if (_textures[i].Equals(sprite.texture))
@@ -203,7 +203,7 @@ internal class RenderBatch : IComparable<RenderBatch>
                     break;
                 }
 
-        Matrix4 translation = sprite.Parent.Transform.GetTranslation();        
+        Matrix4 translation = sprite.Parent.Transform.GetTranslation();
 
         {
             Vector4 currentPos = quadVertexPositions[0] * translation;
@@ -224,7 +224,7 @@ internal class RenderBatch : IComparable<RenderBatch>
             _vertices[offset + 8] = texID;
             offset += c_vertexSize;
         }
-        
+
         {
             Vector4 currentPos = quadVertexPositions[1] * translation;
             _vertices[offset + 0] = currentPos.X;
@@ -245,7 +245,7 @@ internal class RenderBatch : IComparable<RenderBatch>
 
             offset += c_vertexSize;
         }
-        
+
         {
             Vector4 currentPos = quadVertexPositions[2] * translation;
             _vertices[offset + 0] = currentPos.X;
@@ -266,7 +266,7 @@ internal class RenderBatch : IComparable<RenderBatch>
 
             offset += c_vertexSize;
         }
-        
+
         {
             Vector4 currentPos = quadVertexPositions[3] * translation;
             _vertices[offset + 0] = currentPos.X;
@@ -284,74 +284,10 @@ internal class RenderBatch : IComparable<RenderBatch>
 
             //Load tex id
             _vertices[offset + 8] = texID;
-
-            offset += c_vertexSize;
         }
 
     }
 
-
-    /*private void LoadVertexProperties(int index)
-    {
-        var sprite = _sprites[index];
-
-        // Find offset within array (4 vertices per sprite)
-        var offset = index * 4 * c_vertexSize;
-
-        Vector4 color = new(sprite.Color.Color.X, sprite.Color.Color.Y, sprite.Color.Color.Z, sprite.Color.Color.W);
-
-        var texID = -1;
-        var texCoords = sprite.TextureCoords;
-
-        //Find texture
-        if (sprite.texture != null)
-            for (var i = 0; i < _textures.Length; i++)
-                if (_textures[i].Equals(sprite.texture))
-                {
-                    texID = i + 1;
-                    break;
-                }
-
-        float xAdd = 0.5f;
-        float yAdd = 0.5f;
-        for (var i = 0; i < 4; i++)
-        {
-            // if (i == 1) {
-            //     yAdd = -0.5f;
-            // } else if (i == 2) {
-            //     xAdd = -0.5f;
-            // } else if (i == 3) {
-            //     yAdd = 0.5f;
-            // }
-            
-            //Vector4 currentPos = new Vector4(xAdd, yAdd, 0, 1) * sprite.Parent.Transform.GetTranslation();
-
-            // float x = 
-            //
-            //
-            // Vector4 currentPos = new Vector4();
-            
-            
-            _vertices[offset]     = currentPos.X;
-            _vertices[offset + 1] = currentPos.Y;
-
-            // Load color
-            _vertices[offset + 2] = color.X;
-            _vertices[offset + 3] = color.Y;
-            _vertices[offset + 4] = color.Z;
-            _vertices[offset + 5] = color.W;
-
-            //Load tex coords
-            _vertices[offset + 6] = texCoords[i].X;
-            _vertices[offset + 7] = texCoords[i].Y;
-
-            //Load tex id
-            _vertices[offset + 8] = texID;
-
-            offset += c_vertexSize;
-        }
-    }
-*/
     private int[] GenerateIndices()
     {
         // 6 indices per quad (3 per triangle)

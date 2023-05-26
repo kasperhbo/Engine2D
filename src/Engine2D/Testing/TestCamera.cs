@@ -72,13 +72,21 @@ public class TestCamera : Component
         // Somehow this defines how many tiles are visible on the screen (40 * 21).
         //projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0, 32.0f * 21.0f, 0, 100);
         projectionMatrix = Matrix4.CreateOrthographicOffCenter(
-            -(projectionSize.X * zoom),
-            projectionSize.X * zoom,
-            -(projectionSize.Y * zoom),
-            projectionSize.Y * zoom,
+            -(projectionSize.X * zoom)/2,
+            (projectionSize.X * zoom)/2,
+            -(projectionSize.Y * zoom)/2,
+            (projectionSize.Y * zoom)/2,
             0,
             100
-        );
+        );       
+        // projectionMatrix = Matrix4.CreateOrthographicOffCenter(
+        //     -(projectionSize.X * zoom)/2,
+        //     (projectionSize.X * zoom)/2,
+        //     -(projectionSize.Y * zoom)/2,
+        //     (projectionSize.Y * zoom)/2,
+        //     0,
+        //     100
+        // );
         
         inverseProjectionMatrix = Matrix4.Invert(projectionMatrix);
     }

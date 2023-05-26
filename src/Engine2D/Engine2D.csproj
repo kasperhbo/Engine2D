@@ -62,11 +62,18 @@
         <None Remove="Lib\ImGui.Net\src\ImNodes.NET\**" />
         <None Remove="Lib\ImGui.Net\src\ImPlot.NET\**" />
         <None Remove="Lib\ImGui.Net\src\**" />
+        <None Update="Shaders\ShaderFiles\Line.frag">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\ShaderFiles\Line.vert">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 
     <ItemGroup>
         <Folder Include="Rendering\Lights" />
+        <Folder Include="Shaders\ShaderFiles\Debug" />
     </ItemGroup>
 
 

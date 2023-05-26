@@ -13,8 +13,6 @@ public class EditorViewport : ViewportWindow
     
     OPERATION _currentOperation = OPERATION.TRANSLATE;
     MODE _currentMode = MODE.WORLD;
-
-    private Vector2 _gridStart = new();
     
     public EditorViewport(string editorVp) : base(editorVp)
     {
@@ -28,18 +26,12 @@ public class EditorViewport : ViewportWindow
         {
             if (_cameraToRender.projectionSize != (_windowSize.X, _windowSize.Y))
                 _cameraToRender.adjustProjection((_windowSize.X, _windowSize.Y));
-        }
-
-        _gridStart = ImGui.GetCursorScreenPos();
+        } 
     }
 
     protected override void AfterImageRender(bool recieveInput = true)
     {
         base.AfterImageRender();
-        
-        // //Draw grid
-        // ImGui.GetWindowDrawList().AddLine(_gridStart, new(_gridStart.X + 50, _gridStart.Y + 50), 
-        //     ImGui.GetColorU32(ImGuiCol.Text), 3.0f);
         
         //Draw ImGuizmo
         Gameobject go = (Gameobject)Engine.Get().CurrentSelectedAsset;

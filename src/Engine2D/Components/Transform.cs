@@ -16,8 +16,8 @@ public class Transform : Component
     public Quaternion quaternion;
     public Vector3 eulerAngles;
     public Vector3 degrees;
-    
-    public Vector2 size = new(1, 1);
+
+    public Vector2 size = new(32, 32);
 
     public void SetRotation(Quaternion rotation)
     {

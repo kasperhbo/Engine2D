@@ -54,7 +54,6 @@ public class Gameobject : Asset
         {
             var t = new Transform();
 
-            t.size = new System.Numerics.Vector2(100, 100);
             t.position = new System.Numerics.Vector2(0, 0);
 
             AddComponent(t);
@@ -166,7 +165,7 @@ public class Gameobject : Asset
         //             var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
         //             go?.AddComponent(rb);
         //             ImGui.CloseCurrentPopup();
-        //         }
+        //         }otepad
         //
         //         if (ImGui.MenuItem("Sprite Renderer"))
         //         {
