@@ -101,6 +101,16 @@ internal static class OpenTKUIHelper
         return Widgets.FloatLabel(ref property, name);
     }
     
+    public static bool DrawProperty(string name, ref int property)
+    {
+        bool changed = false;
+        PrepareProperty(name);
+        float tempProp = (float)property;
+        if (Widgets.FloatLabel(ref tempProp, name)) changed = true;
+        property = (int)tempProp;
+        return changed;
+    }
+    
     public static bool DrawProperty(string name, ref System.Numerics.Vector2 property)
     {
         PrepareProperty(name);
@@ -113,8 +123,20 @@ internal static class OpenTKUIHelper
         PrepareProperty(name);
         System.Numerics.Vector2 tempProp = new(property.X, property.Y);
         if (Widgets.Vector2(ref tempProp, name)) changed = true;
+        property = new(tempProp.X, tempProp.Y);
         return changed;
     }
+    
+    public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector2i property)
+    {
+        bool changed = false;
+        PrepareProperty(name);
+        System.Numerics.Vector2 tempProp = new(property.X, property.Y);
+        if (Widgets.Vector2(ref tempProp, name)) changed = true;
+        property = new((int)tempProp.X, (int)tempProp.Y);
+        return changed;
+    }
+
     
     public static bool DrawProperty(string name, ref System.Numerics.Vector3 property)
     {
@@ -145,11 +167,12 @@ internal static class OpenTKUIHelper
         if (Widgets.Vector4(ref tempProp, name)) changed = true;
         return changed;
     }
-
+    
     public static bool DrawProperty(string name, ref KDBColor property)
     {
         PrepareProperty(name);
         ImGui.PushID(name);
+
         int num1 = 0 | (KDBFloatLabel(ref property.r, "R") ? 1 : 0);
         ImGui.SameLine();
         int num2 = KDBFloatLabel(ref property.g, "G", 4278235392U) ? 1 : 0;
@@ -161,6 +184,16 @@ internal static class OpenTKUIHelper
         int num6 = KDBFloatLabel(ref property.a, "A", 4287299723U) ? 1 : 0;
         int num7 = num5 | num6;
         ImGui.PopID();
+
+        System.Numerics.Vector4 tempColor = new System.Numerics.Vector4(property.R, property.G, property.B, property.A);
+        
+        ImGui.ColorEdit4(name, ref tempColor, ImGuiColorEditFlags.NoLabel | ImGuiColorEditFlags.NoInputs);
+        
+        property.r = tempColor.X*255;
+        property.g = tempColor.Y*255;
+        property.b = tempColor.Z*255;
+        property.a = tempColor.W*255;
+        
         return num7 != 0;
     }
 

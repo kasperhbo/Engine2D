@@ -13,12 +13,33 @@ public class KDBColor
     public float g;
     public float b;
     public float a;
+
+    public float R
+    {
+        get { return r / 255; }
+    }
+    
+    public float G
+    {
+        get { return g / 255; }
+    }
+    
+    public float B
+    {
+        get { return b / 255; }
+    }
+    
+    public float A
+    {
+        get { return a / 255; }
+    }
+    
     public KDBColor()
     {
-        this.r = 1;
-        this.g = 1;
-        this.b = 1;
-        this.a = 1;
+        this.r = 255;
+        this.g = 255;
+        this.b = 255;
+        this.a = 255;
     }
     
     public KDBColor(KDBColor other)
@@ -96,7 +117,7 @@ public class SpriteRenderer : Component
         if (!_lastColor.Equals(Color))
         {
             IsDirty = true;
-            _lastColor = new KDBColor(Color.r, Color.g, Color.b, Color.a);
+            _lastColor = new KDBColor(Color.R, Color.G, Color.B, Color.A);
         }
 
         if (!_prevZIndex.Equals(ZIndex))

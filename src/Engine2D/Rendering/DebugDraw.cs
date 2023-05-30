@@ -74,9 +74,9 @@ public class DebugDraw
                 vertexArray[index + 2] = -10.0f;
 
                 // Load the color
-                vertexArray[index + 3] = color.r;
-                vertexArray[index + 4] = color.g;
-                vertexArray[index + 5] = color.b;
+                vertexArray[index + 3] = color.R;
+                vertexArray[index + 4] = color.G;
+                vertexArray[index + 5] = color.B;
                 index += 6;
             }
         }

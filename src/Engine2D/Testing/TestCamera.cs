@@ -28,9 +28,6 @@ public class TestCamera : Component
 
     public KDBColor ClearColor = new KDBColor(); 
 
-    // Projection matrix say how big the screen is going to be.
-
-    // View Matrix says where the camera is in relation to our world.
     public float zoom { get; private set; }= 1.0f;
 
 
@@ -51,6 +48,7 @@ public class TestCamera : Component
 
     private void init(System.Numerics.Vector2 position, Vector2 projectionSize)
     {
+        Console.WriteLine(projectionSize);
         this.projectionSize = projectionSize;
         this.Transform.position = position;
         projectionMatrix = new Matrix4();
@@ -156,7 +154,7 @@ public class TestCamera : Component
         if (OpenTKUIHelper.DrawProperty("Clear Color: ", ref ClearColor))
         {
             count++;
-            GL.ClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
+            GL.ClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
         };
         
         if(OpenTKUIHelper.DrawProperty("Projection Size", ref projectionSize))

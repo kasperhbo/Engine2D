@@ -126,7 +126,7 @@ public class LightMapRenderer
         {
             var light = lightsToRenderer[i];
             lightPositions[i] = light.LastTransform.position;
-            lightColors[i] = new Vector3(light.Color.r, light.Color.g, light.Color.b);
+            lightColors[i] = new Vector3(light.Color.R, light.Color.G, light.Color.B);
             lightIntensities[i] = light.Intensity;
         }
 

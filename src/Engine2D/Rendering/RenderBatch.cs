@@ -190,7 +190,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         var sprite = _sprites[index];
         var offset = index * 4 * c_vertexSize;
 
-        Vector4 color = new(sprite.Color.r, sprite.Color.g, sprite.Color.b, sprite.Color.a);
+        Vector4 color = new(sprite.Color.R, sprite.Color.G, sprite.Color.B, sprite.Color.A);
 
         var texID = -1;
         var texCoords = sprite.TextureCoords;
