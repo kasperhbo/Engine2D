@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Engine2D.Components;
 using Engine2D.GameObjects;
 using ImGuiNET;
 using ImTool;
 using OpenTK.Mathematics;
+using SixLabors.ImageSharp.Processing.Processors.Transforms;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 using Vector4 = OpenTK.Mathematics.Vector4;
@@ -173,15 +175,15 @@ internal static class OpenTKUIHelper
         PrepareProperty(name);
         ImGui.PushID(name);
 
-        int num1 = 0 | (KDBFloatLabel(ref property.r, "R") ? 1 : 0);
+        int num1 = 0 | (KDBFloatLabel(ref property.r, "R", 4278190257, 1, 0, 255) ? 1 : 0);
         ImGui.SameLine();
-        int num2 = KDBFloatLabel(ref property.g, "G", 4278235392U) ? 1 : 0;
+        int num2 = KDBFloatLabel(ref property.g, "G", 4278235392U, 1, 0, 255) ? 1 : 0;
         int num3 = num1 | num2;
         ImGui.SameLine();
-        int num4 = KDBFloatLabel(ref property.b, "B", 4289789952U) ? 1 : 0;
+        int num4 = KDBFloatLabel(ref property.b, "B", 4289789952U, 1, 0, 255) ? 1 : 0;
         int num5 = num3 | num4;
         ImGui.SameLine();
-        int num6 = KDBFloatLabel(ref property.a, "A", 4287299723U) ? 1 : 0;
+        int num6 = KDBFloatLabel(ref property.a, "A", 4287299723U, 1, 0, 255) ? 1 : 0;
         int num7 = num5 | num6;
         ImGui.PopID();
 
@@ -197,20 +199,34 @@ internal static class OpenTKUIHelper
         return num7 != 0;
     }
 
-    public static bool KDBFloatLabel(ref float val, string name, uint color = 4278190257, float dragSpeed = 1)
+    public static bool KDBFloatLabel(ref float val, string name, uint color = 4278190257, float dragSpeed = -1, float min = -1, float max = -1)
+    {
+        CreateFloatLabel(name, color);
+        int num = ImGui.DragFloat("###" + name, ref val, dragSpeed, min, max) ? 1 : 0;
+        ImGui.PopStyleVar(1);
+        return num != 0;
+    }
+    
+    public static bool KDBFloatLabel(ref float val, string name, uint color = 4278190257)
+    {
+        CreateFloatLabel(name, color);
+        int num = ImGui.DragFloat("###" + name, ref val) ? 1 : 0;
+        ImGui.PopStyleVar(1);
+        return num != 0;
+    }
+
+    private static void CreateFloatLabel(string name, uint color)
     {
         ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 0.0f);
         System.Numerics.Vector2 vector2 = new System.Numerics.Vector2(ImGui.CalcTextSize(name).X + 7f, 2f);
         System.Numerics.Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
-        System.Numerics.Vector2 p_max = cursorScreenPos + new System.Numerics.Vector2(vector2.X, ImGui.GetFrameHeight());
+        System.Numerics.Vector2 p_max =
+            cursorScreenPos + new System.Numerics.Vector2(vector2.X, ImGui.GetFrameHeight());
         ImDrawListPtr windowDrawList = ImGui.GetWindowDrawList();
         windowDrawList.AddRectFilled(cursorScreenPos, p_max, color, 6f, ImDrawFlags.RoundCornersLeft);
         windowDrawList.AddText(cursorScreenPos + new System.Numerics.Vector2(3f, 4f), uint.MaxValue, name);
         ImGui.SetCursorPosX(ImGui.GetCursorPos().X + vector2.X);
         ImGui.PushItemWidth(80f);
-        int num = ImGui.DragFloat("###" + name, ref val, dragSpeed) ? 1 : 0;
-        ImGui.PopStyleVar(1);
-        return num != 0;
     }
     
     public static ImRect RectExpanded(ImRect rect, float x, float y)
