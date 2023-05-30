@@ -113,10 +113,10 @@ public class Transform : Component
             SetRotationByEuler();
         }
 
-        if (OpenTKUIHelper.DrawProperty("Quaternion Angles", ref quaternion))
-        {
-            SetRotation(quaternion);
-        }
+        // if (OpenTKUIHelper.DrawProperty("Quaternion Angles", ref quaternion))
+        // {
+        //     SetRotation(quaternion);
+        // }
 
         if (OpenTKUIHelper.DrawProperty("Radians Angles", ref degrees))
         {

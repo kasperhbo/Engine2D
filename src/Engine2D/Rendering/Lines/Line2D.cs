@@ -8,16 +8,16 @@ public class Line2D
     public Vector2 From { get; private set; }
     public Vector2 To {get; private set;}
 
-    public SpriteColor Color { get; private set; }= new SpriteColor();
+    public KDBColor Color { get; private set; }= new KDBColor();
 
     private int _lifeTime;
     
     public Line2D(Vector2 from, Vector2 to) {
         this.From = from;
         this.To = to;
-        Color.Color = new Vector4(1, 0, 0, 1);
+        Color = new KDBColor(1, 0, 0, 1);
     }
-    public Line2D(Vector2 from, Vector2 to, SpriteColor color, int lifetime) {
+    public Line2D(Vector2 from, Vector2 to, KDBColor color, int lifetime) {
         this.From = from;
         this.To = to;
         this.Color = color;

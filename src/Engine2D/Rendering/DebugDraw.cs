@@ -66,7 +66,7 @@ public class DebugDraw
                 
                 Vector2 position = i == 0 ? new(line.From.X, line.From.Y) : new(line.To.X, line.To.Y);
                 
-                SpriteColor color = line.Color;
+                KDBColor color = line.Color;
                 
                 // Load position
                 vertexArray[index] = position.X;
@@ -74,9 +74,9 @@ public class DebugDraw
                 vertexArray[index + 2] = -10.0f;
 
                 // Load the color
-                vertexArray[index + 3] = color.Color.X;
-                vertexArray[index + 4] = color.Color.Y;
-                vertexArray[index + 5] = color.Color.Z;
+                vertexArray[index + 3] = color.r;
+                vertexArray[index + 4] = color.g;
+                vertexArray[index + 5] = color.b;
                 index += 6;
             }
         }
@@ -115,11 +115,11 @@ public class DebugDraw
         }
     }
     
-    public void AddLine2D(Vector2 from, Vector2 to, SpriteColor color, TestCamera camera) {
+    public void AddLine2D(Vector2 from, Vector2 to, KDBColor color, TestCamera camera) {
         AddLine2D(from, to, color, 1, camera);
     }
 
-    public void AddLine2D(Vector2 from, Vector2 to, SpriteColor color, int lifetime, TestCamera camera)
+    public void AddLine2D(Vector2 from, Vector2 to, KDBColor color, int lifetime, TestCamera camera)
     {
         if (lines.Count > MAX_LINES) return;
         DebugDraw.lines.Add(new Line2D(new(from.X, from.Y), new(to.X, to.Y), color, 3));

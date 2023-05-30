@@ -14,7 +14,7 @@ namespace Engine2D.Testing;
 
 public class TestCamera : Component
 {
-    public Vector2 projectionSize { get; private set; } = new(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y);
+    public Vector2 projectionSize = new(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y);
 
     // The inverse projection matrix
     private Matrix4 projectionMatrix;
@@ -26,7 +26,7 @@ public class TestCamera : Component
     // private Vector2 position;
     [JsonIgnore][ShowUI (show = false)]public Transform Transform = new();
 
-    public SpriteColor ClearColor = new SpriteColor(); 
+    public KDBColor ClearColor = new KDBColor(); 
 
     // Projection matrix say how big the screen is going to be.
 
@@ -156,8 +156,13 @@ public class TestCamera : Component
         if (OpenTKUIHelper.DrawProperty("Clear Color: ", ref ClearColor))
         {
             count++;
-            GL.ClearColor(ClearColor.Color.X, ClearColor.Color.Y, ClearColor.Color.Z, ClearColor.Color.W);
+            GL.ClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
         };
+        
+        if(OpenTKUIHelper.DrawProperty("Projection Size", ref projectionSize))
+        {
+            adjustProjection();
+        }
 
     }
 

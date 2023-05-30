@@ -12,30 +12,6 @@ namespace Engine2D.UI;
 
 internal static class OpenTKUIHelper
 {
-    public static ImRect RectExpanded(ImRect rect, float x, float y)
-    {
-        ImRect result = rect;
-        result.Min.X -= x;
-        result.Min.Y -= y;
-        result.Max.X += x;
-        result.Max.Y += y;
-        return result;
-    }
-    
-    public static System.Numerics.Vector4 RectExpanded(System.Numerics.Vector4 rect, float x, float y)
-    {
-        var result = rect;
-
-
-        result.X -= x;
-        result.Y -= y;
-
-        result.Z += x;
-        result.W += y;
-
-        return result;
-    }
-
     
     public static void DrawComponentWindow(string id, string title, Action tablesToDraw, float size = 100)
     {
@@ -47,10 +23,9 @@ internal static class OpenTKUIHelper
             // ImGui.BeginChildFrame(1, new Vector2(0,size));
             ImGui.PushStyleColor(ImGuiCol.TableBorderStrong, new System.Numerics.Vector4(.19f, .19f, .19f, 1)); //For visibility
             
-            if (ImGui.BeginTable("##transform_t", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders))
+            if (ImGui.BeginTable("##transform_t", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders | ImGuiTableFlags.SizingFixedFit))
             {
                 tablesToDraw.Invoke();
-        
                 ImGui.EndTable();
             }
 
@@ -63,138 +38,6 @@ internal static class OpenTKUIHelper
         ImGui.PopID();
     }
     
-    
-
-    // public static void BeginGroupPanel(string name, Vector2 size)
-    // {
-    //     ImGui.BeginGroup();
-    //
-    //     var cursorPos = ImGui.GetCursorScreenPos();
-    //     Vector2 itemSpacing = ImGui.GetStyle().ItemSpacing;
-    //     ImGui.PushStyleVar(ImGuiStyleVar.FramePadding,new Vector2(0.0f, 0.0f));
-    //     ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0.0f, 0.0f));
-    //
-    //     float frameHeight = ImGui.GetFrameHeight();
-    //     ImGui.BeginGroup();
-    //
-    //     var effectiveSize = size;
-    //     if (size.X < 0.0f)
-    //         effectiveSize.X = ImGui.GetContentRegionAvail().X;
-    //     else
-    //         effectiveSize.X = size.X;
-    //     
-    //     ImGui.Dummy(new(effectiveSize.X, 0.0f));
-    //
-    //     ImGui.Dummy(new(frameHeight * 0.5f, 0.0f));
-    //     ImGui.SameLine(0.0f, 0.0f);
-    //     ImGui.BeginGroup();
-    //     ImGui.Dummy(new(frameHeight * 0.5f, 0.0f));
-    //     ImGui.SameLine(0.0f, 0.0f);
-    //     ImGui.TextUnformatted(name);
-    //     var labelMin = ImGui.GetItemRectMin();
-    //     var labelMax = ImGui.GetItemRectMax();
-    //     ImGui.SameLine(0.0f, 0.0f);
-    //     ImGui.Dummy(new(0.0f, frameHeight + itemSpacing.Y));
-    //     ImGui.BeginGroup();
-    //
-    //     //ImGui.GetWindowDrawList()->AddRect(labelMin, labelMax, IM_COL32(255, 0, 255, 255));
-    //
-    //     ImGui.PopStyleVar(2);
-    //
-    //     ImGui.GetCurrentWindow().ContentRegionRect.Max.X -= frameHeight * 0.5f;
-    //     ImGui.GetCurrentWindow().WorkRect.Max.X          -= frameHeight * 0.5f;
-    //     ImGui.GetCurrentWindow().InnerRect.Max.X         -= frameHeight * 0.5f;
-    //     ImGui.GetCurrentWindow().Size.X                   -= frameHeight;
-    //
-    //     var itemWidth = ImGui.CalcItemWidth();
-    //     ImGui.PushItemWidth( itemWidth - frameHeight);
-    //
-    //     // s_GroupPanelLabelStack.push_back(ImRect(labelMin, labelMax));
-    //
-    // }
-    //
-    // public void EndGroupPanel()
-    // {
-    //     ImGui::PopItemWidth();
-    //
-    //     var itemSpacing = ImGui.GetStyle().ItemSpacing;
-    //
-    //     ImGui.PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 0.0f));
-    //     ImGui.PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
-    //
-    //     var frameHeight = ImGui.GetFrameHeight();
-    //
-    //     ImGui.EndGroup();
-    //
-    //     //ImGui.GetWindowDrawList()->AddRectFilled(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), IM_COL32(0, 255, 0, 64), 4.0f);
-    //
-    //     ImGui.EndGroup();
-    //
-    //     ImGui.SameLine(0.0f, 0.0f);
-    //     ImGui.Dummy(new(frameHeight * 0.5f, 0.0f));
-    //     ImGui.Dummy(new(0.0, frameHeight - frameHeight * 0.5f - itemSpacing.y));
-    //
-    //     ImGui.EndGroup();
-    //
-    //     var itemMin = ImGui.GetItemRectMin();
-    //     var itemMax = ImGui.GetItemRectMax();
-    //     //ImGui.GetWindowDrawList()->AddRectFilled(itemMin, itemMax, IM_COL32(255, 0, 0, 64), 4.0f);
-    //
-    //     
-    //     
-    //
-    //     Vector2 halfFrame = new Vector2(frameHeight * 0.25f, frameHeight) * 0.5f;
-    //     
-    //     ImRect frameRect = new ImRect(itemMin + halfFrame, itemMax - (halfFrame.X, 0.0f));
-    //     
-    //     labelRect.Min.x -= itemSpacing.x;
-    //     labelRect.Max.x += itemSpacing.x;
-    //     for (int i = 0; i < 4; ++i)
-    //     {
-    //         switch (i)
-    //         {
-    //             // left half-plane
-    //             case 0:
-    //                 ImGui.PushClipRect(new(-FLT_MAX, -FLT_MAX), ImVec2(labelRect.Min.x, FLT_MAX), true);
-    //                 break;
-    //             // right half-plane
-    //             case 1:
-    //                 ImGui.PushClipRect(new(labelRect.Max.x, -FLT_MAX), ImVec2(FLT_MAX, FLT_MAX), true);
-    //                 break;
-    //             // top
-    //             case 2:
-    //                 ImGui.PushClipRect(new(labelRect.Min.x, -FLT_MAX), ImVec2(labelRect.Max.x, labelRect.Min.y),
-    //                     true);
-    //                 break;
-    //             // bottom
-    //             case 3:
-    //                 ImGui.PushClipRect(ImVec2(labelRect.Min.x, labelRect.Max.y), ImVec2(labelRect.Max.x, FLT_MAX),
-    //                     true);
-    //                 break;
-    //         }
-    //
-    //         ImGui.GetWindowDrawList()->AddRect(
-    //             frameRect.Min, frameRect.Max,
-    //             new ImColor(ImGui.GetStyleColorVec4(ImGuiCol_Border)),
-    //             halfFrame.x);
-    //
-    //         ImGui.PopClipRect();
-    //     }
-    //
-    //     ImGui.PopStyleVar(2);
-    //
-    //     ImGui.GetCurrentWindow().ContentRegionRect.Max.x += frameHeight * 0.5f;
-    //     ImGui.GetCurrentWindow().WorkRect.Max.x += frameHeight * 0.5f;
-    //     ImGui.GetCurrentWindow().InnerRect.Max.x += frameHeight * 0.5f;
-    //
-    //     ImGui.GetCurrentWindow().Size.x += frameHeight;
-    //
-    //     ImGui.Dummy(new(0.0f, 0.0f));
-    //
-    //     ImGui.EndGroup();
-    // }
-
-
     public static bool Matrix4(ref Matrix4 mat, string name)
     {
         ImGui.PushID(name);
@@ -239,105 +82,128 @@ internal static class OpenTKUIHelper
         return num25 != 0;
     }
 
-
-    public static bool DrawProperty(string name, ref Vector2 property)
+    private static void PrepareProperty(string name)
     {
-        var changed = false;
         ImGui.TableNextColumn();
         ImGui.Text(name);
         ImGui.TableNextColumn();
-        if (ImTool.Widgets.Vector2(ref property, name)) changed = true;
-        // if (ImGui.DragFloat2("##" + name, ref property)) changed = true;
-        return changed;
+    }
+    
+    public static bool DrawProperty(string name, ref bool property)
+    {
+        PrepareProperty(name);
+        return ImGui.Checkbox("##"+name, ref property);
     }
 
+    public static bool DrawProperty(string name, ref float property)
+    {
+        PrepareProperty(name);
+        return Widgets.FloatLabel(ref property, name);
+    }
+    
+    public static bool DrawProperty(string name, ref System.Numerics.Vector2 property)
+    {
+        PrepareProperty(name);
+        return Widgets.Vector2(ref property, name);
+    }
+    
     public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector2 property)
     {
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        Vector2 data = new(property.X, property.Y);
-        if (ImGui.DragFloat2("##" + name, ref data)) changed = true;
-        property = new OpenTK.Mathematics.Vector2(data.X, data.Y);
+        bool changed = false;
+        PrepareProperty(name);
+        System.Numerics.Vector2 tempProp = new(property.X, property.Y);
+        if (Widgets.Vector2(ref tempProp, name)) changed = true;
         return changed;
     }
     
-
-    public static bool DrawProperty(string name, ref bool property)
+    public static bool DrawProperty(string name, ref System.Numerics.Vector3 property)
     {
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        if (ImGui.Checkbox("##" + name, ref property)) changed = true;
+        PrepareProperty(name);
+        return Widgets.Vector3(ref property, name);
+    }
+    
+    public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector3 property)
+    {
+        bool changed = false;
+        PrepareProperty(name);
+        System.Numerics.Vector3 tempProp = new(property.X, property.Y, property.Z);
+        if (Widgets.Vector3(ref tempProp, name)) changed = true;
         return changed;
     }
-
-    public static bool DrawProperty(string name, ref int property)
-    {
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        if (ImGui.DragInt("##" + name, ref property)) changed = true;
-        return changed;
-    }
-
-    public static bool DrawProperty(string name, ref Vector3 property)
-    {
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        if (ImGui.DragFloat3("##" + name, ref property)) changed = true;
-        return changed;
-    }
-
-    public static bool DrawProperty(string name, ref Vector4 property, float dragSpeed = 0.1f)
-    {
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        System.Numerics.Vector4 copy = new(property.X, property.Y, property.Z, property.W);
-
-        if (ImGui.DragFloat4("##" + name, ref copy, dragSpeed)) changed = true;
-
-        property = new Vector4(copy.X, copy.Y, copy.Z, copy.W);
-        return changed;
-    }
-
+    
     public static bool DrawProperty(string name, ref System.Numerics.Vector4 property)
     {
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        if (ImGui.DragFloat4("##" + name, ref property)) changed = true;
+        PrepareProperty(name);
+        return Widgets.Vector4(ref property, name);
+    }
+    
+    public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector4 property)
+    {
+        bool changed = false;
+        PrepareProperty(name);
+        System.Numerics.Vector4 tempProp = new(property.X, property.Y, property.Z, property.W);
+        if (Widgets.Vector4(ref tempProp, name)) changed = true;
         return changed;
     }
 
-    public static bool DrawProperty(string name, ref float property, float dragSpeed = 0.1f)
+    public static bool DrawProperty(string name, ref KDBColor property)
     {
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        if (ImTool.Widgets.FloatLabel(ref property, "")) changed = true;
-        // if (ImGui.DragFloat("##" + name, ref property, dragSpeed)) changed = true;
-        return changed;
+        PrepareProperty(name);
+        ImGui.PushID(name);
+        int num1 = 0 | (KDBFloatLabel(ref property.r, "R") ? 1 : 0);
+        ImGui.SameLine();
+        int num2 = KDBFloatLabel(ref property.g, "G", 4278235392U) ? 1 : 0;
+        int num3 = num1 | num2;
+        ImGui.SameLine();
+        int num4 = KDBFloatLabel(ref property.b, "B", 4289789952U) ? 1 : 0;
+        int num5 = num3 | num4;
+        ImGui.SameLine();
+        int num6 = KDBFloatLabel(ref property.a, "A", 4287299723U) ? 1 : 0;
+        int num7 = num5 | num6;
+        ImGui.PopID();
+        return num7 != 0;
     }
 
-    public static bool DrawProperty(string name, ref float property, float min, float max, float dragSpeed = 0.1f)
+    public static bool KDBFloatLabel(ref float val, string name, uint color = 4278190257, float dragSpeed = 1)
     {
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        if (ImGui.DragFloat("##" + name, ref property, dragSpeed, min, max)) changed = true;
-        return changed;
+        ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 0.0f);
+        System.Numerics.Vector2 vector2 = new System.Numerics.Vector2(ImGui.CalcTextSize(name).X + 7f, 2f);
+        System.Numerics.Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
+        System.Numerics.Vector2 p_max = cursorScreenPos + new System.Numerics.Vector2(vector2.X, ImGui.GetFrameHeight());
+        ImDrawListPtr windowDrawList = ImGui.GetWindowDrawList();
+        windowDrawList.AddRectFilled(cursorScreenPos, p_max, color, 6f, ImDrawFlags.RoundCornersLeft);
+        windowDrawList.AddText(cursorScreenPos + new System.Numerics.Vector2(3f, 4f), uint.MaxValue, name);
+        ImGui.SetCursorPosX(ImGui.GetCursorPos().X + vector2.X);
+        ImGui.PushItemWidth(80f);
+        int num = ImGui.DragFloat("###" + name, ref val, dragSpeed) ? 1 : 0;
+        ImGui.PopStyleVar(1);
+        return num != 0;
     }
+    
+    public static ImRect RectExpanded(ImRect rect, float x, float y)
+    {
+        ImRect result = rect;
+        result.Min.X -= x;
+        result.Min.Y -= y;
+        result.Max.X += x;
+        result.Max.Y += y;
+        return result;
+    }
+    
+    public static System.Numerics.Vector4 RectExpanded(System.Numerics.Vector4 rect, float x, float y)
+    {
+        var result = rect;
+
+
+        result.X -= x;
+        result.Y -= y;
+
+        result.Z += x;
+        result.W += y;
+
+        return result;
+    }
+    
 
     public static void DrawButtonImage(
         IntPtr imageNormal,
@@ -382,87 +248,6 @@ internal static class OpenTKUIHelper
 
 
 
-    public static OpenTK.Mathematics.Vector2 DrawProperty(string name, OpenTK.Mathematics.Vector2 property)
-    {
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        Vector2 copy = new(property.X, property.Y);
-
-        if (ImGui.DragFloat2("##" + name, ref copy, 0.1f)) changed = true;
-
-        property = new OpenTK.Mathematics.Vector2(copy.X, copy.Y);
-        return property;
-        // return changed;
-    }
-    
-    public static bool DrawProperty(string name, ref SpriteColor color)
-    {
-        ImGui.PushID(name);
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        
-        int num1 = 0 | (Widgets.FloatLabel(ref color.Color.X, "R") ? 1 : 0);
-        ImGui.SameLine();
-        int num2 = Widgets.FloatLabel(ref color.Color.Y, "G", 4278235392U) ? 1 : 0;
-        int num3 = num1 | num2;
-        ImGui.SameLine();
-        int num4 = Widgets.FloatLabel(ref color.Color.Z, "B", 4289789952U) ? 1 : 0;
-        int num5 = num3 | num4;
-        ImGui.SameLine();
-        int num6 = Widgets.FloatLabel(ref color.Color.W, "A", 4287299723U) ? 1 : 0;
-        int num7 = num5 | num6;
-        ImGui.PopID();
-        return num7 != 0;
-    }
-
-    public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector3 property)
-    {
-        ImGui.PushID(name);
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-        
-        int num1 = 0 | (Widgets.FloatLabel(ref property.X, "X") ? 1 : 0);
-        ImGui.SameLine();
-        int num2 = Widgets.FloatLabel(ref property.Y, "Y", 4278235392U) ? 1 : 0;
-        int num3 = num1 | num2;
-        ImGui.SameLine();
-        int num4 = Widgets.FloatLabel(ref property.Z, "Z", 4289789952U) ? 1 : 0;
-        int num5 = num3 | num4;
-        ImGui.PopID();
-        return num5 != 0;
-    }
-    
-    public static bool DrawProperty(string name, ref OpenTK.Mathematics.Quaternion q)
-    {
-        ImGui.PushID(name);
-        var changed = false;
-        ImGui.TableNextColumn();
-        ImGui.Text(name);
-        ImGui.TableNextColumn();
-
-        System.Numerics.Quaternion quat = new System.Numerics.Quaternion(q.X, q.Y, q.Z, q.W);
-        
-        ImGui.PushID(name);
-        int num1 = 0 | (Widgets.FloatLabel(ref quat.X, "X") ? 1 : 0);
-        ImGui.SameLine();
-        int num2 = Widgets.FloatLabel(ref quat.Y, "Y", 4278235392U) ? 1 : 0;
-        int num3 = num1 | num2;
-        ImGui.SameLine();
-        int num4 = Widgets.FloatLabel(ref quat.Z, "Z", 4289789952U) ? 1 : 0;
-        int num5 = num3 | num4;
-        ImGui.SameLine();
-        int num6 = Widgets.FloatLabel(ref quat.W, "W", 4287299723U) ? 1 : 0;
-        int num7 = num5 | num6;
-        ImGui.PopID();
-        q = new Quaternion(quat.X, quat.Y, quat.Z, quat.W);
-        return num7 != 0;
-    }
     
 }
 

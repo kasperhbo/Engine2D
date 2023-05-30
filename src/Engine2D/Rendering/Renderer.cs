@@ -139,7 +139,7 @@ public class Renderer
 
         int maxLines = Math.Max(numVtLines, numHzLines);
         
-        SpriteColor color = new SpriteColor(.2f, 0.2f, 0.2f, 1);
+        KDBColor color = new KDBColor(.2f, 0.2f, 0.2f, 1);
        
         for (int i=0; i < maxLines; i++) {
             float x = firstX + (GRID_WIDTH * i);

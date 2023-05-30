@@ -7,23 +7,34 @@ using Newtonsoft.Json;
 
 namespace Engine2D.GameObjects;
 
-public class SpriteColor
+public class KDBColor
 {
-    public Vector4 Color;
-
-    public SpriteColor()
+    public float r;
+    public float g;
+    public float b;
+    public float a;
+    public KDBColor()
     {
-        Color = new Vector4(1,1,1,1);
+        this.r = 1;
+        this.g = 1;
+        this.b = 1;
+        this.a = 1;
+    }
+    
+    public KDBColor(KDBColor other)
+    {
+        this.r = other.r;
+        this.g = other.g;
+        this.b = other.b;
+        this.a = other.a;
     }
 
-    public SpriteColor(Vector4 color)
+    public KDBColor(float r, float g, float b, float a)
     {
-        Color = color;
-    }
-
-    public SpriteColor(float r, float g, float b, float a)
-    {
-        Color = new Vector4(r, g, b, a);
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
     }
 }
 
@@ -31,11 +42,11 @@ public class SpriteColor
 public class SpriteRenderer : Component
 {
     [ShowUI(show = false)] private Transform _lastTransform = new Transform();
-    [ShowUI(show = false)] private SpriteColor _lastColor = new();
+    [ShowUI(show = false)] private KDBColor _lastColor = new();
     [JsonIgnore] [ShowUI(show = false)] private int _prevZIndex;
 
     [JsonIgnore] public bool AddToRendererAsSprite = true;
-    public SpriteColor Color = new();
+    public KDBColor Color = new();
 
     [ShowUI(show = false)] internal bool IsDirty = true;
 
@@ -82,10 +93,10 @@ public class SpriteRenderer : Component
             Parent.Transform.Copy(_lastTransform);
         }
 
-        if (!_lastColor.Color.Equals(Color.Color))
+        if (!_lastColor.Equals(Color))
         {
             IsDirty = true;
-            _lastColor = new SpriteColor(Color.Color);
+            _lastColor = new KDBColor(Color.r, Color.g, Color.b, Color.a);
         }
 
         if (!_prevZIndex.Equals(ZIndex))
@@ -98,17 +109,6 @@ public class SpriteRenderer : Component
 
     public override void GameUpdate(double dt)
     {
-        if (!_lastTransform.Equals(Parent.Transform))
-        {
-            IsDirty = true;
-            Parent.Transform.Copy(_lastTransform);
-        }
-
-        if (!_lastColor.Color.Equals(Color.Color))
-        {
-            IsDirty = true;
-            _lastColor = new SpriteColor(Color.Color);
-        }
     }
 
     public override string GetItemType()

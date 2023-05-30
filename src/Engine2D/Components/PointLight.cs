@@ -8,8 +8,8 @@ namespace Engine2D.Components;
 [JsonConverter(typeof(ComponentSerializer))]
 public class PointLight : Component
 {
-    [ShowUI(show = false)] private SpriteColor _lastColor = new();
-    public SpriteColor Color = new();
+    [ShowUI(show = false)] private KDBColor _lastColor = new();
+    public KDBColor Color = new();
     public float Intensity = 1;
 
     [JsonIgnore] public Transform LastTransform;
@@ -30,14 +30,11 @@ public class PointLight : Component
         //Console.WriteLine(this.texture?.TexID);
         if (!LastTransform.Equals(Parent.Transform))Parent.Transform.Copy(this.LastTransform);
 
-        if (!_lastColor.Color.Equals(Color.Color)) _lastColor = new SpriteColor(Color.Color);
+        if (!_lastColor.Equals(Color)) _lastColor = new KDBColor(Color);
     }
 
     public override void GameUpdate(double dt)
     {
-        if (!LastTransform.Equals(Parent.Transform))Parent.Transform.Copy(this.LastTransform);
-
-        if (!_lastColor.Color.Equals(Color.Color)) _lastColor = new SpriteColor(Color.Color);
     }
 
     public override string GetItemType()

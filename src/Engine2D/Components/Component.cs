@@ -87,19 +87,19 @@ public abstract class Component
                     field.SetValue(this, val);
                 }
                 
-                if (type == typeof(SpriteColor))
+                if (type == typeof(KDBColor))
                 {
-                    var val = (SpriteColor)value;
+                    var val = (KDBColor)value;
                     OpenTKUIHelper.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
 
-                if (type == typeof(int))
-                {
-                    var val = (int)value;
-                    OpenTKUIHelper.DrawProperty(name, ref val);
-                    field.SetValue(this, val);
-                }
+                // if (type == typeof(int))
+                // {
+                //     var val = (int)value;
+                //     OpenTKUIHelper.DrawProperty(name, ref val);
+                //     field.SetValue(this, val);
+                // }
 
                 if (type == typeof(float))
                 {
