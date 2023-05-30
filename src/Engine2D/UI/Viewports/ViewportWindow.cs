@@ -92,7 +92,7 @@ public class ViewportWindow
         float targetAspectRatio = 16/9;
         
         if(_cameraToRender != null)
-            targetAspectRatio = _cameraToRender.projectionSize.X / _cameraToRender.projectionSize.Y;
+            targetAspectRatio = _cameraToRender.ProjectionSize.X / _cameraToRender.ProjectionSize.Y;
         
         var aspectWidth = windowSize.X;
         var aspectHeight = aspectWidth / targetAspectRatio;

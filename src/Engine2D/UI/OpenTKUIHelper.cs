@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Engine2D.Components;
+using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
 using ImGuiNET;
 using ImTool;
@@ -84,7 +85,7 @@ internal static class OpenTKUIHelper
         return num25 != 0;
     }
 
-    private static void PrepareProperty(string name)
+    public static void PrepareProperty(string name)
     {
         ImGui.TableNextColumn();
         ImGui.Text(name);
@@ -155,6 +156,37 @@ internal static class OpenTKUIHelper
         return changed;
     }
     
+    public static bool DrawProperty(string name, ref RotationBase property)
+    {
+        return DrawProperty(name, ref property.Roll, ref property.Pitch, ref property.Yaw);
+    }
+    
+    public static bool DrawProperty(string name, ref EulerRadians property)
+    {
+        return DrawProperty(name, ref property.Roll, ref property.Pitch, ref property.Yaw, .01f);
+    }
+    
+    public static bool DrawProperty(string name, ref EulerDegrees property)
+    {
+        return DrawProperty(name, ref property.Roll, ref property.Pitch, ref property.Yaw, 1f);
+    }
+    
+    public static bool DrawProperty(string name, ref float Roll, ref float Pitch, ref float Yaw, float dragSpeed = 1)
+    {
+        bool changed = false;
+        PrepareProperty(name);        
+        ImGui.PushID(name);
+        int num1 = 0 | (KDBFloatLabel(ref Roll, "Roll", 4278190257, dragSpeed) ? 1 : 0);
+        ImGui.SameLine();
+        int num2 = KDBFloatLabel(ref Pitch, "Pitch", 4278235392U, dragSpeed) ? 1 : 0;
+        int num3 = num1 | num2;
+        ImGui.SameLine();
+        int num4 = KDBFloatLabel(ref Yaw, "Yaw", 4289789952U, dragSpeed) ? 1 : 0;
+        int num5 = num3 | num4;
+        ImGui.PopID();
+        return num5 != 0;
+    }
+    
     public static bool DrawProperty(string name, ref System.Numerics.Vector4 property)
     {
         PrepareProperty(name);
@@ -169,7 +201,39 @@ internal static class OpenTKUIHelper
         if (Widgets.Vector4(ref tempProp, name)) changed = true;
         return changed;
     }
+
+    private static bool Quaternion(ref System.Numerics.Quaternion quat, string name)
+    {
+        ImGui.PushID(name);
+        int num1 = 0 | (KDBFloatLabel(ref quat.X, "X", 4278190257, .1f) ? 1 : 0);
+        ImGui.SameLine();
+        int num2 = KDBFloatLabel(ref quat.Y, "Y", 4278235392U, .1f) ? 1 : 0;
+        int num3 = num1 | num2;
+        ImGui.SameLine();
+        int num4 = KDBFloatLabel(ref quat.Z, "Z", 4289789952U, .1f) ? 1 : 0;
+        int num5 = num3 | num4;
+        ImGui.SameLine();
+        int num6 = KDBFloatLabel(ref quat.W, "W", 4287299723U, .1f) ? 1 : 0;
+        int num7 = num5 | num6;
+        ImGui.PopID();
+        return num7 != 0;
+    }
     
+    public static bool DrawProperty(string name, ref System.Numerics.Quaternion property)
+    {
+        PrepareProperty(name);
+        System.Numerics.Quaternion qTemp = new System.Numerics.Quaternion(
+            property.X,
+            property.Y,
+            property.Z,
+            property.W);
+
+        bool changed = Quaternion(ref property, name);
+
+        property = new(qTemp.X, qTemp.Y, qTemp.Z, qTemp.W);
+        return changed;
+    }
+
     public static bool DrawProperty(string name, ref KDBColor property)
     {
         PrepareProperty(name);
@@ -202,7 +266,12 @@ internal static class OpenTKUIHelper
     public static bool KDBFloatLabel(ref float val, string name, uint color = 4278190257, float dragSpeed = -1, float min = -1, float max = -1)
     {
         CreateFloatLabel(name, color);
-        int num = ImGui.DragFloat("###" + name, ref val, dragSpeed, min, max) ? 1 : 0;
+        int num = 0;
+        if(min != -1 && max != -1)
+            num = ImGui.DragFloat("###" + name, ref val, dragSpeed, min, max) ? 1 : 0;
+        else
+            num = ImGui.DragFloat("###" + name, ref val, dragSpeed) ? 1 : 0;
+        
         ImGui.PopStyleVar(1);
         return num != 0;
     }
@@ -294,10 +363,6 @@ internal static class OpenTKUIHelper
             ImGui.GetItemRectMin().X, ImGui.GetItemRectMin().Y,
             ImGui.GetItemRectMax().X, ImGui.GetItemRectMax().Y);
     }
-
-
-
-    
 }
 
 internal class ImageTextIcon

@@ -1,7 +1,10 @@
 ﻿using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
+using Engine2D.Components;
+using OpenTK.Graphics.ES30;
 using OpenTK.Mathematics;
+using Veldrid.ImageSharp;
 using Quaternion = OpenTK.Mathematics.Quaternion;
 using Vector3 = OpenTK.Mathematics.Vector3;
 using Vector4 = OpenTK.Mathematics.Vector4;
@@ -17,15 +20,9 @@ public static class MathUtils
         if (val.CompareTo(max) > 0) return max;
         return val;
     }
-    
-    public static Vector3 V3DegreToRadian(in this Vector3 from)
-    {
-        return new Vector3(MathHelper.DegreesToRadians(from.X),
-            MathHelper.DegreesToRadians(from.Y),
-            MathHelper.DegreesToRadians(from.Z));
-    }
 
-    public static Vector4 Multiply(Matrix4x4 matrix4, Vector4 vector4)
+    #region Matrices
+    public static Vector4 Multiply(Matrix4 matrix4, Vector4 vector4)
     {
         double xN;
         double yN;
@@ -35,6 +32,7 @@ public static class MathUtils
         var y = vector4.Y;
         var z = vector4.Z;
         var w = vector4.W;
+
 
         xN = Math.FusedMultiplyAdd(matrix4.M11, x,
             Math.FusedMultiplyAdd(matrix4.M21, y,
@@ -51,12 +49,12 @@ public static class MathUtils
                 Math.FusedMultiplyAdd(matrix4.M33, z,
                     matrix4.M43 * w)));
 
-
         Vector4 dest = new((float)xN, (float)yN, (float)zN, w);
+
         return dest;
     }
-
-    public static Vector4 Multiply(Matrix4 matrix4, Vector4 vector4)
+    
+    public static Vector4 Multiply(Matrix4x4 matrix4, Vector4 vector4)
     {
         double xN;
         double yN;
@@ -119,26 +117,15 @@ public static class MathUtils
         return dest;
     }
 
-    public static Vector3 QuaternionToAngleAxis(Quaternion q)
-    {
-        float Θ = (float)Math.Acos(q.W)*2;
-        
-        float ax = (float)(q.X / Math.Sin(Math.Acos(Θ)));
-        float ay = (float)(q.Y / Math.Sin(Math.Acos(Θ)));
-        float az = (float)(q.Z / Math.Sin(Math.Acos(Θ)));
 
-        return new Vector3(ax, ay, az);
-    } 
+    #endregion
     
-    public static double ConvertRadiansToDegrees(double radians)
-    {
-        double degrees = (180f / Math.PI) * radians;
-        return (degrees);
-    }
+    #region Rotations
+   
+   
     
-    public static double ConvertDegreesToRadians (double degrees)
-    {
-        double radians = (Math.PI / 180) * degrees;
-        return (radians);
-    }
+
+
+    #endregion
 }
+

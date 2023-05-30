@@ -137,36 +137,32 @@ internal class SceneHierachy : UIElemenet
                 {
                     if (ImGui.MenuItem("New SpriteRenderer"))
                     {
-                        List<Component> components = new List<Component>();
-
-                        var spr = new SpriteRenderer();
-                        components.Add(spr);
-                        
-                        var go = new Gameobject(
-                            ("Gameobject: " + Engine.Get()._currentScene?.Gameobjects.Count + 1),
-                            components
-                            );
-                            
-                        Engine.Get()._currentScene?.AddGameObjectToScene(go);
+                        new SpriteRendererGO();
                     }
                     
                     if (ImGui.MenuItem("New Game Camera"))
                     {
-                        List<Component> components = new List<Component>();
-
-                        var spr = new TestCamera(
-                            new OpenTK.Mathematics.Vector2(1280,720)
-                            );
-                        components.Add(spr);
-                        
-                        var go = new Gameobject(
-                            ("Game Camera: " + Engine.Get()._currentScene?.Gameobjects.Count + 1),
-                            components
-                        );
-                            
-                        Engine.Get()._currentScene?.AddGameObjectToScene(go);
+                        new CameraGO();
                     }
+                    
+                    if (ImGui.BeginMenu("Lighting"))
+                    {
+                        if (ImGui.MenuItem("Global Light"))
+                        {
+                            new GlobalLightGO();
+                        }
+                            
+                        if (ImGui.MenuItem("PointLight"))
+                        {
+                            new PointLightGO();
+                        }
+                        
+                        ImGui.EndMenu();
+                    }
+
                 }
+                
+                
             }
             ImGui.EndChild();
         };

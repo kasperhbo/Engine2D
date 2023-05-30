@@ -3,6 +3,7 @@ using Engine2D.Rendering;
 using KDBEngine.Shaders;
 using Newtonsoft.Json;
 using OpenTK.Graphics.OpenGL4;
+using SixLabors.ImageSharp.Processing.Processors.Dithering;
 
 namespace Engine2D.Core;
 
@@ -32,6 +33,25 @@ public class TextureData
         this.flipped = flipped;
         this.minFilter = minFilter;
         this.magFilter = magFilter;
+    }
+
+    public TextureData Copy(TextureData to, string filePath)
+    {
+        to.texturePath = filePath;
+        to.flipped = flipped;
+        to.minFilter = minFilter;
+        to.magFilter = magFilter;
+        return to;
+    }
+    
+    public static TextureData CopyToNew(TextureData from,string filePath)
+    {
+        TextureData to = new TextureData();
+        to.texturePath = filePath;
+        to.flipped =   from.flipped;
+        to.minFilter = from.minFilter;
+        to.magFilter = from.magFilter;
+        return to;
     }
 }
 

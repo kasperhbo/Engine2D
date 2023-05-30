@@ -1,4 +1,5 @@
-﻿using Engine2D.Core;
+﻿using Engine2D.Components.TransformComponents;
+using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Testing;
@@ -92,7 +93,7 @@ public class ComponentSerializer : JsonConverter
             case "BoxCollider2D":
                 return JsonConvert.DeserializeObject<BoxCollider2D>(jo.ToString(), _specifiedSubclassConversion);
             case "PointLight":
-                return JsonConvert.DeserializeObject<PointLight>(jo.ToString(), _specifiedSubclassConversion);
+                return JsonConvert.DeserializeObject<PointLightComponent>(jo.ToString(), _specifiedSubclassConversion);
             case "GlobalLight":
                 return JsonConvert.DeserializeObject<GlobalLight>(jo.ToString(), _specifiedSubclassConversion);
             case "TextureData":

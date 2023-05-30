@@ -141,6 +141,6 @@ public abstract class Component
 
     public virtual float GetFieldSize()
     {
-        return 100;
+        return 80;
     }
 }

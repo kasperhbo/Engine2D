@@ -4,6 +4,7 @@ using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.Rendering;
 using Newtonsoft.Json;
+using Engine2D.Components.TransformComponents;
 
 namespace Engine2D.GameObjects;
 
@@ -103,11 +104,7 @@ public class SpriteRenderer : Component
     public override void EditorUpdate(double dt)
     {
         //Console.WriteLine(this.texture?.TexID);
-        if (_lastTransform.position != Parent.Transform.position
-            || 
-            _lastTransform.size != Parent.Transform.size
-           ||
-            Math.Abs(_lastTransform.eulerAngles.Z - Parent.Transform.eulerAngles.Z) > .001f
+        if (_lastTransform.Equals(Parent.Transform)
             );
         {
             IsDirty = true;

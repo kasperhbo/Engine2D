@@ -203,10 +203,12 @@ internal class RenderBatch : IComparable<RenderBatch>
                     break;
                 }
 
-        Matrix4 translation = sprite.Parent.Transform.GetTranslation();
+        
+        Matrix4x4 translation = sprite.Parent.Transform.GetTranslation();
 
         {
-            Vector4 currentPos = quadVertexPositions[0] * translation;
+            Vector4 currentPos =
+                MathUtils.Multiply(translation, quadVertexPositions[0]); //quadVertexPositions[0] * translation;
             _vertices[offset + 0] = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
 
@@ -226,7 +228,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         }
 
         {
-            Vector4 currentPos = quadVertexPositions[1] * translation;
+            Vector4 currentPos =MathUtils.Multiply(translation, quadVertexPositions[1]);
             _vertices[offset + 0] = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
 
@@ -247,7 +249,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         }
 
         {
-            Vector4 currentPos = quadVertexPositions[2] * translation;
+            Vector4 currentPos = MathUtils.Multiply(translation, quadVertexPositions[2]);
             _vertices[offset + 0] = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
 
@@ -268,7 +270,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         }
 
         {
-            Vector4 currentPos = quadVertexPositions[3] * translation;
+            Vector4 currentPos = MathUtils.Multiply(translation, quadVertexPositions[3]);
             _vertices[offset + 0] = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
 

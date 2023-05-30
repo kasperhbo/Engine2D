@@ -13,7 +13,11 @@ namespace Engine2D.Rendering;
 
 public class Renderer
 {
-    //  internal static OrthographicCamera S_CurrentCamera = new(0,0);
+    public Texture LightmapTexture;
+    
+    public TestFrameBuffer GameBuffer;
+    public TestFrameBuffer EditorGameBuffer;
+
     private static readonly List<RenderBatch> _renderBatches = new();
     private static readonly Dictionary<SpriteRenderer, RenderBatch> _spriteBatchDict = new();
 
@@ -24,13 +28,8 @@ public class Renderer
     #endregion
 
     private LightMapRenderer _lightMapRenderer = new();
-
-    public Texture LightmapTexture;
     
-    public TestFrameBuffer GameBuffer;
-    public TestFrameBuffer EditorGameBuffer;
-
-    private List<PointLight> _pointLights = new();
+    private List<PointLightComponent> _pointLights = new();
     private readonly int _maxLights = 250;
 
     public GlobalLight GlobalLight { get; set; }
@@ -50,7 +49,7 @@ public class Renderer
         //Create light data
         _lightMapRenderer = new LightMapRenderer();
         _lightMapRenderer.Init();
-        _pointLights = new List<PointLight>();
+        _pointLights = new List<PointLightComponent>();
         
         
         //Create frame buffers
@@ -124,20 +123,21 @@ public class Renderer
     {
         float GRID_WIDTH =32f;
         float GRID_HEIGHT =32f;
+        
         Vector2 cameraPos = camera.getPosition();
-        Vector2 projectionSize = new(camera.projectionSize.X, camera.projectionSize.Y);
+        Vector2 projectionSize = new(camera.ProjectionSize.X, camera.ProjectionSize.Y);
         
         // float firstY = ((int)Math.Floor((cameraPos.Y)/ GRID_HEIGHT)) * GRID_HEIGHT;
         // float firstX = ((int)Math.Floor((cameraPos.X)/ GRID_WIDTH)) * GRID_HEIGHT;
 
-        float firstX = ((int)Math.Floor(cameraPos.X / GRID_WIDTH) * GRID_HEIGHT  ) - projectionSize.X*camera.zoom;
-        float firstY = ((int)Math.Floor(cameraPos.Y / GRID_HEIGHT) * GRID_HEIGHT ) - projectionSize.Y*camera.zoom;
+        float firstX = (float)(((int)Math.Floor(cameraPos.X / GRID_WIDTH) * GRID_HEIGHT  ) - projectionSize.X*camera.Zoom);
+        float firstY = (float)(((int)Math.Floor(cameraPos.Y / GRID_HEIGHT) * GRID_HEIGHT ) - projectionSize.Y*camera.Zoom);
         
-        int numVtLines = (int)(projectionSize.X * camera.zoom / GRID_WIDTH) + 2;
-        int numHzLines = (int)(projectionSize.Y * camera.zoom/ GRID_HEIGHT) + 2;
+        int numVtLines = (int)(projectionSize.X * camera.Zoom / GRID_WIDTH) + 2;
+        int numHzLines = (int)(projectionSize.Y * camera.Zoom/ GRID_HEIGHT) + 2;
         
-        float width = (int)((projectionSize.X * camera.zoom) + (5 * GRID_WIDTH)) ;
-        float height = (int)(projectionSize.Y * camera.zoom) + (5 * GRID_HEIGHT) ;
+        float width = (int)((projectionSize.X * camera.Zoom) + (5 * GRID_WIDTH)) ;
+        float height = (int)(projectionSize.Y * camera.Zoom) + (5 * GRID_HEIGHT) ;
         
         width *= 2;
         height *= 2;
@@ -173,9 +173,9 @@ public class Renderer
         EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
-    internal void AddPointLight(PointLight light)
+    internal void AddPointLight(PointLightComponent lightComponent)
     {
-        _pointLights.Add(light);
+        _pointLights.Add(lightComponent);
     }
 
     internal void AddSpriteRenderer(SpriteRenderer spr)
@@ -224,9 +224,9 @@ public class Renderer
         };
     }
 
-    public List<PointLight> GetPointLightsToRender()
+    public List<PointLightComponent> GetPointLightsToRender()
     {
-        var pointLights = new List<PointLight>();
+        var pointLights = new List<PointLightComponent>();
         var count = 0;
 
         for (var i = 0; i < _pointLights.Count; i++)

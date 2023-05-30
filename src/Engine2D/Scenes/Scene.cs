@@ -172,7 +172,7 @@ internal class Scene
             Gameobject go = (Gameobject)Engine.Get().CurrentSelectedAsset;
             if (go != null)
             {
-                EditorCamera.Transform.position = go.Transform.position;
+                go.Transform.Copy(EditorCamera.Transform);
             }
         }
         
@@ -208,13 +208,17 @@ internal class Scene
 
     public void OnGui()
     {
-        EditorCamera.CameraSettingsGUI();
+        EditorCamera?.CameraSettingsGUI();
         
         ImGui.Begin("Scene Settings");
         ImGui.Begin("t");
         ImGui.DragFloat("a", ref Renderer.Y);
-        Vector2 proj = new(EditorCamera.projectionSize.X, EditorCamera.projectionSize.Y);
-        ImGui.DragFloat2("project", ref proj);
+        if (EditorCamera != null)
+        {
+            Vector2 proj = new(EditorCamera.ProjectionSize.X, EditorCamera.ProjectionSize.Y);
+            ImGui.DragFloat2("project", ref proj);
+        }
+
         ImGui.End();
         
         ImGui.End();

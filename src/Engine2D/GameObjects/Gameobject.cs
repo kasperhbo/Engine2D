@@ -1,19 +1,14 @@
-﻿using System.Runtime.InteropServices;
-using System.Transactions;
-using Box2DSharp.Dynamics;
-using Engine2D.Components;
+﻿using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.Scenes;
-using Engine2D.Testing;
 using Engine2D.UI;
 using ImGuiNET;
 using KDBEngine.Core;
 using Newtonsoft.Json;
-using OpenTK.Mathematics;
-using Vector2 = System.Numerics.Vector2;
+using Engine2D.Components.TransformComponents;
 
 namespace Engine2D.GameObjects;
 
@@ -56,7 +51,7 @@ public class Gameobject : Asset
         {
             var t = new Transform();
 
-            t.position = new System.Numerics.Vector2(0, 0);
+            t.Position = new System.Numerics.Vector2(0, 0);
 
             AddComponent(t);
             Transform = t;
@@ -127,63 +122,6 @@ public class Gameobject : Asset
             ImGui.PopID();
         }
 
-
-        // {
-        //     ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y - 80));
-        //     ImGui.Separator();
-        //
-        //     if (ImGui.Button("Add component", new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X, 26)))
-        //     {
-        //         if (ImGui.BeginDragDropTarget())
-        //         {
-        //             var payload = ImGui.AcceptDragDropPayload("Script_Drop");
-        //             if (payload.IsValidPayload())
-        //             {
-        //                 var component = (string)GCHandle.FromIntPtr(payload.Data).Target;
-        //                 Log.Message("Dropped: " + component);
-        //             }
-        //
-        //             ImGui.EndDragDropTarget();
-        //         }
-        //
-        //         ImGui.OpenPopup("AddComponent");
-        //     }
-        //
-        //     ImGui.GetMousePos();
-        //
-        //     ImGui.Dummy(new System.Numerics.Vector2(0, ImGui.GetContentRegionAvail().Y));
-        //
-        //
-        //     //TODO: ADD COMPONENT TO GOP
-        //     if (ImGui.BeginPopup("AddComponent"))
-        //     {
-        //         if (ImGui.MenuItem("ScriptComponent"))
-        //         {
-        //             var rb = new ScriptHolderComponent();
-        //             var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
-        //             go?.AddComponent(rb);
-        //             ImGui.CloseCurrentPopup();
-        //         }
-        //
-        //         if (ImGui.MenuItem("RigidBody"))
-        //         {
-        //             var rb = new RigidBody(BodyType.DynamicBody);
-        //             var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
-        //             go?.AddComponent(rb);
-        //             ImGui.CloseCurrentPopup();
-        //         }otepad
-        //
-        //         if (ImGui.MenuItem("Sprite Renderer"))
-        //         {
-        //             var spr = new SpriteRenderer();
-        //             var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
-        //             go?.AddComponent(spr);
-        //             ImGui.CloseCurrentPopup();
-        //         }
-        //
-        //         ImGui.EndPopup();
-        //     }
-        // }
         _componentsToAddEndOfFrame.Clear();
     }
 
