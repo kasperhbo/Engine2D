@@ -5,9 +5,9 @@ using Engine2D.Testing;
 using ImGuiNET;
 using ImGuizmoNET;
 using KDBEngine.Core;
+using Octokit;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
-using EnableCap = OpenTK.Graphics.OpenGL.EnableCap;
 
 namespace Engine2D.Rendering;
 
@@ -66,16 +66,22 @@ public class Renderer
         _drawCalls = 0;
         //Render Lights
         {
+            GL.ClearColor(1,1,1,1);
             LightmapTexture = _lightMapRenderer.Render(this, editorCamera);
         }
         //Render the scene
         {
             EditorGameBuffer.Bind();
+
+            if (gameCamera != null)
+            {
+                GL.ClearColor(gameCamera.ClearColor.R, gameCamera.ClearColor.G,gameCamera.ClearColor.B,gameCamera.ClearColor.A);
+            }
             
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            OpenTK.Graphics.OpenGL.GL.Disable(EnableCap.Blend);
+            GL.Disable(EnableCap.Blend);
             AddGridLines(editorCamera);
-            OpenTK.Graphics.OpenGL.GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
             foreach (var batch in _renderBatches) batch.Render(editorCamera, LightmapTexture);
             
@@ -89,14 +95,15 @@ public class Renderer
             _drawCalls = 0;
             //Render Lights
             {
+                GL.ClearColor(1,1,1,1);
                 LightmapTexture = _lightMapRenderer.Render(this, gameCamera);
             }
             //Render the scene
             {
                 GameBuffer.Bind();
-
+                GL.ClearColor(gameCamera.ClearColor.R, gameCamera.ClearColor.G,gameCamera.ClearColor.B,gameCamera.ClearColor.A);
                 GL.Clear(ClearBufferMask.ColorBufferBit);
-                OpenTK.Graphics.OpenGL.GL.Enable(EnableCap.Blend);
+                GL.Enable(EnableCap.Blend);
                 GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
                 foreach (var batch in _renderBatches) batch.Render(gameCamera, LightmapTexture);
 
@@ -139,7 +146,7 @@ public class Renderer
 
         int maxLines = Math.Max(numVtLines, numHzLines);
         
-        KDBColor color = new KDBColor(.2f, 0.2f, 0.2f, 1);
+        KDBColor color = new KDBColor(0, 0, 0, 255);
        
         for (int i=0; i < maxLines; i++) {
             float x = firstX + (GRID_WIDTH * i);
