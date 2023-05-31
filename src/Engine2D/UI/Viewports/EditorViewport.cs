@@ -16,18 +16,19 @@ public class EditorViewport : ViewportWindow
     OPERATION _currentOperation = OPERATION.TRANSLATE;
     MODE _currentMode = MODE.WORLD;
     
-    IntPtr TransformControlLocalIcon = IntPtr.Zero;
-    IntPtr TransformControlWorldIcon = IntPtr.Zero;
-    
-    IntPtr PlayBtn = IntPtr.Zero;
-    IntPtr SimulateBtn = IntPtr.Zero;
-    IntPtr StopBtn = IntPtr.Zero;
+    IntPtr _transformControlLocalIcon;
+    IntPtr _transformControlWorldIcon;
+
+    private IntPtr _playBtn;
+    private IntPtr _simulateBtn;
+    private IntPtr _stopBtn;
 
     private System.Numerics.Vector2 pos = new();
 
     public EditorViewport(string editorVp) : base(editorVp)
     {
         TextureData data = new TextureData();
+        
         data.flipped = false;
         data.magFilter = TextureMagFilter.Linear;
         data.minFilter = TextureMinFilter.Linear;
@@ -35,15 +36,15 @@ public class EditorViewport : ViewportWindow
         
         TextureData TransformLocalIconData = TextureData.CopyToNew(data,
             Utils.GetBaseEngineDir() + "\\images\\Icons\\Play.png");
-        TransformControlLocalIcon = (IntPtr)ResourceManager.GetTexture(TransformLocalIconData).TexID;
+        _transformControlLocalIcon = (IntPtr)ResourceManager.GetTexture(TransformLocalIconData).TexID;
         
         TextureData TransformLWorldIconData = TextureData.CopyToNew(data,
             Utils.GetBaseEngineDir() + "\\images\\Icons\\Play.png");
-        TransformControlWorldIcon = (IntPtr)ResourceManager.GetTexture(TransformLWorldIconData).TexID;
+        _transformControlWorldIcon = (IntPtr)ResourceManager.GetTexture(TransformLWorldIconData).TexID;
         
-        PlayBtn = (IntPtr)ResourceManager.GetTexture(data).TexID;
-        SimulateBtn = (IntPtr)ResourceManager.GetTexture(data).TexID;
-        StopBtn = (IntPtr)ResourceManager.GetTexture(data).TexID;
+        _playBtn = (IntPtr)ResourceManager.GetTexture(data).TexID;
+        _simulateBtn = (IntPtr)ResourceManager.GetTexture(data).TexID;
+        _stopBtn = (IntPtr)ResourceManager.GetTexture(data).TexID;
     }
 
     protected override void BeforeImageRender()
@@ -81,13 +82,13 @@ public class EditorViewport : ViewportWindow
             if (ImGui.BeginChild("inner_transform_components",
                     new System.Numerics.Vector2(s * 3 + 40, s + 30), true, ImGuiWindowFlags.NoScrollbar))
             {
-                ImGui.ImageButton(PlayBtn, new System.Numerics.Vector2(s-2,s));
+                ImGui.ImageButton(_playBtn, new System.Numerics.Vector2(s-2,s));
                 ImGui.SameLine();
                 
-                ImGui.ImageButton(SimulateBtn, new System.Numerics.Vector2(s-2,s));
+                ImGui.ImageButton(_simulateBtn, new System.Numerics.Vector2(s-2,s));
                 ImGui.SameLine();
                 
-                ImGui.ImageButton(StopBtn, new System.Numerics.Vector2(s-2,s));
+                ImGui.ImageButton(_stopBtn, new System.Numerics.Vector2(s-2,s));
                 ImGui.EndChild();
             }
             
@@ -100,11 +101,11 @@ public class EditorViewport : ViewportWindow
             if(ImGui.BeginChild("inner",
                    new System.Numerics.Vector2(s*3 + 40, s+30), true, ImGuiWindowFlags.NoScrollbar))
             {
-                ImGui.ImageButton(PlayBtn, new System.Numerics.Vector2(s-2,s));
+                ImGui.ImageButton(_playBtn, new System.Numerics.Vector2(s-2,s));
                 ImGui.SameLine();
-                ImGui.ImageButton(SimulateBtn, new System.Numerics.Vector2(s-2,s));
+                ImGui.ImageButton(_simulateBtn, new System.Numerics.Vector2(s-2,s));
                 ImGui.SameLine();
-                ImGui.ImageButton(StopBtn, new System.Numerics.Vector2(s-2,s));
+                ImGui.ImageButton(_stopBtn, new System.Numerics.Vector2(s-2,s));
                 ImGui.EndChild();
             }
             ImGui.PopStyleColor();

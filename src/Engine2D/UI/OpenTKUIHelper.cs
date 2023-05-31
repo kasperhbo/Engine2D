@@ -98,10 +98,10 @@ internal static class OpenTKUIHelper
         return ImGui.Checkbox("##"+name, ref property);
     }
 
-    public static bool DrawProperty(string name, ref float property)
+    public static bool DrawProperty(string name, ref float property, bool label = true)
     {
         PrepareProperty(name);
-        return Widgets.FloatLabel(ref property, name);
+        return KDBFloat(ref property, name, 4278190257, label);
     }
     
     public static bool DrawProperty(string name, ref int property)
@@ -176,12 +176,12 @@ internal static class OpenTKUIHelper
         bool changed = false;
         PrepareProperty(name);        
         ImGui.PushID(name);
-        int num1 = 0 | (KDBFloatLabel(ref Roll, "Roll", 4278190257, dragSpeed) ? 1 : 0);
+        int num1 = 0 | (KDBFloat(ref Roll, "Roll", 4278190257, dragSpeed) ? 1 : 0);
         ImGui.SameLine();
-        int num2 = KDBFloatLabel(ref Pitch, "Pitch", 4278235392U, dragSpeed) ? 1 : 0;
+        int num2 = KDBFloat(ref Pitch, "Pitch", 4278235392U, dragSpeed) ? 1 : 0;
         int num3 = num1 | num2;
         ImGui.SameLine();
-        int num4 = KDBFloatLabel(ref Yaw, "Yaw", 4289789952U, dragSpeed) ? 1 : 0;
+        int num4 = KDBFloat(ref Yaw, "Yaw", 4289789952U, dragSpeed) ? 1 : 0;
         int num5 = num3 | num4;
         ImGui.PopID();
         return num5 != 0;
@@ -205,15 +205,15 @@ internal static class OpenTKUIHelper
     private static bool Quaternion(ref System.Numerics.Quaternion quat, string name)
     {
         ImGui.PushID(name);
-        int num1 = 0 | (KDBFloatLabel(ref quat.X, "X", 4278190257, .1f) ? 1 : 0);
+        int num1 = 0 | (KDBFloat(ref quat.X, "X", color: 4278190257, dragSpeed:.1f) ? 1 : 0);
         ImGui.SameLine();
-        int num2 = KDBFloatLabel(ref quat.Y, "Y", 4278235392U, .1f) ? 1 : 0;
+        int num2 = KDBFloat(ref quat.Y, "Y", color: 4278235392U, dragSpeed:.1f) ? 1 : 0;
         int num3 = num1 | num2;
         ImGui.SameLine();
-        int num4 = KDBFloatLabel(ref quat.Z, "Z", 4289789952U, .1f) ? 1 : 0;
+        int num4 = KDBFloat(ref quat.Z, "Z", color: 4289789952U, dragSpeed:.1f) ? 1 : 0;
         int num5 = num3 | num4;
         ImGui.SameLine();
-        int num6 = KDBFloatLabel(ref quat.W, "W", 4287299723U, .1f) ? 1 : 0;
+        int num6 = KDBFloat(ref quat.W, "W", color: 4287299723U, dragSpeed:.1f) ? 1 : 0;
         int num7 = num5 | num6;
         ImGui.PopID();
         return num7 != 0;
@@ -239,15 +239,15 @@ internal static class OpenTKUIHelper
         PrepareProperty(name);
         ImGui.PushID(name);
 
-        int num1 = 0 | (KDBFloatLabel(ref property.r, "R", 4278190257, 1, 0, 255) ? 1 : 0);
+        int num1 = 0 | (KDBFloat(ref property.r, "R", 4278190257, 1, 0, 255) ? 1 : 0);
         ImGui.SameLine();
-        int num2 = KDBFloatLabel(ref property.g, "G", 4278235392U, 1, 0, 255) ? 1 : 0;
+        int num2 = KDBFloat(ref property.g, "G", 4278235392U, 1, 0, 255) ? 1 : 0;
         int num3 = num1 | num2;
         ImGui.SameLine();
-        int num4 = KDBFloatLabel(ref property.b, "B", 4289789952U, 1, 0, 255) ? 1 : 0;
+        int num4 = KDBFloat(ref property.b, "B", 4289789952U, 1, 0, 255) ? 1 : 0;
         int num5 = num3 | num4;
         ImGui.SameLine();
-        int num6 = KDBFloatLabel(ref property.a, "A", 4287299723U, 1, 0, 255) ? 1 : 0;
+        int num6 = KDBFloat(ref property.a, "A", 4287299723U, 1, 0, 255) ? 1 : 0;
         int num7 = num5 | num6;
         ImGui.PopID();
 
@@ -263,9 +263,11 @@ internal static class OpenTKUIHelper
         return num7 != 0;
     }
 
-    public static bool KDBFloatLabel(ref float val, string name, uint color = 4278190257, float dragSpeed = -1, float min = -1, float max = -1)
+    public static bool KDBFloat(ref float val, string name, uint color = 4278190257, float dragSpeed = -1, float min = -1, float max = -1, bool label = true)
     {
-        CreateFloatLabel(name, color);
+        if (label) 
+            CreateFloatLabel(name, color);
+        
         int num = 0;
         if(min != -1 && max != -1)
             num = ImGui.DragFloat("###" + name, ref val, dragSpeed, min, max) ? 1 : 0;
@@ -276,11 +278,16 @@ internal static class OpenTKUIHelper
         return num != 0;
     }
     
-    public static bool KDBFloatLabel(ref float val, string name, uint color = 4278190257)
+    public static bool KDBFloat(ref float val, string name, uint color = 4278190257, bool label = true)
     {
-        CreateFloatLabel(name, color);
+        if(label)
+            CreateFloatLabel(name, color);
+        
         int num = ImGui.DragFloat("###" + name, ref val) ? 1 : 0;
-        ImGui.PopStyleVar(1);
+
+        if (label)
+            ImGui.PopStyleVar(1);
+        
         return num != 0;
     }
 

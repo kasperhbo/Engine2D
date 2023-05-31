@@ -30,7 +30,6 @@ public class RotationTransform
 
         EulerRadians = new(quaternion);
         EulerDegrees = new(EulerRadians);
-        MaxCheck();
     }
     
     public void SetRotation(EulerRadians radians)
@@ -38,7 +37,6 @@ public class RotationTransform
         EulerRadians = radians;
         EulerDegrees = EulerRadians.ToDegrees();
         Quaternion = EulerRadians.ToQuaternion();
-        MaxCheck();
     }
     
     public virtual void SetRotation(EulerDegrees degrees)
@@ -46,36 +44,7 @@ public class RotationTransform
         EulerDegrees = degrees;
 
         EulerRadians = EulerDegrees.ToRadians();
-        Quaternion = EulerRadians.ToQuaternion();
-        
-        MaxCheck();
-    }
-
-    private void MaxCheck()
-    {
-        // if (this.EulerDegrees.Yaw > 180)
-        // {
-        //     this.EulerDegrees.Yaw = -180;
-        //     SetRotation(this.EulerDegrees);
-        // }
-        // if (this.EulerDegrees.Yaw < -180)
-        // {
-        //     this.EulerDegrees.Yaw = 180;
-        //     SetRotation(this.EulerDegrees);
-        // }
-        //
-        // if (this.EulerDegrees.Pitch > 180)
-        // {
-        //     this.EulerDegrees.Pitch = -180;
-        //     SetRotation(this.EulerDegrees);
-        // }
-        // if (this.EulerDegrees.Pitch < -180)
-        // {
-        //     this.EulerDegrees.Pitch = 180;
-        //     SetRotation(this.EulerDegrees);
-        // }
-
-        // MathUtils.UpdateVectors(EulerRadians, out _front, out _right, out _up);
+        Quaternion = EulerRadians.ToQuaternion();                                               
     }
 
     public void Copy(RotationTransform to)

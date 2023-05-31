@@ -1,14 +1,9 @@
 ﻿using System.Numerics;
 using Engine2D.Components;
-using Engine2D.Components.TransformComponents;
-using System.Numerics;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
-using KDBEngine.Core;
-using OpenTK.Mathematics;
-using OpenTK.Windowing.GraphicsLibraryFramework;
-using Vector2 = System.Numerics.Vector2;
-using Vector3 = System.Numerics.Vector3;
+using Engine2D.UI;
+using ImGuiNET;
 
 namespace Engine2D.Testing;
 
@@ -19,14 +14,14 @@ public class TestCamera : Component
         _projectionSize = projectionSize;
     }
     
-    private float _zoom = 1;
-    
+    private float _size = 10f;
+    private float _near = 0.3f;
+    private float _far = 100f;
     public Vector2 ProjectionSize => _projectionSize;
-    public float Zoom  => _zoom;
+    public float Size  => _size;
     public KDBColor ClearColor { get; set; } = new();
 
     private Vector2 _projectionSize;
-
     private Vector3 _front = -Vector3.UnitZ;
     private Vector3 _up = Vector3.UnitY;
     private Vector3 _right = Vector3.UnitX;
@@ -41,17 +36,20 @@ public class TestCamera : Component
         );
     }
     
-    
-    
     public Matrix4x4 GetProjectionMatrix()
     {
+        float aspect = (float)_projectionSize.X / (float)_projectionSize.Y;
+
+        float width = _size * aspect;
+        float height = _size;
+        
         Matrix4x4 projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(
-            -(_projectionSize.X * _zoom)/2,
-            (_projectionSize.X * _zoom)/2,
-            -(_projectionSize.Y * _zoom)/2,
-            (_projectionSize.Y * _zoom)/2,
-            0,
-            100
+            -width * 0.5f,
+            width * 0.5f,
+            -height * 0.5f,
+            height * 0.5f,
+            _near,
+            _far
         );
 
         return projectionMatrix;
@@ -65,22 +63,26 @@ public class TestCamera : Component
     public override void EditorUpdate(double dt)
     {
         base.EditorUpdate(dt);
-
-        Log.Message("Updating Vectors Camera");
-        var rot = Parent.Transform.Rotation;
-        MathUtils.UpdateVectors(rot.Quaternion, _front: out _front, _right: out _right, _up: out _up);
-        //
-        // if (rot.EulerDegrees.Yaw <= 90)
-        // {
-        //     _up = ;
-        // }
     }
-
-
 
     public void AdjustProjection(float X, float Y)
     {
         _projectionSize.X = X;
         _projectionSize.Y = Y;
+    }
+
+    public override float GetFieldSize()
+    {
+        return 100;
+    }
+
+    public override void ImGuiFields()
+    {
+        OpenTKUIHelper.DrawProperty("Size: ", ref _size, label: false);
+        ImGui.Separator();
+        ImGui.Text("Clipping Planes");
+        
+        OpenTKUIHelper.DrawProperty("Near: ", ref _near, label: false);
+        OpenTKUIHelper.DrawProperty("Far: ", ref _far, label: false);
     }
 }

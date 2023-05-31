@@ -9,7 +9,7 @@ namespace Engine2D.Components.TransformComponents;
 public class CameraTransform : Transform
 {
     public Vector2 Position;
-    public Vector2 Size = new(32, 32);
+    public Vector2 Size = new(1, 1);
 
     
     public CameraTransform()

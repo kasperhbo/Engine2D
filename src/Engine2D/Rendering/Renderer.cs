@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Engine2D.Components;
 using Engine2D.GameObjects;
+using Engine2D.Logging;
 using Engine2D.Testing;
 using ImGuiNET;
 using ImGuizmoNET;
@@ -121,45 +122,34 @@ public class Renderer
 
     private void AddGridLines(TestCamera camera)
     {
-        float GRID_WIDTH =32f;
-        float GRID_HEIGHT =32f;
+        float toAdd = camera.Size;
         
-        Vector2 cameraPos = camera.Parent.Transform.Position;
-        Vector2 projectionSize = new(camera.ProjectionSize.X, camera.ProjectionSize.Y);
+        if (toAdd >= 20) toAdd = 20;
         
-        // float firstY = ((int)Math.Floor((cameraPos.Y)/ GRID_HEIGHT)) * GRID_HEIGHT;
-        // float firstX = ((int)Math.Floor((cameraPos.X)/ GRID_WIDTH)) * GRID_HEIGHT;
-
-        float firstX = (float)(((int)Math.Floor(cameraPos.X / GRID_WIDTH) * GRID_HEIGHT  ) - projectionSize.X*camera.Zoom);
-        float firstY = (float)(((int)Math.Floor(cameraPos.Y / GRID_HEIGHT) * GRID_HEIGHT ) - projectionSize.Y*camera.Zoom);
+        float yStart = (int)camera.Parent.Transform.Position.Y + (-20 - toAdd);
+        float yEnd = (int)camera.Parent.Transform.Position.Y + (20 + toAdd);
         
-        int numVtLines = (int)(projectionSize.X * camera.Zoom / GRID_WIDTH) + 2;
-        int numHzLines = (int)(projectionSize.Y * camera.Zoom/ GRID_HEIGHT) + 2;
+        float xStart = (int)camera.Parent.Transform.Position.X + (-20 - toAdd);
+        float xEnd = (int)camera.Parent.Transform.Position.X + (20 + toAdd);
         
-        float width = (int)((projectionSize.X * camera.Zoom) + (5 * GRID_WIDTH)) ;
-        float height = (int)(projectionSize.Y * camera.Zoom) + (5 * GRID_HEIGHT) ;
-        
-        width *= 2;
-        height *= 2;
-        numVtLines *= 2;
-        numHzLines *= 2;
-
-        int maxLines = Math.Max(numVtLines, numHzLines);
-        
-        KDBColor color = new KDBColor(0, 0, 0, 255);
-       
-        for (int i=0; i < maxLines; i++) {
-            float x = firstX + (GRID_WIDTH * i);
-            float y = firstY + (GRID_HEIGHT * i);
-
-            if (i < numVtLines) {
-                _debugDraw.AddLine2D(new (x, firstY), new (x, firstY + height), color, camera);
-            }
-
-            if (i < numHzLines) {
-                _debugDraw.AddLine2D(new (firstX, y), new (firstX + width, y), color, camera);
-            }
+        for (int y = (int)camera.Parent.Transform.Position.Y + (int)(-20- toAdd); y <= (int)camera.Parent.Transform.Position.Y +
+             (int)(20+ toAdd); y++)
+        {
+            _debugDraw.AddLine2D(new(xStart, y), new(xEnd, y), new KDBColor(1,0,0,1),
+                camera);
         }
+        for (int x = (int)camera.Parent.Transform.Position.X + (int)(-20- toAdd); 
+             x <= (int)camera.Parent.Transform.Position.X  + (int)(20+ toAdd); x++)
+        {
+            _debugDraw.AddLine2D(new(x, yStart), new(x, yEnd), new KDBColor(1,0,0,1),
+                camera);
+        }
+    }
+    
+    public Vector2 GetCoordinatesGrid(int index, TestCamera camera)
+    {
+        return new(index % camera.ProjectionSize.X, index /  camera.ProjectionSize.Y);
+        //return new Tuple<int x, int y>(index % cols, index / cols);
     }
     
     internal void OnClose()
