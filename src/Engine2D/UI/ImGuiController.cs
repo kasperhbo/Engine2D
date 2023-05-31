@@ -16,6 +16,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 using System.Drawing.Imaging;
+using OpenTK.Windowing.Common;
 
 namespace Dear_ImGui_Sample
 {
@@ -136,12 +137,10 @@ namespace Dear_ImGui_Sample
            
         }
 
-
-
-        public void WindowResized(int width, int height)
+        public void WindowResized(ResizeEventArgs obj)
         {
-            _windowWidth = width;
-            _windowHeight = height;
+            _windowWidth =  obj.Width;
+            _windowHeight = obj.Height;
         }
 
         public void DestroyDeviceObjects()
@@ -249,6 +248,12 @@ void main()
         /// <summary>
         /// Updates ImGui input and IO configuration state.
         /// </summary>
+        ///
+        public void Update(GameWindow wnd, double deltaSeconds)
+        {
+            Update(wnd, (float)deltaSeconds);
+        }
+
         public void Update(GameWindow wnd, float deltaSeconds)
         {
             if (_frameBegun)
@@ -316,17 +321,17 @@ void main()
             io.KeySuper = KeyboardState.IsKeyDown(Keys.LeftSuper) || KeyboardState.IsKeyDown(Keys.RightSuper);
         }
 
-        internal void PressChar(char keyChar)
+        public void PressChar(TextInputEventArgs obj)
         {
-            PressedChars.Add(keyChar);
+            PressedChars.Add((char)obj.Unicode);
         }
 
-        internal void MouseScroll(Vector2 offset)
+        public void MouseWheel(MouseWheelEventArgs obj)
         {
             ImGuiIOPtr io = ImGui.GetIO();
             
-            io.MouseWheel = offset.Y;
-            io.MouseWheelH = offset.X;
+            io.MouseWheel =  obj.Offset.Y;
+            io.MouseWheelH = obj.Offset.X;
         }
 
         private static void SetKeyMappings()
@@ -472,6 +477,8 @@ void main()
             _fontTexture.Dispose();
             _shader.Dispose();
         }
+
+
     }
     
     static class Util

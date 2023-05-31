@@ -6,15 +6,13 @@ using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Testing;
 using ImGuiNET;
-using KDBEngine.Core;
-using KDBEngine.UI;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace Engine2D.UI;
 
-internal class SceneHierachy : UIElemenet
+internal class SceneHierachy : UiElemenet
 {
     protected override string SetWindowTitle()
     {
@@ -113,9 +111,9 @@ internal class SceneHierachy : UIElemenet
     private List<Gameobject> GetGameObjects()
     {
         List<Gameobject> _gameobjectsWithoutParents = new List<Gameobject>();
-        for (int i = 0; i < Engine.Get()._currentScene.Gameobjects.Count; i++)
+        for (int i = 0; i < Engine.Get().CurrentScene.GameObjects.Count; i++)
         {
-            Gameobject go = Engine.Get()._currentScene.Gameobjects[i];
+            Gameobject go = Engine.Get().CurrentScene.GameObjects[i];
 
             if (go.PARENT_UID == -1)
             {

@@ -1,6 +1,6 @@
 ﻿using Engine2D.GameObjects;
 using Engine2D.Rendering;
-using KDBEngine.Core;
+using Engine2D.Core;
 using Newtonsoft.Json;
 
 namespace Engine2D.Components;
@@ -10,7 +10,7 @@ public class GlobalLight : Component
 {
     public float Intensity = 1;
 
-    public override void Init(Gameobject parent, Renderer renderer)
+    public override void Init(Gameobject parent, Renderer? renderer)
     {
         base.Init(parent, renderer);
         renderer.GlobalLight = this;

@@ -6,7 +6,6 @@ using Engine2D.Rendering;
 using Engine2D.Scenes;
 using Engine2D.UI;
 using ImGuiNET;
-using KDBEngine.Core;
 using Newtonsoft.Json;
 using Engine2D.Components.TransformComponents;
 
@@ -45,7 +44,7 @@ public class Gameobject : Asset
 
 
 
-    public void Init(Renderer renderer)
+    public void Init(Renderer? renderer)
     {
         if(Transform == null)
         {
@@ -56,7 +55,6 @@ public class Gameobject : Asset
             AddComponent(t);
             Transform = t;
         }
-        Transform.Parent = this;
         
         if (UID == -1) UID = UIDManager.GetUID();
         UIDManager.TakenUIDS.Add(UID);
@@ -83,7 +81,7 @@ public class Gameobject : Asset
         foreach (var component in components) component.Destroy();
     }
 
-    public void AddComponent(Component component, Renderer renderer)
+    public void AddComponent(Component component, Renderer? renderer)
     {
         component.Init(this, renderer);
         components.Add(component);
@@ -145,7 +143,7 @@ public class Gameobject : Asset
         //TODO: DETACH THIS FROM PREV PARENT AND MAKE THIS SELF OWNED OBJ
         if (parentUID == -1) return;
 
-        Scene currentScene = Engine.Get()._currentScene;
+        Scene currentScene = Engine.Get().CurrentScene;
 
         if (this._parent != null)
             this._parent.Childs.Remove(this);

@@ -1,15 +1,9 @@
-﻿using System.Numerics;
-using Dear_ImGui_Sample;
-using Engine2D.Core;
-using Engine2D.Logging;
-using Engine2D.Rendering;
-using Engine2D.SavingLoading;
+﻿using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.Testing;
 using Engine2D.UI;
 using Engine2D.UI.Viewports;
 using ImGuiNET;
-using KDBEngine.UI;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -17,204 +11,201 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using ImGuiController = Dear_ImGui_Sample.ImGuiController;
 
-namespace KDBEngine.Core
+namespace Engine2D.Core
 {
-    // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
-    // OpenGL's initial hurdle is quite large, but once you get past that, things will start making more sense.
     public class Engine : GameWindow
     {
-        private static Engine _instance;
+        private static Engine? s_instance;
         
-        private readonly Dictionary<string, UIElemenet> _guiWindows = new();
-        private readonly EngineSettingsWindow engineSettingsWindow = new();
-        
-        private ImGuiController _imGuiController;
-        
-        private EditorViewport _editorViewport;
-        private ViewportWindow _gameViewport;
-        
-        internal Scene? _currentScene;
+        public  Scene? CurrentScene { get; private set; }
         public Asset? CurrentSelectedAsset;
         
-#region setup
+
+        private readonly Dictionary<string, UiElemenet> _guiWindows = new();
+        private readonly EngineSettingsWindow engineSettingsWindow = new();
+
+        private ImGuiController _imGuiController;
+
+        private EditorViewport _editorViewport;
+        private ViewportWindow _gameViewport;
+
+        #region setup
 
         public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
             gameWindowSettings, nativeWindowSettings)
         {
         }
 
-        public unsafe static Engine Get()
+        public unsafe static Engine? Get()
         {
-            if (_instance == null)
+            if (s_instance == null)
             {
-                var gameWindowSettings             = GameWindowSettings.Default;
+                var gameWindowSettings = GameWindowSettings.Default;
                 gameWindowSettings.UpdateFrequency = WindowSettings.UpdateFrequency;
                 gameWindowSettings.RenderFrequency = WindowSettings.RenderFrequency;
 
-                var ntwSettings   = NativeWindowSettings.Default;
+                var ntwSettings = NativeWindowSettings.Default;
                 ntwSettings.Title = WindowSettings.Title;
-                ntwSettings.Size  = WindowSettings.Size;
-                
-                _instance = new Engine(gameWindowSettings, ntwSettings);
-                
-                GLFW.SetWindowAttrib(_instance.WindowPtr, WindowAttribute.Decorated, WindowSettings.Decorated);
+                ntwSettings.Size = WindowSettings.Size;
+
+                s_instance = new Engine(gameWindowSettings, ntwSettings);
+
+                s_instance.LoadEngine();
+
+                GLFW.SetWindowAttrib(s_instance.WindowPtr, WindowAttribute.Decorated, WindowSettings.Decorated);
             }
 
-            return _instance;
+            return s_instance;
         }
-        
 
-        protected override void OnLoad()
+
+        private void LoadEngine()
         {
             base.OnLoad();
-            
+
             SaveLoad.LoadEngineSettings();
-            _currentScene = new Scene();
-            _currentScene.Init(ProjectSettings.FullProjectPath + "\\kasper1.kdbscene");
-            
+
             if (Settings.s_IsEngine)
+            {
                 LoadEditor();
-            
+            }
+
             Get().WindowState = WindowSettings.FullScreen;
-            
+
+            AssignDefaultEvents();
+
+            SwitchScene(ProjectSettings.FullProjectPath + "\\kasper1.kdbscene");
+
         }
 
+        private void AssignDefaultEvents()
+        {
+            //Updates
+            base.UpdateFrame += Update;
+            base.RenderFrame += Render;
+
+            //Keyboards
+            base.MouseWheel += MouseWheel;
+            base.TextInput  += TextInput;
+            
+            //other events
+            base.Resize += OnResize;
+            base.Unload += Close;
+            
+        }
+        
         private void LoadEditor()
         {
+            RenderFrame += RenderUI;
+            
             _imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
+            
+            base.MouseWheel += _imGuiController.MouseWheel;
+            base.TextInput += _imGuiController.PressChar;
+            base.Resize += _imGuiController.WindowResized;
+            
             _editorViewport = new("Editor VP");
             _gameViewport = new("Game VP");
+
             CreateUIWindows();
         }
 
-#endregion
+        #endregion
 
-        protected override void OnUpdateFrame(FrameEventArgs args)
+        public void SwitchScene(string newSceneName)
         {
-            base.OnUpdateFrame(args);
-
-            TestInput.mousePosCallback(MouseState, KeyboardState, _currentScene?.EditorCamera);
-
-            _currentScene?.EditorUpdate(args.Time);
-
-            TestInput.endFrame();
-        }
-        
-        protected override void OnRenderFrame(FrameEventArgs e)
-        {
-            base.OnRenderFrame(e);
-            
-            //Set title to fps + title
-            SetTitle((float)e.Time);
-            
-            _currentScene?.Render();
-            
-            //If engine render UI
-            if (Settings.s_IsEngine) 
+            if (CurrentScene != null)
             {
-                //ImGui
+                base.TextInput  -= CurrentScene.OnTextInput;
+                base.MouseWheel -= CurrentScene.OnMouseWheel;
+                base.Unload     -= CurrentScene.Close;
+                
+                foreach (var eventA in CurrentScene.GetDefaultUpdateEvents())
                 {
-                    _imGuiController.Update(this, (float)e.Time);
-                    
-                    ImGui.SetNextWindowPos(new(0, 0));
-                    ImGui.SetNextWindowSize(new(ClientSize.X, ClientSize.Y));
-                    
-                    ImGui.Begin("MainWindow",  
-                        ImGuiWindowFlags.NoDecoration 
-                        | ImGuiWindowFlags.NoNavFocus 
-                        | ImGuiWindowFlags.NoFocusOnAppearing 
-                        | ImGuiWindowFlags.NoBringToFrontOnFocus 
-                        | ImGuiWindowFlags.NoDocking
-                        | ImGuiWindowFlags.NoScrollbar
-                        | ImGuiWindowFlags.NoCollapse
-                        | ImGuiWindowFlags.NoScrollWithMouse
-                        | ImGuiWindowFlags.NoMove);
-
-                    ImGui.SetCursorPos(new(0,0));
-                    
-                    ImGui.BeginTabBar("MainTab");
-                    ImGui.SetCursorPos(new(0,0));
-                    ImGui.DockSpace(99999, new(ClientSize.X, ClientSize.Y),  ImGuiDockNodeFlags.DockSpace);
-                    ImGui.EndTabBar();
-
-                    ImGui.ShowDemoWindow();
-                    foreach (var window in _guiWindows.Values) window.Render();
-
-                    _currentScene?.OnGui();
-                    
-                    TestCamera? cam = _currentScene?.EditorCamera;
-                    TestFrameBuffer? frameBuffer = _currentScene?.Renderer.EditorGameBuffer;
-                    
-                    _editorViewport.OnGui(frameBuffer, cam);
-                    
-                    cam = _currentScene?.CurrentMainGameCamera;
-                    frameBuffer = _currentScene?.Renderer.GameBuffer;
-                    
-                    _gameViewport.OnGui(frameBuffer, cam);
-
-                    ImGui.End();
-
-                    _imGuiController.Render();
+                    UpdateFrame -= eventA;
                 }
             }
+
+            CurrentScene = new Scene();
+            
+            base.TextInput  += CurrentScene.OnTextInput;
+            base.MouseWheel += CurrentScene.OnMouseWheel;
+            base.Unload     += CurrentScene.Close;
+
+            foreach (var eventA in CurrentScene.GetDefaultUpdateEvents())
+            {
+                UpdateFrame += eventA;
+            }
+            
+            CurrentScene.Init(newSceneName);
+        }
+
+        private void Update(FrameEventArgs args)
+        {
+        }
+
+        private void Render(FrameEventArgs args)
+        {
+            SetTitle((float)args.Time);
+            CurrentScene?.Render(args);
             SwapBuffers();
         }
-
-        protected override void OnResize(ResizeEventArgs e)
+        
+        private void RenderUIWindows()
         {
-            base.OnResize(e);
+            foreach (var window in _guiWindows.Values) window.Render();
 
+            CurrentScene?.OnGui();
+
+            TestCamera? cam = CurrentScene?.EditorCamera;
+            TestFrameBuffer? frameBuffer = CurrentScene?.Renderer.EditorGameBuffer;
+
+            _editorViewport.OnGui(frameBuffer, cam);
+
+            cam = CurrentScene?.CurrentMainGameCamera;
+            frameBuffer = CurrentScene?.Renderer.GameBuffer;
+
+            _gameViewport.OnGui(frameBuffer, cam);
+        }
+
+        private new void OnResize(ResizeEventArgs e)
+        {
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
-            
-            _currentScene?.OnResized(e);
-            
-            if (Settings.s_IsEngine)
-            {
-                _imGuiController.WindowResized(ClientSize.X, ClientSize.Y);
-            }
+
+            CurrentScene?.OnResized(e);
         }
 
-        protected override void OnTextInput(TextInputEventArgs e)
+        private void TextInput(TextInputEventArgs e)
         {
-            base.OnTextInput(e);
-
-            _currentScene?.OnTextInput(e);
-            
-            if (Settings.s_IsEngine)
-            {
-                //UPDATE UI
-                _imGuiController.PressChar((char)e.Unicode);
-            }
         }
 
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        private void MouseWheel(MouseWheelEventArgs e)
         {
-            base.OnMouseWheel(e);
-
-            _currentScene?.OnMouseWheel(e);
-            
-            if(Settings.s_IsEngine)
-            {
-                //UPDATE UI
-                _imGuiController.MouseScroll(e.Offset);
-            }
         }
 
-        protected override void OnUnload()
+
+        private void RenderUI(FrameEventArgs e)
         {
-            if (_currentScene != null)
-            {
-                _currentScene.IsPlaying = false;
-                _currentScene.OnClose();
-            }
+            _imGuiController.Update(this, e.Time);
 
-            base.OnUnload();
+            SetupDockspace();
+
+            _imGuiController.Render();
         }
+
+        private void SetupDockspace()
+        {
+            float tabBarSize = 30;
+            
+            ImGui.DockSpaceOverViewport();
+            RenderUIWindows();
+        }
+
 
         private void CreateUIWindows()
         {
             TopMenu top = new TopMenu();
-            
+
             var assetBrowser = new AssetBrowser();
             _guiWindows.Add(assetBrowser.Title, assetBrowser);
 
@@ -226,7 +217,6 @@ namespace KDBEngine.Core
 
             _guiWindows.Add(engineSettingsWindow.Title, engineSettingsWindow);
         }
-
         
         private int _frameCounter;
         private void SetTitle(float time)
@@ -235,7 +225,7 @@ namespace KDBEngine.Core
             _frameCounter++;
             if (_frameCounter == 30)
             {
-                Title = string.Format("KDB ENGIN V{0} | Scene : {1} | FPS : {2}", 0.1, _currentScene.ScenePath, fps);
+                Title = string.Format("KDB ENGIN V{0} | Scene : {1} | FPS : {2}", 0.1, CurrentScene.ScenePath, fps);
                 _frameCounter = 0;
             }
         }

@@ -1,10 +1,9 @@
 ﻿using ImGuiNET;
-using KDBEngine.Core;
-using KDBEngine.UI;
+using Engine2D.Core;
 
 namespace Engine2D.UI;
 
-internal class Inspector : UIElemenet
+internal class Inspector : UiElemenet
 {
     //internal Gameobject CurrentSelectedGameObject;
 

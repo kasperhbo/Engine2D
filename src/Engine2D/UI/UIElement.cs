@@ -1,14 +1,14 @@
 ﻿using ImGuiNET;
 
-namespace KDBEngine.UI;
+namespace Engine2D.UI;
 
-public abstract class UIElemenet
+public abstract class UiElemenet
 {
     protected ImGuiWindowFlags _flags;
     protected bool _visibility = true;
     protected Action _windowContents;
 
-    public UIElemenet()
+    public UiElemenet()
     {
         _flags = SetWindowFlags();
         Title = SetWindowTitle();

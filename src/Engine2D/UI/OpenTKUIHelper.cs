@@ -5,7 +5,7 @@ using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
 using ImGuiNET;
 using ImTool;
-using KDBEngine.Core;
+using Engine2D.Core;
 using OpenTK.Mathematics;
 using SixLabors.ImageSharp.Processing.Processors.Transforms;
 using Vector2 = System.Numerics.Vector2;
@@ -16,7 +16,6 @@ namespace Engine2D.UI;
 
 internal static class OpenTKUIHelper
 {
-    
     public static void DrawComponentWindow(string id, string title, Action tablesToDraw, float size = 100)
     {
         ImGui.PushID(id);
@@ -268,11 +267,13 @@ internal static class OpenTKUIHelper
         if (label) 
             CreateFloatLabel(name, color);
         
+        float valTemp = val;
+        
         int num = 0;
         if(min != -1 && max != -1)
-            num = ImGui.DragFloat("###" + name, ref val, dragSpeed, min, max) ? 1 : 0;
+            num = ImGui.DragFloat("###" + name, ref valTemp, dragSpeed, min, max) ? 1 : 0;
         else
-            num = ImGui.DragFloat("###" + name, ref val, dragSpeed) ? 1 : 0;
+            num = ImGui.DragFloat("###" + name, ref valTemp, dragSpeed) ? 1 : 0;
         
         if (label) 
             ImGui.PopStyleVar(1);
@@ -285,12 +286,17 @@ internal static class OpenTKUIHelper
             if (mouse.X > size.X)
             {
                 Engine.Get().MousePosition = new(0, mouse.Y);
+                
+                valTemp += size.X;
             }
             if (mouse.X <= 0.0001f)
             {
-                Engine.Get().MousePosition = new(size.Y, mouse.Y);
+                Engine.Get().MousePosition = new(size.X, mouse.Y);
+                valTemp -= size.X;
             }
         }
+
+        val = valTemp;
         return num != 0;
     }
     

@@ -1,7 +1,6 @@
 ﻿using Engine2D.Components;
 using Engine2D.Core;
 using ExampleGame.Registers;
-using KDBEngine.Core;
 
 public class Program
 {

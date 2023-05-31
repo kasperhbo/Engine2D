@@ -1,7 +1,6 @@
 ﻿using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Testing;
-using KDBEngine.Core;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -135,7 +134,7 @@ public class LightMapRenderer
         _shader.uploadFloatArray("uIntensity", lightIntensities);
         if (renderer.GlobalLight != null)
         {
-            var currentScene = Engine.Get()._currentScene;
+            var currentScene = Engine.Get().CurrentScene;
             if (currentScene != null)
                 _shader.uploadFloat("uMinLighting", renderer.GlobalLight.Intensity);
         }

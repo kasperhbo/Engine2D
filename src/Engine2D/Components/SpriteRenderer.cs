@@ -86,7 +86,7 @@ public class SpriteRenderer : Component
 
     public int ZIndex = 0;
 
-    public override void Init(Gameobject parent, Renderer renderer)
+    public override void Init(Gameobject parent, Renderer? renderer)
     {
         base.Init(parent, renderer);
        

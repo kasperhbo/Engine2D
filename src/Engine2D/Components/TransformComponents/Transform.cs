@@ -6,11 +6,11 @@ namespace Engine2D.Components.TransformComponents;
 public class Transform : Component
 {
     public Vector2 Position;
-    public Vector2 Size = new(32, 32);
+    public Vector2 Size = new(1, 1);
 
     public RotationTransform Rotation = new();
     
-    public Transform()
+    public Transform() 
     {
     }
 

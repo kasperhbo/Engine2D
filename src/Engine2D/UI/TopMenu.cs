@@ -1,14 +1,13 @@
 ﻿using ImGuiNET;
-using KDBEngine.Core;
+using Engine2D.Core;
 using System.Numerics;
 using ImTool;
-using KDBEngine.UI;
 using WindowState = OpenTK.Windowing.Common.WindowState;
 
 
 namespace Engine2D.UI;
 
-public class TopMenu : UIElemenet
+public class TopMenu : UiElemenet
 {
     private int windowBtnWidth = 30;
     private int borderThickness = 0;

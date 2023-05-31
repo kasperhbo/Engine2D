@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using Engine2D.Core;
 using ImGuiNET;
-using KDBEngine.UI;
 using OpenTK.Graphics.OpenGL4;
 
 namespace Engine2D.UI;
@@ -19,7 +18,7 @@ public enum FileType
     TextFile
 }
 
-internal class AssetBrowser : UIElemenet
+internal class AssetBrowser : UiElemenet
 {
     private static GCHandle? _currentlyDraggedHandle;
 

@@ -2,7 +2,6 @@
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Scenes;
-using KDBEngine.Core;
 using Newtonsoft.Json;
 
 namespace Engine2D.SavingLoading;
@@ -36,7 +35,7 @@ internal static class SaveLoad
     internal static void SaveScene(Scene scene)
     {
         return;
-        var gameObjectArray = scene.Gameobjects.ToArray();
+        var gameObjectArray = scene.GameObjects.ToArray();
 
         var sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
         //So we can see where the go array stops when we deserialize the file

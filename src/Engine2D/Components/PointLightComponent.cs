@@ -15,7 +15,7 @@ public class PointLightComponent : Component
 
     [JsonIgnore] public Transform LastTransform;
 
-    public override void Init(Gameobject parent, Renderer renderer)
+    public override void Init(Gameobject parent, Renderer? renderer)
     {
         LastTransform = new Transform();
         base.Init(parent, renderer);

@@ -1,28 +1,31 @@
 ﻿using System.Numerics;
+
 using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
+
 using Engine2D.Components;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.Testing;
-using Engine2D.UI;
+
 using ImGuiNET;
-using KDBEngine.Core;
+
+using Engine2D.Core;
+
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Engine2D.Scenes;
 
-internal class Scene
+public class Scene
 {
-    public Renderer Renderer { get; private set; }
+    public Renderer? Renderer { get; private set; } = null;
 
     #region onplay
     
     private bool _isPlaying;
-
     public bool IsPlaying
     {
         get => _isPlaying;
@@ -40,26 +43,41 @@ internal class Scene
 
             _isPlaying = value;
         }
-    }    
-    private World physicsWorld;
+    }
+    private World? _physicsWorld = null;
 
     #endregion
 
     internal string ScenePath { get; private set; } = "NoScene";
     
-    public List<Gameobject> Gameobjects = new List<Gameobject>();
+    public List<Gameobject> GameObjects = new List<Gameobject>();
     public GlobalLight GlobalLight { get; set; } = null;
     
     internal TestCamera? EditorCamera = null;
     internal TestCamera? CurrentMainGameCamera = null;
     
+    public List<Action<FrameEventArgs>> GetDefaultUpdateEvents()
+    {
+        List<Action<FrameEventArgs>> res = new();
+        
+        if(Settings.s_IsEngine)
+            res.Add(EditorUpdate);
+        
+        if(_isPlaying)
+            res.Add(GameUpdate);
+        
+        return res;
+    }
+    
     private void StartPlay()
     {
+        Engine.Get().UpdateFrame += GameUpdate;
+        
         throw new NotImplementedException();
         SaveLoad.SaveScene(this);
 
-        physicsWorld = new World(new Vector2(0, -9.8f));
-        foreach (var gameobject in Gameobjects)
+        _physicsWorld = new World(new Vector2(0, -9.8f));
+        foreach (var gameobject in GameObjects)
         foreach (var item in gameobject.components)
             if (item.Type == "Rigidbody")
             {
@@ -69,7 +87,7 @@ internal class Scene
                 bodyDef.BodyType = rb.BodyType;
                 //bodyDef.Position = rb.Parent.transform.position;
 
-                var body = physicsWorld.CreateBody(bodyDef);
+                var body = _physicsWorld.CreateBody(bodyDef);
                 body.IsFixedRotation = rb.FixedRotation;
 
                 rb.RuntimeBody = body;
@@ -89,14 +107,14 @@ internal class Scene
             }
     }
 
-    public void GameUpdate(double dt)
+    public void GameUpdate(FrameEventArgs args)
     {
         var velocityItterations = 6;
         var positionItterations = 2;
 
-        physicsWorld.Step((float)dt, velocityItterations, positionItterations);
+        _physicsWorld.Step((float)args.Time, velocityItterations, positionItterations);
 
-        foreach (var obj in Gameobjects) obj.GameUpdate(dt);
+        foreach (var obj in GameObjects) obj.GameUpdate(args.Time);
     }
 
     private void StopPlay()
@@ -114,9 +132,11 @@ internal class Scene
         Renderer.Init();
         
         ScenePath = scenePath;
-        LoadDataFromDisk();
         
-        foreach (var go in Gameobjects)
+        //Try to load scene if non existent this returns a new list 
+        GameObjects = SaveLoad.LoadScene(ScenePath);
+        
+        foreach (var go in GameObjects)
         {
             go.Init(Renderer);
         }
@@ -124,29 +144,18 @@ internal class Scene
         Start();
     }
 
-    private void LoadDataFromDisk()
-    {
-        if (File.Exists(ScenePath))
-        {
-            Log.Succes("found: " + ScenePath + " On Disk");
-            Gameobjects = SaveLoad.LoadScene(ScenePath);
-        }
-    }
-
     /// <summary>
     /// Runs at scene start | NOT GAME PLAY!
     /// </summary>
-    /// <param name="dt"></param>
-
     public virtual void Start()
     {
-        foreach (var go in Gameobjects)
+        foreach (var go in GameObjects)
         {
             go.Start();
         }
 
         //Set childs to parents based on UID
-        foreach (var go in Gameobjects)
+        foreach (var go in GameObjects)
         {
             if (go.PARENT_UID == -1) return;
             go.SetParent(go.PARENT_UID);
@@ -160,29 +169,16 @@ internal class Scene
         }
     }
     
-    public virtual void EditorUpdate(double dt)
+    public virtual void EditorUpdate(FrameEventArgs e)
     {
-        if (TestInput.KeyDown(Keys.LeftControl))
-            if (TestInput.KeyPress(Keys.S))
-            {
-                if (IsPlaying) return;
-                SaveLoad.SaveScene(this);
-            }
-
-        if (Engine.Get().IsKeyPressed(Keys.F))
-        {
-            Gameobject go = (Gameobject)Engine.Get().CurrentSelectedAsset;
-            if (go != null)
-            {
-                go.Transform.Copy(EditorCamera.Parent.Transform);
-            }
-        }
+        Console.WriteLine(ScenePath);
         
-        foreach (var obj in Gameobjects) obj.EditorUpdate(dt);
-        if (IsPlaying) GameUpdate(dt);
+        foreach (var obj in GameObjects) obj.EditorUpdate(e.Time);
+        
+        if(Engine.Get().IsKeyPressed(Keys.B))
+            Engine.Get().SwitchScene("new");
     }
-
-    public virtual void Render()
+    public virtual void Render(FrameEventArgs e)
     {
         Renderer.Render(EditorCamera, CurrentMainGameCamera);
     }
@@ -196,13 +192,13 @@ internal class Scene
             CurrentMainGameCamera.AdjustProjection(1920, 1080);
         }
 
-        Gameobjects.Add(go);
+        GameObjects.Add(go);
         go.Init(Renderer);
         go.Start();
         Engine.Get().CurrentSelectedAsset = go;
     }
 
-    public virtual void OnClose()
+    public virtual void Close()
     {
         if (EngineSettings.SaveOnClose)
             SaveLoad.SaveScene(this);
@@ -248,7 +244,7 @@ internal class Scene
 
     public Gameobject FindObjectByUID(int uid)
     {
-        foreach (var go in Gameobjects)
+        foreach (var go in GameObjects)
         {
             if (go.UID == uid)
             {

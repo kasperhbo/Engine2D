@@ -1,12 +1,11 @@
 ﻿using Engine2D.SavingLoading;
 using ImGuiNET;
-using KDBEngine.UI;
 
 namespace Engine2D.UI;
 
-internal class EngineSettingsWindow : UIElemenet
+internal class EngineSettingsWindow : UiElemenet
 {
-    private UIElemenet _uiElemenetImplementation;
+    private UiElemenet _uiElemenetImplementation;
     private bool showRestartBar;
 
     internal EngineSettingsWindow()
