@@ -1,5 +1,9 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using System.Numerics;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
+using Vector2 = OpenTK.Mathematics.Vector2;
+using Vector3 = OpenTK.Mathematics.Vector3;
+using Vector4 = OpenTK.Mathematics.Vector4;
 
 namespace KDBEngine.Shaders;
 
@@ -383,5 +387,17 @@ public class Shader
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, v);
         GL.Uniform1(varLocation, values.Length, values);
+    }
+
+    public void uploadMat4f(string varName, Matrix4x4 v)
+    {
+        Matrix4 val = new Matrix4(
+            new Vector4(v.M11, v.M12, v.M13, v.M14),
+            new Vector4(v.M21, v.M22, v.M23, v.M24),
+            new Vector4(v.M31, v.M32, v.M33, v.M34),
+            new Vector4(v.M41, v.M42, v.M43, v.M44)
+        );
+        
+        uploadMat4f(varName, val);
     }
 }

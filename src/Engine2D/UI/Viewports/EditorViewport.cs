@@ -53,7 +53,7 @@ public class EditorViewport : ViewportWindow
         if (_cameraToRender != null)
         {
             if (_cameraToRender.ProjectionSize.X != _windowSize.X || _cameraToRender.ProjectionSize.Y != _windowSize.Y)
-                _cameraToRender.adjustProjection((_windowSize.X, _windowSize.Y));
+                _cameraToRender.AdjustProjection(_windowSize.X, _windowSize.Y);
         }
         
 
@@ -124,17 +124,16 @@ public class EditorViewport : ViewportWindow
             ImGuizmo.Enable(true);
             ImGuizmo.SetOrthographic(true);
             ImGuizmo.SetDrawlist();
-
             
             pos = ImGui.GetCursorStartPos();
             
             ImGuizmo.SetRect(origin.X, origin.Y, sz.X, sz.Y);
             
-            OpenTK.Mathematics.Matrix4 view = _cameraToRender.getViewMatrix();
-            OpenTK.Mathematics.Matrix4 projection = _cameraToRender.getProjectionMatrix();
+            Matrix4x4 view = _cameraToRender.GetViewMatrix();
+            Matrix4x4 projection = _cameraToRender.GetProjectionMatrix();
             Matrix4x4 translation = go.Transform.GetTranslation();
             
-            ImGuizmo.Manipulate(ref view.Row0.X, ref projection.Row0.X, 
+            ImGuizmo.Manipulate(ref view.M11, ref projection.M11, 
                 _currentOperation, _currentMode, ref translation.M11);
             
             if(recieveInput)
@@ -163,7 +162,7 @@ public class EditorViewport : ViewportWindow
                     Matrix4x4.Decompose(translation, out outScale, out outQuaternion, out outPos);
 
                     EulerDegrees deg = new EulerDegrees(outQuaternion);
-
+                    
                     if(_currentOperation == OPERATION.TRANSLATE)
                         go.Transform.Position = new(outPos.X, outPos.Y);
                     if(_currentOperation == OPERATION.ROTATE)

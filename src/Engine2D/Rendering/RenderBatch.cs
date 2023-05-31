@@ -124,8 +124,8 @@ internal class RenderBatch : IComparable<RenderBatch>
 
     public void Render(TestCamera camera, Texture lightmapTexture)
     {
-        var projectionMatrix = camera.getProjectionMatrix();
-        var viewMatrix = camera.getViewMatrix();
+        var projectionMatrix = camera.GetProjectionMatrix();
+        var viewMatrix = camera.GetViewMatrix();
 
         // For now, we will rebuffer all data every frame
         var rebufferData = false;

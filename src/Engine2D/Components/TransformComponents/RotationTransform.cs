@@ -3,15 +3,20 @@ using Box2DSharp.Common;
 using Engine2D.UI;
 using ImGuiNET;
 using ImTool;
+using OpenTK.Graphics.ES20;
 
 namespace Engine2D.Components.TransformComponents;
 
 public class RotationTransform
 {
-    public System.Numerics.Quaternion Quaternion;
-    public EulerDegrees EulerDegrees;
-    public EulerRadians EulerRadians;
+    private Vector3 _front = -Vector3.UnitZ;
+    private Vector3 _up = Vector3.UnitY;
+    private Vector3 _right = Vector3.UnitX;
 
+    public Quaternion Quaternion;//{get;  set;}
+    public EulerDegrees EulerDegrees;//{get;  set;}
+    public EulerRadians EulerRadians;//{get;  set;}
+    
     public RotationTransform()
     {
         Quaternion = System.Numerics.Quaternion.Identity;
@@ -31,13 +36,12 @@ public class RotationTransform
     public void SetRotation(EulerRadians radians)
     {
         EulerRadians = radians;
-
         EulerDegrees = EulerRadians.ToDegrees();
         Quaternion = EulerRadians.ToQuaternion();
         MaxCheck();
     }
     
-    public void SetRotation(EulerDegrees degrees)
+    public virtual void SetRotation(EulerDegrees degrees)
     {
         EulerDegrees = degrees;
 
@@ -49,16 +53,29 @@ public class RotationTransform
 
     private void MaxCheck()
     {
-        if (this.EulerDegrees.Yaw > 180)
-        {
-            this.EulerDegrees.Yaw = -180;
-            SetRotation(this.EulerDegrees);
-        }
-        if (this.EulerDegrees.Yaw < -180)
-        {
-            this.EulerDegrees.Yaw = 180;
-            SetRotation(this.EulerDegrees);
-        }
+        // if (this.EulerDegrees.Yaw > 180)
+        // {
+        //     this.EulerDegrees.Yaw = -180;
+        //     SetRotation(this.EulerDegrees);
+        // }
+        // if (this.EulerDegrees.Yaw < -180)
+        // {
+        //     this.EulerDegrees.Yaw = 180;
+        //     SetRotation(this.EulerDegrees);
+        // }
+        //
+        // if (this.EulerDegrees.Pitch > 180)
+        // {
+        //     this.EulerDegrees.Pitch = -180;
+        //     SetRotation(this.EulerDegrees);
+        // }
+        // if (this.EulerDegrees.Pitch < -180)
+        // {
+        //     this.EulerDegrees.Pitch = 180;
+        //     SetRotation(this.EulerDegrees);
+        // }
+
+        // MathUtils.UpdateVectors(EulerRadians, out _front, out _right, out _up);
     }
 
     public void Copy(RotationTransform to)
@@ -133,6 +150,12 @@ public class RotationTransform
                 SetRotation(EulerDegrees);
             }
         }
+    }
+
+    public void SetRotationInvertPitch(EulerDegrees rotationEulerDegrees)
+    {
+        rotationEulerDegrees.Pitch = -rotationEulerDegrees.Yaw;
+        SetRotation(rotationEulerDegrees);
     }
 }
 

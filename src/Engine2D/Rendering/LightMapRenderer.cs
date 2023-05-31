@@ -112,8 +112,8 @@ public class LightMapRenderer
 
     private void UploadUniforms(Renderer renderer, TestCamera camera)
     {
-        _shader.uploadMat4f("uProjection", camera.getProjectionMatrix());
-        _shader.uploadVec2f("uCameraOffset", camera.getPosition());
+        _shader.uploadMat4f("uProjection", camera.GetProjectionMatrix());
+        _shader.uploadVec2f("uCameraOffset", camera.Parent.Transform.Position);
 
         var lightsToRenderer = renderer.GetPointLightsToRender();
 

@@ -1,232 +1,86 @@
 ﻿using System.Numerics;
-using System.Text.Json.Serialization;
 using Engine2D.Components;
-using Engine2D.Flags;
-using Engine2D.GameObjects;
-using Engine2D.UI;
-using ImGuiNET;
-using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 using Engine2D.Components.TransformComponents;
-using Vector2 = OpenTK.Mathematics.Vector2;
-using Vector3 = OpenTK.Mathematics.Vector3;
+using System.Numerics;
+using Engine2D.GameObjects;
+using Engine2D.Logging;
+using KDBEngine.Core;
+using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
 
 namespace Engine2D.Testing;
 
 public class TestCamera : Component
 {
-    public Vector2 ProjectionSize => projectionSize;
-    public double Zoom  => zoom;
+    public TestCamera(Vector2 projectionSize)
+    {
+        _projectionSize = projectionSize;
+    }
     
-    private Vector2 projectionSize = new();
-    // The inverse projection matrix
-    private Matrix4 projectionMatrix;
-    private Matrix4 inverseProjectionMatrix;
+    private float _zoom = 1;
     
-    private Matrix4 viewMatrix;
-    private Matrix4 inverseViewMatrix;
+    public Vector2 ProjectionSize => _projectionSize;
+    public float Zoom  => _zoom;
+    public KDBColor ClearColor { get; set; } = new();
+
+    private Vector2 _projectionSize;
+
+    private Vector3 _front = -Vector3.UnitZ;
+    private Vector3 _up = Vector3.UnitY;
+    private Vector3 _right = Vector3.UnitX;
+
+    public Matrix4x4 GetViewMatrix()
+    {
+        return Matrix4x4.CreateLookAt(new System.Numerics.Vector3(
+                Parent.Transform.Position.X, Parent.Transform.Position.Y, 20.0f), // Is the 20.0f something i want to scroll to zoom in and out?
+            _front + new System.Numerics.Vector3(
+                Parent.Transform.Position.X, Parent.Transform.Position.Y, 0.0f),
+            _up
+        );
+    }
     
-    // private Vector2 Position;
-    [JsonIgnore][ShowUI (show = false)]public Transform Transform = new();
-    public KDBColor ClearColor = new KDBColor();
-    private float zoom = 1.0f;
-
-
-    public TestCamera(Vector2 projectionSize){
-        Transform.Position = new System.Numerics.Vector2(0, 0);
-        this.projectionSize = new(projectionSize.X, projectionSize.Y);
-        init();
-    }
-
-    public TestCamera(System.Numerics.Vector2 Position, Vector2 projectionSize)
+    
+    
+    public Matrix4x4 GetProjectionMatrix()
     {
-        Transform.Position = Position;
-        this.projectionSize = projectionSize;
-        init();
-    }
-
-    private void init()
-    {
-        init(Transform.Position, projectionSize);
-    }
-
-    private void init(System.Numerics.Vector2 Position, Vector2 projectionSize)
-    {
-        Console.WriteLine(projectionSize);
-        this.projectionSize = projectionSize;
-        this.Transform.Position = Position;
-        projectionMatrix = new Matrix4();
-        inverseProjectionMatrix = new Matrix4();
-        viewMatrix = new Matrix4();
-        inverseViewMatrix = new Matrix4();
-        adjustProjection(this.projectionSize);
-    }
-
-    public void adjustProjection()
-    {
-        adjustProjection(this.projectionSize);
-    }
-
-    public void adjustProjection(Vector2 projectionSize)
-    {
-        this.projectionSize = projectionSize;
-        projectionMatrix = Matrix4.Identity;
-
-        // Somehow this defines how many tiles are visible on the screen (40 * 21).
-        //projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0, 32.0f * 21.0f, 0, 100);
-        projectionMatrix = Matrix4.CreateOrthographicOffCenter(
-            -(projectionSize.X * zoom)/2,
-            (projectionSize.X * zoom)/2,
-            -(projectionSize.Y * zoom)/2,
-            (projectionSize.Y * zoom)/2,
+        Matrix4x4 projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(
+            -(_projectionSize.X * _zoom)/2,
+            (_projectionSize.X * _zoom)/2,
+            -(_projectionSize.Y * _zoom)/2,
+            (_projectionSize.Y * _zoom)/2,
             0,
             100
-        );      
-        
-        inverseProjectionMatrix = Matrix4.Invert(projectionMatrix);
-    }
+        );
 
-    public Matrix4 getProjectionMatrix()
-    {
         return projectionMatrix;
     }
-
-    public Matrix4 getViewMatrix()
-    {
-        var cameraFront = new Vector3(0.0f, 0.0f, -1.0f);
-        var cameraUp = new Vector3(0.0f, 1.0f, 0.0f);
-
-        viewMatrix = Matrix4.Identity;
-        viewMatrix = Matrix4.LookAt(
-            new Vector3(Transform.Position.X, Transform.Position.Y, 20.0f), // Is the 20.0f something i want to scroll to zoom in and out?
-            cameraFront + (Transform.Position.X, Transform.Position.Y, 0.0f),
-            cameraUp
-        );
-        inverseViewMatrix = Matrix4.Invert(viewMatrix);
-        return viewMatrix;
-    }
-
-    
-    
-    
-    public Matrix4 getInverseProjection()
-    {
-        return inverseProjectionMatrix;
-    }
-
-    public Matrix4 getInverseViewMatrix()
-    {
-        return inverseViewMatrix;
-    }
-
-    public Vector2 getProjectionSize()
-    {
-        return projectionSize;
-    }
-
-    public System.Numerics.Vector2 getPosition()
-    {
-        if (Parent != null)
-        {
-            Transform = Parent.Transform;
-        };
-        return Transform.Position;
-    }
-    
-    
-    public void setZoom(float zoom)
-    {
-        this.zoom = zoom;
-        adjustProjection(this.projectionSize);
-    }
-    
-    public void addZoom(float value)
-    {
-        setZoom(zoom + value);
-    }
-
-    public override void ImGuiFields()
-    {
-        if (OpenTKUIHelper.DrawProperty("Clear Color: ", ref ClearColor))
-        {
-            GL.ClearColor(ClearColor.R, ClearColor.G, ClearColor.B, ClearColor.A);
-        };
-        
-        if(OpenTKUIHelper.DrawProperty("zoom", ref zoom))
-        {
-            adjustProjection();
-        }
-        
-        if(OpenTKUIHelper.DrawProperty("Projection Size", ref projectionSize))
-        {
-            adjustProjection();
-        }
-    }
-
-    public override float GetFieldSize()
-    {
-        return 120;
-    }
-
-
-    public void CameraSettingsGUI()
-    {
-        ImGui.Begin("Camera Settings");
-        OpenTKUIHelper.DrawComponentWindow("camera_transform", "Camera Transform", () =>
-        {
-            var tempPos =
-                new System.Numerics.Vector2(Transform.Position.X, Transform.Position.Y);
-            
-            OpenTKUIHelper.DrawProperty("Position: ", ref tempPos);
-            
-            Transform.Position = new System.Numerics.Vector2(tempPos.X, tempPos.Y);
-
-            float zTemp = zoom;
-
-            if (OpenTKUIHelper.DrawProperty("Zoom", ref zTemp))
-            {
-                setZoom(zTemp);
-            };
-            
-            
-        });
-        ImGui.End();
-    }
-    
-    #region Numerics Overloads  
-    
-    public Matrix4x4 GetProjectionMatrixNumerics()
-    {
-        Matrix4x4 projection = Matrix4x4.CreateOrthographicOffCenter(
-            -(projectionSize.X * zoom)/2,
-            (projectionSize.X * zoom)/2,
-            -(projectionSize.Y * zoom)/2,
-            (projectionSize.Y * zoom)/2,
-            0,
-            100
-        );
-        return projection;
-    }
-    
-    public Matrix4x4 GetViewMatrixNumerics()
-    {
-        var cameraFront = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
-        var cameraUp = new System.Numerics.Vector3(0.0f, 1.0f, 0.0f);
-
-        Matrix4x4 view = Matrix4x4.Identity;
-        view = Matrix4x4.CreateLookAt(new System.Numerics.Vector3(Transform.Position.X, Transform.Position.Y, 20.0f), // Is the 20.0f something i want to scroll to zoom in and out?
-            cameraFront + new System.Numerics.Vector3(Transform.Position.X, Transform.Position.Y, 0.0f),
-            cameraUp
-        );
-        
-        return view;
-    }
-    
-    #endregion
-
 
     public override string GetItemType()
     {
         return "Camera";
+    }
+
+    public override void EditorUpdate(double dt)
+    {
+        base.EditorUpdate(dt);
+
+        Log.Message("Updating Vectors Camera");
+        var rot = Parent.Transform.Rotation;
+        MathUtils.UpdateVectors(rot.Quaternion, _front: out _front, _right: out _right, _up: out _up);
+        //
+        // if (rot.EulerDegrees.Yaw <= 90)
+        // {
+        //     _up = ;
+        // }
+    }
+
+
+
+    public void AdjustProjection(float X, float Y)
+    {
+        _projectionSize.X = X;
+        _projectionSize.Y = Y;
     }
 }

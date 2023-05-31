@@ -124,7 +124,7 @@ public class Renderer
         float GRID_WIDTH =32f;
         float GRID_HEIGHT =32f;
         
-        Vector2 cameraPos = camera.getPosition();
+        Vector2 cameraPos = camera.Parent.Transform.Position;
         Vector2 projectionSize = new(camera.ProjectionSize.X, camera.ProjectionSize.Y);
         
         // float firstY = ((int)Math.Floor((cameraPos.Y)/ GRID_HEIGHT)) * GRID_HEIGHT;

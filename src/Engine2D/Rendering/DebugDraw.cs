@@ -88,8 +88,8 @@ public class DebugDraw
         GL.BufferData(BufferTarget.ArrayBuffer, vertexArray.Length * sizeof(float), vertexArray, BufferUsageHint.DynamicDraw);
         
         shader.use();
-        shader.uploadMat4f("uProjection", cam.getProjectionMatrix());
-        shader.uploadMat4f("uView", cam.getViewMatrix());
+        shader.uploadMat4f("uProjection", cam.GetProjectionMatrix());
+        shader.uploadMat4f("uView", cam.GetViewMatrix());
 
         // Bind the vao
         GL.BindVertexArray(vaoID);

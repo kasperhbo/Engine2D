@@ -25,7 +25,7 @@ public class Gameobject : Asset
     public System.Numerics.Vector2 localPosition = new();
     [JsonIgnore] public List<Gameobject> Childs = new List<Gameobject>();
     [JsonIgnore] private Gameobject _parent = null;
-    [JsonIgnore] public Transform Transform { get; private set; }
+    [JsonIgnore] public Transform Transform { get; set; }
     
     public Gameobject()
     {

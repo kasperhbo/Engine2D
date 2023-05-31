@@ -130,9 +130,8 @@ internal class TestInput
 
         var viewProjection = new Matrix4();
 
-        viewProjection = Matrix4.Mult(camera.getInverseViewMatrix(), camera.getInverseProjection());
-        var t = MathUtils.Multiply(viewProjection, tmp);
-        world = new Vector2(t.X, t.Y);
+        //TODO: REWORK THIS
+        world = new Vector2(0,0);
     }
 
     public static void setViewportPos(Vector2 gameViewportPos)

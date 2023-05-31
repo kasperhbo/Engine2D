@@ -113,11 +113,6 @@ internal class Scene
         Renderer = new Renderer();
         Renderer.Init();
         
-        if(Settings.s_IsEngine)
-        {
-            EditorCamera = new TestCamera(new OpenTK.Mathematics.Vector2(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y));
-        }
-        
         ScenePath = scenePath;
         LoadDataFromDisk();
         
@@ -156,6 +151,13 @@ internal class Scene
             if (go.PARENT_UID == -1) return;
             go.SetParent(go.PARENT_UID);
         }
+        
+        if(Settings.s_IsEngine)
+        {
+            CameraGO editorCameraGO = new CameraGO();
+
+            EditorCamera = editorCameraGO.GetComponent<TestCamera>();
+        }
     }
     
     public virtual void EditorUpdate(double dt)
@@ -172,7 +174,7 @@ internal class Scene
             Gameobject go = (Gameobject)Engine.Get().CurrentSelectedAsset;
             if (go != null)
             {
-                go.Transform.Copy(EditorCamera.Transform);
+                go.Transform.Copy(EditorCamera.Parent.Transform);
             }
         }
         
@@ -191,7 +193,7 @@ internal class Scene
         {
             Log.Succes("New Main Camera");
             CurrentMainGameCamera = go.GetComponent<TestCamera>();
-            CurrentMainGameCamera.adjustProjection((1920, 1080));
+            CurrentMainGameCamera.AdjustProjection(1920, 1080);
         }
 
         Gameobjects.Add(go);
@@ -208,7 +210,7 @@ internal class Scene
 
     public void OnGui()
     {
-        EditorCamera?.CameraSettingsGUI();
+        // EditorCamera?.CameraSettingsGUI();
         
         ImGui.Begin("Scene Settings");
         ImGui.Begin("t");
@@ -233,8 +235,8 @@ internal class Scene
 
     internal virtual void OnMouseWheel(MouseWheelEventArgs mouseWheelEventArgs)
     {
-        EditorCamera?.addZoom(mouseWheelEventArgs.OffsetY/10);
-        EditorCamera?.adjustProjection();
+        // EditorCamera?.addZoom(mouseWheelEventArgs.OffsetY/10);
+        // EditorCamera?.adjustProjection();
     }
 
     internal virtual void OnTextInput(TextInputEventArgs inputEventArgs)
