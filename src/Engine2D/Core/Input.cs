@@ -41,7 +41,7 @@
 
 //        currentX = (currentX / GameViewportSize.X) *2- 1.0f;           
 //        currentY = -((currentY / GameViewportSize.Y) *2- 1.0f);
-//        Console.WriteLine(GameViewportSize.Y);
+//        
 
 //        Vector4 tmp = new Vector4(currentX, currentY, 0.0f, 1.0f);
 

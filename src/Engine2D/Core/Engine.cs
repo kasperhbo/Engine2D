@@ -27,7 +27,7 @@ namespace Engine2D.Core
         private ImGuiController _imGuiController;
 
         private EditorViewport _editorViewport;
-        private ViewportWindow _gameViewport;
+        private GameViewport _gameViewport;
 
         #region setup
 
@@ -76,6 +76,10 @@ namespace Engine2D.Core
 
             SwitchScene(ProjectSettings.FullProjectPath + "\\kasper1.kdbscene");
 
+            if (Settings.s_IsEngine)
+            {
+                LoadViewports();
+            }
         }
 
         private void AssignDefaultEvents()
@@ -103,13 +107,15 @@ namespace Engine2D.Core
             base.MouseWheel += _imGuiController.MouseWheel;
             base.TextInput += _imGuiController.PressChar;
             base.Resize += _imGuiController.WindowResized;
-            
-            _editorViewport = new("Editor VP");
-            _gameViewport = new("Game VP");
-
             CreateUIWindows();
         }
 
+        private void LoadViewports()
+        {
+            _editorViewport = new EditorViewport();
+            _gameViewport = new GameViewport();
+        }
+        
         #endregion
 
         public void SwitchScene(string newSceneName)
@@ -158,14 +164,10 @@ namespace Engine2D.Core
             CurrentScene?.OnGui();
 
             TestCamera? cam = CurrentScene?.EditorCamera;
-            TestFrameBuffer? frameBuffer = CurrentScene?.Renderer.EditorGameBuffer;
+            
+            _editorViewport.OnGui(cam, "Editor");
 
-            _editorViewport.OnGui(frameBuffer, cam);
-
-            cam = CurrentScene?.CurrentMainGameCamera;
-            frameBuffer = CurrentScene?.Renderer.GameBuffer;
-
-            _gameViewport.OnGui(frameBuffer, cam);
+            // _gameViewport.OnGui(frameBuffer, cam);
         }
 
         private new void OnResize(ResizeEventArgs e)

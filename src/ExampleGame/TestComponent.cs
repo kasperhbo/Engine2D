@@ -31,7 +31,7 @@ namespace ExampleGame
         // public override void Init(Gameobject parent)
         // {
         //     base.Init(parent);
-        //     Console.WriteLine("init");
+        //     
         //
         //     Utils.GetFilePath("TestComponent.cs");
         // }

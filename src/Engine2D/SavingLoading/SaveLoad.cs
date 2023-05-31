@@ -16,7 +16,6 @@ internal static class SaveLoad
         var saveFile = saveLocation + "EngineSettings.dat";
 
         var ok = Utils.LoadWithSoapStaticClass(typeof(EngineSettings), saveFile);
-        Console.WriteLine("Loading engine: " + ok);
         //DeserializeStaticClass(File.ReadAllText(saveFile), typeof(EngineSettings));           
     }
 

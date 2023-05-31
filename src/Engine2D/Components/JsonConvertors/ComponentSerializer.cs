@@ -72,15 +72,7 @@ public class ComponentSerializer : JsonConverter
         actions.Invoke();
 
         if (obj != null) return obj;
-
-        //return (object)info.ReturnParameter;
-
-        //return (object)actions.Invoke();
-
-        //Component instance = (Component)Activator.CreateInstance(ComponentRegistry.Get(jo["Type"].Value<string>()));
-
-        //return JsonConvert.DeserializeObject<>(jo.ToString(), _specifiedSubclassConversion);
-
+        
         switch (jo["Type"].Value<string>())
         {
             case "Component":

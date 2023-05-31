@@ -36,7 +36,7 @@ public static class Utils
         foreach (var file in dir.GetFiles())
         {
             var targetFilePath = Path.Combine(destinationDir, file.Name);
-            Console.WriteLine(targetFilePath);
+            
             file.CopyTo(targetFilePath);
         }
 

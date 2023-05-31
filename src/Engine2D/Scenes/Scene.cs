@@ -169,16 +169,14 @@ public class Scene
         }
     }
     
-    public virtual void EditorUpdate(FrameEventArgs e)
+    public virtual void EditorUpdate(FrameEventArgs args)
     {
-        Console.WriteLine(ScenePath);
-        
-        foreach (var obj in GameObjects) obj.EditorUpdate(e.Time);
+        foreach (var obj in GameObjects) obj.EditorUpdate(args.Time);
         
         if(Engine.Get().IsKeyPressed(Keys.B))
             Engine.Get().SwitchScene("new");
     }
-    public virtual void Render(FrameEventArgs e)
+    public virtual void Render(FrameEventArgs args)
     {
         Renderer.Render(EditorCamera, CurrentMainGameCamera);
     }
@@ -187,7 +185,6 @@ public class Scene
     {
         if (go.GetComponent<TestCamera>() != null)
         {
-            Log.Succes("New Main Camera");
             CurrentMainGameCamera = go.GetComponent<TestCamera>();
             CurrentMainGameCamera.AdjustProjection(1920, 1080);
         }

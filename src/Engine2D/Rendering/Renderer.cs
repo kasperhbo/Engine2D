@@ -16,8 +16,8 @@ public class Renderer
 {
     public Texture LightmapTexture;
     
-    public TestFrameBuffer? GameBuffer;
-    public TestFrameBuffer? EditorGameBuffer;
+    public TestFrameBuffer? GameBuffer{get; private set;}
+    public TestFrameBuffer? EditorGameBuffer{get; set;}
 
     private static readonly List<RenderBatch> _renderBatches = new();
     private static readonly Dictionary<SpriteRenderer, RenderBatch> _spriteBatchDict = new();
@@ -54,7 +54,7 @@ public class Renderer
         
         
         //Create frame buffers
-        EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
+        // EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
 
         _debugDraw = new DebugDraw();
@@ -69,6 +69,7 @@ public class Renderer
             GL.ClearColor(1,1,1,1);
             LightmapTexture = _lightMapRenderer.Render(this, editorCamera);
         }
+        
         //Render the scene
         {
             EditorGameBuffer.Bind();
@@ -124,22 +125,25 @@ public class Renderer
     {
         float toAdd = camera.Size;
         
-        if (toAdd >= 20) toAdd = 20;
+        if (toAdd >= 50) toAdd = 20;
+        toAdd = 500;
         
         float yStart = (int)camera.Parent.Transform.Position.Y + (-20 - toAdd);
         float yEnd = (int)camera.Parent.Transform.Position.Y + (20 + toAdd);
         
         float xStart = (int)camera.Parent.Transform.Position.X + (-20 - toAdd);
         float xEnd = (int)camera.Parent.Transform.Position.X + (20 + toAdd);
+
+        int ySize = 30;
         
         for (int y = (int)camera.Parent.Transform.Position.Y + (int)(-20- toAdd); y <= (int)camera.Parent.Transform.Position.Y +
-             (int)(20+ toAdd); y++)
+             (int)(20+ toAdd); y+=ySize)
         {
             _debugDraw.AddLine2D(new(xStart, y), new(xEnd, y), new KDBColor(1,0,0,1),
                 camera);
         }
         for (int x = (int)camera.Parent.Transform.Position.X + (int)(-20- toAdd); 
-             x <= (int)camera.Parent.Transform.Position.X  + (int)(20+ toAdd); x++)
+             x <= (int)camera.Parent.Transform.Position.X  + (int)(20+ toAdd); x+=ySize)
         {
             _debugDraw.AddLine2D(new(x, yStart), new(x, yEnd), new KDBColor(1,0,0,1),
                 camera);
@@ -160,7 +164,7 @@ public class Renderer
     {
         _lightMapRenderer.Resize();
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
-        EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
+        // EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
     internal void AddPointLight(PointLightComponent lightComponent)

@@ -1,16 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Engine2D.Components;
 using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
 using ImGuiNET;
 using ImTool;
-using Engine2D.Core;
 using OpenTK.Mathematics;
-using SixLabors.ImageSharp.Processing.Processors.Transforms;
 using Vector2 = System.Numerics.Vector2;
-using Vector3 = System.Numerics.Vector3;
-using Vector4 = OpenTK.Mathematics.Vector4;
 
 namespace Engine2D.UI;
 
@@ -278,24 +273,21 @@ internal static class OpenTKUIHelper
         if (label) 
             ImGui.PopStyleVar(1);
 
-        if (num != 0)
-        {
-            var mouse = Engine.Get().MousePosition;
-            var size = Engine.Get().Size;
-            
-            if (mouse.X > size.X)
-            {
-                Engine.Get().MousePosition = new(0, mouse.Y);
-                
-                valTemp += size.X;
-            }
-            if (mouse.X <= 0.0001f)
-            {
-                Engine.Get().MousePosition = new(size.X, mouse.Y);
-                valTemp -= size.X;
-            }
-        }
-
+        // var mouse = Engine.Get().MousePosition;
+        // var size = Engine.Get().Size;
+        //     
+        // if (mouse.X > size.X)
+        // {
+        //     Engine.Get().MousePosition = new(0, mouse.Y);
+        //         
+        //     valTemp += size.X;
+        // }
+        // if (mouse.X <= 0.0001f)
+        // {
+        //     Engine.Get().MousePosition = new(size.X, mouse.Y);
+        //     valTemp -= size.X;
+        // }
+        //
         val = valTemp;
         return num != 0;
     }

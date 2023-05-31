@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using Engine2D.Logging;
+using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
 
 namespace Engine2D.Rendering;
@@ -103,9 +104,9 @@ public class Texture
             PixelType.UnsignedByte, nullPtr);
     }
 
-    public object Height { get; }
-    public object Filepath { get; }
-    public object Width { get; }
+    public int Height { get; }
+    public string Filepath { get; }
+    public int Width { get; }
 
     public void bind()
     {
@@ -121,7 +122,7 @@ public class Texture
     {
         if (obj == null)
         {
-            Console.WriteLine("Obj is null");
+            Log.Warning("Obj is null");
             return false;
         }
 
