@@ -80,6 +80,9 @@ namespace KDBEngine.Core
             
             if (Settings.s_IsEngine)
                 LoadEditor();
+            
+            Get().WindowState = WindowSettings.FullScreen;
+            
         }
 
         private void LoadEditor()
@@ -169,7 +172,6 @@ namespace KDBEngine.Core
 
                     
                     _imGuiController.Render();
-                    
                 }
             }
 
@@ -275,6 +277,7 @@ public static class WindowSettings
 
     public static float s_UpdateFrequency = 60;
     public static float s_RenderFrequency = 60;
+    public static WindowState FullScreen = WindowState.Maximized;
 }
 
 public static class Settings

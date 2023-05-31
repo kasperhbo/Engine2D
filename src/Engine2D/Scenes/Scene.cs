@@ -40,8 +40,7 @@ internal class Scene
 
             _isPlaying = value;
         }
-    }
-    
+    }    
     private World physicsWorld;
 
     #endregion
@@ -56,6 +55,7 @@ internal class Scene
     
     private void StartPlay()
     {
+        throw new NotImplementedException();
         SaveLoad.SaveScene(this);
 
         physicsWorld = new World(new Vector2(0, -9.8f));
@@ -186,7 +186,7 @@ internal class Scene
     {
         Renderer.Render(EditorCamera, CurrentMainGameCamera);
     }
-
+    
     public void AddGameObjectToScene(Gameobject go)
     {
         if (go.GetComponent<TestCamera>() != null)

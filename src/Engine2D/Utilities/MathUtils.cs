@@ -117,8 +117,6 @@ public static class MathUtils
 
         return dest;
     }
-
-
     #endregion
     
     #region Rotations
@@ -143,21 +141,27 @@ public static class MathUtils
         vector3.Z = (float) (((double) num8 - (double) num11) * (double) point.X + ((double) num9 + (double) num10) * (double) point.Y + (1.0 - ((double) num4 + (double) num5)) * (double) point.Z);
         return vector3;
     }
-
-
-    public static void UpdateVectors(System.Numerics.Quaternion QRot, out System.Numerics.Vector3 _front, out System.Numerics.Vector3 _right, out System.Numerics.Vector3 _up)  
+    
+    public static System.Numerics.Vector3 GetFront(System.Numerics.Quaternion quaternion)
     {
-        System.Numerics.Vector3 forwardVector = new System.Numerics.Vector3(0.0f, 0.0f, 1f);
-        System.Numerics.Vector3 upVector = new System.Numerics.Vector3(0.0f, 1f, 0.0f);
-        System.Numerics.Vector3 rightVector = new System.Numerics.Vector3(1f, 0.0f, 0.0f);
-        _front = Multiply(QRot, forwardVector);
-        _up = Multiply(QRot, upVector);
-        _right = Multiply(QRot, rightVector);
-
-
+        System.Numerics.Vector3 front = new System.Numerics.Vector3(0.0f, 0.0f, 1f);
+        return Multiply(quaternion, front);
     }
 
+    public static System.Numerics.Vector3 GetUp( System.Numerics.Quaternion quaternion)
+    {
+        System.Numerics.Vector3 upVector = new System.Numerics.Vector3(0.0f, 1f, 0.0f);
+        return Multiply(quaternion, upVector);
+    }
+
+    public static System.Numerics.Vector3 GetRight(System.Numerics.Quaternion quaternion)
+    {
+        System.Numerics.Vector3 rightVector = new System.Numerics.Vector3(1f, 0.0f, 0.0f);
+        return Multiply(quaternion, rightVector);
+    }
 
     #endregion
+
+    
 }
 

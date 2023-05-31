@@ -5,6 +5,7 @@ using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
 using ImGuiNET;
 using ImTool;
+using KDBEngine.Core;
 using OpenTK.Mathematics;
 using SixLabors.ImageSharp.Processing.Processors.Transforms;
 using Vector2 = System.Numerics.Vector2;
@@ -101,7 +102,7 @@ internal static class OpenTKUIHelper
     public static bool DrawProperty(string name, ref float property, bool label = true)
     {
         PrepareProperty(name);
-        return KDBFloat(ref property, name, 4278190257, label);
+        return KDBFloat(ref property, name, color: 4278190257, label: label);
     }
     
     public static bool DrawProperty(string name, ref int property)
@@ -140,7 +141,6 @@ internal static class OpenTKUIHelper
         return changed;
     }
 
-    
     public static bool DrawProperty(string name, ref System.Numerics.Vector3 property)
     {
         PrepareProperty(name);
@@ -274,23 +274,26 @@ internal static class OpenTKUIHelper
         else
             num = ImGui.DragFloat("###" + name, ref val, dragSpeed) ? 1 : 0;
         
-        ImGui.PopStyleVar(1);
+        if (label) 
+            ImGui.PopStyleVar(1);
+
+        if (num != 0)
+        {
+            var mouse = Engine.Get().MousePosition;
+            var size = Engine.Get().Size;
+            
+            if (mouse.X > size.X)
+            {
+                Engine.Get().MousePosition = new(0, mouse.Y);
+            }
+            if (mouse.X <= 0.0001f)
+            {
+                Engine.Get().MousePosition = new(size.Y, mouse.Y);
+            }
+        }
         return num != 0;
     }
     
-    public static bool KDBFloat(ref float val, string name, uint color = 4278190257, bool label = true)
-    {
-        if(label)
-            CreateFloatLabel(name, color);
-        
-        int num = ImGui.DragFloat("###" + name, ref val) ? 1 : 0;
-
-        if (label)
-            ImGui.PopStyleVar(1);
-        
-        return num != 0;
-    }
-
     private static void CreateFloatLabel(string name, uint color)
     {
         ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 0.0f);

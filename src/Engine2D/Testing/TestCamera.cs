@@ -4,35 +4,49 @@ using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.UI;
 using ImGuiNET;
+using OpenTK.Graphics.ES30;
 
 namespace Engine2D.Testing;
 
 public class TestCamera : Component
 {
+    private float _size = 10f;
+    private float _near = 0.3f;
+    private float _far = 100f;
+    private Vector2 _projectionSize = new();
+
+    private Matrix4x4 _projectionMatrix = Matrix4x4.Identity;
+    
+    public Vector2 ProjectionSize => _projectionSize;
+    public float Size  => _size;
+    public KDBColor ClearColor { get; set; } = new();
+    
     public TestCamera(Vector2 projectionSize)
     {
         _projectionSize = projectionSize;
     }
     
-    private float _size = 10f;
-    private float _near = 0.3f;
-    private float _far = 100f;
-    public Vector2 ProjectionSize => _projectionSize;
-    public float Size  => _size;
-    public KDBColor ClearColor { get; set; } = new();
-
-    private Vector2 _projectionSize;
-    private Vector3 _front = -Vector3.UnitZ;
-    private Vector3 _up = Vector3.UnitY;
-    private Vector3 _right = Vector3.UnitX;
+    public TestCamera(Vector2 projectionSize, float size)
+    {
+        _projectionSize = projectionSize;
+        _size = size;
+    }
+    
+    public TestCamera(Vector2 projectionSize, float size, float near, float far)
+    {
+        _projectionSize = projectionSize;
+        _size = size;
+        _near = near;
+        _far = far;
+    }
 
     public Matrix4x4 GetViewMatrix()
     {
         return Matrix4x4.CreateLookAt(new System.Numerics.Vector3(
                 Parent.Transform.Position.X, Parent.Transform.Position.Y, 20.0f), // Is the 20.0f something i want to scroll to zoom in and out?
-            _front + new System.Numerics.Vector3(
+            Parent.Transform.Rotation.Front + new System.Numerics.Vector3(
                 Parent.Transform.Position.X, Parent.Transform.Position.Y, 0.0f),
-            _up
+            Parent.Transform.Rotation.Up
         );
     }
     
@@ -43,7 +57,7 @@ public class TestCamera : Component
         float width = _size * aspect;
         float height = _size;
         
-        Matrix4x4 projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(
+        _projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(
             -width * 0.5f,
             width * 0.5f,
             -height * 0.5f,
@@ -52,7 +66,7 @@ public class TestCamera : Component
             _far
         );
 
-        return projectionMatrix;
+        return _projectionMatrix;
     }
 
     public override string GetItemType()
@@ -78,11 +92,17 @@ public class TestCamera : Component
 
     public override void ImGuiFields()
     {
-        OpenTKUIHelper.DrawProperty("Size: ", ref _size, label: false);
+        if (OpenTKUIHelper.DrawProperty("Size: ", ref _size, label: false))
+        {
+        }
+        
         ImGui.Separator();
         ImGui.Text("Clipping Planes");
-        
-        OpenTKUIHelper.DrawProperty("Near: ", ref _near, label: false);
-        OpenTKUIHelper.DrawProperty("Far: ", ref _far, label: false);
+
+        if (OpenTKUIHelper.DrawProperty("Near: ", ref _near, label: false) ||
+            OpenTKUIHelper.DrawProperty("Far: ", ref _far, label: false))
+        {
+        }
+            
     }
 }

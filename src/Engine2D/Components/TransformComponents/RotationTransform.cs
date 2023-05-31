@@ -9,9 +9,9 @@ namespace Engine2D.Components.TransformComponents;
 
 public class RotationTransform
 {
-    private Vector3 _front = -Vector3.UnitZ;
-    private Vector3 _up = Vector3.UnitY;
-    private Vector3 _right = Vector3.UnitX;
+    public Vector3 Front => MathUtils.GetFront(Quaternion);
+    public Vector3 Up => MathUtils.GetUp(Quaternion);
+    public Vector3 Right => MathUtils.GetRight(Quaternion);
 
     public Quaternion Quaternion;//{get;  set;}
     public EulerDegrees EulerDegrees;//{get;  set;}
@@ -19,6 +19,7 @@ public class RotationTransform
     
     public RotationTransform()
     {
+        
         Quaternion = System.Numerics.Quaternion.Identity;
         EulerDegrees = new(0,0,0);
         EulerRadians = new(0,0,0);
@@ -46,7 +47,7 @@ public class RotationTransform
         EulerRadians = EulerDegrees.ToRadians();
         Quaternion = EulerRadians.ToQuaternion();                                               
     }
-
+    
     public void Copy(RotationTransform to)
     {
         to.SetRotation(this.Quaternion);
@@ -68,7 +69,6 @@ public class RotationTransform
 
 
     private static ROTATION_OPTIONS _currentSelectedRotationOption = ROTATION_OPTIONS.DEGREES;
-    
     private static ROTATION_OPTIONS[] _rotationOptionArray = new[]
     {
         ROTATION_OPTIONS.QUATERNION,
