@@ -1,4 +1,5 @@
-﻿using Dear_ImGui_Sample;
+﻿using System.Numerics;
+using Dear_ImGui_Sample;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Rendering;
@@ -13,6 +14,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using ImGuiController = Dear_ImGui_Sample.ImGuiController;
 
 namespace KDBEngine.Core
@@ -23,60 +25,52 @@ namespace KDBEngine.Core
     {
         private static Engine _instance;
         
-        //UI
         private readonly Dictionary<string, UIElemenet> _guiWindows = new();
         private readonly EngineSettingsWindow engineSettingsWindow = new();
+        
         private ImGuiController _imGuiController;
+        
         private EditorViewport _editorViewport;
         private ViewportWindow _gameViewport;
-        // private TestViewportWindow viewportWindow;
         
         internal Scene? _currentScene;
         public Asset? CurrentSelectedAsset;
         
 #region setup
+
         public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
             gameWindowSettings, nativeWindowSettings)
         {
         }
 
-        public static Engine Get()
+        public unsafe static Engine Get()
         {
             if (_instance == null)
             {
-                var gameWindowSettings = GameWindowSettings.Default;
-                gameWindowSettings.UpdateFrequency = WindowSettings.s_UpdateFrequency;
-                gameWindowSettings.RenderFrequency = WindowSettings.s_RenderFrequency;
+                var gameWindowSettings             = GameWindowSettings.Default;
+                gameWindowSettings.UpdateFrequency = WindowSettings.UpdateFrequency;
+                gameWindowSettings.RenderFrequency = WindowSettings.RenderFrequency;
 
-                var ntwSettings = NativeWindowSettings.Default;
-                ntwSettings.Title = WindowSettings.s_Title;
-                ntwSettings.Size = WindowSettings.s_Size;
-
-                var window = new Engine(gameWindowSettings, ntwSettings);
-                _instance = window;
+                var ntwSettings   = NativeWindowSettings.Default;
+                ntwSettings.Title = WindowSettings.Title;
+                ntwSettings.Size  = WindowSettings.Size;
+                
+                _instance = new Engine(gameWindowSettings, ntwSettings);
+                
+                GLFW.SetWindowAttrib(_instance.WindowPtr, WindowAttribute.Decorated, WindowSettings.Decorated);
             }
 
             return _instance;
         }
+        
 
-        public static Engine Get(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
-        {
-            if (_instance == null)
-            {
-                var window = new Engine(gameWindowSettings, nativeWindowSettings);
-                _instance = window;
-            }
-
-            return _instance;
-        }
-#endregion
         protected override void OnLoad()
         {
             base.OnLoad();
             
             SaveLoad.LoadEngineSettings();
             _currentScene = new Scene();
-            _currentScene.Init(ProjectSettings.s_FullProjectPath + "\\kasper1.kdbscene");
+            _currentScene.Init(ProjectSettings.FullProjectPath + "\\kasper1.kdbscene");
             
             if (Settings.s_IsEngine)
                 LoadEditor();
@@ -93,11 +87,12 @@ namespace KDBEngine.Core
             CreateUIWindows();
         }
 
+#endregion
+
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
 
-            //Input.Update(KeyboardState, MouseState);
             TestInput.mousePosCallback(MouseState, KeyboardState, _currentScene?.EditorCamera);
 
             _currentScene?.EditorUpdate(args.Time);
@@ -120,61 +115,48 @@ namespace KDBEngine.Core
                 //ImGui
                 {
                     _imGuiController.Update(this, (float)e.Time);
-
-                    #region Menu
-
-                    TopMenu top = new TopMenu();
-                    //top.OnGui();
-
-
-                    ImGui.BeginMainMenuBar();
-                    if (ImGui.BeginMenu("Menu"))
-                    {
-                        if (ImGui.MenuItem("Save Scene")) SaveLoad.SaveScene(_currentScene);
-                        if (ImGui.MenuItem("Load Scene"))
-                        {
-                        }
-
-                        ImGui.EndMenu();
-                    }
-
-                    if (ImGui.BeginMenu("Help"))
-                    {
-                        if (ImGui.MenuItem("Website")) Utils.TryOpenUrl("https://github.com/kasperhbo/Engine2D");
-                        ImGui.EndMenu();
-                    }
-
-                    if (ImGui.BeginMenu("Settings"))
-                    {
-                        if (ImGui.MenuItem("Engine Settings")) engineSettingsWindow.SetVisibility(true);
-                        ImGui.EndMenu();
-                    }
-                    ImGui.EndMainMenuBar();
                     
-
-                    #endregion
+                    ImGui.SetNextWindowPos(new(0, 0));
+                    ImGui.SetNextWindowSize(new(ClientSize.X, ClientSize.Y));
                     
-                    ImGui.DockSpaceOverViewport();
+                    ImGui.Begin("MainWindow",  
+                        ImGuiWindowFlags.NoDecoration 
+                        | ImGuiWindowFlags.NoNavFocus 
+                        | ImGuiWindowFlags.NoFocusOnAppearing 
+                        | ImGuiWindowFlags.NoBringToFrontOnFocus 
+                        | ImGuiWindowFlags.NoDocking
+                        | ImGuiWindowFlags.NoScrollbar
+                        | ImGuiWindowFlags.NoCollapse
+                        | ImGuiWindowFlags.NoScrollWithMouse
+                        | ImGuiWindowFlags.NoMove);
+
+                    ImGui.SetCursorPos(new(0,0));
+                    
+                    ImGui.BeginTabBar("MainTab");
+                    ImGui.SetCursorPos(new(0,0));
+                    ImGui.DockSpace(99999, new(ClientSize.X, ClientSize.Y),  ImGuiDockNodeFlags.DockSpace);
+                    ImGui.EndTabBar();
+
                     ImGui.ShowDemoWindow();
-
                     foreach (var window in _guiWindows.Values) window.Render();
 
-      
                     _currentScene?.OnGui();
-                    TestCamera cam = _currentScene.EditorCamera;
-                    TestFrameBuffer frameBuffer = _currentScene.Renderer.EditorGameBuffer;
+                    
+                    TestCamera? cam = _currentScene?.EditorCamera;
+                    TestFrameBuffer? frameBuffer = _currentScene?.Renderer.EditorGameBuffer;
+                    
                     _editorViewport.OnGui(frameBuffer, cam);
                     
-                    cam = _currentScene.CurrentMainGameCamera;
-                    frameBuffer = _currentScene.Renderer.GameBuffer;
+                    cam = _currentScene?.CurrentMainGameCamera;
+                    frameBuffer = _currentScene?.Renderer.GameBuffer;
+                    
                     _gameViewport.OnGui(frameBuffer, cam);
 
+                    ImGui.End();
 
-                    
                     _imGuiController.Render();
                 }
             }
-
             SwapBuffers();
         }
 
@@ -231,6 +213,8 @@ namespace KDBEngine.Core
 
         private void CreateUIWindows()
         {
+            TopMenu top = new TopMenu();
+            
             var assetBrowser = new AssetBrowser();
             _guiWindows.Add(assetBrowser.Title, assetBrowser);
 
@@ -243,11 +227,6 @@ namespace KDBEngine.Core
             _guiWindows.Add(engineSettingsWindow.Title, engineSettingsWindow);
         }
 
-        internal float TargetAspectRatio()
-        {
-            var res = (float)ClientSize.X /(float)ClientSize.Y;
-            return res;
-        }
         
         private int _frameCounter;
         private void SetTitle(float time)
@@ -265,19 +244,19 @@ namespace KDBEngine.Core
 
 public static class EngineSettings
 {
-    public static float GlobalScale = 1;
-    public static float DefaultFontSize = 18;
-    public static bool SaveOnClose = false;
+    public static float GlobalScale      = 1;
+    public static float DefaultFontSize  = 18;
+    public static bool SaveOnClose      = false;
 }
 
 public static class WindowSettings
 {
-    public static string s_Title = "Kasper Engine";
-    public static Vector2i s_Size = new(1920, 1080);
-
-    public static float s_UpdateFrequency = 60;
-    public static float s_RenderFrequency = 60;
-    public static WindowState FullScreen = WindowState.Maximized;
+    public static string Title            { get; }= "Kasper Engine";
+    public static Vector2i Size           { get; }= new(1920, 1080);
+    public static float UpdateFrequency   { get; }= 60;
+    public static float RenderFrequency   { get; }= 60;
+    public static WindowState FullScreen  { get; }= WindowState.Maximized ;
+    public static bool Decorated          { get; } = true;
 }
 
 public static class Settings
@@ -287,7 +266,7 @@ public static class Settings
 
 public static class ProjectSettings
 {
-    public static string s_ProjectName = "ExampleGame";
-    public static string s_ProjectLocation = "D:\\dev\\EngineDev\\Engine2D\\src\\";
-    public static string s_FullProjectPath = s_ProjectLocation + s_ProjectName;
+    public static string ProjectName     {get;} = "ExampleGame";
+    public static string ProjectLocation {get;} = "D:\\dev\\EngineDev\\Engine2D\\src\\";
+    public static string FullProjectPath {get;} = ProjectLocation + ProjectName;
 }

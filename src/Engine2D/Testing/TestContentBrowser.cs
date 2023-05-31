@@ -15,7 +15,7 @@ public class TestContentBrowser
     private readonly TextureData texDataDir;
     private readonly TextureData texDataFile;
     private readonly TextureData texDataScene;
-    private Directory currentDirectory = new("", ProjectSettings.s_FullProjectPath, "");
+    private Directory currentDirectory = new("", ProjectSettings.FullProjectPath, "");
     private List<ContentBrowserItemInfo> previous = new();
     private int sceneTexture;
 

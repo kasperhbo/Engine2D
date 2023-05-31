@@ -197,12 +197,12 @@ public static class Utils
 
     public static string[] GetAllScriptFiles()
     {
-        return Directory.GetFiles(ProjectSettings.s_FullProjectPath, "*.cs", SearchOption.AllDirectories);
+        return Directory.GetFiles(ProjectSettings.FullProjectPath, "*.cs", SearchOption.AllDirectories);
     }
 
     public static string GetFilePath(string file)
     {
-        var res = Directory.GetFiles(ProjectSettings.s_FullProjectPath, file, SearchOption.AllDirectories);
+        var res = Directory.GetFiles(ProjectSettings.FullProjectPath, file, SearchOption.AllDirectories);
         if (res.Length == 0)
         {
             Log.Error(file + " not found");

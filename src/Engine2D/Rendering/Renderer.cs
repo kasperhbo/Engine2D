@@ -16,8 +16,8 @@ public class Renderer
 {
     public Texture LightmapTexture;
     
-    public TestFrameBuffer GameBuffer;
-    public TestFrameBuffer EditorGameBuffer;
+    public TestFrameBuffer? GameBuffer;
+    public TestFrameBuffer? EditorGameBuffer;
 
     private static readonly List<RenderBatch> _renderBatches = new();
     private static readonly Dictionary<SpriteRenderer, RenderBatch> _spriteBatchDict = new();

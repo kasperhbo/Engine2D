@@ -30,7 +30,7 @@ public class ViewportWindow
         _title = title;
     }
 
-    public void OnGui(TestFrameBuffer testFrameBuffer, TestCamera camera)
+    public void OnGui(TestFrameBuffer? testFrameBuffer, TestCamera? camera)
     {
         _testFrameBuffer = testFrameBuffer;
         _cameraToRender = camera;

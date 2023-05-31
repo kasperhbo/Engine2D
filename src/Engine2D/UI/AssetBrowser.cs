@@ -44,7 +44,7 @@ internal class AssetBrowser : UIElemenet
     internal AssetBrowser()
     {
         LoadIcons();
-        SwitchDirectory(ProjectSettings.s_FullProjectPath);
+        SwitchDirectory(ProjectSettings.FullProjectPath);
     }
 
     public static float ThumbnailSize { get; } = 128;
@@ -118,7 +118,7 @@ internal class AssetBrowser : UIElemenet
         return () =>
         {
             var currentlyDragging = false;
-            if (_currentDirectory.FullName != ProjectSettings.s_FullProjectPath)
+            if (_currentDirectory.FullName != ProjectSettings.FullProjectPath)
             {
                 ImGui.BeginMenuBar();
                 if (ImGui.MenuItem("Back")) SwitchDirectory(_currentDirectory.Parent.FullName);

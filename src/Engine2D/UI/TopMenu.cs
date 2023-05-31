@@ -2,12 +2,13 @@
 using KDBEngine.Core;
 using System.Numerics;
 using ImTool;
+using KDBEngine.UI;
 using WindowState = OpenTK.Windowing.Common.WindowState;
 
 
 namespace Engine2D.UI;
 
-public class TopMenu
+public class TopMenu : UIElemenet
 {
     private int windowBtnWidth = 30;
     private int borderThickness = 0;
@@ -28,9 +29,7 @@ public class TopMenu
         windowBounds = new Rect();
         
         titlebarBounds = new Rect();
-        
-        
-        
+
         windowBorderColor = new uint[4];
 
         titlebarColor = new uint();
@@ -82,9 +81,9 @@ public class TopMenu
         // MainWindowStyleOverrides(true);
         ImGui.Begin("MainWindow",
         ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoNavFocus
-                                                                 | ImGuiWindowFlags.NoFocusOnAppearing 
-                                                                 | ImGuiWindowFlags.NoBringToFrontOnFocus 
-                                                                          | ImGuiWindowFlags.NoDocking);
+            | ImGuiWindowFlags.NoFocusOnAppearing 
+            | ImGuiWindowFlags.NoBringToFrontOnFocus 
+            | ImGuiWindowFlags.NoDocking);
         // MainWindowStyleOverrides(false);
 
         if (borderThickness > 0)
@@ -102,19 +101,9 @@ public class TopMenu
 
 
         int tabHeight = 4 + (int)ImGui.CalcTextSize("ABCD").Y;
-        // int yStart = TitlebarDisabled ? 0 : titlebarHeight - tabHeight;
-        //     
-        // ImGui.SetCursorPos(new Vector2(borderThickness + 1, yStart));
-        // ImGui.BeginTabBar("Tabs");
-        //     
-        // ImGui.GetWindowDrawList().AddRectFilled(contentBounds.Position, contentBounds.MaxPosition, ImGui.GetColorU32(ImGuiCol.WindowBg));
-
-        // SubmitTabs();
 
         ImGui.EndTabBar();
         ImGui.End();
-
-        
     }
 
 
@@ -137,17 +126,8 @@ public class TopMenu
         ImGui.SetCursorPos(WindowButtonPosition(nBtn));
         if (ImGui.Button(Engine.Get().WindowState == WindowState.Maximized ? "\uf2d2" : "\uf2d0", windowButtonSize))
         {
-            // if (WindowState == WindowState.Maximized)
-            // {
-            //     WindowState = config.PreviousWindowState;
-            // }
-            // else
-            // {
-            //     WindowState = WindowState.Maximized;
-            // }
         }
         nBtn++;
-    
     }
     
     private Vector2 WindowButtonPosition(int n)
@@ -160,5 +140,20 @@ public class TopMenu
         {
             return new Vector2((Engine.Get().Size.X - (windowBtnWidth + 1) * n) - 1, borderThickness + 1);
         }        
+    }
+
+    protected override string SetWindowTitle()
+    {
+        return "";
+    }
+
+    protected override ImGuiWindowFlags SetWindowFlags()
+    {
+        return ImGuiWindowFlags.None;
+    }
+
+    protected override Action SetWindowContent()
+    {
+        return () => { };
     }
 }
