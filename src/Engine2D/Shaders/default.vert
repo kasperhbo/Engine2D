@@ -14,7 +14,7 @@ out vec2 fTexCoords;
 out float fTexId;
 
 void main() {
-    vec4 pos = uProjection * uView * vec4(aPos, 0.0, 1.0);
+    vec4 pos = uProjection *uView* vec4(aPos, 0.0, 1.0);
     fPos = pos.xy;
     fColor = aColor;
     fTexCoords = aTexCoords;

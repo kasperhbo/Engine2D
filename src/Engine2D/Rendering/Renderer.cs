@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Engine2D.Cameras;
 using Engine2D.Components;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
@@ -16,8 +17,8 @@ public class Renderer
 {
     public Texture LightmapTexture;
     
-    public TestFrameBuffer? GameBuffer;
-    public TestFrameBuffer? EditorGameBuffer;
+    public TestFrameBuffer? GameBuffer{get; private set;}
+    public TestFrameBuffer? EditorGameBuffer{get; set;}
 
     private static readonly List<RenderBatch> _renderBatches = new();
     private static readonly Dictionary<SpriteRenderer, RenderBatch> _spriteBatchDict = new();
@@ -54,14 +55,14 @@ public class Renderer
         
         
         //Create frame buffers
-        EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
+        // EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
 
         _debugDraw = new DebugDraw();
         _debugDraw.Init();
     }
 
-    internal void Render(TestCamera editorCamera, TestCamera gameCamera)
+    internal void Render(Camera editorCamera, Camera gameCamera)
     {
         _drawCalls = 0;
         //Render Lights
@@ -69,6 +70,7 @@ public class Renderer
             GL.ClearColor(1,1,1,1);
             LightmapTexture = _lightMapRenderer.Render(this, editorCamera);
         }
+        
         //Render the scene
         {
             EditorGameBuffer.Bind();
@@ -120,33 +122,36 @@ public class Renderer
     {
     }
 
-    private void AddGridLines(TestCamera camera)
+    private void AddGridLines(Camera camera)
     {
         float toAdd = camera.Size;
         
-        if (toAdd >= 20) toAdd = 20;
+        if (toAdd >= 50) toAdd = 20;
+        toAdd = 500;
         
         float yStart = (int)camera.Parent.Transform.Position.Y + (-20 - toAdd);
         float yEnd = (int)camera.Parent.Transform.Position.Y + (20 + toAdd);
         
         float xStart = (int)camera.Parent.Transform.Position.X + (-20 - toAdd);
         float xEnd = (int)camera.Parent.Transform.Position.X + (20 + toAdd);
+
+        int ySize = 1;
         
         for (int y = (int)camera.Parent.Transform.Position.Y + (int)(-20- toAdd); y <= (int)camera.Parent.Transform.Position.Y +
-             (int)(20+ toAdd); y++)
+             (int)(20+ toAdd); y+=ySize)
         {
             _debugDraw.AddLine2D(new(xStart, y), new(xEnd, y), new KDBColor(1,0,0,1),
                 camera);
         }
         for (int x = (int)camera.Parent.Transform.Position.X + (int)(-20- toAdd); 
-             x <= (int)camera.Parent.Transform.Position.X  + (int)(20+ toAdd); x++)
+             x <= (int)camera.Parent.Transform.Position.X  + (int)(20+ toAdd); x+=ySize)
         {
             _debugDraw.AddLine2D(new(x, yStart), new(x, yEnd), new KDBColor(1,0,0,1),
                 camera);
         }
     }
     
-    public Vector2 GetCoordinatesGrid(int index, TestCamera camera)
+    public Vector2 GetCoordinatesGrid(int index, Camera camera)
     {
         return new(index % camera.ProjectionSize.X, index /  camera.ProjectionSize.Y);
         //return new Tuple<int x, int y>(index % cols, index / cols);
@@ -160,7 +165,7 @@ public class Renderer
     {
         _lightMapRenderer.Resize();
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
-        EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
+        // EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
     internal void AddPointLight(PointLightComponent lightComponent)

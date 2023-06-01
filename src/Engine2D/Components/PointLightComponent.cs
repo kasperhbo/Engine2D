@@ -29,7 +29,7 @@ public class PointLightComponent : Component
 
     public override void EditorUpdate(double dt)
     {
-        //Console.WriteLine(this.texture?.TexID);
+        
         if (!LastTransform.Equals(Parent.Transform))Parent.Transform.Copy(this.LastTransform);
 
         if (!_lastColor.Equals(Color)) _lastColor = new KDBColor(Color);

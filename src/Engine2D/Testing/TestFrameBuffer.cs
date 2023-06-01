@@ -1,13 +1,15 @@
 ﻿using Engine2D.Rendering;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.Testing;
 
 public class TestFrameBuffer
 {
     private int fboId;
-
+    private Vector2i size;
+    
     public TestFrameBuffer(Vector2i size)
     {
         Init(size.X, size.Y);
@@ -24,6 +26,7 @@ public class TestFrameBuffer
 
     private void Init(int width, int height)
     {
+        size = new(width, height);
         // Generate framebuffer
         fboId = GL.GenFramebuffer();
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
@@ -66,5 +69,11 @@ public class TestFrameBuffer
     {
         GL.ActiveTexture(TextureUnit.Texture0 + unit);
         GL.BindTexture(TextureTarget.Texture2D, GetTextureID);
+    }
+
+    public TestFrameBuffer SetViewportSize(Vector2i viewportSize)
+    {
+        if (viewportSize.X == this.size.X) return null;
+        return new TestFrameBuffer(viewportSize);
     }
 }

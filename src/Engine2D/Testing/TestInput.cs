@@ -1,4 +1,5 @@
-﻿using Engine2D.Core;
+﻿using Engine2D.Cameras;
+using Engine2D.Core;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -49,7 +50,7 @@ internal class TestInput
         viewportSize = new Vector2(Engine.Get().ClientSize.X, Engine.Get().ClientSize.Y);
     }
 
-    public static void mousePosCallback(MouseState mouse, KeyboardState keyboard, TestCamera camera)
+    public static void mousePosCallback(MouseState mouse, KeyboardState keyboard, Camera camera)
     {
         //if (.mouseButtonDown > 0)
         //{
@@ -117,7 +118,7 @@ internal class TestInput
         return pos.Y;
     }
 
-    private static void calcOrtho(TestCamera camera)
+    private static void calcOrtho(Camera camera)
     {
         var currentX = getX() - viewportPos.X;
         var currentY = getY() - viewportPos.Y;
