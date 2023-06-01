@@ -24,15 +24,15 @@ public class EditorViewport : ViewportWindow
             Vector2 viewportSize = ImGui.GetContentRegionAvail();
             
             Vector2i vp = new OpenTK.Mathematics.Vector2i((int)viewportSize.X, (int)viewportSize.Y);
-
-            if (Engine.Get().CurrentScene.Renderer.EditorGameBuffer.Texture.Width !=  vp.ToVector2().X ||
-                Engine.Get().CurrentScene.Renderer.EditorGameBuffer.Texture.Height != vp.ToVector2().Y)
-            {
-                Engine.Get().CurrentScene.Renderer.EditorGameBuffer = new TestFrameBuffer(vp);
-            }
             
-            ImGui.Image(Engine.Get().CurrentScene.Renderer.EditorGameBuffer.GetTextureID, new(vp.X, vp.Y),
+            ImGui.Image(Engine.Get().CurrentScene.Renderer.EditorGameBuffer.TextureID, new(vp.X, vp.Y),
                 new(0, 1), new(1, 0));
+            
+            if (Engine.Get().CurrentScene.Renderer.EditorGameBuffer.Size.X !=  vp.ToVector2().X ||
+                Engine.Get().CurrentScene.Renderer.EditorGameBuffer.Size.Y != vp.ToVector2().Y)
+            {
+                cameraToRender.AdjustProjection(vp.X, vp.Y);
+            }
         }
         
         ImGui.End();

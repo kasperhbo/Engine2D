@@ -26,10 +26,11 @@ public class LightMapRenderer
     };
 
     private int _elementBufferObject;
+    
     private TestFrameBuffer _lightMap;
     private Shader _shader;
+    
     private int _vertexArrayObject;
-
     private int _vertexBufferObject;
 
     private bool _firstRun = true;
@@ -83,7 +84,7 @@ public class LightMapRenderer
         _shader.use();
     }
 
-    public Texture Render(Engine2D.Rendering.Renderer renderer, Camera camera)
+    public int Render(Renderer renderer, Camera camera)
     {
         if(_firstRun)Init();
         
@@ -102,7 +103,7 @@ public class LightMapRenderer
 
         _lightMap.UnBind();
 
-        return _lightMap.Texture;
+        return _lightMap.TextureID;
     }
 
     public void Resize()

@@ -80,30 +80,28 @@ public class Texture
         Width = width;
         Filepath = "Generated";
 
-        //    // Generate texture on GPU
-        //    TexID = GetHas;
-        //    GL.BindTexture(TextureTarget.Texture2D, TexID);
+        TexID = GenTexture(Width, Height, TextureMagFilter.Linear, TextureMinFilter.Linear);
+    }
 
-        //    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, 0);
-
-
-        // Generate handle
-        TexID = GL.GenTexture();
+    public static int GenTexture(int width, int height, TextureMagFilter magFilter, TextureMinFilter minFilter)
+    {
+        int id = GL.GenTexture();
 
         var nullPtr = IntPtr.Zero;
 
         // Bind the handle            
-        GL.BindTexture(TextureTarget.Texture2D, TexID);
-
+        GL.BindTexture(TextureTarget.Texture2D, id);
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
-            (int)TextureMinFilter.Linear);
+            (int)minFilter);
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
-            (int)TextureMagFilter.Linear);
+            (int)magFilter);
 
         GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgb,
             PixelType.UnsignedByte, nullPtr);
-    }
 
+        return id;
+    }
+    
     public int Height { get; }
     public string Filepath { get; }
     public int Width { get; }
@@ -133,9 +131,9 @@ public class Texture
                && oTex.Filepath.Equals(Filepath);
     }
 
-    public void Use(TextureUnit unit)
+    public static void Use(TextureUnit unit, int textureID)
     {
         GL.ActiveTexture(unit);
-        GL.BindTexture(TextureTarget.Texture2D, TexID);
+        GL.BindTexture(TextureTarget.Texture2D, textureID);
     }
 }

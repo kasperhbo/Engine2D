@@ -123,7 +123,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         LoadVertexProperties(index);
     }
 
-    public void Render(Camera camera, Texture lightmapTexture)
+    public void Render(Camera camera, int lightmapTexture)
     {
         var projectionMatrix = camera.GetProjectionMatrix();
         var viewMatrix = camera.GetViewMatrix();
@@ -148,7 +148,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         _shader.use();
         _shader.uploadMat4f("uProjection", projectionMatrix);
         _shader.uploadMat4f("uView", viewMatrix);
-        lightmapTexture.Use(TextureUnit.Texture0 + (int)ShaderDefaultSlots.LIGHTMAPTEXTURESLOT);
+        Texture.Use(TextureUnit.Texture0 + (int)ShaderDefaultSlots.LIGHTMAPTEXTURESLOT, lightmapTexture);
         _shader.uploadInt("uLightmap", (int)ShaderDefaultSlots.LIGHTMAPTEXTURESLOT);
 
         //TEXTURES

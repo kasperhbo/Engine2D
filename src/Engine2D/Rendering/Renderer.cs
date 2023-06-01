@@ -15,7 +15,7 @@ namespace Engine2D.Rendering;
 
 public class Renderer
 {
-    public Texture LightmapTexture;
+    public int LightmapTexture;
     
     public TestFrameBuffer? GameBuffer{get; private set;}
     public TestFrameBuffer? EditorGameBuffer{get; set;}
@@ -165,7 +165,7 @@ public class Renderer
     {
         _lightMapRenderer.Resize();
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
-        // EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
+        EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
     internal void AddPointLight(PointLightComponent lightComponent)
