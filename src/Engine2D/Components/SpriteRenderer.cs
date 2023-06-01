@@ -1,10 +1,11 @@
-﻿using System.Numerics;
-using Engine2D.Components;
+﻿using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.Rendering;
 using Newtonsoft.Json;
 using Engine2D.Components.TransformComponents;
+using OpenTK.Mathematics;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.GameObjects;
 
@@ -69,12 +70,11 @@ public class SpriteRenderer : Component
 
     [JsonIgnore] public bool AddToRendererAsSprite = true;
     public KDBColor Color = new();
+    public Sprite? Sprite = null;
 
     [ShowUI(show = false)] internal bool IsDirty = true;
 
-    [JsonIgnore] internal Texture texture;
-
-    internal Vector2[] TextureCoords =
+    private Vector2[] _defaultTextureCoords =
     {
         new(1, 1),
         new(1, 0),
@@ -82,18 +82,21 @@ public class SpriteRenderer : Component
         new(0, 1)
     };
 
-    public TextureData? textureData;
-
     public int ZIndex = 0;
 
+    public Vector2[] GetTextureCoords()
+    {
+        if (Sprite != null)
+        {
+            return Sprite.TextureCoords;
+        }
+
+        return _defaultTextureCoords;
+    }
+    
     public override void Init(Gameobject parent, Renderer? renderer)
     {
         base.Init(parent, renderer);
-       
-        if (textureData != null)
-        {
-            texture = ResourceManager.GetTexture(textureData);
-        }
         renderer.AddSpriteRenderer(this);
     }
 

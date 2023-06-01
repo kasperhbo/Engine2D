@@ -116,7 +116,7 @@ public class Texture
         GL.BindTexture(TextureTarget.Texture2D, 0);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj == null)
         {
@@ -124,7 +124,11 @@ public class Texture
             return false;
         }
 
-        if (!(obj is Texture)) return false;
+        if (!(obj is Texture))
+        {
+            Log.Warning("other object is not an texture");
+            return false;
+        }
 
         var oTex = (Texture)obj;
         return oTex.Width.Equals(Width) && oTex.Height.Equals(Height) && oTex.TexID.Equals(TexID)

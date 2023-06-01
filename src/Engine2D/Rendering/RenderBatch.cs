@@ -34,7 +34,7 @@ internal class RenderBatch : IComparable<RenderBatch>
 
     private readonly SpriteRenderer[] _sprites = new SpriteRenderer[c_maxBatchSize];
 
-    private readonly Texture[] _textures = new Texture[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
+    private readonly Texture?[] _textures = new Texture[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
     private readonly int[] _textureUnits = new int[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
     private readonly float[] _vertices = new float[c_maxBatchSize * c_vertexSize];
 
@@ -111,12 +111,12 @@ internal class RenderBatch : IComparable<RenderBatch>
         _sprites[index] = spr;
         _spriteCount++;
 
-        if (spr.texture != null)
-            if (!_textures.Contains(spr.texture))
+        if (spr.Sprite?.Texture != null)
+            if (!_textures.Contains(spr.Sprite.Texture))
                 for (var i = 0; i < _textures.Length; i++)
                     if (_textures[i] == null)
                     {
-                        _textures[i] = spr.texture;
+                        _textures[i] = spr.Sprite.Texture;
                         break;
                     }
 
@@ -194,11 +194,11 @@ internal class RenderBatch : IComparable<RenderBatch>
         Vector4 color = new(sprite.Color.R, sprite.Color.G, sprite.Color.B, sprite.Color.A);
 
         var texID = -1;
-        var texCoords = sprite.TextureCoords;
+        var texCoords = sprite.GetTextureCoords();
 
-        if (sprite.texture != null)
+        if (sprite.Sprite?.Texture != null)
             for (var i = 0; i < _textures.Length; i++)
-                if (_textures[i].Equals(sprite.texture))
+                if (_textures[i].Equals(sprite.Sprite.Texture))
                 {
                     texID = i + 1;
                     break;

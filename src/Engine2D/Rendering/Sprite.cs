@@ -6,20 +6,20 @@ namespace Engine2D.Rendering;
 
 public class Sprite : Asset
 {
-    public bool IsDirty = false;
-    [JsonIgnore] public Texture? Texture;
-
-    public Vector2 TextureCoords = new(1, 1);
-
-    public TextureData TextureData = new();
-
     public string Type = "Sprite";
-
-    public void Init(Vector2 textureCoords, TextureData textureData)
+    
+    public Vector2[] TextureCoords =
     {
-        TextureCoords = textureCoords;
-        TextureData = textureData;
-        Texture = ResourceManager.GetTexture(TextureData);
+        new(1, 1),
+        new(1, 0),
+        new(0, 0),
+        new(0, 1)
+    };
+
+    public Texture? Texture = null;
+    
+    public void Init()
+    {
     }
 
     public override void OnGui()
