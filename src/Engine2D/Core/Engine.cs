@@ -1,7 +1,5 @@
-﻿using Engine2D.Cameras;
-using Engine2D.SavingLoading;
+﻿using Engine2D.SavingLoading;
 using Engine2D.Scenes;
-using Engine2D.Testing;
 using Engine2D.UI;
 using Engine2D.UI.Viewports;
 using ImGuiNET;
@@ -163,12 +161,12 @@ namespace Engine2D.Core
             foreach (var window in _guiWindows.Values) window.Render();
 
             CurrentScene?.OnGui();
-
-            Camera? cam = CurrentScene?.EditorCamera;
             
-            _editorViewport.OnGui(cam, "Editor");
-
-            // _gameViewport.OnGui(frameBuffer, cam);
+            _editorViewport.Begin("Editor", CurrentScene?.EditorCamera,
+                CurrentScene?.Renderer?.EditorGameBuffer);
+            
+            _gameViewport.Begin("Game", CurrentScene.CurrentMainGameCamera,
+                CurrentScene.Renderer.GameBuffer);
         }
 
         private new void OnResize(ResizeEventArgs e)

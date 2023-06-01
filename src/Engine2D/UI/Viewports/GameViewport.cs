@@ -1,81 +1,42 @@
-﻿namespace Engine2D.UI;
+﻿using System.Numerics;
+using ImGuiNET;
 
-internal class GameViewport
+namespace Engine2D.UI.Viewports;
+
+internal class GameViewport : ViewportWindow
 {
     public static bool IsInViewport { get; } = false;
 
+    public override void BeforeImageRender()
+    {
+        
+    }
 
-    //internal unsafe void OnGui(int TextureID, Action actions)
-    //{
-    //    ImGui.Begin("TEMP MENU");
+    public override void AfterImageRender()
+    {
+        
+    }
 
-    //    if (ImGui.Button("PLAY"))
-    //    {
-    //        Engine.Get()._currentScene.IsPlaying = true;
-    //    }
-    //    if (ImGui.Button("STOP"))
-    //    {
-    //        Engine.Get()._currentScene.IsPlaying = false;
-    //    }
-    //    ImGui.DragFloat2("camera pos", ref GameRenderer.S_CurrentCamera.Position);
-    //    ImGui.End();
+    public override Vector2 GetVPSize()
+    {
+        var windowSize = ImGui.GetContentRegionAvail();
+        windowSize.X -= ImGui.GetScrollX();
+        windowSize.Y -= ImGui.GetScrollY();
+        float targetAspectRatio = 16/9;
+        
+        if(Camera != null)
+            targetAspectRatio = Camera.ProjectionSize.X / Camera.ProjectionSize.Y;
+        
+        var aspectWidth = windowSize.X;
+        var aspectHeight = aspectWidth / targetAspectRatio;
+        if (aspectHeight > windowSize.Y)
+        {
+            // We must switch to pillarbox mode
+            aspectHeight = windowSize.Y;
+            aspectWidth = aspectHeight * targetAspectRatio;
+        }
 
-    //    ImGui.Begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
-
-    //    OpenTK.Mathematics.Vector2 windowSize = getLargestSizeForViewport();
-    //    OpenTK.Mathematics.Vector2 windowPos = getCenteredPositionForViewport(new Vector2(1920,1080));
-
-    //    ImGui.SetCursorPos(new Vector2(windowPos.X, windowPos.Y));            
-    //    ImGui.Image((IntPtr)TextureID, new Vector2(windowSize.X, windowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
-
-    //    if (ImGui.BeginDragDropTarget())
-    //    {
-    //        if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
-    //        {
-    //            Engine.LoadScene(AssetBrowser.CurrentDraggingFileName);
-    //        }
-
-    //        ImGui.EndDragDropTarget();
-    //    }
-
-    //    Input.GameViewportPos = windowPos with { X = (windowPos.X), Y = windowPos.Y };
-    //    Input.GameViewportSize = windowPos with { X = (windowSize.X), Y = windowSize.Y };
-
-    //    ImGui.End();
-
-    //}
-
-    //private static OpenTK.Mathematics.Vector2 getLargestSizeForViewport()
-    //{
-    //    Vector2 windowSize = ImGui.GetContentRegionAvail();
-
-    //    windowSize.X -= ImGui.GetScrollX();
-    //    windowSize.Y -= ImGui.GetScrollY();
-
-    //    float aspectWidth = windowSize.X;
-    //    float aspectHeight = aspectWidth / Engine.Get().TargetAspectRatio;
-    //    if (aspectHeight > windowSize.Y)
-    //    {
-    //        // We must switch to pillarbox mode
-    //        aspectHeight = windowSize.Y;
-    //        aspectWidth = aspectHeight * Engine.Get().TargetAspectRatio;
-    //    }
-
-    //    return new OpenTK.Mathematics.Vector2(aspectWidth, aspectHeight);
-    //}
-
-    //private static OpenTK.Mathematics.Vector2 getCenteredPositionForViewport(Vector2 aspectSize)
-    //{
-    //    Vector2 windowSize = ImGui.GetContentRegionAvail();            
-    //    windowSize.X -= ImGui.GetScrollX();
-    //    windowSize.Y -= ImGui.GetScrollY();
-
-    //    float viewportX = (windowSize.X / 2.0f) - (aspectSize.X / 2.0f);
-    //    float viewportY = (windowSize.Y / 2.0f) - (aspectSize.Y / 2.0f);
-
-    //    return new OpenTK.Mathematics.Vector2(
-    //            viewportX + ImGui.GetCursorPosX(),
-    //            viewportY + ImGui.GetCursorPosY()
-    //            );
-    //}
+        return new Vector2(aspectWidth, aspectHeight);
+        
+    }
 }
