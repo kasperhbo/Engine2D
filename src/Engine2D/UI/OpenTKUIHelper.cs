@@ -109,10 +109,10 @@ internal static class OpenTKUIHelper
         return changed;
     }
     
-    public static bool DrawProperty(string name, ref System.Numerics.Vector2 property)
+    public static bool DrawProperty(string name, ref System.Numerics.Vector2 property, float dragSped = .1f)
     {
         PrepareProperty(name);
-        return Widgets.Vector2(ref property, name);
+        return Vector2(ref property, name, dragSpeed:dragSped);
     }
     
     public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector2 property)
@@ -304,6 +304,18 @@ internal static class OpenTKUIHelper
         windowDrawList.AddText(cursorScreenPos + new System.Numerics.Vector2(3f, 4f), uint.MaxValue, name);
         ImGui.SetCursorPosX(ImGui.GetCursorPos().X + vector2.X);
         ImGui.PushItemWidth(80f);
+    }
+    
+    
+    private static bool Vector2(ref System.Numerics.Vector2 vec, string name, float dragSpeed = 1)
+    {
+        ImGui.PushID(name);
+        int num1 = 0 | (KDBFloat(ref vec.X, "X", dragSpeed:dragSpeed) ? 1 : 0);
+        ImGui.SameLine();
+        int num2 = KDBFloat(ref vec.Y, "Y", 4278235392U, dragSpeed:dragSpeed) ? 1 : 0;
+        int num3 = num1 | num2;
+        ImGui.PopID();
+        return num3 != 0;
     }
     
     public static ImRect RectExpanded(ImRect rect, float x, float y)

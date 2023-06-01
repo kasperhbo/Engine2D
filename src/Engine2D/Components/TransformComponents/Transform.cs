@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Engine2D.UI;
+using ImGuiNET;
 
 namespace Engine2D.Components.TransformComponents;
 
@@ -16,6 +17,7 @@ public class Transform : Component
 
     public override void ImGuiFields()
     {
+        
         OpenTKUIHelper.DrawProperty("Position", ref Position);
         OpenTKUIHelper.DrawProperty("Size", ref Size);
 
