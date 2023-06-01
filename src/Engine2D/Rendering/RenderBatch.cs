@@ -178,12 +178,17 @@ internal class RenderBatch : IComparable<RenderBatch>
         _shader.detach();
     }
 
+    // 0.5f,   0.5f, 0.0f,    1.0f, 1.0f,   // top right
+    // 0.5f,  -0.5f, 0.0f,    1.0f, 0.0f,   // bottom right
+    // -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom left
+    // -0.5f,  0.5f, 0.0f,    0.0f, 1.0f    // top left 
+    
     private Vector4[] quadVertexPositions =
     {
-        new(-0.5f, -0.5f, 0.0f, 1.0f),
-        new(-0.5f,  0.5f, 0.0f, 1.0f),
-        new(0.5f,  0.5f, 0.0f, 1.0f ),
-        new(0.5f, -0.5f, 0.0f, 1.0f ),
+        new( 0.5f,  0.5f, 0.0f, 1.0f),
+        new( 0.5f, -0.5f, 0.0f, 1.0f),
+        new(-0.5f, -0.5f, 0.0f, 1.0f ),
+        new(-0.5f,  0.5f, 0.0f, 1.0f ),
     };
 
     private void LoadVertexProperties(int index)
@@ -204,8 +209,15 @@ internal class RenderBatch : IComparable<RenderBatch>
                     break;
                 }
 
-        
         Matrix4x4 translation = sprite.Parent.Transform.GetTranslation();
+        if (sprite.Sprite != null)
+        {
+            var width =  sprite.Sprite.Texture.Width /50;
+            var height = sprite.Sprite.Texture.Height/50;
+
+            translation = sprite.Parent.Transform.GetTranslation(width, height);
+        }
+        
 
         {
             Vector4 currentPos =
@@ -220,8 +232,8 @@ internal class RenderBatch : IComparable<RenderBatch>
             _vertices[offset + 5] = color.W;
 
             //Load tex coords
-            _vertices[offset + 6] = 0;
-            _vertices[offset + 7] = 0;
+            _vertices[offset + 6] = texCoords[0].X;
+            _vertices[offset + 7] = texCoords[0].Y;
 
             //Load tex id
             _vertices[offset + 8] = texID;
@@ -240,8 +252,8 @@ internal class RenderBatch : IComparable<RenderBatch>
             _vertices[offset + 5] = color.W;
 
             //Load tex coords
-            _vertices[offset + 6] = 1;
-            _vertices[offset + 7] = 0;
+            _vertices[offset + 6] = texCoords[1].X;
+            _vertices[offset + 7] = texCoords[1].Y;
 
             //Load tex id
             _vertices[offset + 8] = texID;
@@ -261,15 +273,16 @@ internal class RenderBatch : IComparable<RenderBatch>
             _vertices[offset + 5] = color.W;
 
             //Load tex coords
-            _vertices[offset + 6] = 1;
-            _vertices[offset + 7] = 1;
+            _vertices[offset + 6] = texCoords[2].X;
+            _vertices[offset + 7] = texCoords[2].Y;
 
             //Load tex id
             _vertices[offset + 8] = texID;
 
             offset += c_vertexSize;
         }
-
+            
+        
         {
             Vector4 currentPos = MathUtils.Multiply(translation, quadVertexPositions[3]);
             _vertices[offset + 0] = currentPos.X;
@@ -282,8 +295,8 @@ internal class RenderBatch : IComparable<RenderBatch>
             _vertices[offset + 5] = color.W;
 
             //Load tex coords
-            _vertices[offset + 6] = 0;
-            _vertices[offset + 7] = 1;
+            _vertices[offset + 6] = texCoords[3].X;
+            _vertices[offset + 7] = texCoords[3].Y;
 
             //Load tex id
             _vertices[offset + 8] = texID;
@@ -332,15 +345,5 @@ internal class RenderBatch : IComparable<RenderBatch>
 
                 _spriteCount--;
             }
-    }
-    
-    public static Vector4 Multiply(Matrix4 matrix, Vector4 vector)
-    {
-        return new Vector4(
-            matrix.Row0.X * vector.X + matrix.Row0.Y * vector.Y + matrix.Row0.Z * vector.Z + matrix.Row0.W* vector.W,
-            matrix.Row1.X * vector.X + matrix.Row1.Y * vector.Y + matrix.Row1.Z * vector.Z + matrix.Row1.W* vector.W,
-            matrix.Row2.X * vector.X + matrix.Row2.Y * vector.Y + matrix.Row2.Z * vector.Z + matrix.Row2.W* vector.W,
-            matrix.Row3.X * vector.X + matrix.Row3.Y * vector.Y + matrix.Row3.Z * vector.Z + matrix.Row3.W * vector.W
-        );
     }
 }

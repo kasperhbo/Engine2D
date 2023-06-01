@@ -383,6 +383,7 @@ internal static class OpenTKUIHelper
             ImGui.GetItemRectMin().X, ImGui.GetItemRectMin().Y,
             ImGui.GetItemRectMax().X, ImGui.GetItemRectMax().Y);
     }
+
 }
 
 internal class ImageTextIcon
@@ -395,22 +396,24 @@ internal class ImageTextIcon
     private GCHandle? _currentlyDraggedHandle;
     private bool _currentlyDragging;
     private IntPtr _textureActive;
-    private readonly FileType _type;
 
+    public readonly FileType FileType;
+    public readonly string Path;
+    
     public bool IsSelected = false;
 
     public ImageTextIcon(string label, IntPtr texture, IntPtr textureHovered, IntPtr textureActive, string path,
-        FileType type)
+        FileType fileType)
     {
         _label = label;
         _texture = texture;
         _textureHovered = textureHovered;
         _textureActive = textureActive;
-        _type = type;
+        FileType = fileType;
         Path = path;
     }
 
-    internal string Path { get; }
+    
 
     public unsafe void Draw(out bool doubleClick, out bool singleClick, out bool rightClick)
     {
@@ -435,8 +438,6 @@ internal class ImageTextIcon
         ImGui.PopStyleColor();
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
 
-        //float infoPanelHeight = std::max(displayAssetType ? 
-        //    thumbnailSize * 0.5f : textLineHeight, textLineHeight);
         float infoPanelHeight = 64;
 
         var topLeft = ImGui.GetCursorScreenPos();
@@ -469,7 +470,8 @@ internal class ImageTextIcon
             )
         );
 
-        if (_type == FileType.Scene)
+        if (FileType == FileType.Scene)
+        {
             if (ImGui.BeginDragDropSource())
             {
                 _currentlyDragging = true;
@@ -480,6 +482,21 @@ internal class ImageTextIcon
 
                 ImGui.EndDragDropSource();
             }
+        }
+        
+        if (FileType == FileType.Sprite)
+        {
+            if (ImGui.BeginDragDropSource())
+            {
+                _currentlyDragging = true;
+                _currentlyDraggedHandle ??= GCHandle.Alloc(Path);
+
+                ImGui.SetDragDropPayload("Sprite_Drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                    (uint)sizeof(IntPtr));
+
+                ImGui.EndDragDropSource();
+            }
+        }
 
         if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             if (ImGui.IsItemHovered())
@@ -489,7 +506,6 @@ internal class ImageTextIcon
                 singleClick = true;
 
 
-        //UI::RectExpanded(UI::GetItemRect(), -6.0f, -6.0f));
         ImGui.Text(_label);
         if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             if (ImGui.IsItemHovered())
@@ -518,21 +534,5 @@ internal class ImageTextIcon
         ImGui.PopStyleVar(); // ItemSpacing
 
         ImGui.EndChild();
-
-
-//        if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
-        //     if (ImGui.IsItemHovered())
-        //         doubleClick = true;
-        // if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
-        //     if (ImGui.IsItemHovered())
-        //         singleClick = true;
-        // if (ImGui.BeginPopupContextWindow("test"))
-        // {
-        //     if (ImGui.MenuItem("New Child"))
-        //     {
-        //         Console.WriteLine("c");
-        //     }
-        //     ImGui.EndPopup();
-        // }
     }
 }

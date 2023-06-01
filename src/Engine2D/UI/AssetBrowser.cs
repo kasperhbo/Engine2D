@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Engine2D.Core;
+using Engine2D.Rendering;
+using Engine2D.SavingLoading;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 
@@ -20,8 +22,6 @@ public enum FileType
 
 internal class AssetBrowser : UiElemenet
 {
-    private static GCHandle? _currentlyDraggedHandle;
-
     private DirectoryInfo _currentDirectory;
     private List<ImageTextIcon> _currentFiles = new();
 
@@ -38,6 +38,8 @@ internal class AssetBrowser : UiElemenet
     private TextureData texDataFile;
 
     private TextureData texDataScene;
+
+    private Dictionary<string, Sprite> _spritesIndDirectory = new Dictionary<string, Sprite>();
 
 
     internal AssetBrowser()
@@ -65,6 +67,8 @@ internal class AssetBrowser : UiElemenet
 
     private void SwitchDirectory(string newDir)
     {
+        _spritesIndDirectory = new Dictionary<string, Sprite>();
+        
         _currentFolders = new List<ImageTextIcon>();
         _currentFiles = new List<ImageTextIcon>();
         _currentDirectory = new DirectoryInfo(newDir);
@@ -92,6 +96,14 @@ internal class AssetBrowser : UiElemenet
             if (file.Extension == ".cs" || file.Extension == ".csproj")
                 icon = new ImageTextIcon(file.Name, fileTexture, fileTexture, fileTexture, file.FullName,
                     FileType.Script);
+            if (file.Extension == ".sprite")
+            {
+                icon = new ImageTextIcon(file.Name, sceneTexture, sceneTexture, sceneTexture, file.FullName,
+                    FileType.Sprite);
+                
+                _spritesIndDirectory.Add(file.FullName, SaveLoad.LoadSpriteFromJson(file.FullName));
+            }
+            
             if (file.Extension == ".kdbscene")
                 icon = new ImageTextIcon(file.Name, sceneTexture, sceneTexture, sceneTexture, file.FullName,
                     FileType.Scene);
@@ -155,7 +167,7 @@ internal class AssetBrowser : UiElemenet
                 if (file == currentSelected) file.IsSelected = true;
 
                 file.Draw(out var doublec, out var single, out var rightClick);
-
+                
                 if (doublec)
                     new Process
                     {
@@ -164,13 +176,48 @@ internal class AssetBrowser : UiElemenet
                             UseShellExecute = true
                         }
                     }.Start();
-                if (single) currentSelected = file;
+                
+                if (single)
+                {
+                    currentSelected = file;
+
+                    if (file.FileType == FileType.Sprite)
+                    {
+                        Sprite sprite = _spritesIndDirectory[file.Path];
+                        sprite.FullSavePath = file.Path;
+                        
+                        Engine.Get().CurrentSelectedAsset = sprite;
+                    }
+                };
 
                 ImGui.NextColumn();
             }
 
-
             ImGui.Columns(1);
+
+            if (ImGui.BeginPopupContextWindow("test"))
+            {
+                if (ImGui.MenuItem("Create Sprite"))
+                {
+                    CreateSprite();
+                }
+                ImGui.EndPopup();
+            }
         };
+    }
+
+    private void CreateSprite()
+    {
+        TextureData data = new TextureData()
+        {
+            flipped = false,
+            magFilter = TextureMagFilter.Nearest,
+            minFilter = TextureMinFilter.Nearest,
+            texturePath = ProjectSettings.FullProjectPath + "\\Images\\testImage.png",
+        };
+        
+
+        Sprite sprite = new Sprite(data);
+        SaveLoad.SaveSprite(sprite, _currentDirectory); 
     }
 }

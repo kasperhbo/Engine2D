@@ -159,8 +159,6 @@ internal class SceneHierachy : UiElemenet
                     }
 
                 }
-                
-                
             }
             ImGui.EndChild();
         };

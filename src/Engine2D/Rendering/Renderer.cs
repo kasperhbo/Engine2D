@@ -21,7 +21,7 @@ public class Renderer
     public TestFrameBuffer? EditorGameBuffer{get; set;}
 
     private static readonly List<RenderBatch> _renderBatches = new();
-    private static readonly Dictionary<SpriteRenderer, RenderBatch> _spriteBatchDict = new();
+    private static readonly Dictionary<int, RenderBatch> _spriteBatchDict = new();
 
     #region Debugging
 
@@ -65,51 +65,55 @@ public class Renderer
     internal void Render(Camera editorCamera, Camera gameCamera)
     {
         _drawCalls = 0;
-        //Render Lights
-        {
-            GL.ClearColor(1,1,1,1);
-            LightmapTexture = _lightMapRenderer.Render(this, editorCamera);
-        }
-        
-        //Render the scene
-        {
-            EditorGameBuffer.Bind();
-
-            if (gameCamera != null)
+        if(Settings.s_IsEngine){
+            //Render Lights
             {
-                GL.ClearColor(gameCamera.ClearColor.R, gameCamera.ClearColor.G,gameCamera.ClearColor.B,gameCamera.ClearColor.A);
+                GL.ClearColor(0,0,0,0);
+                LightmapTexture = _lightMapRenderer.Render(this, editorCamera);
             }
-            
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.Disable(EnableCap.Blend);
-            AddGridLines(editorCamera);
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
-            foreach (var batch in _renderBatches) batch.Render(editorCamera, LightmapTexture);
-            
-            _debugDraw.Render(editorCamera);
-            
-            EditorGameBuffer.UnBind();
+
+            //Render the scene
+            {
+                EditorGameBuffer.Bind();
+
+                if (gameCamera != null)
+                {
+                    GL.ClearColor(gameCamera.ClearColor.R, gameCamera.ClearColor.G, gameCamera.ClearColor.B,
+                        gameCamera.ClearColor.A);
+                }
+
+                GL.Clear(ClearBufferMask.ColorBufferBit);
+                // GL.Disable(EnableCap.Blend);
+                // AddGridLines(editorCamera);
+                // GL.Enable(EnableCap.Blend);
+                GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
+                foreach (var batch in _renderBatches) batch.Render(editorCamera, LightmapTexture);
+
+                _debugDraw.Render(editorCamera);
+
+                EditorGameBuffer.UnBind();
+            }
         }
         
         if(gameCamera != null)
         {
+            GL.ClearColor(gameCamera.ClearColor.R, gameCamera.ClearColor.G,gameCamera.ClearColor.B,gameCamera.ClearColor.A);
             _drawCalls = 0;
             //Render Lights
             {
-                GL.ClearColor(1,1,1,1);
                 LightmapTexture = _lightMapRenderer.Render(this, gameCamera);
             }
             //Render the scene
             {
-                GameBuffer.Bind();
-                GL.ClearColor(gameCamera.ClearColor.R, gameCamera.ClearColor.G,gameCamera.ClearColor.B,gameCamera.ClearColor.A);
+                if(Settings.s_IsEngine)
+                    GameBuffer.Bind();
                 GL.Clear(ClearBufferMask.ColorBufferBit);
                 GL.Enable(EnableCap.Blend);
                 GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
                 foreach (var batch in _renderBatches) batch.Render(gameCamera, LightmapTexture);
-
-                GameBuffer.UnBind();
+                
+                if(Settings.s_IsEngine)
+                    GameBuffer.UnBind();
             }
         }
 
@@ -177,11 +181,12 @@ public class Renderer
     {
         var added = false;
         RenderBatch addedToBatch = null;
+        
+        
         foreach (var batch in _renderBatches)
             if (batch.HasRoom && batch.ZIndex == spr.ZIndex)
             {
                 added = true;
-                // _spriteBatchDict.Add(spr, batch);
                 batch.AddSprite(spr);
                 addedToBatch = batch;
             }
@@ -195,14 +200,14 @@ public class Renderer
             _renderBatches.Add(batch);
             _renderBatches.Sort();
         }
-
-        _spriteBatchDict.Add(spr, addedToBatch);
+        
+        _spriteBatchDict.Add(spr.Parent.UID, addedToBatch);
     }
 
     internal void RemoveSprite(SpriteRenderer spr)
     {
-        _spriteBatchDict[spr].RemoveSprite(spr);
-        _spriteBatchDict.Remove(spr);
+        _spriteBatchDict[spr.Parent.UID].RemoveSprite(spr);
+        _spriteBatchDict.Remove(spr.Parent.UID);
     }
 
     public Action GetDebugGUI()

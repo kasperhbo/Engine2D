@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Engine2D.Core;
+using Engine2D.Logging;
 
 namespace Engine2D.UI;
 
@@ -19,6 +20,9 @@ internal class Inspector : UiElemenet
 
     protected override Action SetWindowContent()
     {
-        return () => { Engine.Get().CurrentSelectedAsset?.OnGui(); };
+        return () =>
+        {
+            Engine.Get().CurrentSelectedAsset?.OnGui();
+        };
     }
 }

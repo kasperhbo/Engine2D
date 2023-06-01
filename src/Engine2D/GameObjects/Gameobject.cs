@@ -98,8 +98,7 @@ public class Gameobject : Asset
         ImGui.InputText("##name", ref Name, 256);
         ImGui.SameLine();
         ImGui.Separator();
-        
-        
+
         OpenTKUIHelper.DrawComponentWindow("Transform", "Transform",
             () =>
             {

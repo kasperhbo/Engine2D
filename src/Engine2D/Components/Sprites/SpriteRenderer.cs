@@ -1,9 +1,12 @@
-﻿using Engine2D.Components;
+﻿using System.Runtime.InteropServices;
+using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.Rendering;
 using Newtonsoft.Json;
 using Engine2D.Components.TransformComponents;
+using Engine2D.Logging;
+using Engine2D.SavingLoading;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -106,10 +109,8 @@ public class SpriteRenderer : Component
     {
         base.Init(parent, renderer);
         
-        // renderer.AddSpriteRenderer(this);
-        
+        renderer.AddSpriteRenderer(this);
         _renderer = renderer;
-        AddDefaultSprite();
     }
 
     public override void Start()
@@ -158,25 +159,34 @@ public class SpriteRenderer : Component
         {                                           
            
         }
-
+        if (ImGui.BeginDragDropTarget())
+        {
+            var payload = ImGui.AcceptDragDropPayload("Sprite_Drop");
+            if (payload.IsValidPayload())
+            {
+                var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
+                Sprite sprite = SaveLoad.LoadSpriteFromJson(filename);
+                if (sprite != null)
+                {
+                    AddSprite(sprite);
+                }
+                else
+                {
+                    Log.Error("Cant load sprite " + filename);
+                }
+            }
+            ImGui.EndDragDropTarget();
+        }
+        
     }
 
-    private void AddDefaultSprite()
+    private void AddSprite(Sprite sprite)
     {
-        
-        Sprite = new Sprite();
+        this._renderer.RemoveSprite(this);
 
-        Sprite.Texture = new Texture(
-            ProjectSettings.FullProjectPath + "\\Images\\" + 
-            // "player.png",
-            // "testImage.png",
-            // "Sunny-land-assets-files\\PNG\\sprites\\" +
-            // "eagle\\eagle-attack-1.png",
-            // "tileset.png" ,
-            "pixelcrawler\\weapons\\hands\\Hands.png",
-            false, TextureMinFilter.Nearest, TextureMagFilter.Nearest
-        );
-        _renderer.AddSpriteRenderer(this);
+        this.Sprite = sprite;
+        
+        this._renderer.AddSpriteRenderer(this);
     }
 
     public override string GetItemType()

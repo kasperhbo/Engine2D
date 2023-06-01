@@ -43,8 +43,8 @@ void main () {
         texColor = fColor;
         break;
     }
-
+    vec4 tempColor = vec4(0,0,0,texColor.a);
     // Sample from lightmap and multiply with current fragment color
-    texColor *= texture(uLightmap, (fPos + 1)/2);
-    color = texColor;
+//    texColor *= texture(uLightmap, (fPos + 1)/2);
+    color = vec4(texColor.rgb, tempColor.a);
 }

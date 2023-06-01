@@ -1,8 +1,11 @@
-﻿using Engine2D.Core;
+﻿using System.Xml;
+using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
+using Engine2D.Rendering;
 using Engine2D.Scenes;
 using Newtonsoft.Json;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Engine2D.SavingLoading;
 
@@ -53,7 +56,7 @@ internal static class SaveLoad
 
             File.WriteAllText(scene.ScenePath, sceneData);
         }
-        
+
         Log.Succes("Succesfully saved: " + scene.ScenePath);
     }
 
@@ -87,7 +90,7 @@ internal static class SaveLoad
 
             //Load gameobjects
             objs = JsonConvert.DeserializeObject<List<Gameobject>>(gos)!;
-            
+
         }
 
         Log.Succes("qloaded: " + sceneToLoad);
@@ -95,4 +98,71 @@ internal static class SaveLoad
     }
 
     #endregion
+
+    #region Sprites
+
+    public static void SaveSprite(Sprite sprite, DirectoryInfo currentFolder)
+    {
+        string defaultSaveName = "sprite.sprite";
+        string name = GetNextFreeName(defaultSaveName, currentFolder);
+        string fullSaveName = currentFolder.FullName + "\\" +name;
+        sprite.FullSavePath = fullSaveName;
+        var spriteData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
+        File.WriteAllText(fullSaveName, spriteData);
+    }
+    
+    
+    public static void OverWriteSprite(Sprite sprite)
+    {
+        var spriteData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
+        File.WriteAllText(sprite.FullSavePath, spriteData);
+    }
+
+
+    public static Sprite LoadSpriteFromJson(string? filename)
+    {
+        if (File.Exists(filename))
+        {
+            string spriteStringData = File.ReadAllText(filename);
+            //Load gameobjects
+            return JsonConvert.DeserializeObject<Sprite>(spriteStringData)!;
+        }
+
+        return null;
+    }
+
+
+#endregion
+    
+    private static string GetNextFreeName(string name, DirectoryInfo folder)
+    {
+        string fullName = folder.FullName + "\\" + name;
+        
+        if(File.Exists(fullName))
+        {
+            var fInfo = GetFileInfo(folder.GetFiles(), name);
+            int extensionIndex = name.IndexOf(fInfo.Extension);
+            name = name.Remove(extensionIndex);
+            name += "1";
+            name += fInfo.Extension;
+            return GetNextFreeName(name, folder);
+        }
+
+        return name;
+    }
+
+    private static FileInfo GetFileInfo(FileInfo[] files, string name)
+    {
+        foreach (var file in files)
+        {
+            if (name == file.Name)
+            {
+                return file;
+            }
+        }
+
+        return null;
+    }
+
+
 }

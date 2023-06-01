@@ -21,7 +21,7 @@ public class TextureData
     public TextureMinFilter minFilter;
     public string texturePath;
 
-    public string Type = "TextureData";
+    public string Type { get; }= "TextureData";
 
     public TextureData()
     {
