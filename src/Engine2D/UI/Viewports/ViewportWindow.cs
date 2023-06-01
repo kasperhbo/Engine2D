@@ -1,4 +1,5 @@
-﻿using Engine2D.Testing;
+﻿using Engine2D.Cameras;
+using Engine2D.Testing;
 using ImGuiNET;
 using Engine2D.Core;
 using OpenTK.Mathematics;
@@ -9,7 +10,7 @@ namespace Engine2D.UI.Viewports;
 
 public abstract class ViewportWindow
 {
-    public abstract void OnGui(TestCamera? cameraToRender, string title);
+    public abstract void OnGui(Camera? cameraToRender, string title);
     public abstract Vector2 GetVPSize();
     // private TestFrameBuffer? _testFrameBuffer = null;
     // protected TestCamera? _cameraToRender = null;

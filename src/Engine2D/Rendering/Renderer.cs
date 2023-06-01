@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Engine2D.Cameras;
 using Engine2D.Components;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
@@ -61,7 +62,7 @@ public class Renderer
         _debugDraw.Init();
     }
 
-    internal void Render(TestCamera editorCamera, TestCamera gameCamera)
+    internal void Render(Camera editorCamera, Camera gameCamera)
     {
         _drawCalls = 0;
         //Render Lights
@@ -121,7 +122,7 @@ public class Renderer
     {
     }
 
-    private void AddGridLines(TestCamera camera)
+    private void AddGridLines(Camera camera)
     {
         float toAdd = camera.Size;
         
@@ -134,7 +135,7 @@ public class Renderer
         float xStart = (int)camera.Parent.Transform.Position.X + (-20 - toAdd);
         float xEnd = (int)camera.Parent.Transform.Position.X + (20 + toAdd);
 
-        int ySize = 30;
+        int ySize = 1;
         
         for (int y = (int)camera.Parent.Transform.Position.Y + (int)(-20- toAdd); y <= (int)camera.Parent.Transform.Position.Y +
              (int)(20+ toAdd); y+=ySize)
@@ -150,7 +151,7 @@ public class Renderer
         }
     }
     
-    public Vector2 GetCoordinatesGrid(int index, TestCamera camera)
+    public Vector2 GetCoordinatesGrid(int index, Camera camera)
     {
         return new(index % camera.ProjectionSize.X, index /  camera.ProjectionSize.Y);
         //return new Tuple<int x, int y>(index % cols, index / cols);

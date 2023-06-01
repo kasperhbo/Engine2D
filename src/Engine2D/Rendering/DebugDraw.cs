@@ -1,4 +1,5 @@
-﻿using Engine2D.Core;
+﻿using Engine2D.Cameras;
+using Engine2D.Core;
 using Engine2D.Rendering.Lines;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL4;
@@ -54,7 +55,7 @@ public class DebugDraw
     
     
     
-    public void Render(TestCamera cam)
+    public void Render(Camera cam)
     {
         if (lines.Count <= 0) return;
         
@@ -115,11 +116,11 @@ public class DebugDraw
         }
     }
     
-    public void AddLine2D(Vector2 from, Vector2 to, KDBColor color, TestCamera camera) {
+    public void AddLine2D(Vector2 from, Vector2 to, KDBColor color, Camera camera) {
         AddLine2D(from, to, color, 1, camera);
     }
 
-    public void AddLine2D(Vector2 from, Vector2 to, KDBColor color, int lifetime, TestCamera camera)
+    public void AddLine2D(Vector2 from, Vector2 to, KDBColor color, int lifetime, Camera camera)
     {
         if (lines.Count > MAX_LINES) return;
         DebugDraw.lines.Add(new Line2D(new(from.X, from.Y), new(to.X, to.Y), color, 3));

@@ -1,4 +1,5 @@
-﻿using Engine2D.SavingLoading;
+﻿using Engine2D.Cameras;
+using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.Testing;
 using Engine2D.UI;
@@ -163,7 +164,7 @@ namespace Engine2D.Core
 
             CurrentScene?.OnGui();
 
-            TestCamera? cam = CurrentScene?.EditorCamera;
+            Camera? cam = CurrentScene?.EditorCamera;
             
             _editorViewport.OnGui(cam, "Editor");
 

@@ -1,4 +1,5 @@
-﻿using Engine2D.Components;
+﻿using Engine2D.Cameras;
+using Engine2D.Components;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Testing;
 using Engine2D.Core;
@@ -11,7 +12,7 @@ public class CameraGO : Gameobject
     public CameraGO() : base()
     {
         var currentScene = Engine.Get().CurrentScene;
-        TestCamera camera = new TestCamera(new(1280, 720));
+        Camera camera = new Camera(new(1280, 720));
         camera.Parent = this;
         components.Add(camera);
         

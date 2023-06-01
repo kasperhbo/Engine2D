@@ -1,4 +1,5 @@
-﻿using Engine2D.Core;
+﻿using Engine2D.Cameras;
+using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Testing;
 using KDBEngine.Shaders;
@@ -82,7 +83,7 @@ public class LightMapRenderer
         _shader.use();
     }
 
-    public Texture Render(Engine2D.Rendering.Renderer renderer, TestCamera camera)
+    public Texture Render(Engine2D.Rendering.Renderer renderer, Camera camera)
     {
         if(_firstRun)Init();
         
@@ -109,7 +110,7 @@ public class LightMapRenderer
         _lightMap = new TestFrameBuffer(Engine.Get().Size.X, Engine.Get().Size.Y);
     }
 
-    private void UploadUniforms(Renderer renderer, TestCamera camera)
+    private void UploadUniforms(Renderer renderer, Camera camera)
     {
         _shader.uploadMat4f("uProjection", camera.GetProjectionMatrix());
         _shader.uploadVec2f("uCameraOffset", camera.Parent.Transform.Position);

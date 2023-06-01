@@ -1,4 +1,5 @@
-﻿using Engine2D.Components.TransformComponents;
+﻿using Engine2D.Cameras;
+using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
@@ -97,7 +98,7 @@ public class ComponentSerializer : JsonConverter
                 return JsonConvert.DeserializeObject<Transform>(jo.ToString(),
                     _specifiedSubclassConversion);
             case "Camera":
-                return JsonConvert.DeserializeObject<TestCamera>(jo.ToString(),
+                return JsonConvert.DeserializeObject<Camera>(jo.ToString(),
                     _specifiedSubclassConversion);
 
             default:

@@ -2,13 +2,14 @@
 
 using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
+using Engine2D.Cameras;
 
 using Engine2D.Components;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
-using Engine2D.Testing;
+
 
 using ImGuiNET;
 
@@ -53,8 +54,8 @@ public class Scene
     public List<Gameobject> GameObjects = new List<Gameobject>();
     public GlobalLight GlobalLight { get; set; } = null;
     
-    internal TestCamera? EditorCamera = null;
-    internal TestCamera? CurrentMainGameCamera = null;
+    internal Camera? EditorCamera = null;
+    internal Camera? CurrentMainGameCamera = null;
     
     public List<Action<FrameEventArgs>> GetDefaultUpdateEvents()
     {
@@ -165,7 +166,7 @@ public class Scene
         {
             CameraGO editorCameraGO = new CameraGO();
 
-            EditorCamera = editorCameraGO.GetComponent<TestCamera>();
+            EditorCamera = editorCameraGO.GetComponent<Camera>();
         }
     }
     
@@ -183,9 +184,9 @@ public class Scene
     
     public void AddGameObjectToScene(Gameobject go)
     {
-        if (go.GetComponent<TestCamera>() != null)
+        if (go.GetComponent<Camera>() != null)
         {
-            CurrentMainGameCamera = go.GetComponent<TestCamera>();
+            CurrentMainGameCamera = go.GetComponent<Camera>();
             CurrentMainGameCamera.AdjustProjection(1920, 1080);
         }
 

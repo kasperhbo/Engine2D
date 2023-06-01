@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Engine2D.Cameras;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Testing;
@@ -122,7 +123,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         LoadVertexProperties(index);
     }
 
-    public void Render(TestCamera camera, Texture lightmapTexture)
+    public void Render(Camera camera, Texture lightmapTexture)
     {
         var projectionMatrix = camera.GetProjectionMatrix();
         var viewMatrix = camera.GetViewMatrix();
