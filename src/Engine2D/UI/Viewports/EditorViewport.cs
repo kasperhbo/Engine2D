@@ -1,4 +1,4 @@
-﻿using Engine2D.Cameras;
+using Engine2D.Cameras;
 using Engine2D.Core;
 using Engine2D.Testing;
 using ImGuiNET;
