@@ -4,6 +4,8 @@ using Engine2D.Flags;
 using Engine2D.Rendering;
 using Newtonsoft.Json;
 using Engine2D.Components.TransformComponents;
+using ImGuiNET;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using Vector2 = System.Numerics.Vector2;
 
@@ -74,16 +76,22 @@ public class SpriteRenderer : Component
 
     [ShowUI(show = false)] internal bool IsDirty = true;
 
+    // 0.5f,   0.5f, 0.0f,    1.0f, 1.0f,   // top right
+    // 0.5f,  -0.5f, 0.0f,    1.0f, 0.0f,   // bottom right
+    // -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom left
+    // -0.5f,  0.5f, 0.0f,    0.0f, 1.0f    // top left 
     private Vector2[] _defaultTextureCoords =
     {
-        new(1, 1),
-        new(1, 0),
-        new(0, 0),
-        new(0, 1)
+        new(1.0f, 1.0f),   
+        new(1.0f, 0.0f),   
+        new(0.0f, 0.0f),   
+        new(0.0f, 1.0f)    
     };
 
     public int ZIndex = 0;
 
+    private Renderer _renderer;
+    
     public Vector2[] GetTextureCoords()
     {
         if (Sprite != null)
@@ -97,7 +105,11 @@ public class SpriteRenderer : Component
     public override void Init(Gameobject parent, Renderer? renderer)
     {
         base.Init(parent, renderer);
-        renderer.AddSpriteRenderer(this);
+        
+        // renderer.AddSpriteRenderer(this);
+        
+        _renderer = renderer;
+        AddDefaultSprite();
     }
 
     public override void Start()
@@ -130,6 +142,41 @@ public class SpriteRenderer : Component
 
     public override void GameUpdate(double dt)
     {
+    }
+
+    public override float GetFieldSize()
+    {
+        return 120;
+    }
+
+    public override void ImGuiFields()
+    {
+        base.ImGuiFields();
+
+        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+        if (ImGui.Button("Sprite"))
+        {                                           
+           
+        }
+
+    }
+
+    private void AddDefaultSprite()
+    {
+        
+        Sprite = new Sprite();
+
+        Sprite.Texture = new Texture(
+            ProjectSettings.FullProjectPath + "\\Images\\" + 
+            // "player.png",
+            // "testImage.png",
+            // "Sunny-land-assets-files\\PNG\\sprites\\" +
+            // "eagle\\eagle-attack-1.png",
+            // "tileset.png" ,
+            "pixelcrawler\\weapons\\hands\\Hands.png",
+            false, TextureMinFilter.Nearest, TextureMagFilter.Nearest
+        );
+        _renderer.AddSpriteRenderer(this);
     }
 
     public override string GetItemType()
