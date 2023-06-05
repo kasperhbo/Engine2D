@@ -16,7 +16,7 @@ public class PointLightGO : Gameobject
         {
             Name = "PointLight: " + currentScene.GameObjects.Count + 1;
             
-            currentScene.AddGameObjectToScene(this);
+            // currentScene.AddGameObjectToScene(this);
         }
 
     }

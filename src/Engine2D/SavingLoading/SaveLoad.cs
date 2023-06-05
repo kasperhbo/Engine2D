@@ -36,9 +36,20 @@ internal static class SaveLoad
 
     internal static void SaveScene(Scene scene)
     {
-        return;
-        var gameObjectArray = scene.GameObjects.ToArray();
+        Log.Message("Saving: " + scene.ScenePath);
+        
+        //TODO: Remove this and make just an seperate array/list in the scene
+        List<Gameobject> tempList = new List<Gameobject>();
+        
+        foreach (var go in scene.GameObjects)
+        {
+            if(go.Serialize)tempList.Add(go);
+        }
+        
+        var gameObjectArray = tempList.ToArray();
 
+        
+        
         var sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
         //So we can see where the go array stops when we deserialize the file
         sceneData += "\n////GAMEOBJECTS////\n";
@@ -62,7 +73,6 @@ internal static class SaveLoad
 
     internal static List<Gameobject> LoadScene(string sceneToLoad)
     {
-        return new List<Gameobject>();
         List<Gameobject?> objs = new List<Gameobject?>();
         if (File.Exists(sceneToLoad))
         {

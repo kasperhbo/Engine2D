@@ -55,9 +55,8 @@ public class Renderer
         
         
         //Create frame buffers
-        // EditorGameBuffer = new TestFrameBuffer(Engine.Get().Size);
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
-
+        
         _debugDraw = new DebugDraw();
         _debugDraw.Init();
     }
@@ -65,7 +64,10 @@ public class Renderer
     internal void Render(Camera editorCamera, Camera gameCamera)
     {
         _drawCalls = 0;
-        if(Settings.s_IsEngine){
+        
+        if(Settings.s_IsEngine)
+        {
+            if (editorCamera == null) return;
             //Render Lights
             {
                 GL.ClearColor(0,0,0,0);
@@ -74,22 +76,24 @@ public class Renderer
 
             //Render the scene
             {
+                if (editorCamera == null) return;
+                
                 EditorGameBuffer.Bind();
-
+                
                 if (gameCamera != null)
                 {
-                    GL.ClearColor(gameCamera.ClearColor.R, gameCamera.ClearColor.G, gameCamera.ClearColor.B,
-                        gameCamera.ClearColor.A);
+                    GL.ClearColor(gameCamera.ClearColor.RNormalized, gameCamera.ClearColor.GNormalized, gameCamera.ClearColor.BNormalized,
+                        gameCamera.ClearColor.ANormalized);
                 }
-
                 GL.Clear(ClearBufferMask.ColorBufferBit);
-                // GL.Disable(EnableCap.Blend);
-                // AddGridLines(editorCamera);
-                // GL.Enable(EnableCap.Blend);
+                GL.Disable(EnableCap.Blend);
+                GL.Enable(EnableCap.Blend);
                 GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
-                foreach (var batch in _renderBatches) batch.Render(editorCamera, LightmapTexture);
-
+                
                 _debugDraw.Render(editorCamera);
+                
+                foreach (var batch in _renderBatches) batch.Render(editorCamera, LightmapTexture);
+                
 
                 EditorGameBuffer.UnBind();
             }
@@ -97,7 +101,7 @@ public class Renderer
         
         if(gameCamera != null)
         {
-            GL.ClearColor(gameCamera.ClearColor.R, gameCamera.ClearColor.G,gameCamera.ClearColor.B,gameCamera.ClearColor.A);
+            GL.ClearColor(gameCamera.ClearColor.RNormalized, gameCamera.ClearColor.GNormalized,gameCamera.ClearColor.BNormalized,gameCamera.ClearColor.ANormalized);
             _drawCalls = 0;
             //Render Lights
             {
@@ -111,55 +115,16 @@ public class Renderer
                 GL.Enable(EnableCap.Blend);
                 GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
                 foreach (var batch in _renderBatches) batch.Render(gameCamera, LightmapTexture);
-                
                 if(Settings.s_IsEngine)
                     GameBuffer.UnBind();
             }
         }
-
-        
-        
     }
 
-    public static float Y = 0;
     internal void Update(double dt)
     {
     }
 
-    private void AddGridLines(Camera camera)
-    {
-        float toAdd = camera.Size;
-        
-        if (toAdd >= 50) toAdd = 20;
-        toAdd = 500;
-        
-        float yStart = (int)camera.Parent.Transform.Position.Y + (-20 - toAdd);
-        float yEnd = (int)camera.Parent.Transform.Position.Y + (20 + toAdd);
-        
-        float xStart = (int)camera.Parent.Transform.Position.X + (-20 - toAdd);
-        float xEnd = (int)camera.Parent.Transform.Position.X + (20 + toAdd);
-
-        int ySize = 1;
-        
-        for (int y = (int)camera.Parent.Transform.Position.Y + (int)(-20- toAdd); y <= (int)camera.Parent.Transform.Position.Y +
-             (int)(20+ toAdd); y+=ySize)
-        {
-            _debugDraw.AddLine2D(new(xStart, y), new(xEnd, y), new KDBColor(1,0,0,1),
-                camera);
-        }
-        for (int x = (int)camera.Parent.Transform.Position.X + (int)(-20- toAdd); 
-             x <= (int)camera.Parent.Transform.Position.X  + (int)(20+ toAdd); x+=ySize)
-        {
-            _debugDraw.AddLine2D(new(x, yStart), new(x, yEnd), new KDBColor(1,0,0,1),
-                camera);
-        }
-    }
-    
-    public Vector2 GetCoordinatesGrid(int index, Camera camera)
-    {
-        return new(index % camera.ProjectionSize.X, index /  camera.ProjectionSize.Y);
-        //return new Tuple<int x, int y>(index % cols, index / cols);
-    }
     
     internal void OnClose()
     {

@@ -28,6 +28,7 @@ float calculateLighting(float d, float intensity) {
 void main () {
     // Total lighting accumulation variable
     vec3 totalLighting = vec3(0.0);
+    
     // Eventhough the arrays are crated with MAX_LIGHTS size, the arrays are iterated over only [uNumLights] times
     for (int i = 0; i < uNumLights; i++) {
         // Distance between the current pixel and the light position
@@ -37,6 +38,7 @@ void main () {
         // accumulate the value into total lighting by adding
         totalLighting += uLightColor[i] * attenuation;
     }
+    
     // Take minimum lighting into account
     totalLighting.x = max(totalLighting.x, uMinLighting);
     totalLighting.y = max(totalLighting.y, uMinLighting);

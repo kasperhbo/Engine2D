@@ -196,7 +196,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         var sprite = _sprites[index];
         var offset = index * 4 * c_vertexSize;
 
-        Vector4 color = new(sprite.Color.R, sprite.Color.G, sprite.Color.B, sprite.Color.A);
+        Vector4 color = new(sprite.Color.RNormalized, sprite.Color.GNormalized, sprite.Color.BNormalized, sprite.Color.ANormalized);
 
         var texID = -1;
         var texCoords = sprite.GetTextureCoords();
@@ -212,8 +212,8 @@ internal class RenderBatch : IComparable<RenderBatch>
         Matrix4x4 translation = sprite.Parent.Transform.GetTranslation();
         if (sprite.Sprite != null)
         {
-            var width =  sprite.Sprite.Texture.Width /50;
-            var height = sprite.Sprite.Texture.Height/50;
+            var width =  sprite.Sprite.Texture.Width ;
+            var height = sprite.Sprite.Texture.Height;
 
             translation = sprite.Parent.Transform.GetTranslation(width, height);
         }

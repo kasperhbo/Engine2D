@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Engine2D.Core;
+using Engine2D.Managers;
 using Engine2D.SavingLoading;
 using Engine2D.UI;
 using ImGuiNET;
@@ -44,6 +45,7 @@ public class Sprite : Asset
         if (ImGui.Button("Save"))
         {
             SaveLoad.OverWriteSprite(this);
+            SpriterendererManager.UpdateSpriteRenderers(this.FullSavePath);
         };
         
         OpenTKUIHelper.DrawComponentWindow(

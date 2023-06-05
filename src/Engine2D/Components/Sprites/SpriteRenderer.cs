@@ -6,6 +6,7 @@ using Engine2D.Rendering;
 using Newtonsoft.Json;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.SavingLoading;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
@@ -16,27 +17,27 @@ namespace Engine2D.GameObjects;
 
 public class KDBColor
 {
-    public float r;
-    public float g;
-    public float b;
-    public float a;
-
-    public float R
+    [JsonRequired]public float r;
+    [JsonRequired]public float g;
+    [JsonRequired]public float b;
+    [JsonRequired]public float a;
+                  
+    [JsonIgnore]public float RNormalized
     {
         get { return r / 255; }
     }
     
-    public float G
+    [JsonIgnore]public float GNormalized
     {
         get { return g / 255; }
     }
     
-    public float B
+    [JsonIgnore]public float BNormalized
     {
         get { return b / 255; }
     }
     
-    public float A
+    [JsonIgnore]public float ANormalized
     {
         get { return a / 255; }
     }
@@ -69,13 +70,14 @@ public class KDBColor
 [JsonConverter(typeof(ComponentSerializer))]
 public class SpriteRenderer : Component
 {
+    public KDBColor Color = new();
+    
     [ShowUI(show = false)] private Transform _lastTransform = new Transform();
     [ShowUI(show = false)] private KDBColor _lastColor = new();
     [JsonIgnore] [ShowUI(show = false)] private int _prevZIndex;
-
-    [JsonIgnore] public bool AddToRendererAsSprite = true;
-    public KDBColor Color = new();
-    public Sprite? Sprite = null;
+    [JsonIgnore]private Renderer _renderer;
+    [JsonIgnore]public Sprite? Sprite = null;
+    public string _spritePath = "";
 
     [ShowUI(show = false)] internal bool IsDirty = true;
 
@@ -92,8 +94,6 @@ public class SpriteRenderer : Component
     };
 
     public int ZIndex = 0;
-
-    private Renderer _renderer;
     
     public Vector2[] GetTextureCoords()
     {
@@ -111,6 +111,11 @@ public class SpriteRenderer : Component
         
         renderer.AddSpriteRenderer(this);
         _renderer = renderer;
+
+        if (_spritePath != "")
+        {
+            SetSprite(SaveLoad.LoadSpriteFromJson(_spritePath));
+        }
     }
 
     public override void Start()
@@ -130,7 +135,7 @@ public class SpriteRenderer : Component
         if (!_lastColor.Equals(Color))
         {
             IsDirty = true;
-            _lastColor = new KDBColor(Color.R, Color.G, Color.B, Color.A);
+            _lastColor = new KDBColor(Color.RNormalized, Color.GNormalized, Color.BNormalized, Color.ANormalized);
         }
 
         if (!_prevZIndex.Equals(ZIndex))
@@ -156,8 +161,15 @@ public class SpriteRenderer : Component
 
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
         if (ImGui.Button("Sprite"))
-        {                                           
-           
+        {
+            Sprite sprite =
+                SaveLoad.LoadSpriteFromJson("D:\\dev\\EngineDev\\Engine2D\\\\src\\ExampleGame\\sprite.sprite");
+            SetSprite(sprite);
+            
+            // SpriterendererManager.AddSpriteRenderer(
+            //     "D:\\dev\\EngineDev\\Engine2D\\\\src\\ExampleGame\\sprite.sprite",
+            //     this
+            //     );
         }
         if (ImGui.BeginDragDropTarget())
         {
@@ -168,7 +180,7 @@ public class SpriteRenderer : Component
                 Sprite sprite = SaveLoad.LoadSpriteFromJson(filename);
                 if (sprite != null)
                 {
-                    AddSprite(sprite);
+                    SetSprite(sprite);
                 }
                 else
                 {
@@ -180,12 +192,12 @@ public class SpriteRenderer : Component
         
     }
 
-    private void AddSprite(Sprite sprite)
+    public void SetSprite(Sprite sprite)
     {
+        _spritePath = sprite.FullSavePath;
+        SpriterendererManager.AddSpriteRenderer(sprite.FullSavePath, this);
         this._renderer.RemoveSprite(this);
-
         this.Sprite = sprite;
-        
         this._renderer.AddSpriteRenderer(this);
     }
 

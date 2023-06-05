@@ -16,7 +16,7 @@ public class SpriteRendererGO : Gameobject
         {
             Name = "SpriteRenderer: " + currentScene.GameObjects.Count + 1;
             
-            currentScene.AddGameObjectToScene(this);
+            // currentScene.AddGameObjectToScene(this);
         }
 
     }

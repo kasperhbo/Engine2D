@@ -74,7 +74,6 @@ public class Scene
     {
         Engine.Get().UpdateFrame += GameUpdate;
         
-        throw new NotImplementedException();
         SaveLoad.SaveScene(this);
 
         _physicsWorld = new World(new Vector2(0, -9.8f));
@@ -135,13 +134,12 @@ public class Scene
         ScenePath = scenePath;
         
         //Try to load scene if non existent this returns a new list 
-        GameObjects = SaveLoad.LoadScene(ScenePath);
-        
-        foreach (var go in GameObjects)
+        var gos = SaveLoad.LoadScene(ScenePath);
+        foreach (var go in gos)
         {
-            go.Init(Renderer);
+            this.AddGameObjectToScene(go);
         }
-        
+
         Start();
     }
 
@@ -155,18 +153,16 @@ public class Scene
             go.Start();
         }
 
-        //Set childs to parents based on UID
-        foreach (var go in GameObjects)
-        {
-            if (go.PARENT_UID == -1) return;
-            go.SetParent(go.PARENT_UID);
-        }
-        
+        //Set childs to parents based on UI
+
         if(Settings.s_IsEngine)
         {
             CameraGO editorCameraGO = new CameraGO();
-
+            editorCameraGO.Name = "EDITORCAMERA";
             EditorCamera = editorCameraGO.GetComponent<Camera>();
+            editorCameraGO.Serialize = false;
+            
+            this.AddGameObjectToScene(editorCameraGO);
         }
     }
     
@@ -184,8 +180,9 @@ public class Scene
     
     public void AddGameObjectToScene(Gameobject go)
     {
-        if (go.GetComponent<Camera>() != null)
+        if (go.GetComponent<Camera>() != null && go.Name != "EDITORCAMERA")
         {
+            Log.Succes(go.Name  + " Is the new Main Camera");
             CurrentMainGameCamera = go.GetComponent<Camera>();
             CurrentMainGameCamera.AdjustProjection(1920, 1080);
         }
@@ -208,7 +205,7 @@ public class Scene
         
         ImGui.Begin("Scene Settings");
         ImGui.Begin("t");
-        ImGui.DragFloat("a", ref Renderer.Y);
+        
         if (EditorCamera != null)
         {
             Vector2 proj = new(EditorCamera.ProjectionSize.X, EditorCamera.ProjectionSize.Y);

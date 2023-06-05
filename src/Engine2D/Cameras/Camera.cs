@@ -3,6 +3,7 @@ using Engine2D.Components;
 using Engine2D.GameObjects;
 using Engine2D.UI;
 using ImGuiNET;
+using Newtonsoft.Json;
 
 namespace Engine2D.Cameras;
 
@@ -10,16 +11,25 @@ public class Camera : Component
 {
     public CameraTypes CameraType = CameraTypes.ORTHO;
     
-    private float _size = 10f;
-    private float _near = 0.1f;
-    private float _far = 1000f;
-    
-    private Vector2 _projectionSize = new();
+    public float _size = 10f;
+    public float _near = 0.1f;
+    public float _far = 1000f;
+
+    private Vector2 _projectionSize = new(1920, 1080);
     private Matrix4x4 _projectionMatrix = Matrix4x4.Identity;
     
-    public Vector2 ProjectionSize => _projectionSize;
-    public float Size  => _size;
+    [JsonIgnore]public Vector2 ProjectionSize => _projectionSize;
+    [JsonIgnore]public float Size  => _size;
+    
     public KDBColor ClearColor { get; set; } = new();
+
+    [JsonConstructor]
+    public Camera(CameraTypes cameraType, float size, KDBColor clearColor)
+    {
+        this.CameraType = cameraType;
+        this._size = size;
+        this.ClearColor = clearColor;
+    }
     
     public Camera(Vector2 projectionSize)
     {
@@ -68,7 +78,7 @@ public class Camera : Component
                 _far
             );
         }
-
+        
         if (CameraType == CameraTypes.PERSPECTIVE)
         {
             throw new NotImplementedException();

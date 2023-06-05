@@ -16,7 +16,7 @@ public class GlobalLightGO : Gameobject
         {
             Name = "GlobalLight: " + currentScene.GameObjects.Count + 1;
             
-            currentScene.AddGameObjectToScene(this);
+            // currentScene.AddGameObjectToScene(this);
         }
 
     }

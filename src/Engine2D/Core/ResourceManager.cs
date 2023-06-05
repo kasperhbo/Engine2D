@@ -20,6 +20,7 @@ public class TextureData
     public TextureMagFilter magFilter;
     public TextureMinFilter minFilter;
     public string texturePath;
+    public byte[] imageData;
 
     public string Type { get; }= "TextureData";
 
@@ -27,12 +28,15 @@ public class TextureData
     {
     }
 
-    public TextureData(string texturePath, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
+    public TextureData(string texturePath, 
+        bool flipped, 
+        TextureMinFilter minFilter, TextureMagFilter magFilter)
     {
         this.texturePath = texturePath;
         this.flipped = flipped;
         this.minFilter = minFilter;
         this.magFilter = magFilter;
+        this.imageData = imageData;
     }
 
     public TextureData Copy(TextureData to, string filePath)

@@ -16,6 +16,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 using System.Drawing.Imaging;
+using ImPlotNET;
 using OpenTK.Windowing.Common;
 
 namespace Dear_ImGui_Sample
@@ -52,8 +53,13 @@ namespace Dear_ImGui_Sample
             _windowHeight = height;
 
             IntPtr context = ImGui.CreateContext();
+            
             ImGui.SetCurrentContext(context);
             ImGuizmo.SetImGuiContext(context);
+            
+            ImPlot.SetImGuiContext(context);
+            ImPlot.CreateContext();
+            
             var io = ImGui.GetIO();
             io.Fonts.AddFontDefault();
 
@@ -68,6 +74,7 @@ namespace Dear_ImGui_Sample
             LoadStyle();
             ImGui.NewFrame();
             ImGuizmo.BeginFrame();
+            
             _frameBegun = true;
         }
 

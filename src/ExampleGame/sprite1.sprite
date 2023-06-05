@@ -2,8 +2,8 @@
   "Type": "Sprite",
   "TextureCoords": [
     {
-      "X": 1.0,
-      "Y": 1.0
+      "X": 0.1,
+      "Y": 0.1
     },
     {
       "X": 1.0,
@@ -18,7 +18,7 @@
       "Y": 1.0
     }
   ],
-  "AssetName": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\testImage.png",
+  "AssetName": null,
   "TextureData": {
     "flipped": false,
     "magFilter": 9728,
@@ -26,5 +26,5 @@
     "texturePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\Images\\testImage.png",
     "Type": "TextureData"
   },
-  "FullSavePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\sprite.sprite"
+  "FullSavePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\sprite1.sprite"
 }

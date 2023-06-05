@@ -245,7 +245,7 @@ internal static class OpenTKUIHelper
         int num7 = num5 | num6;
         ImGui.PopID();
 
-        System.Numerics.Vector4 tempColor = new System.Numerics.Vector4(property.R, property.G, property.B, property.A);
+        System.Numerics.Vector4 tempColor = new System.Numerics.Vector4(property.RNormalized, property.GNormalized, property.BNormalized, property.ANormalized);
         
         ImGui.ColorEdit4(name, ref tempColor, ImGuiColorEditFlags.NoLabel | ImGuiColorEditFlags.NoInputs);
         

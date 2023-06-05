@@ -16,7 +16,7 @@ public abstract class ViewportWindow
     protected Vector2i WindowSize;
 
     protected Camera Camera;
-    private TestFrameBuffer _frameBuffer;
+    protected TestFrameBuffer _frameBuffer;
     
     public virtual void Begin(string title, Camera? cameraToRender, TestFrameBuffer buffer)
     {

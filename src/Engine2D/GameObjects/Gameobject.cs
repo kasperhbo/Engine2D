@@ -13,6 +13,8 @@ namespace Engine2D.GameObjects;
 
 public class Gameobject : Asset
 {
+    [JsonIgnore] public bool Serialize = true;
+    
     //UIDS
     public int UID = -1;
     public int PARENT_UID = -1;

@@ -38,19 +38,14 @@ public class LightMapRenderer
     public void Init()
     {
         _firstRun = false;
+        
         var offset = 0;
-        _vertices[offset] = Engine.Get().Size.X;
-        ;
+        _vertices[offset]     = Engine.Get().Size.X; ;
         _vertices[offset + 1] = Engine.Get().Size.Y;
-
         _vertices[offset + 2] = Engine.Get().Size.X;
         _vertices[offset + 3] = -Engine.Get().Size.Y;
-        ;
-
-
         _vertices[offset + 4] = -Engine.Get().Size.X;
         _vertices[offset + 5] = -Engine.Get().Size.Y;
-
         _vertices[offset + 6] = -Engine.Get().Size.X;
         _vertices[offset + 7] = Engine.Get().Size.Y;
 
@@ -127,7 +122,7 @@ public class LightMapRenderer
         {
             var light = lightsToRenderer[i];
             lightPositions[i] = light.LastTransform.Position;
-            lightColors[i] = new Vector3(light.Color.R, light.Color.G, light.Color.B);
+            lightColors[i] = new Vector3(light.Color.RNormalized, light.Color.GNormalized, light.Color.BNormalized);
             lightIntensities[i] = light.Intensity;
         }
 

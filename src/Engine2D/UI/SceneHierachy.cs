@@ -135,24 +135,24 @@ internal class SceneHierachy : UiElemenet
                 {
                     if (ImGui.MenuItem("New SpriteRenderer"))
                     {
-                        new SpriteRendererGO();
+                        Engine.Get().CurrentScene.AddGameObjectToScene(new SpriteRendererGO());
                     }
                     
                     if (ImGui.MenuItem("New Game Camera"))
                     {
-                        new CameraGO();
+                        Engine.Get().CurrentScene.AddGameObjectToScene(new CameraGO());
                     }
                     
                     if (ImGui.BeginMenu("Lighting"))
                     {
                         if (ImGui.MenuItem("Global Light"))
                         {
-                            new GlobalLightGO();
+                            Engine.Get().CurrentScene.AddGameObjectToScene(new GlobalLightGO());
                         }
                             
                         if (ImGui.MenuItem("PointLight"))
                         {
-                            new PointLightGO();
+                            Engine.Get().CurrentScene.AddGameObjectToScene(new PointLightGO());
                         }
                         
                         ImGui.EndMenu();

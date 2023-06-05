@@ -1,4 +1,5 @@
-﻿using Engine2D.Logging;
+﻿using Engine2D.Core;
+using Engine2D.Logging;
 using Octokit;
 using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
@@ -27,18 +28,35 @@ public class Texture
         if (!flipped) flipVal = 1;
         StbImage.stbi_set_flip_vertically_on_load(flipVal);
 
-        // Here we open a stream to the file and pass it to StbImageSharp to load.
-        using (Stream stream = File.OpenRead(filepath))
+        Byte[] data = new Byte[0];
+        
+        if (File.Exists(filepath))
         {
-            var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-            Width = image.Width;
-            Height = image.Height;
-
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, 
-                Width, Height, 0,
-                PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
+            using (Stream stream = File.OpenRead(filepath))
+            {
+                var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+                data = image.Data;
+                Width = image.Width;
+                Height = image.Height;
+            }
         }
+        else
+        {
+            using (Stream stream = File.OpenRead(Utils.GetBaseEngineDir() + "\\Images\\ICONS\\not-" +
+                                                 "found-icon.jpg" ))
+            {
+                var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+                data = image.Data;
+                Width = image.Width;
+                Height = image.Height;
+            }
+        }
+        
+        
 
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, 
+            Width, Height, 0,
+            PixelFormat.Rgba, PixelType.UnsignedByte, data);
         // Now that our texture is loaded, we can set a few settings to affect how the image appears on rendering.
 
         // First, we set the min and mag filter. These are used for when the texture is scaled down and up, respectively.

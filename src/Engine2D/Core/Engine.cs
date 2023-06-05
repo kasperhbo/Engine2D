@@ -237,7 +237,7 @@ public static class EngineSettings
 {
     public static float GlobalScale      = 1;
     public static float DefaultFontSize  = 18;
-    public static bool SaveOnClose      = false;
+     public static bool SaveOnClose       = true;
 }
 
 public static class WindowSettings

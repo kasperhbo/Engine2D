@@ -89,13 +89,26 @@
         <None Update="Images\Icons\mapicon.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Images\Icons\not-found-icon.jpg">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\ShaderFiles\Debug\Grid.frag">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\ShaderFiles\Debug\Grid.vert">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\ShaderFiles\DefaultLine.frag">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\ShaderFiles\DefaultLine.vert">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 
     <ItemGroup>
-        <Folder Include="Images\Icons" />
         <Folder Include="Rendering\Lights" />
-        <Folder Include="Shaders\ShaderFiles\Debug" />
     </ItemGroup>
 
 
