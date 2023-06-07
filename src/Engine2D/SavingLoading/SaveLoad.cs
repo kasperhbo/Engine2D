@@ -26,8 +26,7 @@ internal static class SaveLoad
     {
         var saveLocation = Utils.GetBaseEngineDir() + "\\Settings\\";
         var saveFile = saveLocation + "EngineSettings.dat";
-        var ok = Utils.SaveWithSoapStaticClass(typeof(EngineSettings), saveFile);
-        Console.WriteLine("Saving engine: " + ok);
+        var ok = Utils.SaveWithSoapStaticClass(typeof(EngineSettings), saveFile);       
     }
 
     #endregion
@@ -128,16 +127,42 @@ internal static class SaveLoad
         File.WriteAllText(sprite.FullSavePath, spriteData);
     }
 
-
-    public static Sprite LoadSpriteFromJson(string? filename)
+    public static void SaveTexture(Texture texture, DirectoryInfo currentFolder)
+    {
+        string defaultSaveName = "tex.texture";
+        
+        string name = GetNextFreeName(defaultSaveName, currentFolder);
+        string fullSaveName = currentFolder.FullName + "\\" +name;
+        
+        var textureData = JsonConvert.SerializeObject(texture, Formatting.Indented);
+        File.WriteAllText(fullSaveName, textureData);
+    }
+    
+    public static Texture? LoadTextureFromJson(string? filename)
     {
         if (File.Exists(filename))
         {
+            string textureData = File.ReadAllText(filename);
+
+            Log.Succes("Loaded texture " + filename);
+            return JsonConvert.DeserializeObject<Texture>(textureData)!;
+        }
+        
+        Log.Error("Can't load texture " + filename);
+        return null;
+    }
+    
+
+    public static Sprite? LoadSpriteFromJson(string? filename)
+    {
+        if (File.Exists(filename))
+        {
+            Log.Succes("Loaded Sprite " + filename);
             string spriteStringData = File.ReadAllText(filename);
-            //Load gameobjects
             return JsonConvert.DeserializeObject<Sprite>(spriteStringData)!;
         }
 
+        Log.Error("Can't load sprite " + filename);
         return null;
     }
 

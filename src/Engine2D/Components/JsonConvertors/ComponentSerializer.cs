@@ -3,6 +3,7 @@ using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
+using Engine2D.Rendering;
 using Engine2D.Testing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -21,8 +22,7 @@ public class BaseSpecifiedConcreteClassConverter : DefaultContractResolver
                 //typeof(BoxCollider2D).IsAssignableFrom(objectType) ||
                 //typeof(TextureData).IsAssignableFrom(objectType) ||
                 //typeof(ScriptHolderComponent).IsAssignableFrom(objectType) ||
-                typeof(Gameobject).IsAssignableFrom(objectType) ||
-                typeof(TextureData).IsAssignableFrom(objectType))
+                typeof(Gameobject).IsAssignableFrom(objectType))
             && !objectType.IsAbstract)
             return null;
         return base.ResolveContractConverter(objectType);
@@ -36,8 +36,7 @@ public class ComponentSerializer : JsonConverter
         {
             ContractResolver = new BaseSpecifiedConcreteClassConverter()
         };
-
-    private static Action actions;
+    
 
     public static JObject currentType;
     public static JsonSerializerSettings? specifiedSubclassConversion;
@@ -49,28 +48,14 @@ public class ComponentSerializer : JsonConverter
     {
         return
             objectType == typeof(Component) ||
-            //objectType == typeof(SpriteRenderer)||
-            //objectType == typeof(RigidBody) ||
-            //objectType == typeof(BoxCollider2D) ||
-            //objectType == typeof(TextureData) ||
-            //objectType == typeof(ScriptHolderComponent) ||
-            objectType == typeof(Gameobject) ||
-            objectType == typeof(TextureData);
+            objectType == typeof(Gameobject);
     }
-
-    public static void AddAction(Action action)
-    {
-        actions = action;
-    }
-
     public override object? ReadJson(JsonReader reader, Type objectType, object existingValue,
         JsonSerializer serializer)
     {
         var jo = JObject.Load(reader);
         currentType = jo;
         specifiedSubclassConversion = _specifiedSubclassConversion;
-
-        actions.Invoke();
 
         if (obj != null) return obj;
         
@@ -89,8 +74,6 @@ public class ComponentSerializer : JsonConverter
                 return JsonConvert.DeserializeObject<PointLightComponent>(jo.ToString(), _specifiedSubclassConversion);
             case "GlobalLight":
                 return JsonConvert.DeserializeObject<GlobalLight>(jo.ToString(), _specifiedSubclassConversion);
-            case "TextureData":
-                return JsonConvert.DeserializeObject<TextureData>(jo.ToString(), _specifiedSubclassConversion);
             case "ScriptHolderComponent":
                 return JsonConvert.DeserializeObject<ScriptHolderComponent>(jo.ToString(),
                     _specifiedSubclassConversion);
@@ -99,6 +82,9 @@ public class ComponentSerializer : JsonConverter
                     _specifiedSubclassConversion);
             case "Camera":
                 return JsonConvert.DeserializeObject<Camera>(jo.ToString(),
+                    _specifiedSubclassConversion);
+            case "Texture":
+                return JsonConvert.DeserializeObject<Texture>(jo.ToString(),
                     _specifiedSubclassConversion);
 
             default:

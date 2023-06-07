@@ -5,6 +5,7 @@ using Engine2D.SavingLoading;
 using Engine2D.UI;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Engine2D.Rendering;
 
@@ -26,13 +27,41 @@ public class Sprite : Asset
     };
 
     [JsonIgnore]public Texture? Texture { get; init; } = null;
-    public TextureData TextureData { get; private set; }
+    
+    public string TexturePath = "";
     public string FullSavePath { get; set; }
 
-    public Sprite(TextureData textureData)
+    public Sprite(string texturePath)
     {
-        TextureData = textureData;
-        Texture = ResourceManager.GetTexture(textureData);
+        this.TexturePath = texturePath;
+
+        if (texturePath == "")
+        {
+            Texture = new Texture(Utils.GetBaseEngineDir() + "\\Images\\Icons\\not-found-icon.png",
+                false, TextureMinFilter.Nearest, TextureMagFilter.Nearest);
+        }
+        else
+        {
+            Texture = SaveLoad.LoadTextureFromJson(texturePath);
+        }
+
+        AssetName = this.FullSavePath;
+    }
+
+
+    [JsonConstructor]
+    public Sprite()
+    {
+        if (TexturePath != "")
+        {
+            Texture = SaveLoad.LoadTextureFromJson(TexturePath);
+        }
+        else
+        {
+            Texture = new Texture(Utils.GetBaseEngineDir() + "\\Images\\Icons\\not-found-icon.png",
+                false, TextureMinFilter.Nearest, TextureMagFilter.Nearest);
+        }
+        
         AssetName = this.FullSavePath;
     }
 

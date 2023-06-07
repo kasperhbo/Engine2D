@@ -19,6 +19,9 @@ public class EditorViewport : ViewportWindow
 {
     public bool IsWindowHovered = false;
     
+    OPERATION _currentOperation = OPERATION.TRANSLATE;
+    MODE _currentMode = MODE.WORLD;
+    
     public EditorViewport()
     {
     }
@@ -36,9 +39,6 @@ public class EditorViewport : ViewportWindow
         Guizmo();
     }
     
-    OPERATION _currentOperation = OPERATION.ROTATE;
-    MODE _currentMode = MODE.WORLD;
-
     private void Lines()
     {
         ImPlot.ShowDemoWindow();

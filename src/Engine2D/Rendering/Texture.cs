@@ -1,41 +1,84 @@
-﻿using Engine2D.Core;
+﻿using System.Numerics;
+using Engine2D.Core;
 using Engine2D.Logging;
+using ImGuiNET;
+using Newtonsoft.Json;
 using Octokit;
 using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
 
 namespace Engine2D.Rendering;
 
-public class Texture
+public class Texture : Asset
 {
-    public readonly int TexID;
+    public string Type = "Texture";
+    
+    [JsonIgnore]public int TexID;
+    [JsonIgnore]public byte[] Data;
+    
+    public string EncodedData;
+    public int Height;
+    public string Filepath ;
+    public int Width;
+    public TextureMinFilter MinFilter;
+    public TextureMagFilter MagFilter;
+    public bool Flipped;
 
     public Texture(string filepath, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
     {
         Filepath = filepath;
-        // Generate handle
-        TexID = GL.GenTexture();
+        MinFilter = minFilter;
+        MagFilter = magFilter;
+        Flipped = flipped;
+        
+        Gen();
+        LoadFromImage();
+        CreateOpenGL();
+        EncodedData = Convert.ToBase64String(Data);
+    }
 
+    [JsonConstructor]
+    public Texture(
+        string encodedData, 
+        int height, int width,
+        TextureMinFilter MinFilter,
+        TextureMagFilter MagFilter,
+        bool Flipped)
+    {
+        this.EncodedData = encodedData;
+        this.Width = width;
+        this.Height = height;
+        this.MagFilter = MagFilter;
+        this.MinFilter = MinFilter;
+        this.Flipped = Flipped;
+        
+        Log.Message("Create Image From Json");
+        
+        Data = Convert.FromBase64String(EncodedData);
+        
+        Gen();
+        CreateOpenGL();
+    }
+    
+    private void Gen()
+    {
+        TexID = GL.GenTexture();
         // Bind the handle
         GL.ActiveTexture(TextureUnit.Texture0);
         GL.BindTexture(TextureTarget.Texture2D, TexID);
+    }
 
-        // For this example, we're going to use .NET's built-in System.Drawing library to load textures.
-
-        // OpenGL has it's texture origin in the lower left corner instead of the top left corner,
-        // so we tell StbImageSharp to flip the image when loading.
+    private void LoadFromImage()
+    {
         var flipVal = 0;
-        if (!flipped) flipVal = 1;
+        if (!Flipped) flipVal = 1;
         StbImage.stbi_set_flip_vertically_on_load(flipVal);
-
-        Byte[] data = new Byte[0];
-        
-        if (File.Exists(filepath))
+        if (File.Exists(Filepath))
         {
-            using (Stream stream = File.OpenRead(filepath))
+            using (Stream stream = File.OpenRead(Filepath))
             {
                 var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-                data = image.Data;
+                Data = image.Data;
                 Width = image.Width;
                 Height = image.Height;
             }
@@ -46,17 +89,19 @@ public class Texture
                                                  "found-icon.jpg" ))
             {
                 var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-                data = image.Data;
+                Data = image.Data;
                 Width = image.Width;
                 Height = image.Height;
             }
         }
-        
-        
+    }
 
+    private void CreateOpenGL()
+    {
         GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, 
             Width, Height, 0,
-            PixelFormat.Rgba, PixelType.UnsignedByte, data);
+            PixelFormat.Rgba, PixelType.UnsignedByte, Data);
+        
         // Now that our texture is loaded, we can set a few settings to affect how the image appears on rendering.
 
         // First, we set the min and mag filter. These are used for when the texture is scaled down and up, respectively.
@@ -65,9 +110,9 @@ public class Texture
         // NOTE: The default settings for both of these are LinearMipmap. If you leave these as default but don't generate mipmaps,
         // your image will fail to render at all (usually resulting in pure black instead).
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
-            (int)minFilter);
+            (int)MinFilter);
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
-            (int)magFilter);
+            (int)MagFilter);
 
         // Now, set the wrapping mode. S is for the X axis, and T is for the Y axis.
         // We set this to Repeat so that textures will repeat when wrapped. Not demonstrated here since the texture coordinates exactly match
@@ -82,20 +127,6 @@ public class Texture
         // Here you can see and read about the morié effect https://en.wikipedia.org/wiki/Moir%C3%A9_pattern
         // Here is an example of mips in action https://en.wikipedia.org/wiki/File:Mipmap_Aliasing_Comparison.png
         GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-    }
-
-    private void GetPixel()
-    {
-
-    }
-
-    public Texture(int width, int height)
-    {
-        Height = height;
-        Width = width;
-        Filepath = "Generated";
-
-        TexID = GenTexture(Width, Height, TextureMagFilter.Linear, TextureMinFilter.Linear);
     }
 
     public static int GenTexture(int width, int height, TextureMagFilter magFilter, TextureMinFilter minFilter,
@@ -118,10 +149,6 @@ public class Texture
         return id;
     }
     
-    public int Height { get; }
-    public string Filepath { get; }
-    public int Width { get; }
-
     public void bind()
     {
         GL.BindTexture(TextureTarget.Texture2D, TexID);
@@ -149,6 +176,14 @@ public class Texture
         var oTex = (Texture)obj;
         return oTex.Width.Equals(Width) && oTex.Height.Equals(Height) && oTex.TexID.Equals(TexID)
                && oTex.Filepath.Equals(Filepath);
+    }
+
+    public override void OnGui()
+    {
+        // Log.Message(string.Format("Texture {0} is selected with a width of {1} and a height of {2}", TexID, Width, Height));
+        ImGui.Begin("Texture inspect");
+        ImGui.Image(this.TexID, new Vector2(Width, Height));
+        ImGui.End();
     }
 
     public static void Use(TextureUnit unit, int textureID)

@@ -172,7 +172,7 @@ public class SpriteRenderer : Component
         ImGui.Text("Is Dirty? " + IsDirty.ToString());
         if (ImGui.Button("Sprite"))
         {
-            Sprite sprite =
+            Sprite? sprite =
                 SaveLoad.LoadSpriteFromJson("D:\\dev\\EngineDev\\Engine2D\\\\src\\ExampleGame\\sprite.sprite");
             SetSprite(sprite);
         }
@@ -182,7 +182,7 @@ public class SpriteRenderer : Component
             if (payload.IsValidPayload())
             {
                 var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
-                Sprite sprite = SaveLoad.LoadSpriteFromJson(filename);
+                Sprite? sprite = SaveLoad.LoadSpriteFromJson(filename);
                 if (sprite != null)
                 {
                     SetSprite(sprite);
@@ -197,7 +197,7 @@ public class SpriteRenderer : Component
         
     }
 
-    public void SetSprite(Sprite sprite)
+    public void SetSprite(Sprite? sprite)
     {
         _spritePath = sprite.FullSavePath;
         SpriterendererManager.AddSpriteRenderer(sprite.FullSavePath, this);

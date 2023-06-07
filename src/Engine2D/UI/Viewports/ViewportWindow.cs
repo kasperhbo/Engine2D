@@ -30,6 +30,10 @@ public abstract class ViewportWindow
         Camera = cameraToRender;
         _frameBuffer = buffer;
         
+        ImGui.Begin("DEBUG VIEWPORT " + title);
+        ImGui.Text("Tex ID " + _frameBuffer.TextureID);
+        ImGui.End();
+        
         ImGui.Begin(title);
         BeforeImageRender();
         RenderImage();

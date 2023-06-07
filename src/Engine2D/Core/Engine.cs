@@ -19,9 +19,21 @@ namespace Engine2D.Core
         
         public  Scene? CurrentScene { get; private set; }
         public Asset? CurrentSelectedAsset;
-        
 
         private readonly Dictionary<string, UiElemenet> _guiWindows = new();
+
+        private void AddGuiWindow(UiElemenet window)
+        {
+            _guiWindows.Add(window.Title,window);
+            FileDrop += window.OnFileDrop;
+        }
+
+        private void RemoveGuiWindow(UiElemenet window)
+        {
+            FileDrop -= window.OnFileDrop;
+            _guiWindows.Remove(window.Title);
+        }
+        
         private readonly EngineSettingsWindow engineSettingsWindow = new();
 
         private ImGuiController _imGuiController;
@@ -220,18 +232,16 @@ namespace Engine2D.Core
 
         private void CreateUIWindows()
         {
-            TopMenu top = new TopMenu();
-
             var assetBrowser = new AssetBrowser();
-            _guiWindows.Add(assetBrowser.Title, assetBrowser);
-
+            AddGuiWindow(assetBrowser);
+            
             var inspector = new Inspector();
-            _guiWindows.Add(inspector.Title, inspector);
-
+            AddGuiWindow(inspector);
+            
             var hierarch = new SceneHierachy();
-            _guiWindows.Add(hierarch.Title, hierarch);
+            AddGuiWindow(hierarch);
 
-            _guiWindows.Add(engineSettingsWindow.Title, engineSettingsWindow);
+            AddGuiWindow(engineSettingsWindow);
         }
         
         private int _frameCounter;
