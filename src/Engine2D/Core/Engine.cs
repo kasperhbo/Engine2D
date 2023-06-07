@@ -1,4 +1,5 @@
-﻿using Engine2D.SavingLoading;
+﻿using Engine2D.Logging;
+using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.UI;
 using Engine2D.UI.Viewports;
@@ -25,7 +26,21 @@ namespace Engine2D.Core
 
         private ImGuiController _imGuiController;
 
-        private EditorViewport _editorViewport;
+        private EditorViewport? _editorViewport = null;
+
+        public EditorViewport? CurrentEditorViewport
+        {
+            get
+            {
+                if (_editorViewport == null)
+                {
+                    Log.Error("There is currently no editor vp, please open one firts");
+                    return null;
+                }
+                //TODO: REPLACE THIS FOR MULTIPLE VPS
+                return _editorViewport;
+            }   // get method
+        }
         private GameViewport _gameViewport;
 
         #region setup
@@ -33,9 +48,10 @@ namespace Engine2D.Core
         public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
             gameWindowSettings, nativeWindowSettings)
         {
+            
         }
 
-        public unsafe static Engine? Get()
+        public static unsafe Engine Get()
         {
             if (s_instance == null)
             {
@@ -47,13 +63,14 @@ namespace Engine2D.Core
                 ntwSettings.Title = WindowSettings.Title;
                 ntwSettings.Size = WindowSettings.Size;
 
+
                 s_instance = new Engine(gameWindowSettings, ntwSettings);
 
                 s_instance.LoadEngine();
 
                 GLFW.SetWindowAttrib(s_instance.WindowPtr, WindowAttribute.Decorated, WindowSettings.Decorated);
             }
-
+            
             return s_instance;
         }
 
@@ -65,9 +82,7 @@ namespace Engine2D.Core
             SaveLoad.LoadEngineSettings();
 
             if (Settings.s_IsEngine)
-            {
                 LoadEditor();
-            }
 
             Get().WindowState = WindowSettings.FullScreen;
 
@@ -75,10 +90,9 @@ namespace Engine2D.Core
 
             SwitchScene(ProjectSettings.FullProjectPath + "\\kasper1.kdbscene");
 
-            if (Settings.s_IsEngine)
-            {
+            if (Settings.s_IsEngine || Settings.s_RenderDebugWindowSeperate)
                 LoadViewports();
-            }
+            
         }
 
         private void AssignDefaultEvents()
@@ -106,6 +120,7 @@ namespace Engine2D.Core
             base.MouseWheel += _imGuiController.MouseWheel;
             base.TextInput += _imGuiController.PressChar;
             base.Resize += _imGuiController.WindowResized;
+            
             CreateUIWindows();
         }
 
@@ -253,6 +268,7 @@ public static class WindowSettings
 public static class Settings
 {
     public static bool s_IsEngine = true;
+    public static bool s_RenderDebugWindowSeperate = true;
 }
 
 public static class ProjectSettings

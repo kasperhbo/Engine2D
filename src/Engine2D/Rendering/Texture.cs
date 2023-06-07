@@ -98,17 +98,18 @@ public class Texture
         TexID = GenTexture(Width, Height, TextureMagFilter.Linear, TextureMinFilter.Linear);
     }
 
-    public static int GenTexture(int width, int height, TextureMagFilter magFilter, TextureMinFilter minFilter)
+    public static int GenTexture(int width, int height, TextureMagFilter magFilter, TextureMinFilter minFilter,
+        TextureTarget textureTarget = TextureTarget.Texture2D)
     {
         int id = GL.GenTexture();
 
         var nullPtr = IntPtr.Zero;
 
         // Bind the handle            
-        GL.BindTexture(TextureTarget.Texture2D, id);
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
+        GL.BindTexture(textureTarget, id);
+        GL.TexParameter(textureTarget, TextureParameterName.TextureMinFilter,
             (int)minFilter);
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
+        GL.TexParameter(textureTarget, TextureParameterName.TextureMagFilter,
             (int)magFilter);
 
         GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, width, height, 0, PixelFormat.Rgb,

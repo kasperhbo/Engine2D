@@ -3,10 +3,13 @@ using System.Numerics;
 using Engine2D.Cameras;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
+using Engine2D.Core.Inputs;
 using Engine2D.GameObjects;
+using Engine2D.Logging;
 using ImGuiNET;
 using ImGuizmoNET;
 using ImPlotNET;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using Quaternion = System.Numerics.Quaternion;
 using Vector2 = System.Numerics.Vector2;
 
@@ -14,6 +17,8 @@ namespace Engine2D.UI.Viewports;
 
 public class EditorViewport : ViewportWindow
 {
+    public bool IsWindowHovered = false;
+    
     public EditorViewport()
     {
     }
@@ -24,13 +29,9 @@ public class EditorViewport : ViewportWindow
     
     public override void AfterImageRender()
     {
-        if (Camera == null) return;
-        Camera.AdjustProjection(1920,1080);
-        // if (Camera.ProjectionSize.X != WindowSize.ToVector2().X ||
-        //     Camera.ProjectionSize.Y != WindowSize.ToVector2().Y)
-        // {
-        //     Camera.AdjustProjection(WindowSize.X, WindowSize.Y);
-        // }
+        DrawGrid();
+        IsWindowHovered = ImGui.IsItemHovered();
+        
         Lines();
         Guizmo();
     }
@@ -41,41 +42,6 @@ public class EditorViewport : ViewportWindow
     private void Lines()
     {
         ImPlot.ShowDemoWindow();
-        // float[] xs1 = new float[1001];
-        // float[] ys1 = new float[1001];
-        //
-        // for (int i = 0; i < 1001; ++i) {
-        //     xs1[i] = i * 0.001f;
-        //     ys1[i] = i * 0.01f;;
-        // }
-        //
-        // double[] xs2 = new double[20];
-        // double[] ys2 = new double[20];
-        //
-        // for (int i = 0; i < 20; ++i) {
-        //     xs2[i] = i * 1/19.0f;
-        //     ys2[i] = xs2[i] * xs2[i];
-        // }
-
-        //ImPlot.CreateContext();
-
-        // if (ImPlot.BeginPlot("Line Plots")) {
-        //     float y = 0;
-        //     float x = 100;
-        //     var min = new ImPlotPoint();
-        //     var max = new ImPlotPoint();
-        //     
-        //     min.x = 0;
-        //     min.y = 0;
-        //     max.x = WindowSize.X;
-        //     max.y = WindowSize.Y;
-        //     
-        //     ImPlot.PlotImage("vp", _frameBuffer.TextureID, min, max);
-        //     // ImPlot.PlotLine("f(x)", ref x, ref y, 1);
-        //     // ImPlot.SetNextMarkerStyle(ImPlotMarker_Circle);
-        //     // ImPlot.PlotLine("g(x)", ref xs2, ref ys2, 20);
-        //     ImPlot.EndPlot();
-        // }
     }
     
     private void Guizmo()
@@ -100,11 +66,8 @@ public class EditorViewport : ViewportWindow
 
                 Matrix4x4 view = Camera.GetViewMatrix();
                 Matrix4x4 projection = Camera.GetProjectionMatrix();
-                Matrix4x4 translation = selectedGo.Transform.GetTranslation();
+                Matrix4x4 translation = selectedGo.GetComponent<Transform>().GetTranslation();
         
-                CreateGrid(projection, view);
-                
-                
                 ImGuizmo.Manipulate(ref view.M11, ref projection.M11,
                     _currentOperation, _currentMode, ref translation.M11);
 
@@ -117,11 +80,11 @@ public class EditorViewport : ViewportWindow
                     EulerDegrees deg = new EulerDegrees(q);
 
                     if (_currentOperation == OPERATION.TRANSLATE)
-                        selectedGo.Transform.Position = new(outPos.X, outPos.Y);
+                        selectedGo.GetComponent<Transform>().Position = new(outPos.X, outPos.Y);
                     if (_currentOperation == OPERATION.ROTATE)
-                        selectedGo.Transform.Rotation.SetRotation(deg);
+                        selectedGo.GetComponent<Transform>().Rotation.SetRotation(deg);
                     if (_currentOperation == OPERATION.SCALE)
-                        selectedGo.Transform.Size = new(outScale.X, outScale.Y);
+                        selectedGo.GetComponent<Transform>().Size = new(outScale.X, outScale.Y);
                 }
 
             }
@@ -130,32 +93,89 @@ public class EditorViewport : ViewportWindow
         {
         }
     }
-
-    private void CreateGrid(Matrix4x4 projection, Matrix4x4 view)
+    
+    private void DrawGrid()
     {
-        
+        // DrawImGuiGrid();
     }
 
     public override Vector2 GetVPSize()
     {
-        var windowSize = ImGui.GetContentRegionAvail();
-        windowSize.X -= ImGui.GetScrollX();
-        windowSize.Y -= ImGui.GetScrollY();
-        float targetAspectRatio = 16/9;
+        var ws = ImGui.GetContentRegionAvail();
+
+        float targetAspectRatio = 16.0f / 9.0f;
         
-        if(Camera != null)
-            targetAspectRatio = Camera.ProjectionSize.X / Camera.ProjectionSize.Y;
+        float aspectWidth = ws.X;
+        float aspectHeight = aspectWidth / targetAspectRatio;
         
-        var aspectWidth = windowSize.X;
-        var aspectHeight = aspectWidth / targetAspectRatio;
-        if (aspectHeight > windowSize.Y)
-        {
+        if (aspectHeight > ws.Y) {
             // We must switch to pillarbox mode
-            aspectHeight = windowSize.Y;
+            aspectHeight = ws.Y;
             aspectWidth = aspectHeight * targetAspectRatio;
         }
 
         return new Vector2(aspectWidth, aspectHeight);
+    }
 
+    private void DrawImGuiGrid()
+    {
+        var color = 4278235392U;
+        Matrix4x4 viewProjection = Camera.GetProjectionMatrix() * Camera.GetViewMatrix();
+
+        int gridSize = 1;
+
+        var drawList = ImGui.GetWindowDrawList();
+
+        var origin_tile_pos = new Vector2(
+            MathF.Floor(mCanvas.top_left.X / mCanvas.grid_size.X), 
+            MathF.Floor(mCanvas.top_left.Y / mCanvas.grid_size.Y));
+        
+        var origin_col = (int)(origin_tile_pos.X);
+        var origin_row = (int)(origin_tile_pos.Y);
+
+        var begin_row = origin_row - 1;
+        var begin_col = origin_col - 1;
+
+        var end_row = origin_row + mCanvas.tiles_in_viewport_y + 1;
+        var end_col = origin_col + mCanvas.tiles_in_viewport_x + 1;
+
+        mCanvas.grid_size = new Vector2(1, 1);
+
+        // This offset ensures that the rendered grid is aligned over the underlying grid
+        Vector2 offset = new 
+        (
+            (mCanvas.origin.X % mCanvas.grid_size.X),
+            (mCanvas.origin.Y % mCanvas.grid_size.Y)
+        );
+
+        var end_x = ((float)(end_col) * mCanvas.grid_size.X) + offset.X;
+        var end_y = ((float)(end_row) * mCanvas.grid_size.Y) + offset.Y;
+        
+
+        for (var row = begin_row; row < end_row; ++row) {
+            var row_y = ((float)(row) * mCanvas.grid_size.Y) + offset.Y;
+
+            var pt1 = new Vector2(0, row_y);
+            var pt2 = new Vector2(end_x, row_y);
+            
+            pt1 = Input.screenToWorld(pt1, Camera);
+            pt2 = Input.screenToWorld(pt2, Camera);
+
+            
+            drawList.AddLine(pt1, pt2, (color));
+        }
+
+        int size = 32;
+        for (var col = begin_col; col < end_col; col++) {
+            var col_x = ((float)(col) * mCanvas.grid_size.X) + offset.X;
+
+            var pt1 = new Vector2(col_x, 0);
+            var pt2 = new Vector2(col_x, end_y);
+
+            pt1 = Input.screenToWorld(pt1, Camera);
+            pt2 = Input.screenToWorld(pt2, Camera);
+            
+            drawList.AddLine(pt1, pt2, (color));
+        }
     }
 }

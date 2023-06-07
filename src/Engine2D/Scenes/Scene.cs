@@ -61,7 +61,7 @@ public class Scene
     {
         List<Action<FrameEventArgs>> res = new();
         
-        if(Settings.s_IsEngine)
+        if(Settings.s_IsEngine|| Settings.s_RenderDebugWindowSeperate)
             res.Add(EditorUpdate);
         
         if(_isPlaying)
@@ -155,15 +155,14 @@ public class Scene
 
         //Set childs to parents based on UI
 
-        if(Settings.s_IsEngine)
-        {
-            CameraGO editorCameraGO = new CameraGO();
-            editorCameraGO.Name = "EDITORCAMERA";
+        // if(Settings.s_IsEngine)
+        // {
+            EditorCameraGO editorCameraGO = new EditorCameraGO("EDITORCAMERA");
             EditorCamera = editorCameraGO.GetComponent<Camera>();
             editorCameraGO.Serialize = false;
             
             this.AddGameObjectToScene(editorCameraGO);
-        }
+        //}
     }
     
     public virtual void EditorUpdate(FrameEventArgs args)
@@ -180,11 +179,11 @@ public class Scene
     
     public void AddGameObjectToScene(Gameobject go)
     {
-        if (go.GetComponent<Camera>() != null && go.Name != "EDITORCAMERA")
+        if (go.GetComponent<Camera>() != null && (go.Name != "EDITORCAMERA" || CurrentMainGameCamera == null))
         {
             Log.Succes(go.Name  + " Is the new Main Camera");
             CurrentMainGameCamera = go.GetComponent<Camera>();
-            CurrentMainGameCamera.AdjustProjection(1920, 1080);
+            // CurrentMainGameCamera.AdjustProjection(1920, 1080);
         }
 
         GameObjects.Add(go);

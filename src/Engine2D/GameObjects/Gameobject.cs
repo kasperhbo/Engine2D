@@ -17,49 +17,59 @@ public class Gameobject : Asset
     
     //UIDS
     public int UID = -1;
+    public string Name = "";
+    
     public int PARENT_UID = -1;
 
     //
-    private readonly List<Component> _componentsToAddEndOfFrame = new();
     public List<Component> components = new();
-    public string Name = "";
-    public System.Numerics.Vector2 localPosition = new();
-    [JsonIgnore] public List<Gameobject> Childs = new List<Gameobject>();
-    [JsonIgnore] private Gameobject _parent = null;
-    [JsonIgnore] public Transform Transform { get; set; }
     
-    public Gameobject()
-    {
-    }
-
+    [JsonIgnore] public List<Gameobject> Childs = new List<Gameobject>();
+    [JsonIgnore] protected Gameobject _parent = null;
+    
     public Gameobject(string name)
     {
         Name = name;
         components = new List<Component>();
+        GetUID();
     }
     
     public Gameobject(string name, List<Component> components)
     {
         Name = name;
         this.components = components;
+        GetUID();
+    }
+    
+    [JsonConstructor]
+    public Gameobject(string name, List<Component> components, int uid, int parentUid)
+    {
+        Name = name;
+        this.components = components;
+        this.UID = uid;
+        this.PARENT_UID = parentUid;
+        GetUID();
     }
 
+    private void GetUID()
+    {
+        if (UID == -1) UID = UIDManager.GetUID();
+        else UIDManager.TakenUIDS.Add(UID);
+    }
 
 
     public void Init(Renderer? renderer)
     {
-        if(Transform == null)
+        if(this.GetComponent<Transform>() == null)
         {
+            Log.Warning(this.Name + " Has no Transform Component, Adding one");
+            
             var t = new Transform();
 
             t.Position = new System.Numerics.Vector2(0, 0);
-
             AddComponent(t);
-            Transform = t;
         }
         
-        if (UID == -1) UID = UIDManager.GetUID();
-        UIDManager.TakenUIDS.Add(UID);
         foreach (var component in components) component.Init(this, renderer);
     }
 
@@ -68,7 +78,7 @@ public class Gameobject : Asset
         foreach (var component in components) component.Start();
     }
 
-    public void EditorUpdate(double dt)
+    public virtual void EditorUpdate(double dt)
     {
         foreach (var component in components) component.EditorUpdate(dt);
     }
@@ -99,13 +109,15 @@ public class Gameobject : Asset
     {
         ImGui.InputText("##name", ref Name, 256);
         ImGui.SameLine();
+        ImGui.Text(" UID: " + UID);
         ImGui.Separator();
 
         OpenTKUIHelper.DrawComponentWindow("Transform", "Transform",
             () =>
             {
-                Transform.ImGuiFields();
-            }, Transform.GetFieldSize()
+                this.GetComponent<Transform>().ImGuiFields();
+                
+            }, this.GetComponent<Transform>().GetFieldSize()
         );
         
         for (var i = 0; i < components.Count; i++)
@@ -120,11 +132,10 @@ public class Gameobject : Asset
 
             ImGui.PopID();
         }
-
-        _componentsToAddEndOfFrame.Clear();
+        
     }
 
-    public T GetComponent<T>() where T : Component
+    public T? GetComponent<T>() where T : Component
     {
         foreach (var component in components)
             if (typeof(T) == component.GetType())

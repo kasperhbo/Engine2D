@@ -1,37 +1,41 @@
 ﻿using System.Numerics;
-using Box2DSharp.Common;
+using Engine2D.Logging;
 using Engine2D.UI;
 using ImGuiNET;
-using ImTool;
-using OpenTK.Graphics.ES20;
+using Newtonsoft.Json;
 
 namespace Engine2D.Components.TransformComponents;
 
 public class RotationTransform
 {
-    public Vector3 Front => MathUtils.GetFront(Quaternion);
-    public Vector3 Up => MathUtils.GetUp(Quaternion);
-    public Vector3 Right => MathUtils.GetRight(Quaternion);
-
     public Quaternion Quaternion;//{get;  set;}
-    public EulerDegrees EulerDegrees;//{get;  set;}
-    public EulerRadians EulerRadians;//{get;  set;}
+    
+    [JsonIgnore]public Vector3 Front => MathUtils.GetFront(Quaternion);
+    [JsonIgnore]public Vector3 Up => MathUtils.GetUp(Quaternion);
+    [JsonIgnore]public Vector3 Right => MathUtils.GetRight(Quaternion);
+
+    [JsonIgnore]public EulerDegrees EulerDegrees;//{get;  set;}
+    [JsonIgnore]public EulerRadians EulerRadians;//{get;  set;}
     
     public RotationTransform()
     {
-        
         Quaternion = System.Numerics.Quaternion.Identity;
         EulerDegrees = new(0,0,0);
         EulerRadians = new(0,0,0);
+    }
+
+    [JsonConstructor]
+    public RotationTransform(Quaternion q)
+    {
+        SetRotation(q);
     }
     
     public void SetRotation(System.Numerics.Quaternion quaternion)
     {
         Quaternion = quaternion;
-
         EulerRadians = new(quaternion);
         EulerDegrees = new(EulerRadians);
-    }
+        }
     
     public void SetRotation(EulerRadians radians)
     {
@@ -43,7 +47,6 @@ public class RotationTransform
     public virtual void SetRotation(EulerDegrees degrees)
     {
         EulerDegrees = degrees;
-
         EulerRadians = EulerDegrees.ToRadians();
         Quaternion = EulerRadians.ToQuaternion();                                               
     }

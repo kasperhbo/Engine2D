@@ -36,8 +36,6 @@ public class Renderer
 
     public GlobalLight GlobalLight { get; set; }
 
-    private DebugDraw _debugDraw;
-
     internal void Init()
     {
         Flush();
@@ -56,16 +54,13 @@ public class Renderer
         
         //Create frame buffers
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
-        
-        _debugDraw = new DebugDraw();
-        _debugDraw.Init();
     }
 
     internal void Render(Camera editorCamera, Camera gameCamera)
     {
         _drawCalls = 0;
         
-        if(Settings.s_IsEngine)
+        if(Settings.s_RenderDebugWindowSeperate)
         {
             if (editorCamera == null) return;
             //Render Lights
@@ -78,7 +73,11 @@ public class Renderer
             {
                 if (editorCamera == null) return;
                 
-                EditorGameBuffer.Bind();
+                if(Settings.s_IsEngine)
+                    EditorGameBuffer.Bind();
+                else
+                    Engine.Get().Title = "EDITOR";
+                
                 
                 if (gameCamera != null)
                 {
@@ -90,33 +89,10 @@ public class Renderer
                 GL.Enable(EnableCap.Blend);
                 GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
                 
-                _debugDraw.Render(editorCamera);
-                
                 foreach (var batch in _renderBatches) batch.Render(editorCamera, LightmapTexture);
                 
-
-                EditorGameBuffer.UnBind();
-            }
-        }
-        
-        if(gameCamera != null)
-        {
-            GL.ClearColor(gameCamera.ClearColor.RNormalized, gameCamera.ClearColor.GNormalized,gameCamera.ClearColor.BNormalized,gameCamera.ClearColor.ANormalized);
-            _drawCalls = 0;
-            //Render Lights
-            {
-                LightmapTexture = _lightMapRenderer.Render(this, gameCamera);
-            }
-            //Render the scene
-            {
                 if(Settings.s_IsEngine)
-                    GameBuffer.Bind();
-                GL.Clear(ClearBufferMask.ColorBufferBit);
-                GL.Enable(EnableCap.Blend);
-                GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
-                foreach (var batch in _renderBatches) batch.Render(gameCamera, LightmapTexture);
-                if(Settings.s_IsEngine)
-                    GameBuffer.UnBind();
+                    EditorGameBuffer.UnBind();
             }
         }
     }
@@ -174,21 +150,7 @@ public class Renderer
         _spriteBatchDict[spr.Parent.UID].RemoveSprite(spr);
         _spriteBatchDict.Remove(spr.Parent.UID);
     }
-
-    public Action GetDebugGUI()
-    {
-        return NewDebugUI();
-    }
-
-    private Action NewDebugUI()
-    {
-        return () =>
-        {
-            ImGui.Text("Draw calls: " + _drawCalls);
-            ImGui.Text("Render Batches: " + _renderBatches.Count);
-        };
-    }
-
+    
     public List<PointLightComponent> GetPointLightsToRender()
     {
         var pointLights = new List<PointLightComponent>();

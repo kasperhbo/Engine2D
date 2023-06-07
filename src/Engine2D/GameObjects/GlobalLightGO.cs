@@ -5,7 +5,7 @@ namespace Engine2D.GameObjects;
 
 public class GlobalLightGO : Gameobject
 {
-    public GlobalLightGO() : base()
+    public GlobalLightGO(string name) : base(name)
     {
         var currentScene = Engine.Get().CurrentScene;
         GlobalLight gl = new GlobalLight();

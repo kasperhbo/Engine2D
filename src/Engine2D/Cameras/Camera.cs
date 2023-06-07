@@ -1,9 +1,12 @@
 ﻿using System.Numerics;
 using Engine2D.Components;
+using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
+using Engine2D.Logging;
 using Engine2D.UI;
 using ImGuiNET;
 using Newtonsoft.Json;
+using Transform = Engine2D.Components.TransformComponents.Transform;
 
 namespace Engine2D.Cameras;
 
@@ -11,71 +14,63 @@ public class Camera : Component
 {
     public CameraTypes CameraType = CameraTypes.ORTHO;
     
-    public float _size = 10f;
-    public float _near = 0.1f;
-    public float _far = 1000f;
-
-    private Vector2 _projectionSize = new(1920, 1080);
-    private Matrix4x4 _projectionMatrix = Matrix4x4.Identity;
-    
-    [JsonIgnore]public Vector2 ProjectionSize => _projectionSize;
-    [JsonIgnore]public float Size  => _size;
+    public float Size = 1f;
+    public float Near = 0.1f;
+    public float Far = 1000f;
+   
+    private Vector2 _projectionSize = new(1920,1080);
+    public Vector2 ProjectionSize => _projectionSize;
     
     public KDBColor ClearColor { get; set; } = new();
+    
+    public Camera()
+    {
+        
+    }
 
     [JsonConstructor]
     public Camera(CameraTypes cameraType, float size, KDBColor clearColor)
     {
         this.CameraType = cameraType;
-        this._size = size;
+        this.Size = size;
         this.ClearColor = clearColor;
     }
     
-    public Camera(Vector2 projectionSize)
-    {
-        _projectionSize = projectionSize;
-    }
-    
-    public Camera(Vector2 projectionSize, float size)
-    {
-        _projectionSize = projectionSize;
-        _size = size;
-    }
-    
-    public Camera(Vector2 projectionSize, float size, float near, float far)
-    {
-        _projectionSize = projectionSize;
-        _size = size;
-        _near = near;
-        _far = far;
-    }
-
     public Matrix4x4 GetViewMatrix()
     {
-        return Matrix4x4.CreateLookAt(new System.Numerics.Vector3(
-                Parent.Transform.Position.X, Parent.Transform.Position.Y, 20.0f),
-            Parent.Transform.Rotation.Front + new System.Numerics.Vector3(
-                Parent.Transform.Position.X, Parent.Transform.Position.Y, 0.0f),
-            Parent.Transform.Rotation.Up
+        Transform transform = Parent.GetComponent<Transform>();
+        
+        if(transform == null)
+        {
+            Log.Error(Parent.Name + " Has no transform component!");
+            return Matrix4x4.Identity;
+        }
+        
+        Vector2 pos = Parent.GetComponent<Transform>().Position;
+        RotationTransform rot = Parent.GetComponent<Transform>().Rotation;
+
+        return Matrix4x4.CreateLookAt(new Vector3(
+                pos.X, pos.Y, 20.0f),
+            rot.Front + new Vector3(
+                pos.X, pos.Y, 0.0f),
+            rot.Up
         );
     }
     
     public Matrix4x4 GetProjectionMatrix()
     {
-        float aspect = (float)_projectionSize.X / (float)_projectionSize.Y;
-
-        float width = _size * aspect;
-        float height = _size;
+        // float aspect = (float)_projectionSize.X / (float)_projectionSize.Y;
+        //
+        // float width = Size * aspect;
+        // float height = Size;
+        Matrix4x4 projectionMatrix = Matrix4x4.Identity;
         
+        int zoom = 1;
         if(CameraType == CameraTypes.ORTHO)
         {
-            _projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(
-                -width * 0.5f,
-                width * 0.5f,
-                -height * 0.5f,
-                height * 0.5f,
-                _near,
-                _far
+             projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(
+                    0.0f, ProjectionSize.X * zoom,
+                 0.0f, ProjectionSize.Y * zoom, 0.0f, 100.0f
             );
         }
         
@@ -85,7 +80,7 @@ public class Camera : Component
         }
         
 
-        return _projectionMatrix;
+        return projectionMatrix;
     }
 
     public override string GetItemType()
@@ -98,11 +93,7 @@ public class Camera : Component
         base.EditorUpdate(dt);
     }
 
-    public void AdjustProjection(float X, float Y)
-    {
-        _projectionSize.X = X;
-        _projectionSize.Y = Y;
-    }
+
 
     public override float GetFieldSize()
     {
@@ -111,17 +102,29 @@ public class Camera : Component
 
     public override void ImGuiFields()
     {
-        if (OpenTKUIHelper.DrawProperty("Size: ", ref _size, label: false))
+        if (OpenTKUIHelper.DrawProperty("Size: ", ref Size, label: false))
         {
         }
         
         ImGui.Separator();
         ImGui.Text("Clipping Planes");
 
-        if (OpenTKUIHelper.DrawProperty("Near: ", ref _near, label: false) ||
-            OpenTKUIHelper.DrawProperty("Far: ", ref _far, label: false))
+        if (OpenTKUIHelper.DrawProperty("Near: ", ref Near, label: false) ||
+            OpenTKUIHelper.DrawProperty("Far: ", ref Far, label: false))
         {
         }   
+    }
+
+    public Matrix4x4 getInverseView()
+    {
+        Matrix4x4.Invert(GetViewMatrix(), out var matrix4X4);
+        return matrix4X4;
+    }
+    
+    public Matrix4x4 getInverseProjection()
+    {
+        Matrix4x4.Invert(GetProjectionMatrix(), out var matrix4X4);
+        return matrix4X4;
     }
 }
 

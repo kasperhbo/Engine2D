@@ -7,6 +7,11 @@ public static class UIDManager
     private static int s_uidcounter = 0;
     public static List<int> TakenUIDS = new();
 
+    public static void AddUID(int uid)
+    {
+        TakenUIDS.Add(uid);
+    }
+    
     public static int GetUID()
     {
         int uid = s_uidcounter;
@@ -14,10 +19,9 @@ public static class UIDManager
 
         //Recursive call
         if (TakenUIDS.Contains(uid))
-            GetUID();
+            return GetUID();
 
         TakenUIDS.Add(uid);
-        Log.Message("uid: " + uid);
         return uid;
     }
 }

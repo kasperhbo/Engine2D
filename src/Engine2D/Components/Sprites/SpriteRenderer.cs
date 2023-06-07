@@ -72,7 +72,7 @@ public class SpriteRenderer : Component
 {
     public KDBColor Color = new();
     
-    [ShowUI(show = false)] private Transform _lastTransform = new Transform();
+    [ShowUI(show = false)] private Transform? _lastTransform = new Transform();
     [ShowUI(show = false)] private KDBColor _lastColor = new();
     [JsonIgnore] [ShowUI(show = false)] private int _prevZIndex;
     [JsonIgnore]private Renderer _renderer;
@@ -125,11 +125,11 @@ public class SpriteRenderer : Component
     public override void EditorUpdate(double dt)
     {
         //Console.WriteLine(this.texture?.TexID);
-        if (_lastTransform.Equals(Parent.Transform)
+        if (_lastTransform.Equals(Parent.GetComponent<Transform>())
             );
         {
             IsDirty = true;
-            Parent.Transform.Copy(_lastTransform);
+            Parent.GetComponent<Transform>().Copy(_lastTransform);
         }
 
         if (!_lastColor.Equals(Color))

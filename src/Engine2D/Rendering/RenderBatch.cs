@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Engine2D.Cameras;
+using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Testing;
@@ -14,7 +15,7 @@ using Vector4 = OpenTK.Mathematics.Vector4;
 
 namespace Engine2D.Rendering;
 
-internal class RenderBatch : IComparable<RenderBatch>
+public class RenderBatch : IComparable<RenderBatch>
 {
     private const int c_maxBatchSize = 20000;
 
@@ -209,13 +210,14 @@ internal class RenderBatch : IComparable<RenderBatch>
                     break;
                 }
 
-        Matrix4x4 translation = sprite.Parent.Transform.GetTranslation();
+        Matrix4x4 translation = sprite.Parent.GetComponent<Transform>().GetTranslation();
+        
         if (sprite.Sprite != null)
         {
             var width =  sprite.Sprite.Texture.Width ;
             var height = sprite.Sprite.Texture.Height;
 
-            translation = sprite.Parent.Transform.GetTranslation(width, height);
+            translation = sprite.Parent.GetComponent<Transform>().GetTranslation();
         }
         
 

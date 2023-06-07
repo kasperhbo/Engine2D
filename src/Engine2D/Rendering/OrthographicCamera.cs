@@ -17,7 +17,7 @@ internal class OrthographicCamera : Gameobject
     internal Vector2 Position = new(0, 0);
 
 
-    public OrthographicCamera(float aspectRatio, float size)
+    public OrthographicCamera(float aspectRatio, float size, string name) : base(name)
     {
         _size = size;
         UpdateProjectionMatrix();

@@ -9,10 +9,10 @@ namespace Engine2D.GameObjects;
 
 public class CameraGO : Gameobject
 {
-    public CameraGO() : base()
+    public CameraGO(string name) : base(name)
     {
         var currentScene = Engine.Get().CurrentScene;
-        Camera camera = new Camera(new(1280, 720));
+        Camera camera = new Camera();
         camera.Parent = this;
         components.Add(camera);
         

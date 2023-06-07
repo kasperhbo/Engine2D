@@ -1,4 +1,5 @@
 ﻿using Engine2D.Cameras;
+using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Testing;
@@ -109,7 +110,7 @@ public class LightMapRenderer
     private void UploadUniforms(Renderer renderer, Camera camera)
     {
         _shader.uploadMat4f("uProjection", camera.GetProjectionMatrix());
-        _shader.uploadVec2f("uCameraOffset", camera.Parent.Transform.Position);
+        _shader.uploadVec2f("uCameraOffset", camera.Parent.GetComponent<Transform>().Position);
 
         var lightsToRenderer = renderer.GetPointLightsToRender();
 

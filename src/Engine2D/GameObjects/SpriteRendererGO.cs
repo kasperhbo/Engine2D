@@ -5,7 +5,7 @@ namespace Engine2D.GameObjects;
 
 public class SpriteRendererGO : Gameobject
 {
-    public SpriteRendererGO() : base()
+    public SpriteRendererGO(string name) : base(name)
     {
         var currentScene = Engine.Get().CurrentScene;
         SpriteRenderer spr = new SpriteRenderer();

@@ -13,14 +13,14 @@ public class PointLightComponent : Component
     public KDBColor Color = new();
     public float Intensity = 1;
 
-    [JsonIgnore] public Transform LastTransform;
+    [JsonIgnore] public Transform? LastTransform;
 
     public override void Init(Gameobject parent, Renderer? renderer)
     {
         LastTransform = new Transform();
         base.Init(parent, renderer);
         renderer.AddPointLight(this);
-        LastTransform = parent.Transform;
+        LastTransform = parent.GetComponent<Transform>();
     }
 
     public override void Start()
@@ -30,7 +30,7 @@ public class PointLightComponent : Component
     public override void EditorUpdate(double dt)
     {
         
-        if (!LastTransform.Equals(Parent.Transform))Parent.Transform.Copy(this.LastTransform);
+        if (!LastTransform.Equals(Parent.GetComponent<Transform>()))Parent.GetComponent<Transform>().Copy(this.LastTransform);
 
         if (!_lastColor.Equals(Color)) _lastColor = new KDBColor(Color);
     }

@@ -19,24 +19,19 @@ internal class GameViewport : ViewportWindow
 
     public override Vector2 GetVPSize()
     {
-        var windowSize = ImGui.GetContentRegionAvail();
-        windowSize.X -= ImGui.GetScrollX();
-        windowSize.Y -= ImGui.GetScrollY();
-        float targetAspectRatio = 16/9;
+        var ws = ImGui.GetContentRegionAvail();
+
+        float targetAspectRatio = 16 / 9;
+        float aspectWidth = ws.X;
         
-        if(Camera != null)
-            targetAspectRatio = Camera.ProjectionSize.X / Camera.ProjectionSize.Y;
+        float aspectHeight = aspectWidth / targetAspectRatio;
         
-        var aspectWidth = windowSize.X;
-        var aspectHeight = aspectWidth / targetAspectRatio;
-        if (aspectHeight > windowSize.Y)
-        {
+        if (aspectHeight > ws.Y) {
             // We must switch to pillarbox mode
-            aspectHeight = windowSize.Y;
+            aspectHeight = ws.Y;
             aspectWidth = aspectHeight * targetAspectRatio;
         }
 
         return new Vector2(aspectWidth, aspectHeight);
-        
     }
 }

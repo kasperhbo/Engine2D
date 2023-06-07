@@ -1,6 +1,7 @@
 ﻿using Engine2D.Components;
 using Engine2D.Core;
 using ExampleGame.Registers;
+using OpenTK.Windowing.Desktop;
 
 public class Program
 {
@@ -10,9 +11,9 @@ public class Program
         
         ComponentSerializer.AddAction(() => { CustomDeserializer.Deserialize(); });
         CustomComponentRegister.StartRegister();
-
-            // Console.WriteLine(Utils.GetAllScriptFiles());
+        
         Settings.s_IsEngine = true;        
         Engine.Get().Run();
+        
     }
 }

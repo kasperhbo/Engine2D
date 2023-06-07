@@ -1,37 +1,48 @@
 ﻿using System.Numerics;
 using Engine2D.UI;
 using ImGuiNET;
+using Newtonsoft.Json;
 
 namespace Engine2D.Components.TransformComponents;
 
 public class Transform : Component
 {
     public Vector2 Position;
-    public Vector2 Size = new(1, 1);
+    public Vector2 Size;
 
-    public RotationTransform Rotation = new();
-    
-    public Transform() 
+    public RotationTransform Rotation;
+
+    public Transform()
     {
+        Position = new();
+        Size = new(1,1);
+        Rotation = new();
+    }
+    
+    [JsonConstructor]
+    public Transform(Vector2 position, Vector2 size, RotationTransform rot)
+    {
+        this.Position = position;
+        this.Size = size;
+        this.Rotation = rot;
     }
 
     public override void ImGuiFields()
-    {
-        
+    {               
         OpenTKUIHelper.DrawProperty("Position", ref Position);
         OpenTKUIHelper.DrawProperty("Size", ref Size);
 
         Rotation.ImGuiFields();
     }
 
-    public void Copy(Transform to)
+    public void Copy(Transform? to)
     {
         to.Position = this.Position;
         to.Size = this.Size;
         Rotation.Copy(to.Rotation);
     }
 
-    public bool Equals(Transform other)
+    public bool Equals(Transform? other)
     {
         return (this.Position == other.Position &&
                 this.Size == other.Size &&

@@ -5,7 +5,7 @@ namespace Engine2D.GameObjects;
 
 public class PointLightGO : Gameobject
 {
-    public PointLightGO() : base()
+    public PointLightGO(string name) : base(name)
     {
         var currentScene = Engine.Get().CurrentScene;
         PointLightComponent pl = new PointLightComponent();
