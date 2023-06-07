@@ -46,23 +46,21 @@ public class Camera : Component
             return Matrix4x4.Identity;
         }
         
-        Vector2 pos = Parent.GetComponent<Transform>().Position;
-        RotationTransform rot = Parent.GetComponent<Transform>().Rotation;
+        Vector2 pos = transform.Position;
+
+        Vector3 frontTemp = MathUtilsNumerics.GetFrontAxis(transform.Rotation);
+        Vector3 upTemp = MathUtilsNumerics.GetUpAxis(transform.Rotation);
 
         return Matrix4x4.CreateLookAt(new Vector3(
                 pos.X, pos.Y, 20.0f),
-            rot.Front + new Vector3(
+            frontTemp + new Vector3(
                 pos.X, pos.Y, 0.0f),
-            rot.Up
+            upTemp
         );
     }
     
     public Matrix4x4 GetProjectionMatrix()
     {
-        // float aspect = (float)_projectionSize.X / (float)_projectionSize.Y;
-        //
-        // float width = Size * aspect;
-        // float height = Size;
         Matrix4x4 projectionMatrix = Matrix4x4.Identity;
         
         int zoom = 1;

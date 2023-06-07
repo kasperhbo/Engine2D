@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
 using Engine2D.Components;
@@ -22,12 +23,6 @@ public static class MathUtils
         if (val.CompareTo(min) < 0) return min;
         if (val.CompareTo(max) > 0) return max;
         return val;
-    }
-
-    public static void LerpCustom(ref System.Numerics.Vector2 self, System.Numerics.Vector2 other, float dt)
-    {
-        self.X = self.X + (other.X - self.X) * dt;
-        self.Y = self.Y + (other.Y - self.Y) * dt;
     }
 
     #region Matrices
@@ -183,7 +178,7 @@ public static class MathUtils
         System.Numerics.Vector3 rightVector = new System.Numerics.Vector3(1f, 0.0f, 0.0f);
         return Multiply(quaternion, rightVector);
     }
-
+    
     #endregion
 
 

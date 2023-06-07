@@ -11,6 +11,7 @@ using Engine2D.SavingLoading;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using SixLabors.ImageSharp.Processing.Processors.Dithering;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.GameObjects;
@@ -64,6 +65,15 @@ public class KDBColor
         this.g = g;
         this.b = b;
         this.a = a;
+    }
+
+
+    public bool Equals(KDBColor? obj)
+    {
+        if(obj == null) { Log.Error("Obj to check against not set  'KDB COLOR' ");
+            return false;
+        }
+        return (this.r == obj.r && this.g == obj.g && this.b == obj.b && this.a == obj.a);
     }
 }
 
@@ -124,18 +134,17 @@ public class SpriteRenderer : Component
 
     public override void EditorUpdate(double dt)
     {
-        //Console.WriteLine(this.texture?.TexID);
-        if (_lastTransform.Equals(Parent.GetComponent<Transform>())
-            );
+        if (!_lastTransform.Equals(Parent.GetComponent<Transform>()))
         {
             IsDirty = true;
-            Parent.GetComponent<Transform>().Copy(_lastTransform);
+            var transform = Parent.GetComponent<Transform>();
+            transform.Copy(_lastTransform);
         }
-
+        
         if (!_lastColor.Equals(Color))
         {
-            IsDirty = true;
-            _lastColor = new KDBColor(Color.RNormalized, Color.GNormalized, Color.BNormalized, Color.ANormalized);
+            IsDirty = true; 
+            _lastColor = new KDBColor(Color.r, Color.g, Color.b, Color.a);
         }
 
         if (!_prevZIndex.Equals(ZIndex))
@@ -160,16 +169,12 @@ public class SpriteRenderer : Component
         base.ImGuiFields();
 
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+        ImGui.Text("Is Dirty? " + IsDirty.ToString());
         if (ImGui.Button("Sprite"))
         {
             Sprite sprite =
                 SaveLoad.LoadSpriteFromJson("D:\\dev\\EngineDev\\Engine2D\\\\src\\ExampleGame\\sprite.sprite");
             SetSprite(sprite);
-            
-            // SpriterendererManager.AddSpriteRenderer(
-            //     "D:\\dev\\EngineDev\\Engine2D\\\\src\\ExampleGame\\sprite.sprite",
-            //     this
-            //     );
         }
         if (ImGui.BeginDragDropTarget())
         {

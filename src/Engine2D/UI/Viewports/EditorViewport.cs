@@ -36,7 +36,7 @@ public class EditorViewport : ViewportWindow
         Guizmo();
     }
     
-    OPERATION _currentOperation = OPERATION.TRANSLATE;
+    OPERATION _currentOperation = OPERATION.ROTATE;
     MODE _currentMode = MODE.WORLD;
 
     private void Lines()
@@ -74,15 +74,15 @@ public class EditorViewport : ViewportWindow
                 
                 if (ImGuizmo.IsUsing())
                 {
-                    Matrix4x4.Decompose(translation, out System.Numerics.Vector3 outScale,
-                        out Quaternion q, out System.Numerics.Vector3 outPos);
-
-                    EulerDegrees deg = new EulerDegrees(q);
+                    Matrix4x4.Decompose(translation, out Vector3 outScale,
+                        out Quaternion q, out Vector3 outPos);
 
                     if (_currentOperation == OPERATION.TRANSLATE)
                         selectedGo.GetComponent<Transform>().Position = new(outPos.X, outPos.Y);
+                    
                     if (_currentOperation == OPERATION.ROTATE)
-                        selectedGo.GetComponent<Transform>().Rotation.SetRotation(deg);
+                        selectedGo.GetComponent<Transform>().SetRotation(q);
+                    
                     if (_currentOperation == OPERATION.SCALE)
                         selectedGo.GetComponent<Transform>().Size = new(outScale.X, outScale.Y);
                 }

@@ -6,10 +6,10 @@
     "components": [
       {
         "Color": {
-          "r": 80.0,
+          "r": 7.0,
           "g": 255.0,
-          "b": 255.0,
-          "a": 255.0
+          "b": 14.0,
+          "a": 251.0
         },
         "_spritePath": "D:\\dev\\EngineDev\\Engine2D\\src\\ExampleGame\\sprite.sprite",
         "ZIndex": 0,
@@ -17,21 +17,19 @@
       },
       {
         "Position": {
-          "X": 911.9531,
-          "Y": 542.4961
+          "X": 1357.353,
+          "Y": 632.33435
         },
         "Size": {
-          "X": 1000.0,
-          "Y": 1000.0
+          "X": 139.8,
+          "Y": 204.0
         },
         "Rotation": {
-          "Quaternion": {
-            "X": 0.49911228,
-            "Y": 0.23941061,
-            "Z": 0.0093394,
-            "W": 0.83275586,
-            "IsIdentity": false
-          }
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.54781264,
+          "W": 0.836601,
+          "IsIdentity": false
         },
         "Type": "Transform"
       }

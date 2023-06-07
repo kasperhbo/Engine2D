@@ -150,32 +150,18 @@ internal static class OpenTKUIHelper
         return changed;
     }
     
-    public static bool DrawProperty(string name, ref RotationBase property)
-    {
-        return DrawProperty(name, ref property.Roll, ref property.Pitch, ref property.Yaw);
-    }
-    
-    public static bool DrawProperty(string name, ref EulerRadians property)
-    {
-        return DrawProperty(name, ref property.Roll, ref property.Pitch, ref property.Yaw, .01f);
-    }
-    
-    public static bool DrawProperty(string name, ref EulerDegrees property)
-    {
-        return DrawProperty(name, ref property.Roll, ref property.Pitch, ref property.Yaw, 1f);
-    }
-    
     public static bool DrawProperty(string name, ref float Roll, ref float Pitch, ref float Yaw, float dragSpeed = 1)
     {
         bool changed = false;
-        PrepareProperty(name);        
+        PrepareProperty(name);     
+        
         ImGui.PushID(name);
-        int num1 = 0 | (KDBFloat(ref Roll, "Roll", 4278190257, dragSpeed) ? 1 : 0);
+        int num1 = 0 | (KDBFloat(ref Pitch, "Pitch", 4278190257, dragSpeed) ? 1 : 0);
         ImGui.SameLine();
-        int num2 = KDBFloat(ref Pitch, "Pitch", 4278235392U, dragSpeed) ? 1 : 0;
+        int num2 = KDBFloat(ref Yaw, "Yaw", 4278235392U, dragSpeed) ? 1 : 0;
         int num3 = num1 | num2;
         ImGui.SameLine();
-        int num4 = KDBFloat(ref Yaw, "Yaw", 4289789952U, dragSpeed) ? 1 : 0;
+        int num4 = KDBFloat(ref Roll, "Roll", 4289789952U, dragSpeed) ? 1 : 0;
         int num5 = num3 | num4;
         ImGui.PopID();
         return num5 != 0;
@@ -195,39 +181,14 @@ internal static class OpenTKUIHelper
         if (Widgets.Vector4(ref tempProp, name)) changed = true;
         return changed;
     }
-
-    private static bool Quaternion(ref System.Numerics.Quaternion quat, string name)
-    {
-        ImGui.PushID(name);
-        int num1 = 0 | (KDBFloat(ref quat.X, "X", color: 4278190257, dragSpeed:.1f) ? 1 : 0);
-        ImGui.SameLine();
-        int num2 = KDBFloat(ref quat.Y, "Y", color: 4278235392U, dragSpeed:.1f) ? 1 : 0;
-        int num3 = num1 | num2;
-        ImGui.SameLine();
-        int num4 = KDBFloat(ref quat.Z, "Z", color: 4289789952U, dragSpeed:.1f) ? 1 : 0;
-        int num5 = num3 | num4;
-        ImGui.SameLine();
-        int num6 = KDBFloat(ref quat.W, "W", color: 4287299723U, dragSpeed:.1f) ? 1 : 0;
-        int num7 = num5 | num6;
-        ImGui.PopID();
-        return num7 != 0;
-    }
     
     public static bool DrawProperty(string name, ref System.Numerics.Quaternion property)
     {
         PrepareProperty(name);
-        System.Numerics.Quaternion qTemp = new System.Numerics.Quaternion(
-            property.X,
-            property.Y,
-            property.Z,
-            property.W);
-
-        bool changed = Quaternion(ref property, name);
-
-        property = new(qTemp.X, qTemp.Y, qTemp.Z, qTemp.W);
-        return changed;
+        return Widgets.Quaternion(ref property, name);
     }
 
+    
     public static bool DrawProperty(string name, ref KDBColor property)
     {
         PrepareProperty(name);
@@ -306,7 +267,6 @@ internal static class OpenTKUIHelper
         ImGui.PushItemWidth(80f);
     }
     
-    
     private static bool Vector2(ref System.Numerics.Vector2 vec, string name, float dragSpeed = 1)
     {
         ImGui.PushID(name);
@@ -342,7 +302,6 @@ internal static class OpenTKUIHelper
         return result;
     }
     
-
     public static void DrawButtonImage(
         IntPtr imageNormal,
         IntPtr imageHovered,
