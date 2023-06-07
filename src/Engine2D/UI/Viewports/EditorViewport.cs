@@ -53,6 +53,29 @@ public class EditorViewport : ViewportWindow
 
             if (selectedGo != null)
             {
+                if (Input.KeyPressed(Keys.Q))
+                {
+                    if(_currentMode == MODE.LOCAL) _currentMode = MODE.WORLD;
+                    else if(_currentMode == MODE.WORLD) _currentMode = MODE.LOCAL;
+                }
+
+                if (Input.KeyPressed(Keys.R))
+                {
+                    _currentOperation = OPERATION.ROTATE;
+                }
+
+                if (Input.KeyPressed(Keys.E))
+                {
+                    _currentOperation = OPERATION.SCALE;
+                }
+                
+                if (Input.KeyPressed(Keys.W))
+                {
+                    _currentOperation = OPERATION.TRANSLATE;
+                }
+                
+                
+                
                 ImGuizmo.Enable(true);
 
                 if (Camera.CameraType == CameraTypes.ORTHO)
