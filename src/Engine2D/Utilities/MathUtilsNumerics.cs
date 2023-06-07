@@ -80,25 +80,25 @@ public class MathUtilsNumerics
         return new(p, y, r);
     }
 
-    public static Vector3 GetFrontAxis(System.Numerics.Quaternion quaternion)
+    public static Vector3 GetFrontAxis(Quaternion quaternion)
     {
-        System.Numerics.Vector3 front = new System.Numerics.Vector3(0.0f, 0.0f, 1f);
+        Vector3 front = new Vector3(0.0f, 0.0f, 1f);
         return Multiply(quaternion, front);
     }
     
     public static Vector3 GetUpAxis(Quaternion quaternion)
     {
-        System.Numerics.Vector3 upVector = new System.Numerics.Vector3(0.0f, 1f, 0.0f);
+        Vector3 upVector = new Vector3(0.0f, 1f, 0.0f);
         return Multiply(quaternion, upVector);
     }
     
     public static Vector3 GetRightAxis(Quaternion quaternion)
     {
-        System.Numerics.Vector3 rightVector = new System.Numerics.Vector3(1f, 0.0f, 0.0f);
+        Vector3 rightVector = new Vector3(1f, 0.0f, 0.0f);
         return Multiply(quaternion, rightVector);
     }
 
-    public static System.Numerics.Vector3 Multiply(System.Numerics.Quaternion rotation, System.Numerics.Vector3 point)
+    public static Vector3 Multiply(Quaternion rotation, Vector3 point)
     {
         float num1 = rotation.X * 2f;
         float num2 = rotation.Y * 2f;
