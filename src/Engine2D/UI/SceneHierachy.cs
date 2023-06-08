@@ -14,12 +14,12 @@ namespace Engine2D.UI;
 
 internal class SceneHierachy : UiElemenet
 {
-    protected override string SetWindowTitle()
+    protected override string GSetWindowTitle()
     {
         return "Hierachy";
     }
 
-    protected override ImGuiWindowFlags SetWindowFlags()
+    protected override ImGuiWindowFlags GetWindowFlags()
     {
         return ImGuiWindowFlags.None;
     }
@@ -124,7 +124,7 @@ internal class SceneHierachy : UiElemenet
         return _gameobjectsWithoutParents;
     }
 
-    protected override Action SetWindowContent()
+    protected override Action GetWindowContent()
     {
         return () =>
         {

@@ -152,17 +152,17 @@ internal class AssetBrowser : UiElemenet
         }
     }
 
-    protected override string SetWindowTitle()
+    protected override string GSetWindowTitle()
     {
         return "Asset Browser";
     }
 
-    protected override ImGuiWindowFlags SetWindowFlags()
+    protected override ImGuiWindowFlags GetWindowFlags()
     {
         return ImGuiWindowFlags.MenuBar;
     }
 
-    protected override Action SetWindowContent()
+    protected override Action GetWindowContent()
     {
         return () =>
         {

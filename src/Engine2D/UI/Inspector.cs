@@ -8,17 +8,17 @@ internal class Inspector : UiElemenet
 {
     //internal Gameobject CurrentSelectedGameObject;
 
-    protected override string SetWindowTitle()
+    protected override string GSetWindowTitle()
     {
         return "Inspector";
     }
 
-    protected override ImGuiWindowFlags SetWindowFlags()
+    protected override ImGuiWindowFlags GetWindowFlags()
     {
         return ImGuiWindowFlags.None;
     }
 
-    protected override Action SetWindowContent()
+    protected override Action GetWindowContent()
     {
         return () =>
         {

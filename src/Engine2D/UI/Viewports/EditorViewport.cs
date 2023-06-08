@@ -73,8 +73,7 @@ public class EditorViewport : ViewportWindow
                 {
                     _currentOperation = OPERATION.TRANSLATE;
                 }
-                
-                
+                    
                 
                 ImGuizmo.Enable(true);
 

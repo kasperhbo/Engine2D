@@ -24,22 +24,29 @@ public abstract class UiElemenet
 
     public UiElemenet()
     {
-        _flags = SetWindowFlags();
-        Title = SetWindowTitle();
-        _windowContents = SetWindowContent();
+        _flags = GetWindowFlags();
+        Title = GSetWindowTitle();
+        _windowContents = GetWindowContent();
     }
 
     
-    protected abstract string SetWindowTitle();
-    protected abstract ImGuiWindowFlags SetWindowFlags();
-    protected abstract Action SetWindowContent();
+    protected abstract string GSetWindowTitle();
+    protected abstract ImGuiWindowFlags GetWindowFlags();
+
+    protected virtual Action GetMenuBarContent()
+    {
+        return () => { };
+    }
+    
+    protected abstract Action GetWindowContent();
     
     public void Render()
     {
         if (!_visibility) return;
 
         ImGui.Begin(Title, _flags);
-
+        GetMenuBarContent().Invoke();
+       
         _windowContents?.Invoke();
         IsHovering = ImGui.IsWindowHovered();
 

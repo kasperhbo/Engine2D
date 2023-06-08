@@ -26,18 +26,37 @@ public class AssetBrowser : UiElemenet
         Init();
     }
     
-    protected override string SetWindowTitle()
+    protected override string GSetWindowTitle()
     {
         Log.Message("Creating a new Asset Browser");
         return "New Asset Browser";
     }
 
-    protected override ImGuiWindowFlags SetWindowFlags()
+    protected override ImGuiWindowFlags GetWindowFlags()
     {
-        return ImGuiWindowFlags.None;
+        return ImGuiWindowFlags.None | ImGuiWindowFlags.MenuBar;
     }
 
-    protected override Action SetWindowContent()
+    protected override Action GetMenuBarContent()
+    {
+        return () =>
+        {
+            ImGui.BeginMenuBar();
+
+            if (_currentDirectory.FullName != (ProjectSettings.FullProjectPath + "\\Assets"))
+            {
+                if (ImGui.MenuItem("Back")) SwitchDirectory(new DirectoryInfo(_currentDirectory.Parent.FullName));
+            }
+            
+            int projectLength = (ProjectSettings.FullProjectPath).Length;
+            string titleBar = _currentDirectory.FullName.Remove(0, projectLength);
+            ImGui.Text(titleBar);
+            
+            ImGui.EndMenuBar();
+        };
+    }
+
+    protected override Action GetWindowContent()
     {
         return DrawUI;
     }
@@ -53,6 +72,7 @@ public class AssetBrowser : UiElemenet
 
     private List<DirectoryInfo> _directoriesInDirectory = new List<DirectoryInfo>();
     private List<FileInfo> _filesInDirectory = new List<FileInfo>();
+    
     private GCHandle? _currentlyDraggedHandle;
     private bool _currentlyDragging;
 
@@ -74,20 +94,24 @@ public class AssetBrowser : UiElemenet
         TextureMinFilter.Linear, TextureMagFilter.Linear);
     }
 
+    private bool isSwitching = false;
+
     private void SwitchDirectory(DirectoryInfo newDirectory)
     {
-        ClearLists();
+        isSwitching = true;
+        _currentDirectory = newDirectory;
+        
+        _directoriesInDirectory = new List<DirectoryInfo>();
+        _filesInDirectory = new List<FileInfo>(); 
         
         GetDirectoriesInCurrent();
         GetFilesInCurrent();
-        
-        _currentDirectory = newDirectory;
+        isSwitching = false;
     }
 
     private void ClearLists()
     {
-        _directoriesInDirectory = new();
-        _filesInDirectory = new();
+
     }
 
     private void GetDirectoriesInCurrent()
@@ -104,11 +128,15 @@ public class AssetBrowser : UiElemenet
     {
         ImGui.BeginChild("item view", new(0, -ImGui.GetFrameHeightWithSpacing()));
         {
+            if (isSwitching) return;
             int columnCount = (int)(ImGui.GetContentRegionAvail().X / (90 + 20));
             ImGui.Columns((columnCount < 1) ? 1 : columnCount, "", false);
             {       
-                DrawFolders();
-                DrawFiles();
+                if(!isSwitching)
+                    DrawFolders();
+                
+                if(!isSwitching)
+                    DrawFiles();
             }
             ImGui.Columns(1);
         }
@@ -121,12 +149,14 @@ public class AssetBrowser : UiElemenet
             //SELECT FOLDER
             Action actionOnClick = () => { };
             //GOTO FOLDER
-            Action actionOnDoubleClick = () => { };
+            Action actionOnDoubleClick = () =>
+            {
+                SwitchDirectory(new DirectoryInfo(dir.FullName));
+            };
             //POPUP
             Action actionOnRightClick = () => { };
             
             Action actionAfterRender = () => { };
-
 
 
             ImGui.PushID(dir.FullName);
