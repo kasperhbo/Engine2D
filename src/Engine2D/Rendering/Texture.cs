@@ -36,7 +36,8 @@ public class Texture : Asset
         CreateOpenGL();
         EncodedData = Convert.ToBase64String(Data);
     }
-
+    
+    //
     [JsonConstructor]
     public Texture(
         string encodedData, 
@@ -88,6 +89,7 @@ public class Texture : Asset
             using (Stream stream = File.OpenRead(Utils.GetBaseEngineDir() + "\\Images\\ICONS\\not-" +
                                                  "found-icon.jpg" ))
             {
+                Log.Error(Filepath + " not found");
                 var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
                 Data = image.Data;
                 Width = image.Width;

@@ -235,6 +235,9 @@ namespace Engine2D.Core
             var assetBrowser = new AssetBrowser();
             AddGuiWindow(assetBrowser);
             
+            var assetBrowser2 = new UI.Browsers.AssetBrowser();
+            AddGuiWindow(assetBrowser2);
+            
             var inspector = new Inspector();
             AddGuiWindow(inspector);
             

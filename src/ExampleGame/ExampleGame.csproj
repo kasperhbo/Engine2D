@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Assets\Sprites" />
+    <Folder Include="Assets\Sprites2" />
     <Folder Include="Registers" />
   </ItemGroup>
 
