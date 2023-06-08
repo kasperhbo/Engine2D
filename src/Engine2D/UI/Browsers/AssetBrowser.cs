@@ -108,12 +108,7 @@ public class AssetBrowser : UiElemenet
         GetFilesInCurrent();
         isSwitching = false;
     }
-
-    private void ClearLists()
-    {
-
-    }
-
+    
     private void GetDirectoriesInCurrent()
     {
         _directoriesInDirectory = _currentDirectory.GetDirectories().ToList();
@@ -144,6 +139,36 @@ public class AssetBrowser : UiElemenet
 
     private unsafe void DrawFolders()
     {
+        for (int i = 0; i < 100; i++)
+        {
+            Action actionOnClick = () => { };
+            //GOTO FOLDER
+            Action actionOnDoubleClick = () => { };
+            //POPUP
+            Action actionOnRightClick = () => { };
+            Action actionAfterRender = () => { };
+            
+            bool clicked = false;
+            bool doubleClicked = false;
+            bool rightClicked = false;
+            
+            var size = ImGui.GetFrameHeight() * 5.0f * 1;
+            
+            ImGui.PushID(i);
+            DrawEntry(
+                dirtexture.TexID, i + "folder",
+                new(256, 256), new(size),
+                new(1), new(0),
+                -1,
+                new(0f), new(1f),
+                out clicked, out doubleClicked, out rightClicked
+            );
+
+            HandleDragDropFolder(i.ToString());
+            ImGui.PopID();
+            ImGui.NextColumn();
+        }
+        
         foreach (var dir in _directoriesInDirectory)
         {
             //SELECT FOLDER
@@ -158,10 +183,13 @@ public class AssetBrowser : UiElemenet
             
             Action actionAfterRender = () => { };
 
+            bool clicked = false;
+            bool doubleClicked = false;
+            bool rightClicked = false;
 
-            ImGui.PushID(dir.FullName);
-            DrawEntry(dir.Name, dir.FullName, dirtexture.TexID, actionOnClick, actionOnDoubleClick, actionOnRightClick, actionAfterRender);
-            HandleDragDropFolder(dir.FullName);
+            var size = ImGui.GetFrameHeight() * 5.0f * 1;
+            
+
             ImGui.PopID();
             
             ImGui.NextColumn();
@@ -189,10 +217,10 @@ public class AssetBrowser : UiElemenet
                         actionOnRightClick = () => { Log.Succes("Succesfully actionOnRightClick on " + file.Name); };
                         break;
                 }
-                ImGui.PushID(file.FullName);
-                DrawEntry(file.Name, file.FullName, dirtexture.TexID, actionOnClick, actionOnDoubleClick, actionOnRightClick, actionAfterRender);
-                HandleDragDropFile(file.FullName, fileExtension, file.Name);
-                ImGui.PopID();
+                // ImGui.PushID(file.FullName);
+                // DrawEntry(file.Name, file.FullName, dirtexture.TexID, actionOnClick, actionOnDoubleClick, actionOnRightClick, actionAfterRender);
+                // HandleDragDropFile(file.FullName, fileExtension, file.Name);
+                // ImGui.PopID();
             }
             
             ImGui.NextColumn();
@@ -271,8 +299,26 @@ public class AssetBrowser : UiElemenet
         SwitchDirectory(_currentDirectory);
     }
 
-    private bool DrawEntry(string name, string fullName, IntPtr icon, Action? onClick = null, Action? onDoubleClick = null, Action? onRightClick = null, Action? afterRender = null)
+    private bool DrawEntry(
+        IntPtr texId, string name, 
+        Vector2 texture_size, Vector2 imageSize,
+        Vector2 uv0, Vector2 uv1, int frame_padding,
+        Vector4 bg_col, Vector4 tint_col,
+        out bool isClicked, out bool isDoubleClicked, out bool isRightClicked,
+        Action? afterRender = null
+    )
     {
-        return Gui.FileIcon(name, icon, onClick, onDoubleClick, onRightClick, afterRender);
+
+        return Gui.ImageButtonExTextDown(name, (uint)texId, texId, imageSize, uv0, uv1, new(-1f),
+            bg_col, tint_col,
+            out isClicked, out isDoubleClicked, out isRightClicked,
+            afterRender);
+
+        // return Gui.FileIcon(
+        //     texId, name, texture_size, imageSize, uv0, uv1, frame_padding,
+        //     bg_col, tint_col,
+        //     out isClicked, out isDoubleClicked, out isRightClicked,
+        //     afterRender);
+        //return Gui.FileIcon(name, icon, onClick, onDoubleClick, onRightClick, afterRender);
     }
 }
