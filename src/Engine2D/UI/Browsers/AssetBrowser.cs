@@ -1,6 +1,4 @@
-﻿
-using System.Drawing;
-using System.Numerics;
+﻿using System.Numerics;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Rendering;
@@ -11,6 +9,15 @@ namespace Engine2D.UI.Browsers;
 
 public class AssetBrowser : UiElemenet
 {
+    private enum ESupportedFileTypes
+    {
+        png      ,
+        kdbscene ,
+        sprite   ,
+        texture  ,
+        txt
+    }
+    
     public AssetBrowser() : base()
     {
         Init();
@@ -103,7 +110,14 @@ public class AssetBrowser : UiElemenet
     {
         foreach (var dir in _directoriesInDirectory)
         {
-            DrawEntry(dir.Name, dir.FullName, dirtexture.TexID);
+            //SELECT FOLDER
+            Action actionOnClick = () => { };
+            //GOTO FOLDER
+            Action actionOnDoubleClick = () => { };
+            //POPUP
+            Action actionOnRightClick = () => { };
+
+            DrawEntry(dir.Name, dir.FullName, dirtexture.TexID, actionOnClick, actionOnDoubleClick, actionOnRightClick);
             ImGui.NextColumn();
         }
     }
@@ -112,7 +126,26 @@ public class AssetBrowser : UiElemenet
     {
         foreach (var file in _filesInDirectory)
         {
-            DrawEntry(file.Name, file.FullName, fileTexture.TexID);
+            string fileExtension = file.Extension;
+            fileExtension = fileExtension.Remove(0, 1);
+            if(Enum.TryParse(fileExtension, out ESupportedFileTypes ext))
+            {
+                Action actionOnClick = () => { };
+                Action actionOnDoubleClick = () => { };
+                Action actionOnRightClick = () => { };
+
+                switch (ext)
+                {
+                    case ESupportedFileTypes.txt:
+                        actionOnClick = () => { Log.Succes("Succesfully actionOnClick on " + file.Name); };
+                        actionOnDoubleClick = () => { Log.Succes("Succesfully actionOnDoubleClick on " + file.Name); };
+                        actionOnRightClick = () => { Log.Succes("Succesfully actionOnRightClick on " + file.Name); };
+                        break;
+                }
+                
+                DrawEntry(file.Name, file.FullName, fileTexture.TexID, actionOnClick, actionOnDoubleClick, actionOnRightClick);
+            }
+            
             ImGui.NextColumn();
         }
     }
@@ -128,58 +161,13 @@ public static class UIHelper
 {
     public static bool FileIcon(string filename, IntPtr icon, Action? onClick = null, Action? onDoubleClick = null, Action? onRightClick = null)
     {
-        var cursorScreenPos = ImGui.GetCursorScreenPos();
-        
-        // IntPtr texId, string name, 
-        // Vector2 texture_size, Vector2 imageSize,
-        // Vector2 uv0, Vector2 uv1, int frame_padding,
-        // Vector4 bg_col, Vector4 tint_col
-        //
-        // ImageButtonWithText(
-        //     icon, filename,
-        //     new Vector2(120,  120), new Vector2(120, 120),
-        //     new Vector2(0, 0), new Vector2(1, 1), 5,
-        //     new Vector4(255, 0, 0, 255), new Vector4(255, 255, 1, 255)
-        // );
-        
         ImageButtonExTextDown(filename, ImGui.GetID(filename), icon, new(120), new(0, 1),
-            new(1, 0), new(0), new(0), new(1.0f));
+            new(1, 0), new(0), new(0), new(1.0f), out bool isClicked, out bool isDoubleClicked, out bool isRightClicked);
+        
+        if(isClicked)onClick?.Invoke();
+        if(isDoubleClicked)onDoubleClick?.Invoke();
+        if(isRightClicked)onRightClick?.Invoke();
 
-        if (ImGui.IsItemHovered() && ImGui.IsMouseClicked(ImGuiMouseButton.Left))
-        {
-            onClick?.Invoke();
-        }
-        
-        if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
-        {
-            onDoubleClick?.Invoke();
-        }
-        
-        if (ImGui.IsItemHovered() && ImGui.IsMouseClicked(ImGuiMouseButton.Right))
-        {
-            onRightClick?.Invoke();
-        }
-        
-        bool isClicked = ImGui.IsItemHovered() && ImGui.IsMouseClicked(ImGuiMouseButton.Left);
-        
-        // input label
-        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + (20) / 2.0f);
-        
-        if (ImGui.IsItemHovered() && ImGui.IsMouseClicked(ImGuiMouseButton.Left))
-        {
-            onClick?.Invoke();
-        }
-        
-        if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
-        {
-            onDoubleClick?.Invoke();
-        }
-        
-        if (ImGui.IsItemHovered() && ImGui.IsMouseClicked(ImGuiMouseButton.Right))
-        {
-            onRightClick?.Invoke();
-        }
-        
         return isClicked;
     }
 
@@ -189,10 +177,15 @@ public static class UIHelper
         IntPtr texture_id, 
         Vector2 size, 
         Vector2 uv0, Vector2 uv1,
-        Vector2 padding, Vector4 bg_col, Vector4 tint_col)
+        Vector2 padding, Vector4 bg_col, Vector4 tint_col,
+        out bool isClicked, out bool isDoubleClicked, out bool isRightClicked)
     {
         unsafe
         {
+            isClicked = false;
+            isDoubleClicked = false;
+            isRightClicked = false;
+            
             var window = ImGui.GetCurrentWindow();
             if (window.SkipItems)
                 return false;
@@ -231,12 +224,15 @@ public static class UIHelper
             bool hovered = false;
             bool held = false;
         
-            bool pressed = ImGui.ButtonBehavior(bb, id, ref hovered, ref held);
-
+            isClicked = ImGui.ButtonBehavior(bb, id, ref hovered, ref held);
+            
             // Render
             var col = ImGui.GetColorU32((held && hovered) ? 
                 ImGuiCol.ButtonActive : hovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button);
-        
+
+            if (hovered && ImGui.IsMouseClicked(ImGuiMouseButton.Right)) isRightClicked = true;
+            if (hovered && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left)) isDoubleClicked = true;
+            
             ImGui.RenderNavHighlight(bb, id);
 
             ImGui.RenderFrame(
@@ -254,7 +250,7 @@ public static class UIHelper
             
             ImGui.RenderText(start, label);
             
-            return pressed;
+            return isClicked;
         }
     }
     
