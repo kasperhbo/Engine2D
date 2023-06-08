@@ -15,7 +15,7 @@ internal class EngineSettingsWindow : UiElemenet
         SetVisibility(false);
     }
 
-    protected override string GSetWindowTitle()
+    protected override string GetWindowTitle()
     {
         return "Engine Settings";
     }

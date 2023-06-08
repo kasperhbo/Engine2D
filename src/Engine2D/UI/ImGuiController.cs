@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Drawing;
-using System.Linq;
+using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using ImGuiNET;
 using ImGuizmoNET;
+using ImPlotNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
-using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
-using System.Drawing.Imaging;
-using ImPlotNET;
-using OpenTK.Windowing.Common;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using Vector2 = System.Numerics.Vector2;
+using Vector4 = System.Numerics.Vector4;
+// using OpenTK.Mathematics;
 
 namespace Dear_ImGui_Sample
 {
@@ -42,7 +40,7 @@ namespace Dear_ImGui_Sample
         private int _windowWidth;
         private int _windowHeight;
 
-        private System.Numerics.Vector2 _scaleFactor = System.Numerics.Vector2.One;
+        private Vector2 _scaleFactor = Vector2.One;
 
         /// <summary>
         /// Constructs a new ImGuiController.
@@ -85,58 +83,59 @@ namespace Dear_ImGui_Sample
             style.AntiAliasedFill = true;
             style.AntiAliasedLines = true;
 
-            style.ChildRounding = 0;
+            style.ChildRounding = 5;
             
-            style.Colors[(int)ImGuiCol.Text] = new System.Numerics.Vector4(0.88f, 0.88f, 0.88f, 1.00f);
-            style.Colors[(int)ImGuiCol.TextDisabled] = new System.Numerics.Vector4(0.50f, 0.50f, 0.50f, 1.00f);
-            style.Colors[(int)ImGuiCol.WindowBg] = new System.Numerics.Vector4(0.196f, 0.196f, 0.196f, 1.00f);
-            style.Colors[(int)ImGuiCol.ChildBg] = new System.Numerics.Vector4(0.196f, 0.196f, 0.196f, 1.00f);
-            style.Colors[(int)ImGuiCol.PopupBg] = new System.Numerics.Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.Border] = new System.Numerics.Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.BorderShadow] = new System.Numerics.Vector4(0.36f, 0.36f, 0.36f, 0.21f);
-            style.Colors[(int)ImGuiCol.FrameBg] = new System.Numerics.Vector4(0.15f, 0.15f, 0.15f, 1.00f);
-            style.Colors[(int)ImGuiCol.FrameBgHovered] = new System.Numerics.Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.FrameBgActive] = new System.Numerics.Vector4(0.12f, 0.12f, 0.12f, 1.00f);
-            style.Colors[(int)ImGuiCol.TitleBg] = new System.Numerics.Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.TitleBgActive] = new System.Numerics.Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.TitleBgCollapsed] = new System.Numerics.Vector4(0.00f, 0.00f, 0.00f, 0.51f);
-            style.Colors[(int)ImGuiCol.MenuBarBg] = new System.Numerics.Vector4(0.14f, 0.14f, 0.14f, 1.00f);
-            style.Colors[(int)ImGuiCol.ScrollbarBg] = new System.Numerics.Vector4(0.16f, 0.16f, 0.16f, 1.00f);
-            style.Colors[(int)ImGuiCol.ScrollbarGrab] = new System.Numerics.Vector4(0.28f, 0.28f, 0.28f, 1.00f);
-            style.Colors[(int)ImGuiCol.ScrollbarGrabHovered] = new System.Numerics.Vector4(0.28f, 0.28f, 0.28f, 1.00f);
-            style.Colors[(int)ImGuiCol.ScrollbarGrabActive] = new System.Numerics.Vector4(0.24f, 0.24f, 0.24f, 1.00f);
-            style.Colors[(int)ImGuiCol.CheckMark] = new System.Numerics.Vector4(0.50f, 0.50f, 0.50f, 1.00f);
-            style.Colors[(int)ImGuiCol.SliderGrab] = new System.Numerics.Vector4(0.28f, 0.28f, 0.28f, 1.00f);
-            style.Colors[(int)ImGuiCol.SliderGrabActive] = new System.Numerics.Vector4(0.28f, 0.28f, 0.28f, 1.00f);
-            style.Colors[(int)ImGuiCol.Button] = new System.Numerics.Vector4(0.16f, 0.16f, 0.16f, 1.00f);
-            style.Colors[(int)ImGuiCol.ButtonHovered] = new System.Numerics.Vector4(0.14f, 0.14f, 0.14f, 1.00f);
-            style.Colors[(int)ImGuiCol.ButtonActive] = new System.Numerics.Vector4(0.12f, 0.12f, 0.12f, 1.00f);
-            style.Colors[(int)ImGuiCol.Header] = new System.Numerics.Vector4(0.18f, 0.18f, 0.18f, 1.00f);
-            style.Colors[(int)ImGuiCol.HeaderHovered] = new System.Numerics.Vector4(0.16f, 0.16f, 0.16f, 1.00f);
-            style.Colors[(int)ImGuiCol.HeaderActive] = new System.Numerics.Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.Separator] = new System.Numerics.Vector4(0.15f, 0.15f, 0.15f, 1.00f);
-            style.Colors[(int)ImGuiCol.SeparatorHovered] = new System.Numerics.Vector4(0.37f, 0.37f, 0.37f, 1.00f);
-            style.Colors[(int)ImGuiCol.SeparatorActive] = new System.Numerics.Vector4(0.49f, 0.49f, 0.49f, 1.00f);
-            style.Colors[(int)ImGuiCol.ResizeGrip] = new System.Numerics.Vector4(0.15f, 0.15f, 0.15f, 1.00f);
-            style.Colors[(int)ImGuiCol.ResizeGripHovered] = new System.Numerics.Vector4(0.35f, 0.35f, 0.35f, 1.00f);
-            style.Colors[(int)ImGuiCol.ResizeGripActive] = new System.Numerics.Vector4(0.49f, 0.49f, 0.49f, 1.00f);
-            style.Colors[(int)ImGuiCol.Tab] = new System.Numerics.Vector4(0.16f, 0.16f, 0.16f, 1.00f);
-            style.Colors[(int)ImGuiCol.TabHovered] = new System.Numerics.Vector4(0.18f, 0.18f, 0.18f, 1.00f);
-            style.Colors[(int)ImGuiCol.TabActive] = new System.Numerics.Vector4(0.20f, 0.20f, 0.20f, 1.00f);
-            style.Colors[(int)ImGuiCol.TabUnfocused] = new System.Numerics.Vector4(0.16f, 0.16f, 0.16f, 1.00f);
-            style.Colors[(int)ImGuiCol.TabUnfocusedActive] = new System.Numerics.Vector4(0.20f, 0.20f, 0.20f, 1.00f);
-            style.Colors[(int)ImGuiCol.DockingPreview] = new System.Numerics.Vector4(0.41f, 0.41f, 0.41f, 1.00f);
-            style.Colors[(int)ImGuiCol.DockingEmptyBg] = new System.Numerics.Vector4(0.20f, 0.20f, 0.20f, 1.00f);
-            style.Colors[(int)ImGuiCol.PlotLines] = new System.Numerics.Vector4(0.66f, 0.66f, 0.66f, 1.00f);
-            style.Colors[(int)ImGuiCol.PlotLinesHovered] = new System.Numerics.Vector4(0.27f, 0.37f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.PlotHistogram] = new System.Numerics.Vector4(0.34f, 0.47f, 0.17f, 1.00f);
-            style.Colors[(int)ImGuiCol.PlotHistogramHovered] = new System.Numerics.Vector4(0.41f, 0.56f, 0.20f, 0.99f);
-            style.Colors[(int)ImGuiCol.TextSelectedBg] = new System.Numerics.Vector4(0.80f, 0.80f, 0.80f, 0.27f);
-            style.Colors[(int)ImGuiCol.DragDropTarget] = new System.Numerics.Vector4(0.59f, 0.59f, 0.59f, 0.98f);
-            style.Colors[(int)ImGuiCol.NavHighlight] = new System.Numerics.Vector4(0.83f, 0.83f, 0.83f, 1.00f);
-            style.Colors[(int)ImGuiCol.NavWindowingHighlight] = new System.Numerics.Vector4(0.83f, 0.83f, 0.83f, 1.00f);
-            style.Colors[(int)ImGuiCol.NavWindowingDimBg] = new System.Numerics.Vector4(0.05f, 0.05f, 0.05f, 0.50f);
-            style.Colors[(int)ImGuiCol.ModalWindowDimBg] = new System.Numerics.Vector4(0.05f, 0.05f, 0.05f, 0.50f);
+            style.Colors[(int)ImGuiCol.Text] = new Vector4(0.88f, 0.88f, 0.88f, 1.00f);
+            style.Colors[(int)ImGuiCol.TextDisabled] = new Vector4(0.50f, 0.50f, 0.50f, 1.00f);
+            style.Colors[(int)ImGuiCol.WindowBg] = new Vector4(0.196f, 0.196f, 0.196f, 1.00f);
+            style.Colors[(int)ImGuiCol.ChildBg] = new Vector4(0.196f, 0.196f, 0.196f, 1.00f);
+            style.Colors[(int)ImGuiCol.PopupBg] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.Border] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.BorderShadow] = new Vector4(0.36f, 0.36f, 0.36f, 0.21f);
+            style.Colors[(int)ImGuiCol.FrameBg] = new Vector4(0.15f, 0.15f, 0.15f, 1.00f);
+            style.Colors[(int)ImGuiCol.FrameBgHovered] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.FrameBgActive] = new Vector4(0.12f, 0.12f, 0.12f, 1.00f);
+            style.Colors[(int)ImGuiCol.TitleBg] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.TitleBgActive] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.TitleBgCollapsed] = new Vector4(0.00f, 0.00f, 0.00f, 0.51f);
+            style.Colors[(int)ImGuiCol.MenuBarBg] = new Vector4(0.14f, 0.14f, 0.14f, 1.00f);
+            style.Colors[(int)ImGuiCol.ScrollbarBg] = new Vector4(0.16f, 0.16f, 0.16f, 1.00f);
+            style.Colors[(int)ImGuiCol.ScrollbarGrab] = new Vector4(0.28f, 0.28f, 0.28f, 1.00f);
+            style.Colors[(int)ImGuiCol.ScrollbarGrabHovered] = new Vector4(0.28f, 0.28f, 0.28f, 1.00f);
+            style.Colors[(int)ImGuiCol.ScrollbarGrabActive] = new Vector4(0.24f, 0.24f, 0.24f, 1.00f);
+            style.Colors[(int)ImGuiCol.CheckMark] = new Vector4(0.50f, 0.50f, 0.50f, 1.00f);
+            style.Colors[(int)ImGuiCol.SliderGrab] = new Vector4(0.28f, 0.28f, 0.28f, 1.00f);
+            style.Colors[(int)ImGuiCol.SliderGrabActive] = new Vector4(0.28f, 0.28f, 0.28f, 1.00f);
+            style.Colors[(int)ImGuiCol.Button] = new Vector4(0.16f, 0.16f, 0.16f, 1.00f);
+            style.Colors[(int)ImGuiCol.ButtonHovered] = new Vector4(0.14f, 0.14f, 0.14f, 1.00f);
+            style.Colors[(int)ImGuiCol.ButtonActive] = new Vector4(0.12f, 0.12f, 0.12f, 1.00f);
+            style.Colors[(int)ImGuiCol.Header] = new Vector4(0.18f, 0.18f, 0.18f, 1.00f);
+            style.Colors[(int)ImGuiCol.HeaderHovered] = new Vector4(0.16f, 0.16f, 0.16f, 1.00f);
+            style.Colors[(int)ImGuiCol.HeaderActive] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.Separator] = new Vector4(0.15f, 0.15f, 0.15f, 1.00f);
+            style.Colors[(int)ImGuiCol.SeparatorHovered] = new Vector4(0.37f, 0.37f, 0.37f, 1.00f);
+            style.Colors[(int)ImGuiCol.SeparatorActive] = new Vector4(0.49f, 0.49f, 0.49f, 1.00f);
+            style.Colors[(int)ImGuiCol.ResizeGrip] = new Vector4(0.15f, 0.15f, 0.15f, 1.00f);
+            style.Colors[(int)ImGuiCol.ResizeGripHovered] = new Vector4(0.35f, 0.35f, 0.35f, 1.00f);
+            style.Colors[(int)ImGuiCol.ResizeGripActive] = new Vector4(0.49f, 0.49f, 0.49f, 1.00f);
+            style.Colors[(int)ImGuiCol.Tab] = new Vector4(0.16f, 0.16f, 0.16f, 1.00f);
+            style.Colors[(int)ImGuiCol.TabHovered] = new Vector4(0.18f, 0.18f, 0.18f, 1.00f);
+            style.Colors[(int)ImGuiCol.TabActive] = new Vector4(0.20f, 0.20f, 0.20f, 1.00f);
+            style.Colors[(int)ImGuiCol.TabUnfocused] = new Vector4(0.16f, 0.16f, 0.16f, 1.00f);
+            style.Colors[(int)ImGuiCol.TabUnfocusedActive] = new Vector4(0.20f, 0.20f, 0.20f, 1.00f);
+            style.Colors[(int)ImGuiCol.DockingPreview] = new Vector4(0.41f, 0.41f, 0.41f, 1.00f);
+            style.Colors[(int)ImGuiCol.DockingEmptyBg] = new Vector4(0.20f, 0.20f, 0.20f, 1.00f);
+            style.Colors[(int)ImGuiCol.PlotLines] = new Vector4(0.66f, 0.66f, 0.66f, 1.00f);
+            style.Colors[(int)ImGuiCol.PlotLinesHovered] = new Vector4(0.27f, 0.37f, 0.13f, 1.00f);
+            style.Colors[(int)ImGuiCol.PlotHistogram] = new Vector4(0.34f, 0.47f, 0.17f, 1.00f);
+            style.Colors[(int)ImGuiCol.PlotHistogramHovered] = new Vector4(0.41f, 0.56f, 0.20f, 0.99f);
+            style.Colors[(int)ImGuiCol.TextSelectedBg] = new Vector4(0.80f, 0.80f, 0.80f, 0.27f);
+            style.Colors[(int)ImGuiCol.DragDropTarget] = new Vector4(0.59f, 0.59f, 0.59f, 0.98f);
+            style.Colors[(int)ImGuiCol.NavHighlight] = new Vector4(0.83f, 0.83f, 0.83f, 1.00f);
+            style.Colors[(int)ImGuiCol.NavWindowingHighlight] = new Vector4(0.83f, 0.83f, 0.83f, 1.00f);
+            style.Colors[(int)ImGuiCol.NavWindowingDimBg] = new Vector4(0.05f, 0.05f, 0.05f, 0.50f);
+            style.Colors[(int)ImGuiCol.ModalWindowDimBg] = new Vector4(0.05f, 0.05f, 0.05f, 0.50f);
+            style.Colors[(int)ImGuiCol.DragDropTarget] = new Vector4(0.019f, 0.019f, 0.019f, .4f);
         }
 
         private void LoadStyle2()
@@ -231,7 +230,7 @@ void main()
             _fontTexture.SetMagFilter(TextureMagFilter.Linear);
             _fontTexture.SetMinFilter(TextureMinFilter.Linear);
             
-            io.Fonts.SetTexID((IntPtr)_fontTexture.GLTexture);
+            io.Fonts.SetTexID(_fontTexture.GLTexture);
 
             io.Fonts.ClearTexData();
         }
@@ -283,7 +282,7 @@ void main()
         private void SetPerFrameImGuiData(float deltaSeconds)
         {
             ImGuiIOPtr io = ImGui.GetIO();
-            io.DisplaySize = new System.Numerics.Vector2(
+            io.DisplaySize = new Vector2(
                 _windowWidth / _scaleFactor.X,
                 _windowHeight / _scaleFactor.Y);
             io.DisplayFramebufferScale = _scaleFactor;
@@ -305,7 +304,7 @@ void main()
 
             var screenPoint = new Vector2i((int)MouseState.X, (int)MouseState.Y);
             var point = screenPoint;//wnd.PointToClient(screenPoint);
-            io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
+            io.MousePos = new Vector2(point.X, point.Y);
             
             foreach (Keys key in Enum.GetValues(typeof(Keys)))
             {
@@ -445,27 +444,25 @@ void main()
                     {
                         throw new NotImplementedException();
                     }
+
+                    GL.ActiveTexture(TextureUnit.Texture0);
+                    GL.BindTexture(TextureTarget.Texture2D, (int)pcmd.TextureId);
+                    Util.CheckGLError("Texture");
+
+                    // We do _windowHeight - (int)clip.W instead of (int)clip.Y because gl has flipped Y when it comes to these coordinates
+                    var clip = pcmd.ClipRect;
+                    GL.Scissor((int)clip.X, _windowHeight - (int)clip.W, (int)(clip.Z - clip.X), (int)(clip.W - clip.Y));
+                    Util.CheckGLError("Scissor");
+
+                    if ((io.BackendFlags & ImGuiBackendFlags.RendererHasVtxOffset) != 0)
+                    {
+                        GL.DrawElementsBaseVertex(PrimitiveType.Triangles, (int)pcmd.ElemCount, DrawElementsType.UnsignedShort, idx_offset * sizeof(ushort), vtx_offset);
+                    }
                     else
                     {
-                        GL.ActiveTexture(TextureUnit.Texture0);
-                        GL.BindTexture(TextureTarget.Texture2D, (int)pcmd.TextureId);
-                        Util.CheckGLError("Texture");
-
-                        // We do _windowHeight - (int)clip.W instead of (int)clip.Y because gl has flipped Y when it comes to these coordinates
-                        var clip = pcmd.ClipRect;
-                        GL.Scissor((int)clip.X, _windowHeight - (int)clip.W, (int)(clip.Z - clip.X), (int)(clip.W - clip.Y));
-                        Util.CheckGLError("Scissor");
-
-                        if ((io.BackendFlags & ImGuiBackendFlags.RendererHasVtxOffset) != 0)
-                        {
-                            GL.DrawElementsBaseVertex(PrimitiveType.Triangles, (int)pcmd.ElemCount, DrawElementsType.UnsignedShort, (IntPtr)(idx_offset * sizeof(ushort)), vtx_offset);
-                        }
-                        else
-                        {
-                            GL.DrawElements(BeginMode.Triangles, (int)pcmd.ElemCount, DrawElementsType.UnsignedShort, (int)pcmd.IdxOffset * sizeof(ushort));
-                        }
-                        Util.CheckGLError("Draw");
+                        GL.DrawElements(BeginMode.Triangles, (int)pcmd.ElemCount, DrawElementsType.UnsignedShort, (int)pcmd.IdxOffset * sizeof(ushort));
                     }
+                    Util.CheckGLError("Draw");
 
                     idx_offset += (int)pcmd.ElemCount;
                 }
@@ -607,9 +604,9 @@ void main()
             Util.CheckGLError("Storage2d");
 
             BitmapData data = image.LockBits(new Rectangle(0, 0, Width, Height),
-                ImageLockMode.ReadOnly, global::System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
             
-            GL.TextureSubImage2D(GLTexture, 0, 0, 0, Width, Height, PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+            GL.TextureSubImage2D(GLTexture, 0, 0, 0, Width, Height, OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
             Util.CheckGLError("SubImage");
 
             image.UnlockBits(data);
@@ -652,7 +649,7 @@ void main()
             Util.CreateTexture(TextureTarget.Texture2D, Name, out GLTexture);
             GL.TextureStorage2D(GLTexture, MipmapLevels, InternalFormat, Width, Height);
 
-            GL.TextureSubImage2D(GLTexture, 0, 0, 0, Width, Height, PixelFormat.Bgra, PixelType.UnsignedByte, data);
+            GL.TextureSubImage2D(GLTexture, 0, 0, 0, Width, Height, OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, data);
 
             if (generateMipmaps) GL.GenerateTextureMipmap(GLTexture);
 
@@ -709,7 +706,7 @@ void main()
         public readonly string Name;
         public int Program { get; private set; }
         private readonly Dictionary<string, int> UniformToLocation = new Dictionary<string, int>();
-        private bool Initialized = false;
+        private bool Initialized;
 
         private readonly (ShaderType Type, string Path)[] Files;
 

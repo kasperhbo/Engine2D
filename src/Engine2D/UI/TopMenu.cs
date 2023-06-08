@@ -141,7 +141,7 @@ public class TopMenu : UiElemenet
         }        
     }
 
-    protected override string GSetWindowTitle()
+    protected override string GetWindowTitle()
     {
         return "";
     }

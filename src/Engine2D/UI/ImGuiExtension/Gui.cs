@@ -104,8 +104,6 @@ public static class Gui
 
         string label = StringUtils.CharToString(label_str);
 
-        uint id = GetID(label);
-
         Vector2 textSize = CalcTextSize(label, true);
         bool hasText = textSize.X > 0;
         
@@ -160,14 +158,14 @@ public static class Gui
         }
         
         ItemSize(bb);
-        if (!ItemAdd(bb, id))
-        {
-            return false;
-        }
-
+        // if (!ItemAdd(bb, id))
+        // {
+        //     return false;
+        // }
+        //
         bool hovered = false;
         bool held = false;
-        isClicked = ButtonBehavior(bb, id, ref hovered, ref held);
+        // isClicked = ButtonBehavior(bb, , ref hovered, ref held);
 
         var col = GetColorU32((hovered && held) ? ImGuiCol.ButtonActive
             : hovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button);
@@ -208,18 +206,23 @@ public static class Gui
         
         return isClicked;
     }
-    
+
+
     public static bool ImageButtonExTextDown(
         string label,
         uint id,
-        IntPtr texture_id, 
-        Vector2 size, 
+        IntPtr texture_id,
+        Vector2 size,
         Vector2 uv0, Vector2 uv1,
         Vector2 padding, Vector4 bg_col, Vector4 tint_col,
         out bool isClicked, out bool isDoubleClicked, out bool isRightClicked,
-        Action? afterRender)
+        Action? afterRender,
+        float rOverwrite = -1,
+        float gOverwrite = -1,
+        float bOverwrite = -1,
+        float aOverwrite = -1
+        )
     {
-        
         isClicked = false;
         isDoubleClicked = false;
         isRightClicked = false;
@@ -274,14 +277,17 @@ public static class Gui
             isClicked = true;
 
         // Render
+        
         if (hovered && IsMouseClicked(ImGuiMouseButton.Right)) isRightClicked = true;
         if (hovered && IsMouseDoubleClicked(ImGuiMouseButton.Left)) isDoubleClicked = true;
         
         var col = GetColorU32((held && hovered) ? 
             ImGuiCol.ButtonActive : hovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button);
-        
-        // RenderNavHighlight(bb, id);
-        // if(hovered)
+
+        if (rOverwrite != -1 && gOverwrite != -1 && bOverwrite != -1 && aOverwrite != -1)
+        {
+            col = GetColorU32(new Vector4(rOverwrite, gOverwrite, bOverwrite, aOverwrite));
+        }
         
         RenderFrame(
             image_bb.Min, image_bb.Max,

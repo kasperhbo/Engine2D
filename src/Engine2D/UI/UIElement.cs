@@ -25,12 +25,12 @@ public abstract class UiElemenet
     public UiElemenet()
     {
         _flags = GetWindowFlags();
-        Title = GSetWindowTitle();
+        Title = GetWindowTitle();
         _windowContents = GetWindowContent();
     }
 
     
-    protected abstract string GSetWindowTitle();
+    protected abstract string GetWindowTitle();
     protected abstract ImGuiWindowFlags GetWindowFlags();
 
     protected virtual Action GetMenuBarContent()

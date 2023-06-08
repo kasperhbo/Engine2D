@@ -297,6 +297,9 @@ namespace Engine2D.Core
             var hierarch = new SceneHierachy();
             AddGuiWindow(hierarch);
 
+            var uiSettingsPanel = new UISettingsPanel();
+            AddGuiWindow(uiSettingsPanel);
+            
             AddGuiWindow(engineSettingsWindow);
         }
         

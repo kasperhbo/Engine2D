@@ -152,7 +152,7 @@ internal class AssetBrowser : UiElemenet
         }
     }
 
-    protected override string GSetWindowTitle()
+    protected override string GetWindowTitle()
     {
         return "Asset Browser";
     }
@@ -441,6 +441,8 @@ internal class ImageTextIcon
 
         ImGui.EndChild();
     }
+    
+    
 }
 
 

@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Rendering;
@@ -9,6 +10,18 @@ using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 
 namespace Engine2D.UI.Browsers;
+
+public struct DragDropPayload
+{
+    public string PayloadData;
+    
+}
+
+public struct DragDropPayloadReference
+{
+    public int Index;
+}
+
 
 public class AssetBrowser : UiElemenet
 {
@@ -26,7 +39,7 @@ public class AssetBrowser : UiElemenet
         Init();
     }
     
-    protected override string GSetWindowTitle()
+    protected override string GetWindowTitle()
     {
         Log.Message("Creating a new Asset Browser");
         return "New Asset Browser";
@@ -78,6 +91,9 @@ public class AssetBrowser : UiElemenet
 
     private string _draggingValueFullPath;
     private string _draggingValueSelfName;
+
+    private Vector4 _overwriteColorOnDragDrop = new(1,0,0,1);
+    private bool _onDragDropTarget = false;
     
     private void Init()
     {
@@ -95,6 +111,9 @@ public class AssetBrowser : UiElemenet
     }
 
     private bool isSwitching = false;
+    private int _dragDropPayloadCounter = 0;
+    private Dictionary<int, DragDropPayload> _dragDropPayloads = new Dictionary<int, DragDropPayload>();
+    private bool _initiatedDragDrop = false;
 
     private void SwitchDirectory(DirectoryInfo newDirectory)
     {
@@ -121,6 +140,8 @@ public class AssetBrowser : UiElemenet
 
     private void DrawUI()
     {
+        _onDragDropTarget = false;
+        
         ImGui.BeginChild("item view", new(0, -ImGui.GetFrameHeightWithSpacing()));
         {
             if (isSwitching) return;
@@ -139,61 +160,70 @@ public class AssetBrowser : UiElemenet
 
     private unsafe void DrawFolders()
     {
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < _directoriesInDirectory.Count; i++)
         {
-            Action actionOnClick = () => { };
-            //GOTO FOLDER
-            Action actionOnDoubleClick = () => { };
-            //POPUP
-            Action actionOnRightClick = () => { };
-            Action actionAfterRender = () => { };
-            
+            var dir = _directoriesInDirectory[i];
             bool clicked = false;
             bool doubleClicked = false;
             bool rightClicked = false;
             
             var size = ImGui.GetFrameHeight() * 5.0f * 1;
             
-            ImGui.PushID(i);
+            ImGui.PushID(dir.FullName);
+            
             DrawEntry(
-                dirtexture.TexID, i + "folder",
+                dirtexture.TexID, dir.Name,
                 new(256, 256), new(size),
                 new(1), new(0),
                 -1,
                 new(0f), new(1f),
                 out clicked, out doubleClicked, out rightClicked
             );
-
-            HandleDragDropFolder(i.ToString());
-            ImGui.PopID();
-            ImGui.NextColumn();
-        }
-        
-        foreach (var dir in _directoriesInDirectory)
-        {
-            //SELECT FOLDER
-            Action actionOnClick = () => { };
-            //GOTO FOLDER
-            Action actionOnDoubleClick = () =>
+            
+            HandleDragDrop(dir: dir);
+            
+            if (ImGui.BeginDragDropTarget())
             {
-                SwitchDirectory(new DirectoryInfo(dir.FullName));
-            };
-            //POPUP
-            Action actionOnRightClick = () => { };
+                var payload = ImGui.AcceptDragDropPayload("asset_browser_drop");
+                if (payload.NativePtr != null)
+                {
+                    DragDropPayloadReference* h = (DragDropPayloadReference*)payload.Data;
+                    var pload = _dragDropPayloads[h->Index];
+                    _dragDropPayloads.Remove(h->Index);
+                    Console.WriteLine(pload.PayloadData + "onto " + dir.Name);
+                }
             
-            Action actionAfterRender = () => { };
-
-            bool clicked = false;
-            bool doubleClicked = false;
-            bool rightClicked = false;
-
-            var size = ImGui.GetFrameHeight() * 5.0f * 1;
+                ImGui.EndDragDropTarget();
+            }
             
-
+            // Our buttons are both drag sources and drag targets here!
+            // if (ImGui.BeginDragDropSource(ImGuiDragDropFlags.None))
+            // {
+            //     // Set payload to carry the index of our item (could be anything)
+            //     _currentlyDraggedHandle ??= GCHandle.Alloc(dir.FullName);
+            //     ImGui.SetDragDropPayload("asset_browser_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),(uint)sizeof(IntPtr));
+            //
+            //     // Display preview (could be anything, e.g. when dragging an image we could decide to display
+            //     // the filename and a small preview of the image, etc.)
+            //     ImGui.Text(dir.Name);
+            //     ImGui.EndDragDropSource();
+            // }
+            //
+            // if (ImGui.BeginDragDropTarget())
+            // {
+            //     var payload = ImGui.AcceptDragDropPayload("asset_browser_drop");
+            //     if (payload.IsValidPayload())
+            //     {
+            //         var data = (string)GCHandle.FromIntPtr(payload.Data).Target!;
+            //         Console.WriteLine(data + " onto " + dir.Name);
+            //     }
+            // }
+            
+            // HandleDragDropFolder(dir.Name);
             ImGui.PopID();
-            
             ImGui.NextColumn();
         }
+
     }
 
     private unsafe void DrawFiles()
@@ -208,6 +238,10 @@ public class AssetBrowser : UiElemenet
                 Action actionOnDoubleClick = () => { };
                 Action actionOnRightClick = () => { };
                 Action actionAfterRender = () => { };
+                
+                bool clicked = false;
+                bool doubleClicked = false;
+                bool rightClicked = false;
 
                 switch (ext)
                 {
@@ -218,85 +252,75 @@ public class AssetBrowser : UiElemenet
                         break;
                 }
                 // ImGui.PushID(file.FullName);
-                // DrawEntry(file.Name, file.FullName, dirtexture.TexID, actionOnClick, actionOnDoubleClick, actionOnRightClick, actionAfterRender);
-                // HandleDragDropFile(file.FullName, fileExtension, file.Name);
-                // ImGui.PopID();
+                
+                var size = ImGui.GetFrameHeight() * 5.0f * 1;
+                
+                ImGui.PushID(file.FullName);
+                
+                DrawEntry(
+                    dirtexture.TexID, file.Name,
+                    new(256, 256), new(size),
+                    new(1), new(0),
+                    -1,
+                    new(0f), new(1f),
+                    out clicked, out doubleClicked, out rightClicked
+                );
+
+                HandleDragDrop(file: file);
+                
+                ImGui.PopID();
             }
             
             ImGui.NextColumn();
         }
     }
-    
-    private unsafe void HandleDragDropFolder(string thisFullname)
+
+    private unsafe void HandleDragDrop(FileInfo? file = null, DirectoryInfo? dir = null)
     {
-        if (ImGui.BeginDragDropTarget())
+        string name = "";
+        string fullName = "";
+        
+        if (file != null)
         {
-            bool isValid = false;
-            {
-                var payload = ImGui.AcceptDragDropPayload("asset_browser_drop");
-                if (payload.IsValidPayload())
-                {
-                    // var filePath = (string)GCHandle.FromIntPtr(payload.Data).Target;
-                    var filePath = _draggingValueFullPath;
-                    Console.WriteLine("Dropped : " + filePath + " onto " + thisFullname);
-                    isValid = true;
-                }
-            }
-
-
-            foreach (ESupportedFileTypes type in (ESupportedFileTypes[])Enum.GetValues(typeof(ESupportedFileTypes)))
-            {
-                if (!isValid)
-                {
-                    var payload = ImGui.AcceptDragDropPayload("asset_browser_drop" + "_" + type);
-                    if (payload.IsValidPayload())
-                    {
-                        MoveFile(_draggingValueFullPath, thisFullname + "\\" + _draggingValueSelfName);
-                        isValid = true;
-                    }
-                }
-            }
-
-            ImGui.EndDragDropTarget();
+            name = file.Name;
+            fullName = file.FullName;
         }
-            
+        else if (dir != null)
+        {
+            name = dir.Name;
+            fullName = dir.FullName;
+        }
+        else
+        {
+            return;
+        }
+        
         if (ImGui.BeginDragDropSource())
         {
-            _currentlyDragging = true;
-            _currentlyDraggedHandle ??= GCHandle.Alloc(thisFullname);
-            _draggingValueFullPath = thisFullname;
-            
-            ImGui.SetDragDropPayload("asset_browser_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
-                (uint)sizeof(IntPtr));
+            ImGui.Text(name);
+            DragDropPayload p = new DragDropPayload()
+            {
+                PayloadData =  fullName
+            };
+
+            _dragDropPayloads.Add(_dragDropPayloadCounter, p);
+            DragDropPayloadReference r = new DragDropPayloadReference();
+            r.Index = _dragDropPayloadCounter;
+            _dragDropPayloadCounter++;
                 
-            ImGui.Text(thisFullname);
-                
+            GCHandle handle = GCHandle.Alloc(r, GCHandleType.Pinned);
+            ImGui.SetDragDropPayload("asset_browser_drop", handle.AddrOfPinnedObject(), (uint)sizeof(DragDropPayloadReference));
             ImGui.EndDragDropSource();
-        }
-    }
-
-    private unsafe void HandleDragDropFile(string thisFullname, string extensions, string thisSelfName)
-    {
-        if (!ImGui.BeginDragDropSource()) return;
-        
-        _currentlyDragging = true;
-        _currentlyDraggedHandle ??= GCHandle.Alloc(thisFullname);
-        _draggingValueFullPath = thisFullname;
-        _draggingValueSelfName = thisSelfName;
-
-        string type = "asset_browser_drop" + "_" + extensions; 
-        
-        ImGui.SetDragDropPayload(type, GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
-            (uint)sizeof(IntPtr));
+            handle.Free();
                 
-        ImGui.Text(extensions);
-        ImGui.EndDragDropSource();
+            _initiatedDragDrop = true;
+        }
     }
 
     private void MoveFile(string fullName, string destFullname)
     {
-        File.Move(fullName, destFullname);
-        SwitchDirectory(_currentDirectory);
+        // File.Move(fullName, destFullname);
+        // SwitchDirectory(_currentDirectory);
     }
 
     private bool DrawEntry(
@@ -305,14 +329,17 @@ public class AssetBrowser : UiElemenet
         Vector2 uv0, Vector2 uv1, int frame_padding,
         Vector4 bg_col, Vector4 tint_col,
         out bool isClicked, out bool isDoubleClicked, out bool isRightClicked,
-        Action? afterRender = null
+        Action? afterRender = null,
+        float r = -1f,
+        float g = -1f,
+        float b = -1f,
+        float a = -1f
     )
     {
-
         return Gui.ImageButtonExTextDown(name, (uint)texId, texId, imageSize, uv0, uv1, new(-1f),
             bg_col, tint_col,
             out isClicked, out isDoubleClicked, out isRightClicked,
-            afterRender);
+            afterRender, r,g,b,a);
 
         // return Gui.FileIcon(
         //     texId, name, texture_size, imageSize, uv0, uv1, frame_padding,
@@ -321,4 +348,41 @@ public class AssetBrowser : UiElemenet
         //     afterRender);
         //return Gui.FileIcon(name, icon, onClick, onDoubleClick, onRightClick, afterRender);
     }
+
+    // void test(){
+    //     if (ImGui.BeginDragDropSource())
+    //     {
+    //         ImGui.Text(e.PrettyName);
+    //         // Kinda meme
+    //         DragDropPayload p = new DragDropPayload();
+    //         p.Entity = e;
+    //         _dragDropPayloads.Add(_dragDropPayloadCounter, p);
+    //         DragDropPayloadReference r = new DragDropPayloadReference();
+    //         r.Index = _dragDropPayloadCounter;
+    //         _dragDropPayloadCounter++;
+    //         
+    //         GCHandle handle = GCHandle.Alloc(r, GCHandleType.Pinned);
+    //         ImGui.SetDragDropPayload("entity", handle.AddrOfPinnedObject(), (uint)sizeof(DragDropPayloadReference));
+    //         ImGui.EndDragDropSource();
+    //         handle.Free();
+    //         
+    //         _initiatedDragDrop = true;
+    //     }
+    //
+    //     if (hierarchial && ImGui.BeginDragDropTarget())
+    //     {
+    //         var payload = ImGui.AcceptDragDropPayload("entity");
+    //         if (payload.NativePtr != null)
+    //         {
+    //             DragDropPayloadReference* h = (DragDropPayloadReference*)payload.Data;
+    //             var pload = _dragDropPayloads[h->Index];
+    //             _dragDropPayloads.Remove(h->Index);
+    //             _dragDropSources.Add(pload.Entity);
+    //             _dragDropDestObjects.Add(e);
+    //             _dragDropDests.Add(e.Children.Count);
+    //         }
+    //
+    //         ImGui.EndDragDropTarget();
+    //     }
+    // }
 }
