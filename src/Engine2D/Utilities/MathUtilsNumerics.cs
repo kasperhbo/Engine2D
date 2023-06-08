@@ -1,8 +1,8 @@
 ﻿using System.Numerics;
 
-namespace Engine2D;
+namespace Engine2D.Utilities;
 
-public class MathUtilsNumerics
+public static class MathUtilsNumerics
 {
     #region Rotation
     

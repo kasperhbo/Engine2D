@@ -4,6 +4,7 @@ using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Testing;
+using Engine2D.Utilities;
 using GlmSharp;
 using KDBEngine.Shaders;
 using Microsoft.Win32.SafeHandles;

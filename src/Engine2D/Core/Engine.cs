@@ -215,12 +215,12 @@ namespace Engine2D.Core
         private void RenderUI(FrameEventArgs e)
         {
             _imGuiController.Update(this, e.Time);
-
+          
             SetupDockspace();
 
             _imGuiController.Render();
         }
-
+        
         private void SetupDockspace()
         {
             float tabBarSize = 30;

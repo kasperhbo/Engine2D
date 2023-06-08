@@ -8,6 +8,7 @@ using Engine2D.UI;
 using ImGuiNET;
 using Newtonsoft.Json;
 using Engine2D.Components.TransformComponents;
+using Engine2D.UI.ImGuiExtension;
 
 namespace Engine2D.GameObjects;
 
@@ -112,7 +113,7 @@ public class Gameobject : Asset
         ImGui.Text(" UID: " + UID);
         ImGui.Separator();
 
-        OpenTKUIHelper.DrawComponentWindow("Transform", "Transform",
+        OpenTkuiHelper.DrawComponentWindow("Transform", "Transform",
             () =>
             {
                 this.GetComponent<Transform>().ImGuiFields();
@@ -126,7 +127,7 @@ public class Gameobject : Asset
             
             ImGui.PushID(i);
 
-            OpenTKUIHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
+            OpenTkuiHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
                 () => { components[i].ImGuiFields(); }, components[i].GetFieldSize() 
             );
 

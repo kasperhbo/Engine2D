@@ -1,17 +1,12 @@
-﻿using System.Data;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Engine2D.Components.TransformComponents;
-using Engine2D.GameObjects;
-using Engine2D.Logging;
+﻿using Engine2D.GameObjects;
 using ImGuiNET;
 using ImTool;
 using OpenTK.Mathematics;
 using Vector2 = System.Numerics.Vector2;
 
-namespace Engine2D.UI;
+namespace Engine2D.UI.ImGuiExtension;
 
-internal static class OpenTKUIHelper
+internal static class OpenTkuiHelper
 {
     public static void DrawComponentWindow(string id, string title, Action tablesToDraw, float size = 100)
     {

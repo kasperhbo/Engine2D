@@ -1,19 +1,9 @@
 ﻿using System.Numerics;
-using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
-using Engine2D.Components;
-using Engine2D.Components.TransformComponents;
-using Octokit;
-using OpenTK.Graphics.ES30;
 using OpenTK.Mathematics;
-using Veldrid.ImageSharp;
-using Quaternion = OpenTK.Mathematics.Quaternion;
-using Vector2 = System.Numerics.Vector2;
-using Vector3 = OpenTK.Mathematics.Vector3;
 using Vector4 = OpenTK.Mathematics.Vector4;
 
-namespace Engine2D;
+namespace Engine2D.Utilities;
 
 public static class MathUtils
 {

@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
 using Engine2D.Logging;
 using Engine2D.UI;
+using Engine2D.UI.ImGuiExtension;
+using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
 using OpenTK.Mathematics;
@@ -46,21 +48,21 @@ public class Transform : Component
 
     public override void ImGuiFields()
     {               
-        OpenTKUIHelper.DrawProperty("Position", ref Position);
-        OpenTKUIHelper.DrawProperty("Size", ref Size);
+        OpenTkuiHelper.DrawProperty("Position", ref Position);
+        OpenTkuiHelper.DrawProperty("Size", ref Size);
         ImGui.Separator();
         var Q = Rotation;
-        if (OpenTKUIHelper.DrawProperty("Q Rotation", ref Q))
+        if (OpenTkuiHelper.DrawProperty("Q Rotation", ref Q))
         {
             SetRotation(Q);
         }
         
-        if (OpenTKUIHelper.DrawProperty("Euler Radians", ref EulerRadians))
+        if (OpenTkuiHelper.DrawProperty("Euler Radians", ref EulerRadians))
         {
             Log.Warning("Euler changing not implemented");
         }
         
-        if (OpenTKUIHelper.DrawProperty("Euler Degrees", ref EulerDegrees))
+        if (OpenTkuiHelper.DrawProperty("Euler Degrees", ref EulerDegrees))
         {
             Log.Warning("Degrees changing not implemented");
         }

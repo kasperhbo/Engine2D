@@ -6,6 +6,8 @@ using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
+using Engine2D.UI.ImGuiExtension;
+using Engine2D.Utilities;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
@@ -361,10 +363,10 @@ internal class ImageTextIcon
         // TODO: replace with actual Asset Thumbnail interface
 
         if (ImGui.InvisibleButton("##thumbnailButton", new Vector2(thumbnailSize, thumbnailSize))) singleClick = true;
-        OpenTKUIHelper.DrawButtonImage(
+        OpenTkuiHelper.DrawButtonImage(
             _texture, _textureHovered, _texture,
-            OpenTKUIHelper.RectExpanded(
-                OpenTKUIHelper.GetItemRect(),
+            OpenTkuiHelper.RectExpanded(
+                OpenTkuiHelper.GetItemRect(),
                 -6,
                 -6
             )

@@ -1,4 +1,4 @@
-﻿namespace Engine2D;
+﻿namespace Engine2D.Utilities;
 
 public static class FileUtils
 {

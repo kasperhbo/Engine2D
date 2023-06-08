@@ -3,6 +3,7 @@ using Engine2D.Core;
 using Engine2D.Managers;
 using Engine2D.SavingLoading;
 using Engine2D.UI;
+using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using Newtonsoft.Json;
 using OpenTK.Graphics.OpenGL4;
@@ -77,7 +78,7 @@ public class Sprite : Asset
             SpriterendererManager.UpdateSpriteRenderers(this.FullSavePath);
         };
         
-        OpenTKUIHelper.DrawComponentWindow(
+        OpenTkuiHelper.DrawComponentWindow(
             "Sprite Settings",
             "Sprite Settings",
             OnGuiItems,
@@ -90,7 +91,7 @@ public class Sprite : Asset
         for (int i = 0; i < TextureCoords.Length; i++)
         {
             Vector2 temp = TextureCoords[i];
-            OpenTKUIHelper.DrawProperty("Coord " + i, ref temp);
+            OpenTkuiHelper.DrawProperty("Coord " + i, ref temp);
             TextureCoords[i] = temp;
         }
     }

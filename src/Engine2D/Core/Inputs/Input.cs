@@ -5,6 +5,7 @@ using Box2DSharp.Collision;
 using Engine2D.Cameras;
 using Engine2D.Logging;
 using Engine2D.UI.Viewports;
+using Engine2D.Utilities;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;

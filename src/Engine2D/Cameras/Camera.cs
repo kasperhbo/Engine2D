@@ -4,6 +4,8 @@ using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.UI;
+using Engine2D.UI.ImGuiExtension;
+using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
 using Transform = Engine2D.Components.TransformComponents.Transform;
@@ -100,15 +102,15 @@ public class Camera : Component
 
     public override void ImGuiFields()
     {
-        if (OpenTKUIHelper.DrawProperty("Size: ", ref Size, label: false))
+        if (OpenTkuiHelper.DrawProperty("Size: ", ref Size, label: false))
         {
         }
         
         ImGui.Separator();
         ImGui.Text("Clipping Planes");
 
-        if (OpenTKUIHelper.DrawProperty("Near: ", ref Near, label: false) ||
-            OpenTKUIHelper.DrawProperty("Far: ", ref Far, label: false))
+        if (OpenTkuiHelper.DrawProperty("Near: ", ref Near, label: false) ||
+            OpenTkuiHelper.DrawProperty("Far: ", ref Far, label: false))
         {
         }   
     }
