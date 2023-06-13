@@ -230,7 +230,7 @@ namespace Engine2D.Core
 
         private float _titleBarHeight = 45;
         
-        private unsafe void SetupDockspace()
+        private void SetupDockspace()
         {
             ImGuiWindowFlags host_window_flags = 0;
             host_window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking;
