@@ -123,11 +123,6 @@
 
 
     <ItemGroup>
-        <Folder Include="Rendering\Lights" />
-    </ItemGroup>
-
-
-    <ItemGroup>
       <EmbeddedResource Remove="Lib\ImGui.Net\src\CodeGenerator\**" />
       <EmbeddedResource Remove="Lib\ImGui.Net\src\ImGui.NET\**" />
       <EmbeddedResource Remove="Lib\ImGui.Net\src\ImGuizmo.NET\**" />

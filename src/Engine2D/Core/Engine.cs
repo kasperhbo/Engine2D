@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Dear_ImGui_Sample;
 using Engine2D.Logging;
 using Engine2D.SavingLoading;
 using Engine2D.Scenes;
@@ -22,40 +23,6 @@ namespace Engine2D.Core
         public Asset? CurrentSelectedAsset;
 
         private readonly Dictionary<string, UiElemenet> _guiWindows = new();
-
-        private void AddGuiWindow(UiElemenet window)
-        {
-            _guiWindows.Add(window.Title,window);
-            FileDrop += window.OnFileDrop;
-        }
-
-        private void RemoveGuiWindow(UiElemenet window)
-        {
-            FileDrop -= window.OnFileDrop;
-            _guiWindows.Remove(window.Title);
-        }
-        
-        private readonly EngineSettingsWindow engineSettingsWindow = new();
-
-        private ImGuiController _imGuiController;
-
-        private EditorViewport? _editorViewport = null;
-
-        public EditorViewport? CurrentEditorViewport
-        {
-            get
-            {
-                if (_editorViewport == null)
-                {
-                    Log.Error("There is currently no editor vp, please open one firts");
-                    return null;
-                }
-                
-                return _editorViewport;
-            } 
-        }
-        
-        private GameViewport _gameViewport;
 
         #region setup
 
@@ -95,8 +62,6 @@ namespace Engine2D.Core
 
             SaveLoad.LoadEngineSettings();
 
-            if (Settings.s_IsEngine)
-                LoadEditor();
 
             WindowState = WindowSettings.FullScreen;
 
@@ -104,9 +69,9 @@ namespace Engine2D.Core
 
             SwitchScene(ProjectSettings.FullProjectPath + "\\kasper1.kdbscene");
 
-            if (Settings.s_IsEngine || Settings.s_RenderDebugWindowSeperate)
-                LoadViewports();
-            
+            if (Settings.s_IsEngine)
+                UIRenderer.Init(this, true);
+
         }
 
         private void AssignDefaultEvents()
@@ -125,24 +90,6 @@ namespace Engine2D.Core
             
         }
         
-        private void LoadEditor()
-        {
-            RenderFrame += RenderUI;
-            
-            _imGuiController = new ImGuiController(ClientSize.X, ClientSize.Y);
-            
-            base.MouseWheel += _imGuiController.MouseWheel;
-            base.TextInput += _imGuiController.PressChar;
-            base.Resize += _imGuiController.WindowResized;
-            
-            CreateUIWindows();
-        }
-
-        private void LoadViewports()
-        {
-            _editorViewport = new EditorViewport();
-            _gameViewport = new GameViewport();
-        }
         
         #endregion
 
@@ -185,21 +132,6 @@ namespace Engine2D.Core
             SwapBuffers();
         }
         
-        private void RenderUIWindows()
-        {
-            foreach (var window in _guiWindows.Values)
-            {
-                window.Render();
-            }
-            
-            CurrentScene?.OnGui();
-            
-            _editorViewport.Begin("Editor", CurrentScene?.EditorCamera,
-                CurrentScene?.Renderer?.EditorGameBuffer);
-            
-            _gameViewport.Begin("Game", CurrentScene.CurrentMainGameCamera,
-                CurrentScene.Renderer.GameBuffer);
-        }
 
         private new void OnResize(ResizeEventArgs e)
         {
@@ -215,93 +147,8 @@ namespace Engine2D.Core
         private void MouseWheel(MouseWheelEventArgs e)
         {
         }
-
-
-        private void RenderUI(FrameEventArgs e)
-        {
-            _imGuiController.Update(this, e.Time);
-            DrawMainMenuBar();
-            DrawToolbar();
-            SetupDockspace();
-
-            _imGuiController.Render();
-        }
-
-        private float _titleBarHeight = 45;
         
-        private void SetupDockspace()
-        {
-            ImGuiWindowFlags host_window_flags = 0;
-            host_window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking;
-            host_window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
-            
-            ImGui.SetNextWindowPos(new System.Numerics.Vector2(0,55));
-            ImGui.SetNextWindowSize(
-                new System.Numerics.Vector2(ClientSize.X, ClientSize.Y - 55));
-            
-            string label = "";
 
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new System.Numerics.Vector2(0.0f, 0.0f));
-
-            bool open = false;
-            ImGui.Begin("DockspaceViewport", ref open, host_window_flags);
-            ImGui.PopStyleVar(3);
-
-            ImGuiDockNodeFlags flags = ImGuiDockNodeFlags.None;
-
-            uint id = ImGui.GetID("DockSpace");
-            ImGui.DockSpace(id, new System.Numerics.Vector2(0, 0), flags
-            );
-            ImGui.End();
-
-            RenderUIWindows();
-        }
-
-        private void DrawMainMenuBar()
-        {
-            ImGui.SetNextWindowSize(new System.Numerics.Vector2(ClientSize.X, 55));
-            ImGui.SetNextWindowPos(new System.Numerics.Vector2(0, 1));
-            ImGui.Begin("titlebar", ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoNav );
-
-            ImGui.BeginMenuBar(); 
-            ImGui.MenuItem("File");
-            ImGui.MenuItem("Windows");
-            ImGui.MenuItem("Help");
-            ImGui.EndMenuBar();
-        }
-        
-        private void DrawToolbar()
-        {   
-            //ImGui.Begin("Toolbar", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoNav );
-            ImGui.Button("Button");
-            ImGui.SameLine();
-            ImGui.Button("Button2");
-            ImGui.End();
-        }
-
-
-        private void CreateUIWindows()
-        {
-            var assetBrowser = new AssetBrowser();
-            AddGuiWindow(assetBrowser);
-            
-            var assetBrowser2 = new UI.Browsers.AssetBrowser();
-            AddGuiWindow(assetBrowser2);
-            
-            var inspector = new Inspector();
-            AddGuiWindow(inspector);
-            
-            var hierarch = new SceneHierachy();
-            AddGuiWindow(hierarch);
-
-            var uiSettingsPanel = new UISettingsPanel();
-            AddGuiWindow(uiSettingsPanel);
-            
-            AddGuiWindow(engineSettingsWindow);
-        }
-        
         private int _frameCounter;
         private void SetTitle(float time)
         {
