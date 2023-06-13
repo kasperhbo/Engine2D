@@ -51,7 +51,6 @@ namespace Engine2D.Core
                     return null;
                 }
                 
-                //TODO: REPLACE THIS FOR MULTIPLE VPS
                 return _editorViewport;
             } 
         }
@@ -99,7 +98,7 @@ namespace Engine2D.Core
             if (Settings.s_IsEngine)
                 LoadEditor();
 
-            Get().WindowState = WindowSettings.FullScreen;
+            WindowState = WindowSettings.FullScreen;
 
             AssignDefaultEvents();
 
@@ -343,6 +342,6 @@ public static class Settings
 public static class ProjectSettings
 {
     public static string ProjectName     {get;} = "ExampleGame";
-    public static string ProjectLocation {get;} = "D:\\dev\\EngineDev\\Engine2D\\src\\";
+    public static string ProjectLocation {get;} = @"D:\dev\Engine2D\src\";
     public static string FullProjectPath {get;} = ProjectLocation + ProjectName;
 }

@@ -17,8 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Sprites" />
-    <Folder Include="Assets\Sprites2" />
+    <Folder Include="Assets\TestFolder\" />
     <Folder Include="Registers" />
   </ItemGroup>
 

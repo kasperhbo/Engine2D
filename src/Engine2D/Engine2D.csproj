@@ -90,7 +90,7 @@
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Images\Icons\not-found-icon.jpg">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Shaders\ShaderFiles\Debug\Grid.frag">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -103,6 +103,21 @@
         </None>
         <None Update="Shaders\ShaderFiles\DefaultLine.vert">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Images\Icons\file-icon.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Images\Icons\folder-icon.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Images\Icons\folder-open-icon.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Images\Icons\scene-icon.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Images\Icons\terminal-icon.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 

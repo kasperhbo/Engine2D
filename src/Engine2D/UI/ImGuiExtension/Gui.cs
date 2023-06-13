@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Numerics;
-using Engine2D.Logging;
+﻿using System.Numerics;
 using Engine2D.Utilities;
 using ImGuiNET;
 using static ImGuiNET.ImGui;
@@ -9,49 +7,6 @@ namespace Engine2D.UI.ImGuiExtension;
 
 public static class Gui
 {
-    // public static bool FileIcon(        
-    //     IntPtr texId, string name, 
-    //     Vector2 texture_size, Vector2 imageSize,
-    //     Vector2 uv0, Vector2 uv1, int frame_padding,
-    //     Vector4 bg_col, Vector4 tint_col,
-    //     out bool isClicked, out bool isDoubleClicked, out bool isRightClicked,
-    //     Action? afterRender
-    //     )
-    // {
-    //     return ImageButtonExTextDown(
-    //         texId, name, 
-    //         texture_size, imageSize, 
-    //         uv0, uv1, frame_padding,
-    //         bg_col, tint_col,
-    //         out isClicked, out isDoubleClicked, out isRightClicked,
-    //         afterRender);
-    // }
-
-    // public static bool ImageButtonExTextDown(
-    //     string label,
-    //     uint id,
-    //     IntPtr texture_id,
-    //     Vector2 size,
-    //     Vector2 uv0, Vector2 uv1,
-    //     Vector2 padding, 
-    //     Vector4 bg_col, Vector4 tint_col,
-    //     Action afterRender)
-    // {
-    //     return ImageButtonExTextDown(
-    //          label,
-    //          id,
-    //          texture_id,
-    //          size,
-    //          uv0,  uv1,
-    //          padding,  
-    //          bg_col, tint_col,
-    //         out bool click,
-    //         out bool doubleclick,
-    //         out bool rightclick, 
-    //          afterRender
-    //     );
-    // }
-
     public static bool FileIcon(
         IntPtr texId, string name, 
         Vector2 texture_size, Vector2 imageSize,
@@ -112,10 +67,7 @@ public static class Gui
         
         var padding =
             (frame_padding >= 0) ? new Vector2(frame_padding, frame_padding) : style.FramePadding;
-     
         
-        bool istextBig = textSize.X > imageSize.X;
-
         var totalSizeWithoutPadding = new Vector2(size.X, size.Y > textSize.Y ? size.Y : textSize.Y);
 
         ImRect bb = new ImRect
@@ -151,11 +103,6 @@ public static class Gui
 
         start = GetCursorPos() + padding;
         start.Y += (size.Y - textSize.Y) + 2;
-        
-        if(!istextBig)
-        {
-            start.X += (size.X - textSize.X) * .5f;
-        }
         
         ItemSize(bb);
         // if (!ItemAdd(bb, id))
@@ -208,31 +155,40 @@ public static class Gui
     }
 
 
-    public static bool ImageButtonExTextDown(
-        string label,
-        uint id,
+    public static bool ImageButtonExTextDown(string label,
         IntPtr texture_id,
         Vector2 size,
         Vector2 uv0, Vector2 uv1,
-        Vector2 padding, Vector4 bg_col, Vector4 tint_col,
+        Vector2 padding, Vector2 ImageAdjustLocation,
+        Vector4 tint_col,
         out bool isClicked, out bool isDoubleClicked, out bool isRightClicked,
-        Action? afterRender,
+        bool isSelected,
         float rOverwrite = -1,
         float gOverwrite = -1,
         float bOverwrite = -1,
-        float aOverwrite = -1
-        )
+        float aOverwrite = -1)
     {
         isClicked = false;
         isDoubleClicked = false;
         isRightClicked = false;
             
+        string originalLabel = label;
+        
         var window = GetCurrentWindow();
         if (window.SkipItems)
             return false;
 
         Vector2 textSize = CalcTextSize(label, 0, true);
-            
+
+        bool isTextBig = textSize.X > size.X;
+        if(isTextBig)
+        {
+            //labe...
+            label = label.Remove(4, label.Length - 4) + "...";
+        }
+        
+        textSize = CalcTextSize(label, 0, true);
+        
         var start = GetCursorScreenPos() + padding;
         
         ImRect bb = new ImRect
@@ -254,7 +210,7 @@ public static class Gui
         ImRect image_bb = new()
         {
             Min = GetCursorScreenPos(),// + reajustMIN,
-            Max = GetCursorScreenPos() + size// + reajustMAX
+            Max = (GetCursorScreenPos()) + size// + reajustMAX
         };
 
         bool hovered = false;
@@ -264,7 +220,7 @@ public static class Gui
         start.Y += (size.Y - textSize.Y) - 2;
         start.X += (size.X - textSize.X) / 2;
         
-        ImGui.InvisibleButton(label, 
+        InvisibleButton(label, 
             new Vector2(
                 GetWidth(image_bb), 
                 GetHeight(image_bb)
@@ -284,6 +240,11 @@ public static class Gui
         var col = GetColorU32((held && hovered) ? 
             ImGuiCol.ButtonActive : hovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button);
 
+        if (isSelected)
+        {
+            col = GetColorU32(ImGuiCol.TextSelectedBg);
+        }
+        
         if (rOverwrite != -1 && gOverwrite != -1 && bOverwrite != -1 && aOverwrite != -1)
         {
             col = GetColorU32(new Vector4(rOverwrite, gOverwrite, bOverwrite, aOverwrite));
@@ -292,23 +253,20 @@ public static class Gui
         RenderFrame(
             image_bb.Min, image_bb.Max,
             col, true, 8);
-
-        // if(bg_col.W > 0.0f)
-        //     GetWindowDrawList().AddRectFilled((image_bb.Min + padding) + new Vector2(5), (image_bb.Max - padding) - new Vector2(5), 
-        //         GetColorU32(bg_col));
+        
         padding = new(15);
         
         GetWindowDrawList().AddImage(texture_id,
-            (image_bb.Min + padding), (image_bb.Max - padding),
+            (image_bb.Min - ImageAdjustLocation  + padding), (image_bb.Max - ImageAdjustLocation- padding),
             uv0, uv1, GetColorU32(tint_col));
-            
-
-        // if(istextBig == false)
+        
+        if(IsItemHovered())
+        {
+            SetTooltip(originalLabel);
+        }
 
         RenderText(start, label);
         
-        //if 
-        //
         return isClicked;
     }
     
