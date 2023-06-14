@@ -3,6 +3,7 @@ using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.UI;
 using Engine2D.UI.Browsers;
+using Engine2D.UI.ImGuiExtension;
 using Engine2D.UI.Viewports;
 using ImGuiNET;
 using OpenTK.Windowing.Common;
@@ -46,10 +47,18 @@ public static class UIRenderer
         _windows = new List<UiElemenet>();
         _controller = new ImGuiController(Engine.Get().Size.X, Engine.Get().Size.Y);
 
-
         if (createDefaultWindows) CreateDefaultWindows();
+        LoadFont(Utils.GetBaseEngineDir() + "\\UI\\Fonts\\Roboto\\Roboto-Black.ttf", 22);
     }
 
+    private static void LoadFont(string fontPath, int fontSize)
+    {
+        ImFontPtr font = ImGui.GetIO().Fonts.AddFontFromFileTTF(fontPath, fontSize);
+ 
+        ImGui.GetIO().FontGlobalScale = 1f; // Adjust the font scale if needed
+        ImGui.PushFont(font);
+    }
+    
     private static void Update(FrameEventArgs args)
     {
         //_controller.Update(Engine.Get(), args.Time);
@@ -62,7 +71,9 @@ public static class UIRenderer
         DrawMainMenuBar();
         DrawToolbar();
         SetupDockspace();
-
+        
+        ImGui.ShowDemoWindow();
+        
         _controller.Render();
     }
 
@@ -80,9 +91,36 @@ public static class UIRenderer
     {
         _controller.WindowResized(args);
     }
-
+    static int currentItem = 0;
     private static void RenderUIWindows()
     {
+        ImGui.Begin("Styles");
+
+        if (ImGui.Combo("label", ref currentItem, "Default (dark)\0" +
+                                                  "Default always RED buttons (dark)\0" +
+                                                  "Default gray buttons (dark)\0" +
+                                                  "Colors on black (dark)\0" +
+                                                  "Solarized (dark)\0" +
+                                                  "SetupStyle\0" +
+                                                  "Cyan/White on Grey (dark)\0" +
+                                                  "Cyan/Yellow on Gray/Black (dark)\0" +
+                                                  "Red on Gray/Black (dark)\0" +
+                                                  "Cyan/Yellow on White (light)\0" +
+                                                  "Grey scale on White (light)\0" +
+                                                  "ImGui Classic\0" +
+                                                  "ImGui Dark\0" +
+                                                  "ImGui Light\0"+
+                                                  "chatgpt\0"+
+                                                  "chatgptlight\0"
+            ))
+        {
+            ImGuiStyleManager.selectTheme(currentItem);
+            Console.WriteLine(currentItem);
+            ImGui.EndCombo();
+        }
+        
+        ImGui.End();
+        
         foreach (var window in _windows)
         {
             window.Render();
