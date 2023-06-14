@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
+using Engine2D.Logging;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using ImGuizmoNET;
@@ -24,29 +25,28 @@ namespace Dear_ImGui_Sample
     /// A modified version of Veldrid.ImGui's ImGuiRenderer.
     /// Manages input for ImGui and handles rendering ImGui's DrawLists with Veldrid.
     /// </summary>
-    public class ImGuiController : IDisposable
+    public static class KDBImGuiController
     {
-        private bool _frameBegun;
-
+        private static bool _frameBegun;
         // Veldrid objects
-        private int _vertexArray;
-        private int _vertexBuffer;
-        private int _vertexBufferSize;
-        private int _indexBuffer;
-        private int _indexBufferSize;
+        private static int _vertexArray;
+        private static int _vertexBuffer;
+        private static int _vertexBufferSize;
+        private static int _indexBuffer;
+        private static int _indexBufferSize;
 
-        private Texture _fontTexture;
-        private Shader _shader;
+        private static Texture _fontTexture;
+        private static Shader _shader;
         
-        private int _windowWidth;
-        private int _windowHeight;
+        private static int _windowWidth;
+        private static int _windowHeight;
 
-        private Vector2 _scaleFactor = Vector2.One;
+        private static Vector2 _scaleFactor = Vector2.One;
 
         /// <summary>
         /// Constructs a new ImGuiController.
         /// </summary>
-        public ImGuiController(int width, int height)
+        public static void Init(int width, int height)
         {
             _windowWidth = width;
             _windowHeight = height;
@@ -60,7 +60,11 @@ namespace Dear_ImGui_Sample
             ImPlot.CreateContext();
             
             var io = ImGui.GetIO();
-            io.Fonts.AddFontDefault();
+            //io.Fonts.AddFontDefault();
+            
+            //Load default font
+            ImGui.GetIO().Fonts.AddFontFromFileTTF(Engine2D.Core.Utils.GetBaseEngineDir()
+                                                   +"\\UI\\Fonts\\Roboto\\Roboto-Light.ttf", 16);  
 
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
@@ -71,7 +75,7 @@ namespace Dear_ImGui_Sample
 
             SetPerFrameImGuiData(1f / 60f);
             
-            ImGuiStyleManager.SetGUIStyle();
+            ImGuiStyleManager.SetGuiStyle();
             
             ImGui.NewFrame();
             ImGuizmo.BeginFrame();
@@ -79,85 +83,18 @@ namespace Dear_ImGui_Sample
             _frameBegun = true;
         }
 
-        private void LoadStyle()
-        {
-            var style = ImGui.GetStyle();
-
-            style.AntiAliasedFill = true;
-            style.AntiAliasedLines = true;
-
-            style.ChildRounding = 5;
-            
-            style.Colors[(int)ImGuiCol.Text] = new Vector4(0.88f, 0.88f, 0.88f, 1.00f);
-            style.Colors[(int)ImGuiCol.TextDisabled] = new Vector4(0.50f, 0.50f, 0.50f, 1.00f);
-            style.Colors[(int)ImGuiCol.WindowBg] = new Vector4(0.196f, 0.196f, 0.196f, 1.00f);
-            style.Colors[(int)ImGuiCol.ChildBg] = new Vector4(0.196f, 0.196f, 0.196f, 1.00f);
-            style.Colors[(int)ImGuiCol.PopupBg] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.Border] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.BorderShadow] = new Vector4(0.36f, 0.36f, 0.36f, 0.21f);
-            style.Colors[(int)ImGuiCol.FrameBg] = new Vector4(0.15f, 0.15f, 0.15f, 1.00f);
-            style.Colors[(int)ImGuiCol.FrameBgHovered] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.FrameBgActive] = new Vector4(0.12f, 0.12f, 0.12f, 1.00f);
-            style.Colors[(int)ImGuiCol.TitleBg] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.TitleBgActive] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.TitleBgCollapsed] = new Vector4(0.00f, 0.00f, 0.00f, 0.51f);
-            style.Colors[(int)ImGuiCol.MenuBarBg] = new Vector4(0.14f, 0.14f, 0.14f, 1.00f);
-            style.Colors[(int)ImGuiCol.ScrollbarBg] = new Vector4(0.16f, 0.16f, 0.16f, 1.00f);
-            style.Colors[(int)ImGuiCol.ScrollbarGrab] = new Vector4(0.28f, 0.28f, 0.28f, 1.00f);
-            style.Colors[(int)ImGuiCol.ScrollbarGrabHovered] = new Vector4(0.28f, 0.28f, 0.28f, 1.00f);
-            style.Colors[(int)ImGuiCol.ScrollbarGrabActive] = new Vector4(0.24f, 0.24f, 0.24f, 1.00f);
-            style.Colors[(int)ImGuiCol.CheckMark] = new Vector4(0.50f, 0.50f, 0.50f, 1.00f);
-            style.Colors[(int)ImGuiCol.SliderGrab] = new Vector4(0.28f, 0.28f, 0.28f, 1.00f);
-            style.Colors[(int)ImGuiCol.SliderGrabActive] = new Vector4(0.28f, 0.28f, 0.28f, 1.00f);
-            style.Colors[(int)ImGuiCol.Button] = new Vector4(0.16f, 0.16f, 0.16f, 1.00f);
-            style.Colors[(int)ImGuiCol.ButtonHovered] = new Vector4(0.14f, 0.14f, 0.14f, 1.00f);
-            style.Colors[(int)ImGuiCol.ButtonActive] = new Vector4(0.12f, 0.12f, 0.12f, 1.00f);
-            style.Colors[(int)ImGuiCol.Header] = new Vector4(0.18f, 0.18f, 0.18f, 1.00f);
-            style.Colors[(int)ImGuiCol.HeaderHovered] = new Vector4(0.16f, 0.16f, 0.16f, 1.00f);
-            style.Colors[(int)ImGuiCol.HeaderActive] = new Vector4(0.13f, 0.13f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.Separator] = new Vector4(0.15f, 0.15f, 0.15f, 1.00f);
-            style.Colors[(int)ImGuiCol.SeparatorHovered] = new Vector4(0.37f, 0.37f, 0.37f, 1.00f);
-            style.Colors[(int)ImGuiCol.SeparatorActive] = new Vector4(0.49f, 0.49f, 0.49f, 1.00f);
-            style.Colors[(int)ImGuiCol.ResizeGrip] = new Vector4(0.15f, 0.15f, 0.15f, 1.00f);
-            style.Colors[(int)ImGuiCol.ResizeGripHovered] = new Vector4(0.35f, 0.35f, 0.35f, 1.00f);
-            style.Colors[(int)ImGuiCol.ResizeGripActive] = new Vector4(0.49f, 0.49f, 0.49f, 1.00f);
-            style.Colors[(int)ImGuiCol.Tab] = new Vector4(0.16f, 0.16f, 0.16f, 1.00f);
-            style.Colors[(int)ImGuiCol.TabHovered] = new Vector4(0.18f, 0.18f, 0.18f, 1.00f);
-            style.Colors[(int)ImGuiCol.TabActive] = new Vector4(0.20f, 0.20f, 0.20f, 1.00f);
-            style.Colors[(int)ImGuiCol.TabUnfocused] = new Vector4(0.16f, 0.16f, 0.16f, 1.00f);
-            style.Colors[(int)ImGuiCol.TabUnfocusedActive] = new Vector4(0.20f, 0.20f, 0.20f, 1.00f);
-            style.Colors[(int)ImGuiCol.DockingPreview] = new Vector4(0.41f, 0.41f, 0.41f, 1.00f);
-            style.Colors[(int)ImGuiCol.DockingEmptyBg] = new Vector4(0.20f, 0.20f, 0.20f, 1.00f);
-            style.Colors[(int)ImGuiCol.PlotLines] = new Vector4(0.66f, 0.66f, 0.66f, 1.00f);
-            style.Colors[(int)ImGuiCol.PlotLinesHovered] = new Vector4(0.27f, 0.37f, 0.13f, 1.00f);
-            style.Colors[(int)ImGuiCol.PlotHistogram] = new Vector4(0.34f, 0.47f, 0.17f, 1.00f);
-            style.Colors[(int)ImGuiCol.PlotHistogramHovered] = new Vector4(0.41f, 0.56f, 0.20f, 0.99f);
-            style.Colors[(int)ImGuiCol.TextSelectedBg] = new Vector4(0.80f, 0.80f, 0.80f, 0.27f);
-            style.Colors[(int)ImGuiCol.DragDropTarget] = new Vector4(0.59f, 0.59f, 0.59f, 0.98f);
-            style.Colors[(int)ImGuiCol.NavHighlight] = new Vector4(0.83f, 0.83f, 0.83f, 1.00f);
-            style.Colors[(int)ImGuiCol.NavWindowingHighlight] = new Vector4(0.83f, 0.83f, 0.83f, 1.00f);
-            style.Colors[(int)ImGuiCol.NavWindowingDimBg] = new Vector4(0.05f, 0.05f, 0.05f, 0.50f);
-            style.Colors[(int)ImGuiCol.ModalWindowDimBg] = new Vector4(0.05f, 0.05f, 0.05f, 0.50f);
-            style.Colors[(int)ImGuiCol.DragDropTarget] = new Vector4(0.019f, 0.019f, 0.019f, .4f);
-        }
-
-        private void LoadStyle2()
-        {
-           
-        }
-
-        public void WindowResized(ResizeEventArgs obj)
+        public static void WindowResized(ResizeEventArgs obj)
         {
             _windowWidth =  obj.Width;
             _windowHeight = obj.Height;
         }
 
-        public void DestroyDeviceObjects()
+        public static void DestroyDeviceObjects()
         {
-            Dispose();
+            Destroy();
         }
 
-        public void CreateDeviceResources()
+        public static void CreateDeviceResources()
         {
             Util.CreateVertexArray("ImGui", out _vertexArray);
 
@@ -224,18 +161,41 @@ void main()
         /// <summary>
         /// Recreates the device texture used to render text.
         /// </summary>
-        public void RecreateFontDeviceTexture()
+        public static unsafe void RecreateFontDeviceTexture()
         {
+            Console.WriteLine("Recreating Font Device Textures");
+            
             ImGuiIOPtr io = ImGui.GetIO();
+            
             io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height, out int bytesPerPixel);
-
+            
             _fontTexture = new Texture("ImGui Text Atlas", width, height, pixels);
             _fontTexture.SetMagFilter(TextureMagFilter.Linear);
             _fontTexture.SetMinFilter(TextureMinFilter.Linear);
             
             io.Fonts.SetTexID(_fontTexture.GLTexture);
-
+            
             io.Fonts.ClearTexData();
+            
+            // var io = ImGui.GetIO();
+            //
+            // ImFontAtlasPtr fontAtlas = io.Fonts;
+            //
+            // ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
+            //
+            // // Glyphs could be added per-font as well as per config used globally like here
+            // fontConfig.GlyphRanges = (ushort*)fontAtlas.GetGlyphRangesDefault();
+            //
+            // // Fonts merge example
+            // fontConfig.PixelSnapH = (1);
+            // fontAtlas.AddFontDefault();
+            // fontAtlas.Build();
+            // io.Fonts.SetTexID(fontAtlas.TexID);
+            // io.Fonts.ClearTexData();
+            // fontAtlas.Destroy();
+            // fontAtlas.AddFontFromFileTTF(Engine2D.Core.Utils.GetBaseEngineDir()
+            // +"\\Fonts\\Roboto\\Roboto-Italic.ttf", 32);
+            //
         }
 
         /// <summary>
@@ -244,7 +204,7 @@ void main()
         /// or index data has increased beyond the capacity of the existing buffers.
         /// A <see cref="Veldrid.CommandList"/> is needed to submit drawing and resource update commands.
         /// </summary>
-        public void Render()
+        public static void Render()
         {
             if (_frameBegun)
             {
@@ -258,12 +218,12 @@ void main()
         /// Updates ImGui input and IO configuration state.
         /// </summary>
         ///
-        public void Update(GameWindow wnd, double deltaSeconds)
+        public static void Update(GameWindow wnd, double deltaSeconds)
         {
             Update(wnd, (float)deltaSeconds);
         }
 
-        public void Update(GameWindow wnd, float deltaSeconds)
+        public static void Update(GameWindow wnd, float deltaSeconds)
         {
             if (_frameBegun)
             {
@@ -282,7 +242,7 @@ void main()
         /// Sets per-frame data based on the associated window.
         /// This is called by Update(float).
         /// </summary>
-        private void SetPerFrameImGuiData(float deltaSeconds)
+        private static void SetPerFrameImGuiData(float deltaSeconds)
         {
             ImGuiIOPtr io = ImGui.GetIO();
             io.DisplaySize = new Vector2(
@@ -292,9 +252,9 @@ void main()
             io.DeltaTime = deltaSeconds; // DeltaTime is in seconds.
         }
 
-        readonly List<char> PressedChars = new List<char>();
+        readonly static List<char> PressedChars = new List<char>();
 
-        private void UpdateImGuiInput(GameWindow wnd)
+        private static void UpdateImGuiInput(GameWindow wnd)
         {
             ImGuiIOPtr io = ImGui.GetIO();
 
@@ -330,12 +290,12 @@ void main()
             io.KeySuper = KeyboardState.IsKeyDown(Keys.LeftSuper) || KeyboardState.IsKeyDown(Keys.RightSuper);
         }
 
-        public void PressChar(TextInputEventArgs obj)
+        public static void PressChar(TextInputEventArgs obj)
         {
             PressedChars.Add((char)obj.Unicode);
         }
 
-        public void MouseWheel(MouseWheelEventArgs obj)
+        public static void MouseWheel(MouseWheelEventArgs obj)
         {
             ImGuiIOPtr io = ImGui.GetIO();
             
@@ -367,7 +327,7 @@ void main()
             io.KeyMap[(int)ImGuiKey.Z] = (int)Keys.Z;
         }
 
-        private void RenderImDrawData(ImDrawDataPtr draw_data)
+        private static void RenderImDrawData(ImDrawDataPtr draw_data)
         {
             if (draw_data.CmdListsCount == 0)
             {
@@ -479,13 +439,11 @@ void main()
         /// <summary>
         /// Frees all graphics resources used by the renderer.
         /// </summary>
-        public void Dispose()
+        public static void Destroy()
         {
             _fontTexture.Dispose();
             _shader.Dispose();
         }
-
-
     }
     
     static class Util

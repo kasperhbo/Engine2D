@@ -1,25 +1,25 @@
-﻿using System.Data;
-using System.Numerics;
-using System.Runtime.InteropServices;
+﻿using System.Numerics;
 using Engine2D.Core;
+using Engine2D.Core.Inputs;
 using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Engine2D.UI.Browsers;
 
 public enum ESupportedFileTypes
 {
-    folder, 
-    png,
+    folder   , 
+    png      ,
     kdbscene ,
     sprite   ,
     texture  ,
-    txt
+    txt      ,
 }
 
-public class AssetBrowser : UiElemenet
+public class AssetBrowser : UIElement
 {
     public bool IsEntryHovered;
     
@@ -41,79 +41,31 @@ public class AssetBrowser : UiElemenet
     
     private Vector2 _sizeBetweenItems = new Vector2(15);
 
-    private AssetBrowserEntry? _currentSelectedEntry = null;
+    public int _currentSelectedEntryIndex = -1;
 
-    public AssetBrowser() : base()
+    public AssetBrowser(string title) : base(title)
     {
-        // ImageSize = new(ImGui.GetFrameHeight() * 5.0f * 1);
+        Flags = ImGuiWindowFlags.None | ImGuiWindowFlags.NoScrollbar;
         Init();
-        Init();
+    }
+
+    public override void Render()
+    {
+        ImGui.SetNextItemWidth(100);
+        ImGui.DragFloat2("Padding", ref Padding);
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(100);
+        ImGui.DragFloat2("ImageSize", ref ImageSize);
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(100);
+        ImGui.DragFloat2("ImageAdjust", ref ImageAdjust);
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(100);
+        ImGui.DragFloat2("SizeBetween", ref _sizeBetweenItems);
+        
+        DrawUI();
     }
     
-    protected override string GetWindowTitle()
-    {
-        return "New Asset Browser";
-    }
-
-    protected override ImGuiWindowFlags GetWindowFlags()
-    {
-        return ImGuiWindowFlags.None | ImGuiWindowFlags.MenuBar;
-    }
-
-    protected override Action GetMenuBarContent()
-    {
-        return () =>
-        {
-            //todo: remove this, this is for debugging the ui
-            ImGui.SetNextItemWidth(100);
-            ImGui.DragFloat2("Padding", ref Padding);
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth(100);
-            ImGui.DragFloat2("ImageSize", ref ImageSize);
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth(100);
-            ImGui.DragFloat2("ImageAdjust", ref ImageAdjust);
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth(100);
-            ImGui.DragFloat2("SizeBetween", ref _sizeBetweenItems);
-            
-            ImGui.BeginMenuBar();
-
-            if (_currentDirectory.FullName != (ProjectSettings.FullProjectPath + "\\Assets"))
-            {
-                if (ImGui.MenuItem("Back")) SwitchDirectory(new DirectoryInfo(_currentDirectory.Parent.FullName));
-            }
-
-
-            
-            int projectLength = (ProjectSettings.FullProjectPath).Length;
-            string titleBar = _currentDirectory.FullName.Remove(0, projectLength);
-            ImGui.Text(titleBar);
-            
-            ImGui.EndMenuBar();
-        };
-    }
-
-    protected override Action GetWindowContent()
-    {
-        return DrawUI;
-    }
-    
-    public AssetBrowserEntry? CurrentSelectedEntry
-    {
-        set
-        {
-            if (_currentSelectedEntry != null)
-                _currentSelectedEntry.IsSelected = false;
-
-            if (value != null)
-                value.IsSelected = true;
-            
-            _currentSelectedEntry = value;
-        }
-   }
-
-
     private void Init()
     {
         LoadIcons();
@@ -169,7 +121,7 @@ public class AssetBrowser : UiElemenet
         // ImGui.PushStyleVar(ImGuiStyleVar.CellPadding   , new Vector2(10f,2f));// cellPadding(ImGuiStyleVar_CellPadding, ImVec2(10.0f, 2.0f));
         //
 
-        
+        int columnCount = 0;
         ImGuiTableFlags tableFlags =   ImGuiTableFlags.Resizable
                                      | ImGuiTableFlags.SizingFixedFit
                                      | ImGuiTableFlags.BordersInnerV;
@@ -206,7 +158,7 @@ public class AssetBrowser : UiElemenet
             {
                 if (ImGui.BeginPopupContextWindow("windowpoup"))
                 {
-                    CurrentSelectedEntry = null;
+                    _currentSelectedEntryIndex = -1;
                     
                     ImGui.MenuItem("Item1");
                     ImGui.MenuItem("Item2");
@@ -217,21 +169,22 @@ public class AssetBrowser : UiElemenet
                 {
                     if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
                     {
-                        CurrentSelectedEntry = null;
+                        _currentSelectedEntryIndex = -1;
                     }
                 }
 
                 IsEntryHovered = false;
                 if (_isSwitching) return;
-                int columnCount = (int)(ImGui.GetContentRegionAvail().X / (ImageSize.X + _sizeBetweenItems.X));
+                columnCount = (int)(ImGui.GetContentRegionAvail().X / (ImageSize.X + _sizeBetweenItems.X));
                 
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0,10));
                 
                 ImGui.Columns((columnCount < 1) ? 1 : columnCount, "", false);
                 {
-                    foreach (var entry in _entries)
+                    for (var i = 0; i < _entries.Count; i++)
                     {
-                        entry.Draw();
+                        var entry = _entries[i];
+                        entry.Draw(i);
                         ImGui.NextColumn();
                     }
                 }
@@ -243,10 +196,91 @@ public class AssetBrowser : UiElemenet
             ImGui.EndTable();
         }
         ImGui.PopID();
-        
 
+        if (IsFocussed)
+        {
+            KeyEvents(columnCount);
+        }
     }
 
+    private void KeyEvents(int columnCount)
+    {
+        if (Input.KeyPressed(Keys.Right))
+        {
+            if (_currentSelectedEntryIndex == -1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+            else if(_currentSelectedEntryIndex > _entries.Count-1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+            else
+            {
+                _currentSelectedEntryIndex++;
+            }
+        }
+        
+        if (Input.KeyPressed(Keys.Left))
+        {
+            if (_currentSelectedEntryIndex == -1)
+            {
+                _currentSelectedEntryIndex = _entries.Count-1;
+            }
+            else if(_currentSelectedEntryIndex < 0)
+            {
+                _currentSelectedEntryIndex = _entries.Count-1;
+            }
+            else
+            {
+                _currentSelectedEntryIndex--;
+            }
+        }
+        
+        if (Input.KeyPressed(Keys.Up))
+        {
+            if (_currentSelectedEntryIndex == -1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+            else
+            {
+                _currentSelectedEntryIndex -= columnCount;
+            }
+            
+            if(_currentSelectedEntryIndex == -1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+            
+            if(_currentSelectedEntryIndex < 0)
+            {
+                _currentSelectedEntryIndex = _entries.Count - 1;
+            }
+        }
+        
+        if (Input.KeyPressed(Keys.Down))
+        {
+            if (_currentSelectedEntryIndex == -1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+            else
+            {
+                _currentSelectedEntryIndex += columnCount;
+            }
+
+            if (_currentSelectedEntryIndex == _entries.Count)
+                _currentSelectedEntryIndex = _entries.Count - 1;
+            
+            if(_currentSelectedEntryIndex > _entries.Count-1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+        }
+            
+    }
+    
     private void GetAllDirectories(DirectoryInfo directory)
     {
         var dirs = directory.GetDirectories();
@@ -256,7 +290,6 @@ public class AssetBrowser : UiElemenet
                                                          ImGuiTreeNodeFlags.SpanFullWidth | 
                                                          (directory.FullName == _currentDirectory.FullName ? ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.None)
                                    );
-        Console.WriteLine(directory.FullName + " / "  + _currentDirectory.FullName);
         bool open = ImGui.TreeNodeEx(directory.Name, flags);
 
         if (open)
@@ -317,7 +350,7 @@ public class AssetBrowserEntry
     private Texture _texture;
     private AssetBrowser _assetBrowser;
 
-    public bool IsSelected = false;
+    private bool _isSelected = false;
     
     public AssetBrowserEntry(string label, string fullPath, string parentPath, ESupportedFileTypes fileType, Texture texture, AssetBrowser assetBrowser)
     {
@@ -331,15 +364,21 @@ public class AssetBrowserEntry
     }
 
     
-    public void Draw()
+    public void Draw(int index)
     {
         ImGui.PushID(_fullPath);
         bool clicked = false;
         bool doubleClicked = false;
         bool rightClicked = false;
-        
-        
-      
+
+        if (index == _assetBrowser._currentSelectedEntryIndex)
+        {
+            _isSelected = true;
+        }
+        else
+        {
+            _isSelected = false;
+        }
         
         Gui.ImageButtonExTextDown(
             Label,
@@ -348,11 +387,11 @@ public class AssetBrowserEntry
             new(1), new Vector2(0),
             _assetBrowser.Padding, _assetBrowser.ImageAdjust,
             new Vector4(1),
-            out clicked, out doubleClicked, out rightClicked, IsSelected);
+            out clicked, out doubleClicked, out rightClicked, _isSelected);
 
         if (ImGui.BeginPopupContextItem(Label + "popup")) // <-- This is using IsItemHovered()
         {
-            _assetBrowser.CurrentSelectedEntry = this;
+            _assetBrowser._currentSelectedEntryIndex = index;
             if (ImGui.MenuItem(Label + " label")) {  }
             ImGui.EndPopup();
         }
@@ -363,7 +402,7 @@ public class AssetBrowserEntry
         }
 
         if (ImGui.IsItemClicked())
-            _assetBrowser.CurrentSelectedEntry = this;
+            _assetBrowser._currentSelectedEntryIndex = index;
 
         if (ImGui.IsItemClicked() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
         {

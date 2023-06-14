@@ -3,70 +3,43 @@ using ImGuiNET;
 
 namespace Engine2D.UI;
 
-internal class EngineSettingsWindow : UiElemenet
+internal class EngineSettingsWindow : UIElement
 {
-    private UiElemenet _uiElemenetImplementation;
+    private UIElement _uiElementImplementation;
     private bool showRestartBar;
 
-    internal EngineSettingsWindow()
+    internal EngineSettingsWindow(string title) : base(title)
     {
-        _flags = ImGuiWindowFlags.None;
-
-        SetVisibility(false);
+        Flags = ImGuiWindowFlags.None;
     }
 
-    protected override string GetWindowTitle()
-    {
-        return "Engine Settings";
-    }
 
-    protected override ImGuiWindowFlags GetWindowFlags()
+    public override void Render()
     {
-        return ImGuiWindowFlags.None;
-    }
 
-    protected override Action GetWindowContent()
-    {
-        return () =>
+        ImGui.Columns(2);
+
+
+        ImGui.NextColumn();
+        ImGui.Text("Fonst Scale");
+        ImGui.NextColumn();
+        if (ImGui.DragFloat("##fontscale", ref EngineSettings.DefaultFontSize)) showRestartBar = true;
+        if (showRestartBar)
         {
-            if (ImGui.Button("Close"))
-            {
-                SaveLoad.SaveEngineSettings();
-                SetVisibility(false);
-            }
-
+            ImGui.Begin("##restartwindow", ImGuiWindowFlags.NoTitleBar
+                                           | ImGuiWindowFlags.NoMove
+                                           | ImGuiWindowFlags.NoDecoration
+                                           | ImGuiWindowFlags.NoResize
+                                           | ImGuiWindowFlags.AlwaysUseWindowPadding
+                                           | ImGuiWindowFlags.NoScrollbar);
             ImGui.Columns(2);
-            ImGui.Text("Global Scale");
+            ImGui.Text("YOU NEED TO RESTART THE EDITOR BEFORE CHANGES APPLY");
             ImGui.NextColumn();
-            ImGui.DragFloat("##globslscale", ref EngineSettings.GlobalScale);
-
-            ImGui.NextColumn();
-            ImGui.Text("Fonst Scale");
-            ImGui.NextColumn();
-            if (ImGui.DragFloat("##fontscale", ref EngineSettings.DefaultFontSize)) showRestartBar = true;
-            if (showRestartBar)
-            {
-                ImGui.Begin("##restartwindow", ImGuiWindowFlags.NoTitleBar
-                                               | ImGuiWindowFlags.NoMove
-                                               | ImGuiWindowFlags.NoDecoration
-                                               | ImGuiWindowFlags.NoResize
-                                               | ImGuiWindowFlags.AlwaysUseWindowPadding
-                                               | ImGuiWindowFlags.NoScrollbar);
-                ImGui.Columns(2);
-                ImGui.Text("YOU NEED TO RESTART THE EDITOR BEFORE CHANGES APPLY");
-                ImGui.NextColumn();
-                if (ImGui.Button("RESTART"))
-                    //TODO: MAKE EDITOR 
-                    Console.WriteLine(AppDomain.CurrentDomain.FriendlyName);
-                //Engine.Get().Close();
-                ImGui.End();
-            }
-        };
-    }
-
-    public override void SetVisibility(bool visibility)
-    {
-        base.SetVisibility(visibility);
-        if (visibility) showRestartBar = false;
+            if (ImGui.Button("RESTART"))
+                //TODO: MAKE EDITOR 
+                Console.WriteLine(AppDomain.CurrentDomain.FriendlyName);
+            //Engine.Get().Close();
+            ImGui.End();
+        }
     }
 }
