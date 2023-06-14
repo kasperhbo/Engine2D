@@ -1,0 +1,26 @@
+{
+  "Type": "Sprite",
+  "TextureCoords": [
+    {
+      "X": 0.04761905,
+      "Y": -4.5
+    },
+    {
+      "X": 0.0952381,
+      "Y": -4.5
+    },
+    {
+      "X": 0.0952381,
+      "Y": -4.0
+    },
+    {
+      "X": 0.04761905,
+      "Y": -4.0
+    }
+  ],
+  "TexturePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\emptyfolder\\bigSpritesheet.tex",
+  "AssetName": null,
+  "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\emptyfolder\\bigSpritesheet41.sprite",
+  "Width": 16,
+  "Height": 32
+}
