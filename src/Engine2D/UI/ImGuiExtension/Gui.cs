@@ -116,12 +116,12 @@ public static class Gui
         return isClicked;
     }
 
-    public static bool TopBarButton(float buttonLocationX, float buttonSize, TopBarButton button)
+    public static bool TopBarButton(float buttonLocationX, Vector2 buttonSize, TopBarButton button)
     {
         bool clicked = false;
         PushStyleColor(ImGuiCol.ButtonHovered, button._hoverColor);
         SetCursorPosX(buttonLocationX);
-        if (Button(button._label, new Vector2(buttonSize, buttonSize))) clicked = true;
+        if (Button(button._label, buttonSize)) clicked = true;
         PopStyleColor();
         
         return clicked;

@@ -6,6 +6,7 @@ using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using SixLabors.ImageSharp.ColorSpaces.Conversion;
 
 namespace Engine2D.UI.Browsers;
 
@@ -21,8 +22,6 @@ public enum ESupportedFileTypes
 
 public class AssetBrowser : UIElement
 {
-    public bool IsEntryHovered;
-    
     private static readonly string BaseAssetDir = ProjectSettings.FullProjectPath + "\\Assets";
     
     private DirectoryInfo _currentDirectory = new DirectoryInfo(BaseAssetDir);
@@ -49,20 +48,39 @@ public class AssetBrowser : UIElement
         Init();
     }
 
+    private TopBarButton backButton = new TopBarButton("Back");
+    
+    public override void RenderTopBar()
+    {
+        if(_currentDirectory.FullName != ProjectSettings.FullProjectPath + "\\Assets")
+        {
+            if (Gui.TopBarButton(2, new(40, 20), backButton))
+            {
+                SwitchDirectory(_currentDirectory.Parent);
+            }
+            ImGui.SameLine();
+        }
+        string defPath = (ProjectSettings.FullProjectPath + 1);
+        ImGui.Text(_currentDirectory.FullName.Remove(0,defPath.Length));
+        ImGui.SameLine();
+        
+        base.RenderTopBar();
+    }
+
     public override void Render()
     {
-        ImGui.SetNextItemWidth(100);
-        ImGui.DragFloat2("Padding", ref Padding);
-        ImGui.SameLine();
-        ImGui.SetNextItemWidth(100);
-        ImGui.DragFloat2("ImageSize", ref ImageSize);
-        ImGui.SameLine();
-        ImGui.SetNextItemWidth(100);
-        ImGui.DragFloat2("ImageAdjust", ref ImageAdjust);
-        ImGui.SameLine();
-        ImGui.SetNextItemWidth(100);
-        ImGui.DragFloat2("SizeBetween", ref _sizeBetweenItems);
-        
+        // ImGui.SetNextItemWidth(100);
+        // ImGui.DragFloat2("Padding", ref Padding);
+        // ImGui.SameLine();
+        // ImGui.SetNextItemWidth(100);
+        // ImGui.DragFloat2("ImageSize", ref ImageSize);
+        // ImGui.SameLine();
+        // ImGui.SetNextItemWidth(100);
+        // ImGui.DragFloat2("ImageAdjust", ref ImageAdjust);
+        // ImGui.SameLine();
+        // ImGui.SetNextItemWidth(100);
+        // ImGui.DragFloat2("SizeBetween", ref _sizeBetweenItems);
+        //
         DrawUI();
     }
     
@@ -173,7 +191,6 @@ public class AssetBrowser : UIElement
                     }
                 }
 
-                IsEntryHovered = false;
                 if (_isSwitching) return;
                 columnCount = (int)(ImGui.GetContentRegionAvail().X / (ImageSize.X + _sizeBetweenItems.X));
                 
@@ -205,6 +222,14 @@ public class AssetBrowser : UIElement
 
     private void KeyEvents(int columnCount)
     {
+        if (Input.KeyPressed(Keys.Enter))
+        {
+            if (_currentSelectedEntryIndex == -1) return;
+            if (_entries[_currentSelectedEntryIndex]._fileType == ESupportedFileTypes.folder)
+            {
+                SwitchDirectory(new DirectoryInfo(_entries[_currentSelectedEntryIndex].fullPath));
+            }
+        }
         if (Input.KeyPressed(Keys.Right))
         {
             if (_currentSelectedEntryIndex == -1)
@@ -284,14 +309,36 @@ public class AssetBrowser : UIElement
     private void GetAllDirectories(DirectoryInfo directory)
     {
         var dirs = directory.GetDirectories();
-        ImGuiTreeNodeFlags flags = 
-            (dirs.Length > 0 ? ImGuiTreeNodeFlags.None : ImGuiTreeNodeFlags.Leaf|
-                                                         ImGuiTreeNodeFlags.OpenOnArrow |
-                                                         ImGuiTreeNodeFlags.SpanFullWidth | 
-                                                         (directory.FullName == _currentDirectory.FullName ? ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.None)
-                                   );
-        bool open = ImGui.TreeNodeEx(directory.Name, flags);
 
+        bool currentDir = _currentDirectory.FullName == directory.FullName;
+        bool hasFolders = dirs.Length > 0;
+        
+       
+        if (directory.FullName == ProjectSettings.FullProjectPath + "\\Assets")
+        {
+            foreach (var dir in dirs)
+            {
+                GetAllDirectories(dir);
+            }
+
+            return;
+        }
+        
+        ImGuiTreeNodeFlags flags;
+        
+        flags = (currentDir ? ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.None) | 
+                (hasFolders ? ImGuiTreeNodeFlags.None : ImGuiTreeNodeFlags.Leaf)   |
+                ImGuiTreeNodeFlags.OpenOnArrow;
+        
+        bool open = ImGui.TreeNodeEx(directory.Name, flags);
+        
+        ImGui.GetWindowDrawList().AddImage(_folderTexture.TexID, new Vector2(0,0), new Vector2(25,25));
+        
+        if (ImGui.IsItemClicked())
+        {
+            SwitchDirectory(directory);
+        }
+        
         if (open)
         {
             foreach (var dir in dirs)
@@ -301,11 +348,6 @@ public class AssetBrowser : UIElement
         }
         
         if (open) ImGui.TreePop();
-    }
-
-    private void RenderTopBar(float topBarHeight)
-    {
-        
     }
 
     private void CreateEntries()
@@ -343,10 +385,10 @@ public class AssetBrowser : UIElement
 public class AssetBrowserEntry
 {
     public string Label { get; private set; }
-    private string _fullPath;
+    public string fullPath;
     private string _parentPath;
 
-    private ESupportedFileTypes _fileType;
+    public ESupportedFileTypes _fileType;
     private Texture _texture;
     private AssetBrowser _assetBrowser;
 
@@ -355,7 +397,7 @@ public class AssetBrowserEntry
     public AssetBrowserEntry(string label, string fullPath, string parentPath, ESupportedFileTypes fileType, Texture texture, AssetBrowser assetBrowser)
     {
         Label = label;
-        _fullPath = fullPath;
+        this.fullPath = fullPath;
         _parentPath = parentPath;
         _fileType = fileType;
         
@@ -366,7 +408,7 @@ public class AssetBrowserEntry
     
     public void Draw(int index)
     {
-        ImGui.PushID(_fullPath);
+        ImGui.PushID(fullPath);
         bool clicked = false;
         bool doubleClicked = false;
         bool rightClicked = false;
@@ -396,18 +438,13 @@ public class AssetBrowserEntry
             ImGui.EndPopup();
         }
         
-        if (ImGui.IsItemHovered())
-        {
-            _assetBrowser.IsEntryHovered = true;
-        }
-
         if (ImGui.IsItemClicked())
             _assetBrowser._currentSelectedEntryIndex = index;
 
         if (ImGui.IsItemClicked() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
         {
             if (_fileType == ESupportedFileTypes.folder)
-                _assetBrowser.SwitchDirectory(new DirectoryInfo(this._fullPath));
+                _assetBrowser.SwitchDirectory(new DirectoryInfo(this.fullPath));
         }
 
 

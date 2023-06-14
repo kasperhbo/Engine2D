@@ -28,20 +28,19 @@ public class EditorViewport : ViewportWindow
     
     public override void BeforeImageRender()
     {
+        Camera.ProjectionSize = GetVPSize();
     }
     
     public override void AfterImageRender()
     {
-        DrawGrid();
         IsWindowHovered = ImGui.IsItemHovered();
         
-        Lines();
         Guizmo();
     }
     
     private void Lines()
     {
-        ImPlot.ShowDemoWindow();
+        
     }
     
     private void Guizmo()
@@ -125,13 +124,12 @@ public class EditorViewport : ViewportWindow
     {
         var ws = ImGui.GetContentRegionAvail();
 
-        float targetAspectRatio = 16.0f / 9.0f;
+        float targetAspectRatio = 16f / 9f;
         
         float aspectWidth = ws.X;
         float aspectHeight = aspectWidth / targetAspectRatio;
         
         if (aspectHeight > ws.Y) {
-            // We must switch to pillarbox mode
             aspectHeight = ws.Y;
             aspectWidth = aspectHeight * targetAspectRatio;
         }

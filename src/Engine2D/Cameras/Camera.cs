@@ -20,8 +20,8 @@ public class Camera : Component
     public float Near = 0.1f;
     public float Far = 1000f;
    
-    private Vector2 _projectionSize = new(1920,1080);
-    public Vector2 ProjectionSize => _projectionSize;
+    // private Vector2 _projectionSize = new(1920,1080);
+    public Vector2 ProjectionSize = new Vector2(1920,1080);
     
     public KDBColor ClearColor { get; set; } = new();
     
@@ -69,8 +69,8 @@ public class Camera : Component
         if(CameraType == CameraTypes.ORTHO)
         {
              projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(
-                    0.0f, ProjectionSize.X * zoom,
-                 0.0f, ProjectionSize.Y * zoom, 0.0f, 100.0f
+                       -(ProjectionSize.X * Size / 2), ProjectionSize.X * Size/2,
+                    -(ProjectionSize.Y * Size / 2),  ProjectionSize.Y * Size/2, 0.0f, 100.0f
             );
         }
         

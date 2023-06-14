@@ -13,8 +13,8 @@ public abstract class UIElement
     protected bool IsHovering = false;
 
     protected bool IsFocussed = false;
-    
-    private TopBarButton _closeButton = new TopBarButton("X", new Vector4(1, 0, 0, 1));
+
+    protected TopBarButton _closeButton = new TopBarButton("X", new Vector4(1, 0, 0, 1));
 
 
     public UIElement(string title)
@@ -30,10 +30,17 @@ public abstract class UIElement
         IsFocussed = ImGui.IsWindowFocused(ImGuiFocusedFlags.RootWindow) |
                      ImGui.IsWindowFocused(ImGuiFocusedFlags.ChildWindows);
          
-        if (Gui.TopBarButton(ImGui.GetContentRegionAvail().X - 20, 20, _closeButton))
+        RenderTopBar();
+    }
+
+    public virtual void RenderTopBar()
+    {
+        if (Gui.TopBarButton(ImGui.GetContentRegionMax().X-20, new(20, 20), _closeButton))
         {
-           UiRenderer.RemoveGuiWindow(this);
+            UiRenderer.RemoveGuiWindow(this);
         }
+        
+        ImGui.Separator();
     }
 
     
