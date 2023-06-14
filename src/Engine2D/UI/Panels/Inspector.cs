@@ -4,25 +4,16 @@ using Engine2D.Logging;
 
 namespace Engine2D.UI;
 
-internal class Inspector : UiElemenet
+internal class Inspector : UIElement
 {
     //internal Gameobject CurrentSelectedGameObject;
 
-    protected override string GetWindowTitle()
+    public Inspector(string title) : base(title)
     {
-        return "Inspector";
     }
 
-    protected override ImGuiWindowFlags GetWindowFlags()
+    public override void Render()
     {
-        return ImGuiWindowFlags.None;
-    }
-
-    protected override Action GetWindowContent()
-    {
-        return () =>
-        {
-            Engine.Get().CurrentSelectedAsset?.OnGui();
-        };
+        Engine.Get().CurrentSelectedAsset?.OnGui();
     }
 }

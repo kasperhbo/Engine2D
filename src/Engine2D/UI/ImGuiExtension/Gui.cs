@@ -87,18 +87,13 @@ public static class Gui
         
         if (hovered && IsMouseClicked(ImGuiMouseButton.Right)) isRightClicked = true;
         if (hovered && IsMouseDoubleClicked(ImGuiMouseButton.Left)) isDoubleClicked = true;
+        var col = GetColorU32(ImGuiCol.TextDisabled);
         
-        var col = GetColorU32((held && hovered) ? 
-            ImGuiCol.ButtonActive : hovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button);
-
+        col = GetColorU32((held && hovered) ? ImGuiCol.ButtonActive : hovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button);
+        
         if (isSelected)
         {
             col = GetColorU32(ImGuiCol.TextSelectedBg);
-        }
-        
-        if (rOverwrite != -1 && gOverwrite != -1 && bOverwrite != -1 && aOverwrite != -1)
-        {
-            col = GetColorU32(new Vector4(rOverwrite, gOverwrite, bOverwrite, aOverwrite));
         }
         
         RenderFrame(
@@ -120,6 +115,17 @@ public static class Gui
         
         return isClicked;
     }
+
+    public static bool TopBarButton(float buttonLocationX, Vector2 buttonSize, TopBarButton button)
+    {
+        bool clicked = false;
+        PushStyleColor(ImGuiCol.ButtonHovered, button._hoverColor);
+        SetCursorPosX(buttonLocationX);
+        if (Button(button._label, buttonSize)) clicked = true;
+        PopStyleColor();
+        
+        return clicked;
+    }
     
 
     #region ImRect Extensions
@@ -129,4 +135,23 @@ public static class Gui
     static Vector2  GetSize(ImRect rect)   { return new Vector2(rect.Max.X - rect.Min.X, rect.Max.Y - rect.Min.Y); }
     
     #endregion
+}
+
+public class TopBarButton
+{
+    public Vector4 _hoverColor;
+    public string  _label;
+
+    public TopBarButton(string label, Vector4 hoverColor)
+    {
+        _hoverColor = hoverColor;
+        _label = label;
+    }
+    
+    public TopBarButton(string label)
+    {
+        var style = ImGui.GetStyle();        
+        _hoverColor =style.Colors[(int)ImGuiCol.ButtonHovered]; 
+        _label = label;
+    }
 }

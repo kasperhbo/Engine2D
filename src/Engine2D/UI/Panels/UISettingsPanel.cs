@@ -1,38 +1,23 @@
-﻿using Engine2D.UI.ImGuiExtension;
+﻿using System.Numerics;
+using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using imnodesNET;
 
 namespace Engine2D.UI;
 
-public class UISettingsPanel : UiElemenet
+public class UISettingsPanel : UIElement
 {
     private ImGuiStylePtr style;
     
-    public UISettingsPanel() : base(){
-    
+    public UISettingsPanel(string title) : base(title)
+    {
         style = ImGui.GetStyle();
     }
-    
-    protected override string GetWindowTitle()
-    {
-        return "UI Settings Panel";
-    }
 
-    protected override ImGuiWindowFlags GetWindowFlags()
-    {
-        return ImGuiWindowFlags.None;
-    }
 
-    protected override Action GetWindowContent()
+    public override void Render()
     {
-        return () =>
-        {
-            if (_visibility)
-            {
-                OpenTkuiHelper.DrawComponentWindow(ImGui.GetID("UI Colors").ToString(), 
-                    "UI Colors", GetColorComponents, 100000);
-            }
-        };
+        GetColorComponents();
     }
 
     private readonly string[] colors =

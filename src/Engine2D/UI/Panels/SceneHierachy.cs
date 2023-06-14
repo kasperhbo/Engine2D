@@ -12,21 +12,10 @@ using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace Engine2D.UI;
 
-internal class SceneHierachy : UiElemenet
+internal class SceneHierachy : UIElement
 {
-    protected override string GetWindowTitle()
+    public SceneHierachy(string title) : base(title)
     {
-        return "Hierachy";
-    }
-
-    protected override ImGuiWindowFlags GetWindowFlags()
-    {
-        return ImGuiWindowFlags.None;
-    }
-
-    private void CreateHierachyItem()
-    {
-
     }
 
     private void CreateHierachy()
@@ -124,9 +113,8 @@ internal class SceneHierachy : UiElemenet
         return _gameobjectsWithoutParents;
     }
 
-    protected override Action GetWindowContent()
+    public override void Render()
     {
-        return () =>
         {
             CreateHierachy();
             ImGui.BeginChild("Scrolling");
@@ -163,5 +151,4 @@ internal class SceneHierachy : UiElemenet
             ImGui.EndChild();
         };
     }
-
 }

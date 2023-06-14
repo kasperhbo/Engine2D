@@ -1,28 +1,27 @@
-﻿using System.Data;
-using System.Numerics;
-using System.Runtime.InteropServices;
+﻿using System.Numerics;
 using Engine2D.Core;
+using Engine2D.Core.Inputs;
 using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using SixLabors.ImageSharp.ColorSpaces.Conversion;
 
 namespace Engine2D.UI.Browsers;
 
 public enum ESupportedFileTypes
 {
-    folder, 
-    png,
+    folder   , 
+    png      ,
     kdbscene ,
     sprite   ,
     texture  ,
-    txt
+    txt      ,
 }
 
-public class AssetBrowser : UiElemenet
+public class AssetBrowser : UIElement
 {
-    public bool IsEntryHovered;
-    
     private static readonly string BaseAssetDir = ProjectSettings.FullProjectPath + "\\Assets";
     
     private DirectoryInfo _currentDirectory = new DirectoryInfo(BaseAssetDir);
@@ -41,79 +40,50 @@ public class AssetBrowser : UiElemenet
     
     private Vector2 _sizeBetweenItems = new Vector2(15);
 
-    private AssetBrowserEntry? _currentSelectedEntry = null;
+    public int _currentSelectedEntryIndex = -1;
 
-    public AssetBrowser() : base()
+    public AssetBrowser(string title) : base(title)
     {
-        // ImageSize = new(ImGui.GetFrameHeight() * 5.0f * 1);
-        Init();
+        Flags = ImGuiWindowFlags.None | ImGuiWindowFlags.NoScrollbar;
         Init();
     }
+
+    private TopBarButton backButton = new TopBarButton("Back");
     
-    protected override string GetWindowTitle()
+    public override void RenderTopBar()
     {
-        return "New Asset Browser";
-    }
-
-    protected override ImGuiWindowFlags GetWindowFlags()
-    {
-        return ImGuiWindowFlags.None | ImGuiWindowFlags.MenuBar;
-    }
-
-    protected override Action GetMenuBarContent()
-    {
-        return () =>
+        if(_currentDirectory.FullName != ProjectSettings.FullProjectPath + "\\Assets")
         {
-            //todo: remove this, this is for debugging the ui
-            ImGui.SetNextItemWidth(100);
-            ImGui.DragFloat2("Padding", ref Padding);
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth(100);
-            ImGui.DragFloat2("ImageSize", ref ImageSize);
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth(100);
-            ImGui.DragFloat2("ImageAdjust", ref ImageAdjust);
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth(100);
-            ImGui.DragFloat2("SizeBetween", ref _sizeBetweenItems);
-            
-            ImGui.BeginMenuBar();
-
-            if (_currentDirectory.FullName != (ProjectSettings.FullProjectPath + "\\Assets"))
+            if (Gui.TopBarButton(2, new(40, 20), backButton))
             {
-                if (ImGui.MenuItem("Back")) SwitchDirectory(new DirectoryInfo(_currentDirectory.Parent.FullName));
+                SwitchDirectory(_currentDirectory.Parent);
             }
-
-
-            
-            int projectLength = (ProjectSettings.FullProjectPath).Length;
-            string titleBar = _currentDirectory.FullName.Remove(0, projectLength);
-            ImGui.Text(titleBar);
-            
-            ImGui.EndMenuBar();
-        };
+            ImGui.SameLine();
+        }
+        string defPath = (ProjectSettings.FullProjectPath + 1);
+        ImGui.Text(_currentDirectory.FullName.Remove(0,defPath.Length));
+        ImGui.SameLine();
+        
+        base.RenderTopBar();
     }
 
-    protected override Action GetWindowContent()
+    public override void Render()
     {
-        return DrawUI;
+        // ImGui.SetNextItemWidth(100);
+        // ImGui.DragFloat2("Padding", ref Padding);
+        // ImGui.SameLine();
+        // ImGui.SetNextItemWidth(100);
+        // ImGui.DragFloat2("ImageSize", ref ImageSize);
+        // ImGui.SameLine();
+        // ImGui.SetNextItemWidth(100);
+        // ImGui.DragFloat2("ImageAdjust", ref ImageAdjust);
+        // ImGui.SameLine();
+        // ImGui.SetNextItemWidth(100);
+        // ImGui.DragFloat2("SizeBetween", ref _sizeBetweenItems);
+        //
+        DrawUI();
     }
     
-    public AssetBrowserEntry? CurrentSelectedEntry
-    {
-        set
-        {
-            if (_currentSelectedEntry != null)
-                _currentSelectedEntry.IsSelected = false;
-
-            if (value != null)
-                value.IsSelected = true;
-            
-            _currentSelectedEntry = value;
-        }
-   }
-
-
     private void Init()
     {
         LoadIcons();
@@ -169,7 +139,7 @@ public class AssetBrowser : UiElemenet
         // ImGui.PushStyleVar(ImGuiStyleVar.CellPadding   , new Vector2(10f,2f));// cellPadding(ImGuiStyleVar_CellPadding, ImVec2(10.0f, 2.0f));
         //
 
-        
+        int columnCount = 0;
         ImGuiTableFlags tableFlags =   ImGuiTableFlags.Resizable
                                      | ImGuiTableFlags.SizingFixedFit
                                      | ImGuiTableFlags.BordersInnerV;
@@ -206,7 +176,7 @@ public class AssetBrowser : UiElemenet
             {
                 if (ImGui.BeginPopupContextWindow("windowpoup"))
                 {
-                    CurrentSelectedEntry = null;
+                    _currentSelectedEntryIndex = -1;
                     
                     ImGui.MenuItem("Item1");
                     ImGui.MenuItem("Item2");
@@ -217,21 +187,21 @@ public class AssetBrowser : UiElemenet
                 {
                     if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
                     {
-                        CurrentSelectedEntry = null;
+                        _currentSelectedEntryIndex = -1;
                     }
                 }
 
-                IsEntryHovered = false;
                 if (_isSwitching) return;
-                int columnCount = (int)(ImGui.GetContentRegionAvail().X / (ImageSize.X + _sizeBetweenItems.X));
+                columnCount = (int)(ImGui.GetContentRegionAvail().X / (ImageSize.X + _sizeBetweenItems.X));
                 
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0,10));
                 
                 ImGui.Columns((columnCount < 1) ? 1 : columnCount, "", false);
                 {
-                    foreach (var entry in _entries)
+                    for (var i = 0; i < _entries.Count; i++)
                     {
-                        entry.Draw();
+                        var entry = _entries[i];
+                        entry.Draw(i);
                         ImGui.NextColumn();
                     }
                 }
@@ -243,22 +213,132 @@ public class AssetBrowser : UiElemenet
             ImGui.EndTable();
         }
         ImGui.PopID();
-        
 
+        if (IsFocussed)
+        {
+            KeyEvents(columnCount);
+        }
     }
 
+    private void KeyEvents(int columnCount)
+    {
+        if (Input.KeyPressed(Keys.Enter))
+        {
+            if (_currentSelectedEntryIndex == -1) return;
+            if (_entries[_currentSelectedEntryIndex]._fileType == ESupportedFileTypes.folder)
+            {
+                SwitchDirectory(new DirectoryInfo(_entries[_currentSelectedEntryIndex].fullPath));
+            }
+        }
+        if (Input.KeyPressed(Keys.Right))
+        {
+            if (_currentSelectedEntryIndex == -1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+            else if(_currentSelectedEntryIndex > _entries.Count-1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+            else
+            {
+                _currentSelectedEntryIndex++;
+            }
+        }
+        
+        if (Input.KeyPressed(Keys.Left))
+        {
+            if (_currentSelectedEntryIndex == -1)
+            {
+                _currentSelectedEntryIndex = _entries.Count-1;
+            }
+            else if(_currentSelectedEntryIndex < 0)
+            {
+                _currentSelectedEntryIndex = _entries.Count-1;
+            }
+            else
+            {
+                _currentSelectedEntryIndex--;
+            }
+        }
+        
+        if (Input.KeyPressed(Keys.Up))
+        {
+            if (_currentSelectedEntryIndex == -1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+            else
+            {
+                _currentSelectedEntryIndex -= columnCount;
+            }
+            
+            if(_currentSelectedEntryIndex == -1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+            
+            if(_currentSelectedEntryIndex < 0)
+            {
+                _currentSelectedEntryIndex = _entries.Count - 1;
+            }
+        }
+        
+        if (Input.KeyPressed(Keys.Down))
+        {
+            if (_currentSelectedEntryIndex == -1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+            else
+            {
+                _currentSelectedEntryIndex += columnCount;
+            }
+
+            if (_currentSelectedEntryIndex == _entries.Count)
+                _currentSelectedEntryIndex = _entries.Count - 1;
+            
+            if(_currentSelectedEntryIndex > _entries.Count-1)
+            {
+                _currentSelectedEntryIndex = 0;
+            }
+        }
+            
+    }
+    
     private void GetAllDirectories(DirectoryInfo directory)
     {
         var dirs = directory.GetDirectories();
-        ImGuiTreeNodeFlags flags = 
-            (dirs.Length > 0 ? ImGuiTreeNodeFlags.None : ImGuiTreeNodeFlags.Leaf|
-                                                         ImGuiTreeNodeFlags.OpenOnArrow |
-                                                         ImGuiTreeNodeFlags.SpanFullWidth | 
-                                                         (directory.FullName == _currentDirectory.FullName ? ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.None)
-                                   );
-        Console.WriteLine(directory.FullName + " / "  + _currentDirectory.FullName);
-        bool open = ImGui.TreeNodeEx(directory.Name, flags);
 
+        bool currentDir = _currentDirectory.FullName == directory.FullName;
+        bool hasFolders = dirs.Length > 0;
+        
+       
+        if (directory.FullName == ProjectSettings.FullProjectPath + "\\Assets")
+        {
+            foreach (var dir in dirs)
+            {
+                GetAllDirectories(dir);
+            }
+
+            return;
+        }
+        
+        ImGuiTreeNodeFlags flags;
+        
+        flags = (currentDir ? ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.None) | 
+                (hasFolders ? ImGuiTreeNodeFlags.None : ImGuiTreeNodeFlags.Leaf)   |
+                ImGuiTreeNodeFlags.OpenOnArrow;
+        
+        bool open = ImGui.TreeNodeEx(directory.Name, flags);
+        
+        ImGui.GetWindowDrawList().AddImage(_folderTexture.TexID, new Vector2(0,0), new Vector2(25,25));
+        
+        if (ImGui.IsItemClicked())
+        {
+            SwitchDirectory(directory);
+        }
+        
         if (open)
         {
             foreach (var dir in dirs)
@@ -268,11 +348,6 @@ public class AssetBrowser : UiElemenet
         }
         
         if (open) ImGui.TreePop();
-    }
-
-    private void RenderTopBar(float topBarHeight)
-    {
-        
     }
 
     private void CreateEntries()
@@ -310,19 +385,19 @@ public class AssetBrowser : UiElemenet
 public class AssetBrowserEntry
 {
     public string Label { get; private set; }
-    private string _fullPath;
+    public string fullPath;
     private string _parentPath;
 
-    private ESupportedFileTypes _fileType;
+    public ESupportedFileTypes _fileType;
     private Texture _texture;
     private AssetBrowser _assetBrowser;
 
-    public bool IsSelected = false;
+    private bool _isSelected = false;
     
     public AssetBrowserEntry(string label, string fullPath, string parentPath, ESupportedFileTypes fileType, Texture texture, AssetBrowser assetBrowser)
     {
         Label = label;
-        _fullPath = fullPath;
+        this.fullPath = fullPath;
         _parentPath = parentPath;
         _fileType = fileType;
         
@@ -331,15 +406,21 @@ public class AssetBrowserEntry
     }
 
     
-    public void Draw()
+    public void Draw(int index)
     {
-        ImGui.PushID(_fullPath);
+        ImGui.PushID(fullPath);
         bool clicked = false;
         bool doubleClicked = false;
         bool rightClicked = false;
-        
-        
-      
+
+        if (index == _assetBrowser._currentSelectedEntryIndex)
+        {
+            _isSelected = true;
+        }
+        else
+        {
+            _isSelected = false;
+        }
         
         Gui.ImageButtonExTextDown(
             Label,
@@ -348,27 +429,22 @@ public class AssetBrowserEntry
             new(1), new Vector2(0),
             _assetBrowser.Padding, _assetBrowser.ImageAdjust,
             new Vector4(1),
-            out clicked, out doubleClicked, out rightClicked, IsSelected);
+            out clicked, out doubleClicked, out rightClicked, _isSelected);
 
         if (ImGui.BeginPopupContextItem(Label + "popup")) // <-- This is using IsItemHovered()
         {
-            _assetBrowser.CurrentSelectedEntry = this;
+            _assetBrowser._currentSelectedEntryIndex = index;
             if (ImGui.MenuItem(Label + " label")) {  }
             ImGui.EndPopup();
         }
         
-        if (ImGui.IsItemHovered())
-        {
-            _assetBrowser.IsEntryHovered = true;
-        }
-
         if (ImGui.IsItemClicked())
-            _assetBrowser.CurrentSelectedEntry = this;
+            _assetBrowser._currentSelectedEntryIndex = index;
 
         if (ImGui.IsItemClicked() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
         {
             if (_fileType == ESupportedFileTypes.folder)
-                _assetBrowser.SwitchDirectory(new DirectoryInfo(this._fullPath));
+                _assetBrowser.SwitchDirectory(new DirectoryInfo(this.fullPath));
         }
 
 

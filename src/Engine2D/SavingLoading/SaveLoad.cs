@@ -1,9 +1,12 @@
-﻿using System.Xml;
+﻿using System.Reflection;
+using System.Runtime.Serialization.Formatters.Soap;
+using System.Xml;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.Scenes;
+using Engine2D.UI;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
 
@@ -11,26 +14,76 @@ namespace Engine2D.SavingLoading;
 
 internal static class SaveLoad
 {
-    #region engine settings
-
-    internal static void LoadEngineSettings()
+    public static bool SaveStatic(Type static_class, string filename)
     {
-        var saveLocation = Utils.GetBaseEngineDir() + "\\Settings\\";
-        var saveFile = saveLocation + "EngineSettings.dat";
-
-        var ok = Utils.LoadWithSoapStaticClass(typeof(EngineSettings), saveFile);
-        //DeserializeStaticClass(File.ReadAllText(saveFile), typeof(EngineSettings));           
+        try
+        {
+            FieldInfo[] fields = static_class.GetFields(BindingFlags.Static | BindingFlags.Public);
+            object[,] a = new object[fields.Length,2];
+            int i = 0;
+            foreach (FieldInfo field in fields)
+            {
+                a[i, 0] = field.Name;
+                a[i, 1] = field.GetValue(null);
+                i++;
+            };
+            Stream f = File.Open(filename, FileMode.Create);
+            SoapFormatter formatter = new SoapFormatter();                
+            formatter.Serialize(f, a);
+            f.Close();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
-    internal static void SaveEngineSettings()
+    public static bool LoadStatic(Type static_class, string filename)
+    {
+        try
+        {
+            FieldInfo[] fields = static_class.GetFields(BindingFlags.Static | BindingFlags.Public);                
+            object[,] a;
+            Stream f = File.Open(filename, FileMode.Open);
+            SoapFormatter formatter = new SoapFormatter();
+            a = formatter.Deserialize(f) as object[,];
+            f.Close();
+            if (a.GetLength(0) != fields.Length) return false;
+            int i = 0;
+            foreach (FieldInfo field in fields)
+            {
+                if (field.Name == (a[i, 0] as string))
+                {
+                    field.SetValue(null, a[i,1]);
+                }
+                i++;
+            };                
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    
+    
+    
+    internal static void LoadWindowSettings()
     {
         var saveLocation = Utils.GetBaseEngineDir() + "\\Settings\\";
-        var saveFile = saveLocation + "EngineSettings.dat";
-        var ok = Utils.SaveWithSoapStaticClass(typeof(EngineSettings), saveFile);       
+        var saveFile = saveLocation + "WindowSettings.dat";
+        Utils.LoadWithSoapStaticClass(typeof(UiRenderer), saveFile);
     }
-
-    #endregion
-
+    
+    internal static void SaveWindowSettings()
+    {
+        var saveLocation = Utils.GetBaseEngineDir() + "\\Settings\\";
+        var saveFile = saveLocation + "WindowSettings.dat";
+        var ok = Utils.SaveWithSoapStaticClass(typeof(UiRenderer), saveFile);
+    }
+    
+    
     #region scenes
 
     internal static void SaveScene(Scene scene)
@@ -200,4 +253,11 @@ internal static class SaveLoad
     }
 
 
+    public static void LoadEngineSettings()
+    {
+    }
+
+    public static void SaveEngineSettings()
+    {
+    }
 }

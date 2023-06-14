@@ -17,18 +17,163 @@
       },
       {
         "Position": {
-          "X": 292.1377,
-          "Y": 406.2503
+          "X": 3.000187,
+          "Y": -9.033829
         },
         "Size": {
-          "X": 392.2776,
-          "Y": 392.2776
+          "X": 64.0,
+          "Y": 64.0
         },
         "Rotation": {
           "X": 0.0,
           "Y": 0.0,
           "Z": -0.3186793,
           "W": 0.94786257,
+          "IsIdentity": false
+        },
+        "Type": "Transform"
+      }
+    ],
+    "AssetName": null
+  },
+  {
+    "UID": 2,
+    "Name": "GlobalLight: 21",
+    "PARENT_UID": -1,
+    "components": [
+      {
+        "Intensity": 0.2,
+        "Type": "GlobalLight"
+      },
+      {
+        "Position": {
+          "X": 531.6518,
+          "Y": 476.6345
+        },
+        "Size": {
+          "X": 1.0,
+          "Y": 1.0
+        },
+        "Rotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
+          "W": 0.0,
+          "IsIdentity": false
+        },
+        "Type": "Transform"
+      }
+    ],
+    "AssetName": null
+  },
+  {
+    "UID": 3,
+    "Name": "PointLight: 31",
+    "PARENT_UID": -1,
+    "components": [
+      {
+        "Color": {
+          "r": 246.0,
+          "g": 255.0,
+          "b": 255.0,
+          "a": 255.0
+        },
+        "Intensity": 1.0,
+        "Type": "PointLight"
+      },
+      {
+        "Position": {
+          "X": 40.00004,
+          "Y": -2.0027885
+        },
+        "Size": {
+          "X": 1.0,
+          "Y": 1.0
+        },
+        "Rotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
+          "W": 0.0,
+          "IsIdentity": false
+        },
+        "Type": "Transform"
+      }
+    ],
+    "AssetName": null
+  },
+  {
+    "UID": 4,
+    "Name": "PointLight: 41",
+    "PARENT_UID": -1,
+    "components": [
+      {
+        "Color": {
+          "r": 255.0,
+          "g": 255.0,
+          "b": 255.0,
+          "a": 255.0
+        },
+        "Intensity": 1.0,
+        "Type": "PointLight"
+      },
+      {
+        "Position": {
+          "X": -35.999943,
+          "Y": -11.015577
+        },
+        "Size": {
+          "X": 9.0,
+          "Y": 1.0
+        },
+        "Rotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
+          "W": 0.0,
+          "IsIdentity": false
+        },
+        "Type": "Transform"
+      }
+    ],
+    "AssetName": null
+  },
+  {
+    "UID": 5,
+    "Name": "Camera: 51",
+    "PARENT_UID": -1,
+    "components": [
+      {
+        "CameraType": 0,
+        "Size": 1.0,
+        "Near": 0.1,
+        "Far": 1000.0,
+        "ProjectionSize": {
+          "X": 1920.0,
+          "Y": 1080.0
+        },
+        "ClearColor": {
+          "r": 255.0,
+          "g": 255.0,
+          "b": 255.0,
+          "a": 255.0
+        },
+        "Type": "Camera"
+      },
+      {
+        "Position": {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        "Size": {
+          "X": 1.0,
+          "Y": 1.0
+        },
+        "Rotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
+          "W": 0.0,
           "IsIdentity": false
         },
         "Type": "Transform"

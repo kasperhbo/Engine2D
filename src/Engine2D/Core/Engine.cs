@@ -11,7 +11,6 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using ImGuiController = Dear_ImGui_Sample.ImGuiController;
 
 namespace Engine2D.Core
 {
@@ -22,7 +21,7 @@ namespace Engine2D.Core
         public  Scene? CurrentScene { get; private set; }
         public Asset? CurrentSelectedAsset;
 
-        private readonly Dictionary<string, UiElemenet> _guiWindows = new();
+        private readonly Dictionary<string, UIElement> _guiWindows = new();
 
         #region setup
 
@@ -58,10 +57,10 @@ namespace Engine2D.Core
 
         private void LoadEngine()
         {
-            base.OnLoad();
-
+            SaveLoad.LoadWindowSettings();
             SaveLoad.LoadEngineSettings();
 
+            base.OnLoad();
 
             WindowState = WindowSettings.FullScreen;
 
@@ -70,7 +69,7 @@ namespace Engine2D.Core
             SwitchScene(ProjectSettings.FullProjectPath + "\\kasper1.kdbscene");
 
             if (Settings.s_IsEngine)
-                UIRenderer.Init(this, true);
+                UiRenderer.Init(this, true);
 
         }
 
@@ -86,11 +85,16 @@ namespace Engine2D.Core
             
             //other events
             base.Resize += OnResize;
-            base.Unload += Close;
-            
+            base.Unload += OnClose;
         }
-        
-        
+
+        private void OnClose()
+        {
+            Log.Message("Closing engine");
+            SaveLoad.SaveWindowSettings();
+            SaveLoad.SaveEngineSettings();
+        }
+
         #endregion
 
         public void SwitchScene(string newSceneName)
@@ -165,8 +169,7 @@ namespace Engine2D.Core
 
 public static class EngineSettings
 {
-    public static float GlobalScale      = 1;
-    public static float DefaultFontSize  = 18;
+     public static float DefaultFontSize  = 18;
      public static bool SaveOnClose       = true;
 }
 

@@ -200,20 +200,7 @@ public class Scene
 
     public void OnGui()
     {
-        // EditorCamera?.CameraSettingsGUI();
         
-        ImGui.Begin("Scene Settings");
-        ImGui.Begin("t");
-        
-        if (EditorCamera != null)
-        {
-            Vector2 proj = new(EditorCamera.ProjectionSize.X, EditorCamera.ProjectionSize.Y);
-            ImGui.DragFloat2("project", ref proj);
-        }
-
-        ImGui.End();
-        
-        ImGui.End();
     }
 
     #region inputs

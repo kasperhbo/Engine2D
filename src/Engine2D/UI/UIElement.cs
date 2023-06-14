@@ -1,69 +1,57 @@
-﻿using Engine2D.Logging;
+﻿using System.Numerics;
+using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
-using OpenTK.Windowing.Common;
 
 namespace Engine2D.UI;
 
-public abstract class UiElemenet
+public abstract class UIElement
 {
-    protected ImGuiWindowFlags _flags;
-    protected bool _visibility = true;
-    protected Action _windowContents;
-    
-    public bool IsHovering { get; private set; } = false;
-    public string Title { get; private set; }
+    protected string Title = "";
 
-    /// <summary>
-    ///     An Simple UI Window
-    /// </summary>
-    /// <param name="title">The Title of the ui Window</param>
-    /// <param name="flags">The ImGuiWindowFlags.</param>
-    /// <param name="windowContents">
-    ///     The Window contents like text, buttons and other elements
-    /// </param>
+    protected ImGuiWindowFlags Flags = ImGuiWindowFlags.None;
+    public bool IsVisible { get; protected set; } = true;
+    protected bool IsHovering = false;
 
-    public UiElemenet()
+    protected bool IsFocussed = false;
+
+    protected TopBarButton _closeButton = new TopBarButton("X", new Vector4(1, 0, 0, 1));
+
+
+    public UIElement(string title)
     {
-        _flags = GetWindowFlags();
-        Title = GetWindowTitle();
-        _windowContents = GetWindowContent();
+        this.Title = title;
     }
 
-    
-    protected abstract string GetWindowTitle();
-    protected abstract ImGuiWindowFlags GetWindowFlags();
-
-    protected virtual Action GetMenuBarContent()
+    public virtual void BeginRender()
     {
-        return () => { };
+        ImGui.PushID(Title);
+        ImGui.Begin(Title, Flags);
+
+        IsFocussed = ImGui.IsWindowFocused(ImGuiFocusedFlags.RootWindow) |
+                     ImGui.IsWindowFocused(ImGuiFocusedFlags.ChildWindows);
+         
+        RenderTopBar();
     }
-    
-    protected abstract Action GetWindowContent();
-    
-    public void Render()
-    {
-        if (!_visibility) return;
 
-        ImGui.Begin(Title, _flags);
-        GetMenuBarContent().Invoke();
-       
-        _windowContents?.Invoke();
-        IsHovering = ImGui.IsWindowHovered();
+    public virtual void RenderTopBar()
+    {
+        if (Gui.TopBarButton(ImGui.GetContentRegionMax().X-20, new(20, 20), _closeButton))
+        {
+            UiRenderer.RemoveGuiWindow(this);
+        }
         
+        ImGui.Separator();
+    }
+
+    
+    
+    public abstract void Render();
+
+    public virtual void EndRender()
+    {
         ImGui.End();
-    }
+        ImGui.PopID();
+        
 
-    public virtual void OnFileDrop(FileDropEventArgs args)
-    {
-        if (IsHovering)
-            foreach (var file in args.FileNames)
-            {
-                Log.Message(string.Format("Dropped Files {0} On To {1}", file, Title));
-            }
-    }
-
-    public virtual void SetVisibility(bool visibility)
-    {
-        _visibility = visibility;
     }
 }

@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\TestFolder\" />
-    <Folder Include="Registers" />
+    <Folder Include="Assets\emptyfolder\" />
+    <Folder Include="Assets\TestFolder\emptyfolder\" />
   </ItemGroup>
 
 </Project>

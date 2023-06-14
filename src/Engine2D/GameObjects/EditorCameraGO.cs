@@ -8,6 +8,7 @@ using Engine2D.Testing;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
 using Engine2D.Logging;
+using Engine2D.UI;
 using Engine2D.UI.Viewports;
 using Newtonsoft.Json.Serialization;
 using OpenTK.Windowing.Common;
@@ -51,7 +52,7 @@ public class EditorCameraGO : Gameobject
 
     private void MouseControl(float dt)
     {
-        if (UIRenderer.CurrentEditorViewport != null && UIRenderer.CurrentEditorViewport.IsWindowHovered)
+        if (UiRenderer.CurrentEditorViewport != null && UiRenderer.CurrentEditorViewport.IsWindowHovered)
         {
             if (Input.MouseDown(MouseButton.Middle))
             {

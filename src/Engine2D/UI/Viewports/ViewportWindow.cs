@@ -21,18 +21,14 @@ public abstract class ViewportWindow
     public Vector2 WindowPos { get; set; } = new();
 
     protected Camera Camera;
-    protected TestFrameBuffer _frameBuffer;
+    protected TestFrameBuffer? _frameBuffer;
     public Vector2 gameViewportSize => WindowSize;
     public Vector2 gameViewportPos => WindowPos;
 
-    public virtual void Begin(string title, Camera? cameraToRender, TestFrameBuffer buffer)
+    public virtual void Begin(string title, Camera? cameraToRender, TestFrameBuffer? buffer)
     {
         Camera = cameraToRender;
         _frameBuffer = buffer;
-        
-        ImGui.Begin("DEBUG VIEWPORT " + title);
-        ImGui.Text("Tex ID " + _frameBuffer.TextureID);
-        ImGui.End();
         
         ImGui.Begin(title);
         BeforeImageRender();
