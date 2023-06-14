@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
+using OpenTK.Windowing.Common;
 
 namespace Engine2D.UI;
 
@@ -51,7 +52,11 @@ public abstract class UIElement
     {
         ImGui.End();
         ImGui.PopID();
-        
+    }
 
+
+    public virtual void FileDrop(FileDropEventArgs obj)
+    {
+        
     }
 }

@@ -29,6 +29,7 @@
         <Compile Remove="Lib\ImGui.Net\src\ImNodes.NET\**" />
         <Compile Remove="Lib\ImGui.Net\src\ImPlot.NET\**" />
         <Compile Remove="Lib\ImGui.Net\src\**" />
+        <Compile Remove="Resources\Icons.Designer.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -90,7 +91,7 @@
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Images\Icons\not-found-icon.jpg">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Shaders\ShaderFiles\Debug\Grid.frag">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -105,19 +106,19 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Images\Icons\file-icon.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Images\Icons\folder-icon.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Images\Icons\folder-open-icon.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Images\Icons\scene-icon.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Images\Icons\terminal-icon.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="UI\Fonts\Roboto\Roboto-Black.ttf">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -155,6 +156,9 @@
         <None Update="UI\Fonts\Roboto\Roboto-ThinItalic.ttf">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Images\Icons\file-icon.jpg">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 
@@ -165,11 +169,18 @@
       <EmbeddedResource Remove="Lib\ImGui.Net\src\ImNodes.NET\**" />
       <EmbeddedResource Remove="Lib\ImGui.Net\src\ImPlot.NET\**" />
       <EmbeddedResource Remove="Lib\ImGui.Net\src\**" />
+      <EmbeddedResource Remove="Resources\Icons.resx" />
     </ItemGroup>
 
 
     <ItemGroup>
       <Reference Include="System.Drawing.Common" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Folder Include="Resources\" />
+      <Folder Include="SavingLoading\" />
     </ItemGroup>
 
 </Project>

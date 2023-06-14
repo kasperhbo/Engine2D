@@ -3,12 +3,12 @@ using ImGuiNET;
 
 namespace Engine2D.UI;
 
-internal class EngineSettingsWindow : UIElement
+internal class EngineSettingsPanel : UIElement
 {
     private UIElement _uiElementImplementation;
     private bool showRestartBar;
 
-    internal EngineSettingsWindow(string title) : base(title)
+    internal EngineSettingsPanel(string title) : base(title)
     {
         Flags = ImGuiWindowFlags.None;
     }

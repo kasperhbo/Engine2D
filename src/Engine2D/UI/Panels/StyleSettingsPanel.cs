@@ -6,12 +6,12 @@ using ImGuiNET;
 
 namespace Engine2D.UI;
 
-public class StyleSettings : UIElement
+public class StyleSettingsPanel : UIElement
 {
     private int _currentStyle = 0;
     private int _currentFont = 0;
     
-    public StyleSettings(string title) : base(title)
+    public StyleSettingsPanel(string title) : base(title)
     {
     }
 

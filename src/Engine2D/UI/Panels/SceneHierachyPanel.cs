@@ -12,9 +12,9 @@ using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace Engine2D.UI;
 
-internal class SceneHierachy : UIElement
+internal class SceneHierachyPanel : UIElement
 {
-    public SceneHierachy(string title) : base(title)
+    public SceneHierachyPanel(string title) : base(title)
     {
     }
 

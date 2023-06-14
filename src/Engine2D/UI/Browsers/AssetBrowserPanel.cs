@@ -1,12 +1,15 @@
-﻿using System.Numerics;
+﻿using System.Numerics; 
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
+using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.Rendering;
+using Engine2D.SavingLoading;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using SixLabors.ImageSharp.ColorSpaces.Conversion;
 
 namespace Engine2D.UI.Browsers;
 
@@ -20,7 +23,7 @@ public enum ESupportedFileTypes
     txt      ,
 }
 
-public class AssetBrowser : UIElement
+public class AssetBrowserPanel : UIElement
 {
     private static readonly string BaseAssetDir = ProjectSettings.FullProjectPath + "\\Assets";
     
@@ -42,7 +45,7 @@ public class AssetBrowser : UIElement
 
     public int _currentSelectedEntryIndex = -1;
 
-    public AssetBrowser(string title) : base(title)
+    public AssetBrowserPanel(string title) : base(title)
     {
         Flags = ImGuiWindowFlags.None | ImGuiWindowFlags.NoScrollbar;
         Init();
@@ -69,21 +72,44 @@ public class AssetBrowser : UIElement
 
     public override void Render()
     {
-        // ImGui.SetNextItemWidth(100);
-        // ImGui.DragFloat2("Padding", ref Padding);
-        // ImGui.SameLine();
-        // ImGui.SetNextItemWidth(100);
-        // ImGui.DragFloat2("ImageSize", ref ImageSize);
-        // ImGui.SameLine();
-        // ImGui.SetNextItemWidth(100);
-        // ImGui.DragFloat2("ImageAdjust", ref ImageAdjust);
-        // ImGui.SameLine();
-        // ImGui.SetNextItemWidth(100);
-        // ImGui.DragFloat2("SizeBetween", ref _sizeBetweenItems);
-        //
         DrawUI();
+        
     }
-    
+
+    public override void FileDrop(FileDropEventArgs obj)
+    {
+        base.FileDrop(obj);
+
+        List<FileInfo> imageFiles = new List<FileInfo>();
+
+        foreach (var file in obj.FileNames)
+        {
+            FileInfo fInfo = new FileInfo(file);
+            if(Enum.TryParse(fInfo.Extension.Remove(0,1), out ESupportedFileTypes ext))
+            {
+                Log.Message("Trying to load " + fInfo.Name);
+                if (ext == ESupportedFileTypes.png)
+                {
+                    imageFiles.Add(fInfo);
+                }
+            }
+        }
+
+        for (int i = 0; i < imageFiles.Count; i++)
+        {
+            var extensionLength = imageFiles[i].Extension.Length;
+            var saveName = imageFiles[i].Name.Remove(imageFiles[i].Name.Length - extensionLength, extensionLength);
+            saveName += ".tex";
+            Texture texture = new Texture(imageFiles[i].FullName, false, TextureMinFilter.Linear, TextureMagFilter.Linear);
+            SaveLoad.SaveTexture(saveName , texture, _currentDirectory);
+            Log.Succes(string.Format("Succesfully made texture from {0}, and save it to {1}", 
+                imageFiles[i].FullName, _currentDirectory + "\\" + imageFiles[i].Name));
+        }
+
+        //refresh ui
+        SwitchDirectory(_currentDirectory);
+    }
+
     private void Init()
     {
         LoadIcons();
@@ -92,11 +118,8 @@ public class AssetBrowser : UIElement
 
     private void LoadIcons()
     {
-        _folderTexture  = new Texture(Utils.GetBaseEngineDir() + "\\Images\\Icons\\folder-icon.png" , false, 
-        TextureMinFilter.Linear, TextureMagFilter.Linear);
-        
-        _fileTexture = new Texture(Utils.GetBaseEngineDir() + "\\Images\\Icons\\file-icon.png", false, 
-        TextureMinFilter.Linear, TextureMagFilter.Linear);
+        _folderTexture = IconManager.GetIcon("folder-icon");
+        _fileTexture = IconManager.GetIcon("file-icon");
     }
 
     private bool _isSwitching = false;
@@ -202,6 +225,10 @@ public class AssetBrowser : UIElement
                     {
                         var entry = _entries[i];
                         entry.Draw(i);
+                        if (ImGui.IsItemClicked())
+                        {
+                            Log.Message("Clicked " + entry.Label);
+                        }
                         ImGui.NextColumn();
                     }
                 }
@@ -312,8 +339,7 @@ public class AssetBrowser : UIElement
 
         bool currentDir = _currentDirectory.FullName == directory.FullName;
         bool hasFolders = dirs.Length > 0;
-        
-       
+
         if (directory.FullName == ProjectSettings.FullProjectPath + "\\Assets")
         {
             foreach (var dir in dirs)
@@ -359,8 +385,6 @@ public class AssetBrowser : UIElement
             _entries.Add(entry);
         }
         
-        // ImGui.BeginGroup();
-     
         foreach (var file in _filesInDirectory)
         {
             string fileExtension = file.Extension;
@@ -375,9 +399,6 @@ public class AssetBrowser : UIElement
             _entries.Add(entry);
         }
         
-
-        // ImGui.EndGroup();
-        
     }
     
 }
@@ -390,11 +411,11 @@ public class AssetBrowserEntry
 
     public ESupportedFileTypes _fileType;
     private Texture _texture;
-    private AssetBrowser _assetBrowser;
+    private AssetBrowserPanel _assetBrowserPanel;
 
     private bool _isSelected = false;
     
-    public AssetBrowserEntry(string label, string fullPath, string parentPath, ESupportedFileTypes fileType, Texture texture, AssetBrowser assetBrowser)
+    public AssetBrowserEntry(string label, string fullPath, string parentPath, ESupportedFileTypes fileType, Texture texture, AssetBrowserPanel assetBrowserPanel)
     {
         Label = label;
         this.fullPath = fullPath;
@@ -402,7 +423,7 @@ public class AssetBrowserEntry
         _fileType = fileType;
         
         _texture = texture;
-        _assetBrowser = assetBrowser;
+        _assetBrowserPanel = assetBrowserPanel;
     }
 
     
@@ -413,7 +434,7 @@ public class AssetBrowserEntry
         bool doubleClicked = false;
         bool rightClicked = false;
 
-        if (index == _assetBrowser._currentSelectedEntryIndex)
+        if (index == _assetBrowserPanel._currentSelectedEntryIndex)
         {
             _isSelected = true;
         }
@@ -425,26 +446,26 @@ public class AssetBrowserEntry
         Gui.ImageButtonExTextDown(
             Label,
             _texture.TexID,
-            _assetBrowser.ImageSize,
+            _assetBrowserPanel.ImageSize,
             new(1), new Vector2(0),
-            _assetBrowser.Padding, _assetBrowser.ImageAdjust,
+            _assetBrowserPanel.Padding, _assetBrowserPanel.ImageAdjust,
             new Vector4(1),
             out clicked, out doubleClicked, out rightClicked, _isSelected);
 
         if (ImGui.BeginPopupContextItem(Label + "popup")) // <-- This is using IsItemHovered()
         {
-            _assetBrowser._currentSelectedEntryIndex = index;
+            _assetBrowserPanel._currentSelectedEntryIndex = index;
             if (ImGui.MenuItem(Label + " label")) {  }
             ImGui.EndPopup();
         }
         
         if (ImGui.IsItemClicked())
-            _assetBrowser._currentSelectedEntryIndex = index;
+            _assetBrowserPanel._currentSelectedEntryIndex = index;
 
         if (ImGui.IsItemClicked() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
         {
             if (_fileType == ESupportedFileTypes.folder)
-                _assetBrowser.SwitchDirectory(new DirectoryInfo(this.fullPath));
+                _assetBrowserPanel.SwitchDirectory(new DirectoryInfo(this.fullPath));
         }
 
 

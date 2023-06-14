@@ -4,11 +4,11 @@ using Engine2D.Logging;
 
 namespace Engine2D.UI;
 
-internal class Inspector : UIElement
+internal class InspectorPanel : UIElement
 {
     //internal Gameobject CurrentSelectedGameObject;
 
-    public Inspector(string title) : base(title)
+    public InspectorPanel(string title) : base(title)
     {
     }
 

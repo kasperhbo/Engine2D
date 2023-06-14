@@ -122,16 +122,19 @@ public static class UiRenderer
 
     public static void AddGuiWindow(UIElement window)
     {
+        Engine.Get().FileDrop += window.FileDrop;
         _windows.Add(window);
     }
 
     public static void RemoveGuiWindow(UIElement window)
     {
-        if (window.GetType() == typeof(SceneHierachy)) _hierarchyWindowCount--;
-        if (window.GetType() == typeof(Inspector)) _inspectorWindowCount--;
-        if (window.GetType() == typeof(AssetBrowser)) _assetBrowserWindowCount--;
-        if (window.GetType() == typeof(StyleSettings)) _styleSettingsWindowCount--;
+        if (window.GetType() == typeof(SceneHierachyPanel)) _hierarchyWindowCount--;
+        if (window.GetType() == typeof(InspectorPanel)) _inspectorWindowCount--;
+        if (window.GetType() == typeof(AssetBrowserPanel)) _assetBrowserWindowCount--;
+        if (window.GetType() == typeof(StyleSettingsPanel)) _styleSettingsWindowCount--;
 
+        Engine.Get().FileDrop -= window.FileDrop;
+        
         // _engine.FileDrop -= window.OnFileDrop;
         _windowsToRemoveEndOfFrame.Add(window);
     }
@@ -243,28 +246,28 @@ public static class UiRenderer
     {
         if (_styleSettingsWindowCount >= 1) return;
         
-        var styleSettings = new StyleSettings("Style Settings");
+        var styleSettings = new StyleSettingsPanel("Style Settings");
         _styleSettingsWindowCount++;
         AddGuiWindow(styleSettings);
     }
     
     private static void CreateHierachyWindow()
     {
-        var hierarch = new SceneHierachy("Hierarchy "  + _hierarchyWindowCount);
+        var hierarch = new SceneHierachyPanel("Hierarchy "  + _hierarchyWindowCount);
         _hierarchyWindowCount++;
         AddGuiWindow(hierarch);
     }
     
     private static void CreateInspectWindow()
     {
-        var Inspector = new Inspector("Inspector "  + _inspectorWindowCount);
+        var Inspector = new InspectorPanel("Inspector "  + _inspectorWindowCount);
         _inspectorWindowCount++;
         AddGuiWindow(Inspector);
     }
     
     private static void CreateAssetBrowserWindow()
     {
-        var assetBrowserWindow = new AssetBrowser("Asset Browser "  + _assetBrowserWindowCount);
+        var assetBrowserWindow = new AssetBrowserPanel("Asset Browser "  + _assetBrowserWindowCount);
         _assetBrowserWindowCount++;
         AddGuiWindow(assetBrowserWindow);
     }

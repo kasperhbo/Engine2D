@@ -180,10 +180,8 @@ internal static class SaveLoad
         File.WriteAllText(sprite.FullSavePath, spriteData);
     }
 
-    public static void SaveTexture(Texture texture, DirectoryInfo currentFolder)
+    public static void SaveTexture(string defaultSaveName,Texture texture, DirectoryInfo currentFolder)
     {
-        string defaultSaveName = "tex.texture";
-        
         string name = GetNextFreeName(defaultSaveName, currentFolder);
         string fullSaveName = currentFolder.FullName + "\\" +name;
         

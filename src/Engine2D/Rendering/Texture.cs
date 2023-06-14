@@ -74,7 +74,8 @@ public class Texture : Asset
         var flipVal = 0;
         if (!Flipped) flipVal = 1;
         StbImage.stbi_set_flip_vertically_on_load(flipVal);
-        if (File.Exists(Filepath))
+        
+        try
         {
             using (Stream stream = File.OpenRead(Filepath))
             {
@@ -84,18 +85,30 @@ public class Texture : Asset
                 Height = image.Height;
             }
         }
-        else
-        {
-            using (Stream stream = File.OpenRead(Utils.GetBaseEngineDir() + "\\Images\\ICONS\\not-" +
-                                                 "found-icon.jpg" ))
+        catch {
+            Log.Error("No file" + Filepath);
+            Filepath = Utils.GetBaseEngineDir() + "\\Images\\icons\\not-found-icon.jpg";
+            using (Stream stream = File.OpenRead(Filepath))
             {
-                Log.Error(Filepath + " not found");
                 var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
                 Data = image.Data;
                 Width = image.Width;
                 Height = image.Height;
             }
         }
+        //}
+        //else
+        //{
+        //    using (Stream stream = File.OpenRead(Utils.GetBaseEngineDir() + "\\Images\\ICONS\\not-" +
+        //                                         "found-icon.jpg" ))
+        //    {
+        //        Log.Error(Filepath + " not found");
+        //        var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+        //        Data = image.Data;
+        //        Width = image.Width;
+        //        Height = image.Height;
+        //    }
+        //}
     }
 
     private void CreateOpenGL()
