@@ -45,14 +45,15 @@ public static class IconManager
     
     private static void AddIcons(FileInfo fInfo)
     {
-        Texture tex = new Texture(fInfo.FullName, false, TextureMinFilter.Linear, TextureMagFilter.Linear);
         var name = Path.GetFileNameWithoutExtension(fInfo.FullName);
-
+        
         if (_icons.ContainsKey(name))
         {
             Log.Error("Already icon with same name, make sure there are no duplicates! Also not in sub dirs");
             return;
         }
+        
+        Texture tex = new Texture(fInfo.FullName, true, TextureMinFilter.Linear, TextureMagFilter.Linear);
         _icons.Add(name, tex);
     }
 

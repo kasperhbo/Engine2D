@@ -156,9 +156,6 @@
         <None Update="UI\Fonts\Roboto\Roboto-ThinItalic.ttf">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="Images\Icons\file-icon.jpg">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 
 

@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
 using Engine2D.Core;
 using Engine2D.Logging;
+using Engine2D.SavingLoading;
+using Engine2D.UI.Browsers;
 using ImGuiNET;
 using Newtonsoft.Json;
 using Octokit;
@@ -12,17 +14,17 @@ namespace Engine2D.Rendering;
 public class Texture : Asset
 {
     public string Type = "Texture";
-    
-    [JsonIgnore]public int TexID;
-    [JsonIgnore]public byte[] Data;
-    
+
+    [JsonIgnore] public int TexID;
+    [JsonIgnore] public byte[] Data;
+    [JsonIgnore] public bool Flipped;
+
     public string EncodedData;
     public int Height;
-    public string Filepath ;
+    public string Filepath;
     public int Width;
     public TextureMinFilter MinFilter;
     public TextureMagFilter MagFilter;
-    public bool Flipped;
 
     public Texture(string filepath, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
     {
@@ -30,37 +32,35 @@ public class Texture : Asset
         MinFilter = minFilter;
         MagFilter = magFilter;
         Flipped = flipped;
-        
+
         Gen();
         LoadFromImage();
         CreateOpenGL();
         EncodedData = Convert.ToBase64String(Data);
     }
-    
+
     //
     [JsonConstructor]
     public Texture(
-        string encodedData, 
+        string encodedData,
         int height, int width,
         TextureMinFilter MinFilter,
-        TextureMagFilter MagFilter,
-        bool Flipped)
+        TextureMagFilter MagFilter)
     {
         this.EncodedData = encodedData;
         this.Width = width;
         this.Height = height;
         this.MagFilter = MagFilter;
         this.MinFilter = MinFilter;
-        this.Flipped = Flipped;
-        
-        Log.Message("Create Image From Json");
-        
+
         Data = Convert.FromBase64String(EncodedData);
-        
+
         Gen();
         CreateOpenGL();
+
+        Log.Succes("Create Image From JSON");
     }
-    
+
     private void Gen()
     {
         TexID = GL.GenTexture();
@@ -74,7 +74,7 @@ public class Texture : Asset
         var flipVal = 0;
         if (!Flipped) flipVal = 1;
         StbImage.stbi_set_flip_vertically_on_load(flipVal);
-        
+
         try
         {
             using (Stream stream = File.OpenRead(Filepath))
@@ -85,7 +85,8 @@ public class Texture : Asset
                 Height = image.Height;
             }
         }
-        catch {
+        catch
+        {
             Log.Error("No file" + Filepath);
             Filepath = Utils.GetBaseEngineDir() + "\\Images\\icons\\not-found-icon.jpg";
             using (Stream stream = File.OpenRead(Filepath))
@@ -96,27 +97,14 @@ public class Texture : Asset
                 Height = image.Height;
             }
         }
-        //}
-        //else
-        //{
-        //    using (Stream stream = File.OpenRead(Utils.GetBaseEngineDir() + "\\Images\\ICONS\\not-" +
-        //                                         "found-icon.jpg" ))
-        //    {
-        //        Log.Error(Filepath + " not found");
-        //        var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-        //        Data = image.Data;
-        //        Width = image.Width;
-        //        Height = image.Height;
-        //    }
-        //}
     }
 
     private void CreateOpenGL()
     {
-        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, 
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8,
             Width, Height, 0,
             PixelFormat.Rgba, PixelType.UnsignedByte, Data);
-        
+
         // Now that our texture is loaded, we can set a few settings to affect how the image appears on rendering.
 
         // First, we set the min and mag filter. These are used for when the texture is scaled down and up, respectively.
@@ -163,7 +151,7 @@ public class Texture : Asset
 
         return id;
     }
-    
+
     public void bind()
     {
         GL.BindTexture(TextureTarget.Texture2D, TexID);
@@ -195,12 +183,76 @@ public class Texture : Asset
 
     public override void OnGui()
     {
-        // Log.Message(string.Format("Texture {0} is selected with a width of {1} and a height of {2}", TexID, Width, Height));
         ImGui.Begin("Texture inspect");
-        ImGui.Image(this.TexID, new Vector2(Width, Height));
+        ImGui.Text("Image Preview");
+        ImGui.SameLine();
+        var w = Width;
+        var h = Height;
+
+        if (h > 32)
+        {
+            int dif = Height - 32;
+            w = w - dif;
+            h = h - dif;
+        }
+
+        if (ImGui.Button("Save"))
+        {
+            SaveLoad.SaveTexture(AssetName, this, null, true);
+        }
+
+        ImGui.Image(this.TexID, new Vector2(w, h), new(0), new(1));
+
+        int currentIndexMinFilter = (MinFilter == TextureMinFilter.Linear) ? 0 : 1;
+
+        if (ImGui.Combo("Min Filter: ", ref currentIndexMinFilter,
+                "TextureMinFilter.Linear\0" +
+                "TextureMinFilter.Nearest\0"
+            ))
+        {
+            SelectNewMinFilter(currentIndexMinFilter);
+            ImGui.EndCombo();
+        }
+        
+        int currentIndexMagFilter = (MagFilter == TextureMagFilter.Linear) ? 0 : 1;
+
+        if (ImGui.Combo("Mag Filter: ", ref currentIndexMagFilter,
+                "TextureMagFilter.Linear\0" +
+                "TextureMagFilter.Nearest\0"
+            ))
+        {
+            SelectNewMagFilter(currentIndexMagFilter);
+            ImGui.EndCombo();
+        }
+
+        
         ImGui.End();
     }
 
+    private void SelectNewMinFilter(int index)
+    {
+        if (index == 0)
+        {
+            MinFilter = TextureMinFilter.Linear;
+        }
+        else
+        {
+            MinFilter = TextureMinFilter.Nearest;
+        }
+    }
+
+    private void SelectNewMagFilter(int index)
+    {
+        if (index == 0)
+        {
+            MagFilter = TextureMagFilter.Linear;
+        }
+        else
+        {
+            MagFilter = TextureMagFilter.Nearest;
+        }
+    }
+    
     public static void Use(TextureUnit unit, int textureID)
     {
         GL.ActiveTexture(unit);

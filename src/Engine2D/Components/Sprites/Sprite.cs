@@ -21,9 +21,9 @@ public class Sprite : Asset
     
     public Vector2[] TextureCoords =
     {
-        new(1.0f, 1.0f),
-        new(1.0f, 0.0f),
         new(0.0f, 0.0f),
+        new(1.0f, 0.0f),
+        new(1.0f, 1.0f),
         new(0.0f, 1.0f)
     };
 
@@ -31,6 +31,9 @@ public class Sprite : Asset
     
     public string TexturePath = "";
     public string FullSavePath { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set;}
+
 
     public Sprite(string texturePath)
     {
@@ -49,18 +52,22 @@ public class Sprite : Asset
         AssetName = this.FullSavePath;
     }
 
-
     [JsonConstructor]
-    public Sprite()
+    public Sprite(string type, Vector2[] textureCoords, string texturePath, string assetName ,string fullPath)
     {
+        this.Type = type;
+        this.TextureCoords = textureCoords;
+        this.TexturePath = texturePath;
+        this.AssetName = assetName;
+        this.FullSavePath = fullPath;
+        
         if (TexturePath != "")
         {
             Texture = SaveLoad.LoadTextureFromJson(TexturePath);
         }
         else
         {
-            Texture = new Texture(Utils.GetBaseEngineDir() + "\\Images\\Icons\\not-found-icon.png",
-                false, TextureMinFilter.Nearest, TextureMagFilter.Nearest);
+            Texture = IconManager.GetIcon("not-found-icon");
         }
         
         AssetName = this.FullSavePath;
@@ -78,6 +85,18 @@ public class Sprite : Asset
             SpriterendererManager.UpdateSpriteRenderers(this.FullSavePath);
         };
         
+        var w = Width;
+        var h = Height;
+
+        if (h > 128)
+        {
+            int dif = Texture.Height - 128;
+            w = w - dif;
+            h = h - dif;
+        }
+        
+        ImGui.Image(Texture.TexID, new Vector2(w, h), TextureCoords[0], TextureCoords[2]);
+        
         OpenTkuiHelper.DrawComponentWindow(
             "Sprite Settings",
             "Sprite Settings",
@@ -88,10 +107,13 @@ public class Sprite : Asset
 
     private void OnGuiItems()
     {
+        
         for (int i = 0; i < TextureCoords.Length; i++)
         {
             Vector2 temp = TextureCoords[i];
+            
             OpenTkuiHelper.DrawProperty("Coord " + i, ref temp);
+            
             TextureCoords[i] = temp;
         }
     }

@@ -41,6 +41,8 @@ public class StyleSettingsPanel : UIElement
                 ImGuiStyleManager.SelectTheme(_currentStyle);
                 ImGui.EndCombo();
             }
+            
+            
 
             string robotoPath = Utils.GetBaseEngineDir() + "\\UI\\Fonts\\Roboto\\";
             string[] fonts = Directory.GetFiles(robotoPath);

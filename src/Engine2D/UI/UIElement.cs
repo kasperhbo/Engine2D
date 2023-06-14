@@ -50,6 +50,15 @@ public abstract class UIElement
 
     public virtual void EndRender()
     {
+        if (ImGui.IsWindowHovered(ImGuiHoveredFlags.ChildWindows | ImGuiHoveredFlags.RootWindow))
+        {
+            IsHovering = true;
+        }
+        else
+        {
+            IsHovering = false;
+        }
+        
         ImGui.End();
         ImGui.PopID();
     }

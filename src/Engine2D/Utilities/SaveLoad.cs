@@ -163,9 +163,8 @@ internal static class SaveLoad
 
     #region Sprites
 
-    public static void SaveSprite(Sprite sprite, DirectoryInfo currentFolder)
+    public static void SaveSprite(Sprite sprite, string defaultSaveName, DirectoryInfo currentFolder)
     {
-        string defaultSaveName = "sprite.sprite";
         string name = GetNextFreeName(defaultSaveName, currentFolder);
         string fullSaveName = currentFolder.FullName + "\\" +name;
         sprite.FullSavePath = fullSaveName;
@@ -180,10 +179,17 @@ internal static class SaveLoad
         File.WriteAllText(sprite.FullSavePath, spriteData);
     }
 
-    public static void SaveTexture(string defaultSaveName,Texture texture, DirectoryInfo currentFolder)
+    public static void SaveTexture(string defaultSaveName,Texture texture, DirectoryInfo? currentFolder = null, bool overWrite = false)
     {
-        string name = GetNextFreeName(defaultSaveName, currentFolder);
-        string fullSaveName = currentFolder.FullName + "\\" +name;
+        string name = defaultSaveName;
+        
+        if(!overWrite)
+             name = GetNextFreeName(defaultSaveName, currentFolder);
+        
+        string fullSaveName = name;
+        
+        if(currentFolder != null)
+            fullSaveName = currentFolder.FullName + "\\" +name;
         
         var textureData = JsonConvert.SerializeObject(texture, Formatting.Indented);
         File.WriteAllText(fullSaveName, textureData);
@@ -194,7 +200,6 @@ internal static class SaveLoad
         if (File.Exists(filename))
         {
             string textureData = File.ReadAllText(filename);
-
             Log.Succes("Loaded texture " + filename);
             return JsonConvert.DeserializeObject<Texture>(textureData)!;
         }
@@ -208,8 +213,8 @@ internal static class SaveLoad
     {
         if (File.Exists(filename))
         {
-            Log.Succes("Loaded Sprite " + filename);
             string spriteStringData = File.ReadAllText(filename);
+            Log.Succes("Loaded Sprite " + filename);
             return JsonConvert.DeserializeObject<Sprite>(spriteStringData)!;
         }
 

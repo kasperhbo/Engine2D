@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Engine2D.UI.Browsers;
 using Engine2D.Utilities;
 using ImGuiNET;
 using static ImGuiNET.ImGui;
@@ -7,7 +8,9 @@ namespace Engine2D.UI.ImGuiExtension;
 
 public static class Gui
 {
-    public static bool ImageButtonExTextDown(string label,
+    public static bool ImageButtonExTextDown(
+        string label,
+        ESupportedFileTypes fileType,
         IntPtr texture_id,
         Vector2 size,
         Vector2 uv0, Vector2 uv1,
@@ -108,9 +111,15 @@ public static class Gui
         
         if(IsItemHovered())
         {
-            SetTooltip(originalLabel);
+            SetTooltip( fileType + " " + originalLabel);
         }
 
+        PushStyleColor(ImGuiCol.Text, new Vector4(0,0,0,1));
+        image_bb.Min.Y = image_bb.Min.Y + 10;
+        
+        RenderText( image_bb.Min - ImageAdjustLocation  + padding, fileType.ToString());
+        PopStyleColor();
+        
         RenderText(start, label);
         
         return isClicked;
