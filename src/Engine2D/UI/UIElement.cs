@@ -49,9 +49,8 @@ public abstract class UiElemenet
        
         _windowContents?.Invoke();
         IsHovering = ImGui.IsWindowHovered();
-
+        
         ImGui.End();
-
     }
 
     public virtual void OnFileDrop(FileDropEventArgs args)

@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
+using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using ImGuizmoNET;
 using ImPlotNET;
@@ -69,7 +70,9 @@ namespace Dear_ImGui_Sample
             SetKeyMappings();
 
             SetPerFrameImGuiData(1f / 60f);
-            LoadStyle();
+            
+            ImGuiStyleManager.SetGUIStyle();
+            
             ImGui.NewFrame();
             ImGuizmo.BeginFrame();
             

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
+using Dear_ImGui_Sample;
 using Engine2D.Cameras;
 using Engine2D.Components;
 using Engine2D.Components.TransformComponents;
@@ -50,7 +51,7 @@ public class EditorCameraGO : Gameobject
 
     private void MouseControl(float dt)
     {
-        if (Engine.Get().CurrentEditorViewport.IsWindowHovered)
+        if (UIRenderer.CurrentEditorViewport != null && UIRenderer.CurrentEditorViewport.IsWindowHovered)
         {
             if (Input.MouseDown(MouseButton.Middle))
             {
