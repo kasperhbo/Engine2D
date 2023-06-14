@@ -168,11 +168,16 @@ public static class UiRenderer
         ImGui.SetNextWindowPos(new Vector2(0, 1));
         ImGui.Begin("titlebar", ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoNav );
         ImGui.BeginMenuBar(); 
-        ImGui.MenuItem("File");
+      
+
+        if (ImGui.BeginMenu("File"))
+        {
+            Log.Error("Not Implemented");
+            ImGui.EndMenu();
+        }
+
         if (ImGui.BeginMenu("View"))
         {
-
-            
             if (ImGui.MenuItem("Asset Browser"))
             {
                 CreateAssetBrowserWindow();
@@ -219,7 +224,18 @@ public static class UiRenderer
             ImGui.EndMenu();
         }
         
-        ImGui.MenuItem("Help");
+        if (ImGui.BeginMenu("Help"))
+        {
+            if (ImGui.MenuItem("Website"))
+            {
+                Log.Error("Not Implemented");
+            }
+            if (ImGui.MenuItem("WIKI"))
+            {
+                Log.Error("Not Implemented");
+            }
+            ImGui.EndMenu();
+        }
         ImGui.EndMenuBar();
     }
 
