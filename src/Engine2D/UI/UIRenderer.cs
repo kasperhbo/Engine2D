@@ -72,6 +72,12 @@ public static class UiRenderer
         DrawToolbar();
         SetupDockSpace();
         
+        var currentSelectedAssetBrowserAsset = Engine.Get().CurrentSelectedAssetBrowserAsset;
+        if (currentSelectedAssetBrowserAsset != null)
+        {
+            currentSelectedAssetBrowserAsset.OnGui();
+        }
+
         ImGui.ShowDemoWindow();
         
         KDBImGuiController.Render();
@@ -130,7 +136,11 @@ public static class UiRenderer
     {
         if (window.GetType() == typeof(SceneHierachyPanel)) _hierarchyWindowCount--;
         if (window.GetType() == typeof(InspectorPanel)) _inspectorWindowCount--;
-        if (window.GetType() == typeof(AssetBrowserPanel)) _assetBrowserWindowCount--;
+        if (window.GetType() == typeof(AssetBrowserPanel))
+        {
+            AssetBrowserPanel.AssetBrowserPanels.Remove((AssetBrowserPanel)window);
+            _assetBrowserWindowCount--;
+        };
         if (window.GetType() == typeof(StyleSettingsPanel)) _styleSettingsWindowCount--;
 
         Engine.Get().FileDrop -= window.FileDrop;

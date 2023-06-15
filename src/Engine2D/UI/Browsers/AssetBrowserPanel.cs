@@ -23,12 +23,16 @@ public enum ESupportedFileTypes
     png      ,
     kdbscene ,
     sprite   ,
+    spritesheet,
     tex      ,
     txt      ,
 }
 
 public class AssetBrowserPanel : UIElement
 {
+    public static List<AssetBrowserPanel> AssetBrowserPanels = new List<AssetBrowserPanel>();
+    
+    
     private static readonly string BaseAssetDir = ProjectSettings.FullProjectPath + "\\Assets";
 
     public DirectoryInfo CurrentDirectory { get; private set; } = new DirectoryInfo(BaseAssetDir);
@@ -53,9 +57,21 @@ public class AssetBrowserPanel : UIElement
     public AssetBrowserPanel(string title) : base(title)
     {
         Flags = ImGuiWindowFlags.None | ImGuiWindowFlags.NoScrollbar;
+        AssetBrowserPanels.Add(this);
         Init();
     }
 
+    public static void Refresh()
+    {
+        var cur = Engine.Get().CurrentSelectedAssetBrowserAsset;
+        Engine.Get().CurrentSelectedAssetBrowserAsset = null;
+        foreach (var panel in AssetBrowserPanels)
+        {
+            panel.SwitchDirectory(panel.CurrentDirectory);
+        }
+        Engine.Get().CurrentSelectedAssetBrowserAsset = cur;
+    }
+    
     private TopBarButton backButton = new TopBarButton("Back");
     
     public override void RenderTopBar()
@@ -87,8 +103,6 @@ public class AssetBrowserPanel : UIElement
         
         if (!IsHovering) return;
         
-        
-        
         List<FileInfo> imageFiles = new List<FileInfo>();
 
         foreach (var file in obj.FileNames)
@@ -108,8 +122,8 @@ public class AssetBrowserPanel : UIElement
             var extensionLength = imageFiles[i].Extension.Length;
             var saveName = imageFiles[i].Name.Remove(imageFiles[i].Name.Length - extensionLength, extensionLength);
             saveName += ".tex";
-            Texture texture = new Texture(imageFiles[i].FullName, true, TextureMinFilter.Linear, TextureMagFilter.Linear);
-            SaveLoad.SaveTexture(saveName , texture, CurrentDirectory);
+            Texture texture = new Texture(imageFiles[i].FullName,CurrentDirectory.FullName + "\\" + saveName ,true, TextureMinFilter.Linear, TextureMagFilter.Linear);
+            texture.Save();
             Log.Succes(string.Format("Succesfully made texture from {0}, and save it to {1}", 
                 imageFiles[i].FullName, CurrentDirectory + "\\" + imageFiles[i].Name));
         }
@@ -130,14 +144,9 @@ public class AssetBrowserPanel : UIElement
         _texIcon = IconManager.GetIcon("texture-icon");
     }
 
-    private bool _isSwitching = false;
-    private int _dragDropPayloadCounter = 0;
-    private bool _initiatedDragDrop = false;
-
 
     public void SwitchDirectory(DirectoryInfo newDirectory)
     {
-        _isSwitching = true;
         CurrentDirectory = newDirectory;
         
         _directoriesInDirectory = new List<DirectoryInfo>();
@@ -148,8 +157,6 @@ public class AssetBrowserPanel : UIElement
         GetFilesInCurrent();
         
         CreateEntries();
-        
-        _isSwitching = false;
     }
     
 
@@ -165,11 +172,6 @@ public class AssetBrowserPanel : UIElement
 
     private void DrawUI()
     {
-        // ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing   , new Vector2(8f,8f) );// spacing(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
-        // ImGui.PushStyleVar(ImGuiStyleVar.FramePadding  , new Vector2(4f,4f) );// padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
-        // ImGui.PushStyleVar(ImGuiStyleVar.CellPadding   , new Vector2(10f,2f));// cellPadding(ImGuiStyleVar_CellPadding, ImVec2(10.0f, 2.0f));
-        //
-
         int columnCount = 0;
         ImGuiTableFlags tableFlags =   ImGuiTableFlags.Resizable
                                      | ImGuiTableFlags.SizingFixedFit
@@ -221,8 +223,7 @@ public class AssetBrowserPanel : UIElement
                         _currentSelectedEntryIndex = -1;
                     }
                 }
-
-                if (_isSwitching) return;
+                
                 columnCount = (int)(ImGui.GetContentRegionAvail().X / (ImageSize.X + _sizeBetweenItems.X));
                 
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0,10));
@@ -234,8 +235,7 @@ public class AssetBrowserPanel : UIElement
                         var entry = _entries[i];
                         entry.Draw(i);
                         if (ImGui.IsItemClicked())
-                        {
-                            Log.Message("Clicked " + entry.Label);
+                        { 
                         }
                         ImGui.NextColumn();
                     }
@@ -417,7 +417,7 @@ public class AssetBrowserPanel : UIElement
 public class AssetBrowserEntry
 {
     public string Label { get; private set; }
-    public string fullPath;
+    public string? fullPath;
     private string _parentPath;
 
     public ESupportedFileTypes _fileType;
@@ -426,7 +426,7 @@ public class AssetBrowserEntry
 
     private bool _isSelected = false;
     
-    public AssetBrowserEntry(string label, string fullPath, string parentPath, ESupportedFileTypes fileType, Texture texture, AssetBrowserPanel assetBrowserPanel)
+    public AssetBrowserEntry(string label, string? fullPath, string parentPath, ESupportedFileTypes fileType, Texture texture, AssetBrowserPanel assetBrowserPanel)
     {
         Label = label;
         this.fullPath = fullPath;
@@ -438,7 +438,7 @@ public class AssetBrowserEntry
 
         if (_fileType == ESupportedFileTypes.tex)
         {
-            _texture = SaveLoad.LoadTextureFromJson(this.fullPath);
+            _texture = ResourceManager.LoadTextureFromJson(this.fullPath);
         }
     }
 
@@ -478,15 +478,21 @@ public class AssetBrowserEntry
                 if (ImGui.MenuItem("Create Sprite From Texture"))
                 {
                     Sprite sprite = new Sprite(fullPath);
-                    string saveName = Label.Remove(Label.Length - 4, 4);
-                    saveName += ".sprite";
-                    SaveLoad.SaveSprite(sprite, saveName,_assetBrowserPanel.CurrentDirectory);
+                    sprite.Save();
+                    AssetBrowserPanel.Refresh(); 
                 }
-
+                
                 if (ImGui.MenuItem("Create Sprite Sheet"))
                 {
-                    SpriteSheet spriteSheet = new SpriteSheet(fullPath, 16, 32, 42, 0, Label, _assetBrowserPanel.CurrentDirectory);
+                    string? savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
+                    savePath += Label.Remove(Label.Length - 4);
+                    savePath += ".spritesheet";
+                    
+                    SpriteSheet spriteSheet = new SpriteSheet(fullPath,savePath,16, 32, 42, 0);
+                    spriteSheet.Save();
+                    AssetBrowserPanel.Refresh();
                 }
+                
             }
             
             if (ImGui.MenuItem(Label + " label")) {  }
@@ -500,13 +506,20 @@ public class AssetBrowserEntry
         {
             if (_fileType == ESupportedFileTypes.tex)
             {
-                Engine.Get().CurrentSelectedAsset = _texture;
-                Engine.Get().CurrentSelectedAsset.AssetName = fullPath;
+                Engine.Get().CurrentSelectedAssetBrowserAsset = _texture;
             }
             if (_fileType == ESupportedFileTypes.sprite)
             {
-                Sprite sprite = SaveLoad.LoadSpriteFromJson(fullPath);
-                Engine.Get().CurrentSelectedAsset = sprite;
+                // Sprite sprite = SaveLoad.LoadSpriteFromJson(fullPath);
+                Sprite sprite = ResourceManager.GetItem<Sprite>(fullPath);
+                Engine.Get().CurrentSelectedAssetBrowserAsset = sprite;
+            }
+            
+            if (_fileType == ESupportedFileTypes.spritesheet)
+            {
+                // SpriteSheet sprite = SaveLoad.LoadSpriteSheetFromJson(fullPath);
+                SpriteSheet spriteSheet = ResourceManager.GetItem<SpriteSheet>(fullPath);
+                Engine.Get().CurrentSelectedAssetBrowserAsset = spriteSheet;
             }
         }
 

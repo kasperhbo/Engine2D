@@ -3,6 +3,7 @@ using Engine2D.Cameras;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.GameObjects;
+using Engine2D.Managers;
 using Engine2D.Testing;
 using Engine2D.Utilities;
 using GlmSharp;

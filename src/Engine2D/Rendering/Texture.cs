@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Engine2D.Core;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.SavingLoading;
 using Engine2D.UI.Browsers;
 using ImGuiNET;
@@ -11,7 +12,7 @@ using StbImageSharp;
 
 namespace Engine2D.Rendering;
 
-public class Texture : Asset
+public class Texture : AssetBrowserAsset
 {
     public string Type = "Texture";
 
@@ -19,6 +20,8 @@ public class Texture : Asset
     [JsonIgnore] public byte[] Data;
     [JsonIgnore] public bool Flipped;
 
+    [JsonProperty]private string? _saveName = "";
+    
     public string EncodedData;
     public int Height;
     public string Filepath;
@@ -26,13 +29,14 @@ public class Texture : Asset
     public TextureMinFilter MinFilter;
     public TextureMagFilter MagFilter;
 
-    public Texture(string filepath, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
+    public Texture(string filepath, string? saveName, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
     {
+        this._saveName = saveName;
         Filepath = filepath;
         MinFilter = minFilter;
         MagFilter = magFilter;
         Flipped = flipped;
-
+        
         Gen();
         LoadFromImage();
         CreateOpenGL();
@@ -42,11 +46,13 @@ public class Texture : Asset
     //
     [JsonConstructor]
     public Texture(
+        string? savePath,
         string encodedData,
         int height, int width,
         TextureMinFilter MinFilter,
         TextureMagFilter MagFilter)
     {
+        this._saveName = savePath;
         this.EncodedData = encodedData;
         this.Width = width;
         this.Height = height;
@@ -198,7 +204,7 @@ public class Texture : Asset
 
         if (ImGui.Button("Save"))
         {
-            SaveLoad.SaveTexture(AssetName, this, null, true);
+            Save();
         }
 
         ImGui.Image(this.TexID, new Vector2(w, h), new(0), new(1));
@@ -257,5 +263,16 @@ public class Texture : Asset
     {
         GL.ActiveTexture(unit);
         GL.BindTexture(TextureTarget.Texture2D, textureID);
+    }
+    
+    public void Save()
+    {
+        if (_saveName == "")
+        {
+            Log.Error("Save name not set, not saving!");
+            return;
+        }
+        
+        ResourceManager.SaveTexture(_saveName, this, null, true);
     }
 }

@@ -1,12 +1,15 @@
 ﻿using System.Reflection;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Xml;
+using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.Scenes;
 using Engine2D.UI;
+using Engine2D.UI.Browsers;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
 
@@ -161,71 +164,7 @@ internal static class SaveLoad
 
     #endregion
 
-    #region Sprites
-
-    public static void SaveSprite(Sprite sprite, string defaultSaveName, DirectoryInfo currentFolder)
-    {
-        string name = GetNextFreeName(defaultSaveName, currentFolder);
-        string fullSaveName = currentFolder.FullName + "\\" +name;
-        sprite.FullSavePath = fullSaveName;
-        var spriteData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
-        File.WriteAllText(fullSaveName, spriteData);
-    }
-    
-    
-    public static void OverWriteSprite(Sprite sprite)
-    {
-        var spriteData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
-        File.WriteAllText(sprite.FullSavePath, spriteData);
-    }
-
-    public static void SaveTexture(string defaultSaveName,Texture texture, DirectoryInfo? currentFolder = null, bool overWrite = false)
-    {
-        string name = defaultSaveName;
-        
-        if(!overWrite)
-             name = GetNextFreeName(defaultSaveName, currentFolder);
-        
-        string fullSaveName = name;
-        
-        if(currentFolder != null)
-            fullSaveName = currentFolder.FullName + "\\" +name;
-        
-        var textureData = JsonConvert.SerializeObject(texture, Formatting.Indented);
-        File.WriteAllText(fullSaveName, textureData);
-    }
-    
-    public static Texture? LoadTextureFromJson(string? filename)
-    {
-        if (File.Exists(filename))
-        {
-            string textureData = File.ReadAllText(filename);
-            Log.Succes("Loaded texture " + filename);
-            return JsonConvert.DeserializeObject<Texture>(textureData)!;
-        }
-        
-        Log.Error("Can't load texture " + filename);
-        return null;
-    }
-    
-
-    public static Sprite? LoadSpriteFromJson(string? filename)
-    {
-        if (File.Exists(filename))
-        {
-            string spriteStringData = File.ReadAllText(filename);
-            Log.Succes("Loaded Sprite " + filename);
-            return JsonConvert.DeserializeObject<Sprite>(spriteStringData)!;
-        }
-
-        Log.Error("Can't load sprite " + filename);
-        return null;
-    }
-
-
-#endregion
-    
-    private static string GetNextFreeName(string name, DirectoryInfo folder)
+    public static string? GetNextFreeName(string? name, DirectoryInfo folder)
     {
         string fullName = folder.FullName + "\\" + name;
         
@@ -242,7 +181,7 @@ internal static class SaveLoad
         return name;
     }
 
-    private static FileInfo GetFileInfo(FileInfo[] files, string name)
+    private static FileInfo GetFileInfo(FileInfo[] files, string? name)
     {
         foreach (var file in files)
         {

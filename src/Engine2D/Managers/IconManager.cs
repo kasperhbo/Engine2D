@@ -16,7 +16,7 @@ public static class IconManager
     
     static IconManager()
     {
-        _textureNotFoundIcon = new Texture(Utils.GetBaseEngineDir() + "\\Images\\Icons\\not-found-icon.jpg", false,
+        _textureNotFoundIcon = new Texture(Utils.GetBaseEngineDir() + "\\Images\\Icons\\not-found-icon.jpg","", false,
             TextureMinFilter.Linear, TextureMagFilter.Linear);
         
         string path = Utils.GetBaseEngineDir() + "\\Images\\Icons\\";
@@ -53,7 +53,7 @@ public static class IconManager
             return;
         }
         
-        Texture tex = new Texture(fInfo.FullName, true, TextureMinFilter.Linear, TextureMagFilter.Linear);
+        Texture tex = new Texture(fInfo.FullName, "",true, TextureMinFilter.Linear, TextureMagFilter.Linear);
         _icons.Add(name, tex);
     }
 

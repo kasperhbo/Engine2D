@@ -87,7 +87,7 @@ public class SpriteRenderer : Component
     [JsonIgnore] [ShowUI(show = false)] private int _prevZIndex;
     [JsonIgnore]private Renderer _renderer;
     [JsonIgnore]public Sprite? Sprite = null;
-    public string _spritePath = "";
+    public string? _spritePath = "";
 
     [ShowUI(show = false)] internal bool IsDirty = true;
 
@@ -124,7 +124,7 @@ public class SpriteRenderer : Component
 
         if (_spritePath != "")
         {
-            SetSprite(SaveLoad.LoadSpriteFromJson(_spritePath));
+            Sprite = ResourceManager.GetItem<Sprite>(_spritePath);
         }
     }
 
@@ -137,7 +137,7 @@ public class SpriteRenderer : Component
         if (!_lastTransform.Equals(Parent.GetComponent<Transform>()))
         {
             IsDirty = true;
-            var transform = Parent.GetComponent<Transform>();
+            var transform = Parent.GetComponent<Transform>()!;
             transform.Copy(_lastTransform);
         }
         
@@ -173,7 +173,7 @@ public class SpriteRenderer : Component
         if (ImGui.Button("Sprite"))
         {
             Sprite? sprite =
-                SaveLoad.LoadSpriteFromJson("D:\\dev\\EngineDev\\Engine2D\\\\src\\ExampleGame\\sprite.sprite");
+                ResourceManager.GetItem<Sprite>("D:\\dev\\EngineDev\\Engine2D\\\\src\\ExampleGame\\sprite.sprite");
             SetSprite(sprite);
         }
         if (ImGui.BeginDragDropTarget())
@@ -182,7 +182,7 @@ public class SpriteRenderer : Component
             if (payload.IsValidPayload())
             {
                 var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
-                Sprite? sprite = SaveLoad.LoadSpriteFromJson(filename);
+                Sprite? sprite = ResourceManager.GetItem<Sprite>(filename);
                 if (sprite != null)
                 {
                     SetSprite(sprite);
@@ -199,8 +199,9 @@ public class SpriteRenderer : Component
 
     public void SetSprite(Sprite? sprite)
     {
-        _spritePath = sprite.FullSavePath;
-        SpriterendererManager.AddSpriteRenderer(sprite.FullSavePath, this);
+        _spritePath = sprite?.FullSavePath;
+        
+        // SpriterendererManager.AddSpriteRenderer(sprite.FullSavePath, this);
         this._renderer.RemoveSprite(this);
         this.Sprite = sprite;
         this._renderer.AddSpriteRenderer(this);

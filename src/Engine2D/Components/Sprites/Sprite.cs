@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System.Net.Mime;
+using System.Numerics;
+using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.Managers;
 using Engine2D.SavingLoading;
@@ -10,7 +12,7 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace Engine2D.Rendering;
 
-public class Sprite : Asset
+public class Sprite : AssetBrowserAsset
 {
     public string Type = "Sprite";
     
@@ -29,31 +31,33 @@ public class Sprite : Asset
 
     [JsonIgnore]public Texture? Texture { get; init; } = null;
     
-    public string TexturePath = "";
-    public string FullSavePath { get; set; }
+    public string? TexturePath = "";
+    private bool _unsaved = false;
+    public string? FullSavePath { get; set; }
     public int Width { get; set; }
     public int Height { get; set;}
-
-
-    public Sprite(string texturePath)
+    
+    public Sprite(string? texturePath)
     {
         this.TexturePath = texturePath;
 
         if (texturePath == "")
         {
-            Texture = new Texture(Utils.GetBaseEngineDir() + "\\Images\\Icons\\not-found-icon.png",
+            Texture = new Texture(Utils.GetBaseEngineDir() + "\\Images\\Icons\\not-found-icon.png","",
                 false, TextureMinFilter.Nearest, TextureMagFilter.Nearest);
         }
         else
         {
-            Texture = SaveLoad.LoadTextureFromJson(texturePath);
+            Texture = ResourceManager.LoadTextureFromJson(texturePath);
         }
 
         AssetName = this.FullSavePath;
     }
 
+  
+    
     [JsonConstructor]
-    public Sprite(string type, Vector2[] textureCoords, string texturePath, string assetName ,string fullPath)
+    public Sprite(string type, Vector2[] textureCoords, string? texturePath, string? assetName ,string? fullPath)
     {
         this.Type = type;
         this.TextureCoords = textureCoords;
@@ -63,7 +67,7 @@ public class Sprite : Asset
         
         if (TexturePath != "")
         {
-            Texture = SaveLoad.LoadTextureFromJson(TexturePath);
+            Texture = ResourceManager.LoadTextureFromJson(TexturePath);
         }
         else
         {
@@ -73,16 +77,17 @@ public class Sprite : Asset
         AssetName = this.FullSavePath;
     }
 
-    public void Init()
-    {
-    }
 
     public override void OnGui()
     {
+        if(_unsaved) ImGui.Begin("Sprite editor", ImGuiWindowFlags.UnsavedDocument);
+        else ImGui.Begin("Sprite editor");
+        
+        
         if (ImGui.Button("Save"))
         {
-            SaveLoad.OverWriteSprite(this);
-            SpriterendererManager.UpdateSpriteRenderers(this.FullSavePath);
+            Save();
+            //TODO: ADD SPRITE RENDER MANAGER
         };
         
         var w = Width;
@@ -107,14 +112,24 @@ public class Sprite : Asset
 
     private void OnGuiItems()
     {
-        
         for (int i = 0; i < TextureCoords.Length; i++)
         {
             Vector2 temp = TextureCoords[i];
-            
-            OpenTkuiHelper.DrawProperty("Coord " + i, ref temp);
+
+            if (OpenTkuiHelper.DrawProperty("Coord " + i, ref temp))
+            {
+                _unsaved = true;
+            }
             
             TextureCoords[i] = temp;
         }
+    }
+
+    public void Save()
+    {
+        string? path = TexturePath.Remove(TexturePath.Length - 4);
+        path += ".sprite";
+        ResourceManager.SaveSprite(path, this, null, true);
+        _unsaved = false;
     }
 }

@@ -6,7 +6,7 @@
     "components": [
       {
         "Color": {
-          "r": 255.0,
+          "r": 0.0,
           "g": 255.0,
           "b": 255.0,
           "a": 255.0
@@ -33,8 +33,7 @@
         },
         "Type": "Transform"
       }
-    ],
-    "AssetName": null
+    ]
   },
   {
     "UID": 2,
@@ -42,7 +41,7 @@
     "PARENT_UID": -1,
     "components": [
       {
-        "Intensity": 0.2,
+        "Intensity": 1.0,
         "Type": "GlobalLight"
       },
       {
@@ -63,8 +62,7 @@
         },
         "Type": "Transform"
       }
-    ],
-    "AssetName": null
+    ]
   },
   {
     "UID": 3,
@@ -99,8 +97,7 @@
         },
         "Type": "Transform"
       }
-    ],
-    "AssetName": null
+    ]
   },
   {
     "UID": 4,
@@ -135,8 +132,7 @@
         },
         "Type": "Transform"
       }
-    ],
-    "AssetName": null
+    ]
   },
   {
     "UID": 5,
@@ -178,8 +174,43 @@
         },
         "Type": "Transform"
       }
-    ],
-    "AssetName": null
+    ]
+  },
+  {
+    "UID": 6,
+    "Name": "SpriteRenderer: 61",
+    "PARENT_UID": -1,
+    "components": [
+      {
+        "Color": {
+          "r": 255.0,
+          "g": 255.0,
+          "b": 255.0,
+          "a": 255.0
+        },
+        "_spritePath": "",
+        "ZIndex": 0,
+        "Type": "SpriteRenderer"
+      },
+      {
+        "Position": {
+          "X": 106.00003,
+          "Y": 4.0024033
+        },
+        "Size": {
+          "X": 55.0,
+          "Y": 55.0
+        },
+        "Rotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": -0.3283736,
+          "W": 0.94454795,
+          "IsIdentity": false
+        },
+        "Type": "Transform"
+      }
+    ]
   }
 ]
 ////GAMEOBJECTS////

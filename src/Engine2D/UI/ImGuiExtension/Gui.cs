@@ -17,11 +17,7 @@ public static class Gui
         Vector2 padding, Vector2 ImageAdjustLocation,
         Vector4 tint_col,
         out bool isClicked, out bool isDoubleClicked, out bool isRightClicked,
-        bool isSelected,
-        float rOverwrite = -1,
-        float gOverwrite = -1,
-        float bOverwrite = -1,
-        float aOverwrite = -1)
+        bool isSelected, bool showType = true)
     {
         isClicked = false;
         isDoubleClicked = false;
@@ -117,7 +113,9 @@ public static class Gui
         PushStyleColor(ImGuiCol.Text, new Vector4(0,0,0,1));
         image_bb.Min.Y = image_bb.Min.Y + 10;
         
-        RenderText( image_bb.Min - ImageAdjustLocation  + padding, fileType.ToString());
+        if(showType)
+            RenderText( image_bb.Min - ImageAdjustLocation  + padding, fileType.ToString());
+        
         PopStyleColor();
         
         RenderText(start, label);

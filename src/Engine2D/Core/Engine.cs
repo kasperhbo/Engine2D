@@ -19,6 +19,7 @@ namespace Engine2D.Core
         private static Engine? s_instance;
         
         public  Scene? CurrentScene { get; private set; }
+        public AssetBrowserAsset? CurrentSelectedAssetBrowserAsset;
         public Asset? CurrentSelectedAsset;
 
         private readonly Dictionary<string, UIElement> _guiWindows = new();

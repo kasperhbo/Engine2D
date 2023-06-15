@@ -177,7 +177,6 @@
 
     <ItemGroup>
       <Folder Include="Resources\" />
-      <Folder Include="SavingLoading\" />
     </ItemGroup>
 
 </Project>

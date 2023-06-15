@@ -2,6 +2,7 @@
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.Testing;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL4;
