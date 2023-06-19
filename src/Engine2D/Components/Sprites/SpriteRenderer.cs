@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Engine2D.Components;
+using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.Rendering;
@@ -75,136 +76,145 @@ public class KDBColor
         }
         return (this.r == obj.r && this.g == obj.g && this.b == obj.b && this.a == obj.a);
     }
+
+    public static void Copy(KDBColor from, KDBColor to)
+    {
+        from.r = to.r;
+        from.g = to.g;
+        from.b = to.b;
+        from.a = to.a;
+    }
 }
 
 [JsonConverter(typeof(ComponentSerializer))]
 public class SpriteRenderer : Component
 {
-    public KDBColor Color = new();
+    [JsonProperty]private string _spriteSaveFile = "";
+    [JsonProperty]public int ZIndex = 0;
     
-    [ShowUI(show = false)] private Transform? _lastTransform = new Transform();
-    [ShowUI(show = false)] private KDBColor _lastColor = new();
-    [JsonIgnore] [ShowUI(show = false)] private int _prevZIndex;
-    [JsonIgnore]private Renderer _renderer;
-    [JsonIgnore]public Sprite? Sprite = null;
-    public string? _spritePath = "";
-
-    [ShowUI(show = false)] internal bool IsDirty = true;
+    [JsonProperty]public KDBColor Color = new KDBColor();
+    [JsonIgnore]public Sprite? Sprite { get; private set; } = null;
+    [JsonIgnore]public bool IsDirty { get; set; }
 
     // 0.5f,   0.5f, 0.0f,    1.0f, 1.0f,   // top right
     // 0.5f,  -0.5f, 0.0f,    1.0f, 0.0f,   // bottom right
     // -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom left
     // -0.5f,  0.5f, 0.0f,    0.0f, 1.0f    // top left 
-    private Vector2[] _defaultTextureCoords =
+    [JsonIgnore] private Transform _lastTransform = new Transform();
+    [JsonIgnore] private KDBColor _lastColor = new KDBColor();
+    [JsonIgnore]private Vector2[] _defaultTextureCoords =
     {
-        new(1.0f, 1.0f),   
-        new(1.0f, 0.0f),   
-        new(0.0f, 0.0f),   
-        new(0.0f, 1.0f)    
+        new(1.0f, 1.0f),
+        new(1.0f, 0.0f),
+        new(0.0f, 0.0f),
+        new(0.0f, 1.0f),
     };
-
-    public int ZIndex = 0;
     
-    public Vector2[] GetTextureCoords()
-    {
-        if (Sprite != null)
+    public Vector2[] TextureCoords {
+        get
         {
+            if (Sprite == null) return _defaultTextureCoords;
+            
             return Sprite.TextureCoords;
         }
-
-        return _defaultTextureCoords;
     }
-    
+
+    [JsonConstructor]
+    public SpriteRenderer()
+    {
+        IsDirty = true;
+    }
+
     public override void Init(Gameobject parent, Renderer? renderer)
     {
+        ResourceManager.SpriteRenderers.Add(this);
         base.Init(parent, renderer);
         
-        renderer.AddSpriteRenderer(this);
-        _renderer = renderer;
-
-        if (_spritePath != "")
+        if (_spriteSaveFile == "")
         {
-            Sprite = ResourceManager.GetItem<Sprite>(_spritePath);
+            Engine.Get().CurrentScene.Renderer.AddSpriteRenderer(this);
         }
-    }
-
-    public override void Start()
-    {
+        else
+        {
+            SetSprite(_spriteSaveFile);
+        }
     }
 
     public override void EditorUpdate(double dt)
     {
-        if (!_lastTransform.Equals(Parent.GetComponent<Transform>()))
+        base.EditorUpdate(dt);
+
+        if (!_lastColor.Equals(Color) || !_lastTransform.Equals(Parent.GetComponent<Transform>()))
         {
             IsDirty = true;
-            var transform = Parent.GetComponent<Transform>()!;
-            transform.Copy(_lastTransform);
+            KDBColor.Copy(_lastColor, Color);
+            Transform.Copy(_lastTransform, Parent.GetComponent<Transform>());
         }
         
-        if (!_lastColor.Equals(Color))
-        {
-            IsDirty = true; 
-            _lastColor = new KDBColor(Color.r, Color.g, Color.b, Color.a);
-        }
-
-        if (!_prevZIndex.Equals(ZIndex))
-        {
-            _prevZIndex = ZIndex;
-            throw new NotImplementedException();
-            IsDirty = true;
-        }
     }
 
-    public override void GameUpdate(double dt)
+    private FileSystemWatcher _fileSystemWatcher;
+
+    public void RefreshSprite()
     {
+        SetSprite(_spriteSaveFile);
     }
-
-    public override float GetFieldSize()
+    
+    public void SetSprite(string newSprite)
     {
-        return 120;
+        Engine.Get().CurrentScene?.Renderer?.RemoveSprite(this);
+        
+        IsDirty = true;
+        string oldSprite = _spriteSaveFile;
+        _spriteSaveFile = newSprite;
+
+        Sprite = ResourceManager.GetItem<Sprite>(_spriteSaveFile);
+        Engine.Get().CurrentScene?.Renderer?.AddSpriteRenderer(this);
     }
 
+    private void SetSprite(object sender, FileSystemEventArgs e)
+    {
+        Console.WriteLine("Folder changed");
+        SetSprite(e.FullPath);
+    }
+
+    private int index = 1;
     public override void ImGuiFields()
     {
         base.ImGuiFields();
-
-        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
-        ImGui.Text("Is Dirty? " + IsDirty.ToString());
         if (ImGui.Button("Sprite"))
         {
-            Sprite? sprite =
-                ResourceManager.GetItem<Sprite>("D:\\dev\\EngineDev\\Engine2D\\\\src\\ExampleGame\\sprite.sprite");
-            SetSprite(sprite);
+            if(index == 1)
+            {
+                index = 2;
+                SetSprite(ProjectSettings.FullProjectPath + "\\Assets\\folder-open-icon.sprite");
+            }
+            else
+            {
+                index = 1;
+                SetSprite(ProjectSettings.FullProjectPath + "\\Assets\\bigSpritesheet.sprite");
+            }
         }
+        
         if (ImGui.BeginDragDropTarget())
         {
-            var payload = ImGui.AcceptDragDropPayload("Sprite_Drop");
+            var payload = ImGui.AcceptDragDropPayload("sprite_drop");
             if (payload.IsValidPayload())
             {
                 var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
-                Sprite? sprite = ResourceManager.GetItem<Sprite>(filename);
-                if (sprite != null)
-                {
-                    SetSprite(sprite);
-                }
-                else
-                {
-                    Log.Error("Cant load sprite " + filename);
-                }
+                SetSprite(filename);
             }
             ImGui.EndDragDropTarget();
         }
-        
-    }
 
-    public void SetSprite(Sprite? sprite)
-    {
-        _spritePath = sprite?.FullSavePath;
-        
-        // SpriterendererManager.AddSpriteRenderer(sprite.FullSavePath, this);
-        this._renderer.RemoveSprite(this);
-        this.Sprite = sprite;
-        this._renderer.AddSpriteRenderer(this);
+
+        if (Sprite != null)
+        {
+            ImGui.InputFloat2("0", ref Sprite.TextureCoords[0]);
+            ImGui.InputFloat2("1", ref Sprite.TextureCoords[1]);
+            ImGui.InputFloat2("2", ref Sprite.TextureCoords[2]);
+            ImGui.InputFloat2("3", ref Sprite.TextureCoords[3]);
+        }
     }
 
     public override string GetItemType()

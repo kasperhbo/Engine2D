@@ -5,6 +5,12 @@ using OpenTK.Windowing.Common;
 
 namespace Engine2D.UI;
 
+public struct UISETTINGS
+{
+    public static Vector2 ImageUV0 = new(0, 1);
+    public static Vector2 ImageUV1 = new(1,0);
+}
+
 public abstract class UIElement
 {
     protected string Title = "";

@@ -1,12 +1,13 @@
 ﻿using Engine2D.Components.Sprites;
 using Engine2D.Core;
+using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.UI.Browsers;
+using Engine2D.Utilities;
 using KDBEngine.Shaders;
 using Newtonsoft.Json;
-using OpenTK.Graphics.ES11;
 
 namespace Engine2D.Managers;
 
@@ -18,9 +19,10 @@ internal struct ShaderData
 
 internal static class ResourceManager
 {
-    private static readonly Dictionary<ShaderData, Shader> _shaders = new();
-
-    private static Dictionary<string?, AssetBrowserAsset?> items = new Dictionary<string?, AssetBrowserAsset?>();
+    private static readonly Dictionary<ShaderData, Shader?> Shaders = new();
+    private static Dictionary<string, AssetBrowserAsset?> _items = new Dictionary<string, AssetBrowserAsset?>();
+    public static List<SpriteRenderer> SpriteRenderers = new List<SpriteRenderer>();
+    
 
     static ResourceManager()
     {
@@ -36,23 +38,28 @@ internal static class ResourceManager
         for (int i = 0; i < enumerable.Length; i++)
         {
             string? file = enumerable[i].ToLower();
-            //Sprites
-            if (file.EndsWith(".sprite"))
+
+            AssetBrowserAsset? item = null;
+
+            var extension = file.Remove(0, file.LastIndexOf(".") + 1);
+
+            if (Enum.TryParse(extension, out ESupportedFileTypes ext))
             {
-                Sprite? sprite = LoadSpriteFromJson(file);
-                if (sprite != null)
+                switch (ext)
                 {
-                    items.Add(file, sprite);
+                    case ESupportedFileTypes.sprite:
+                        item = LoadSpriteFromJson(file);
+                        break;
+                    case ESupportedFileTypes.tex:
+                        item = LoadTextureFromJson(file);
+                        break;
+                    case ESupportedFileTypes.spritesheet:
+                        item = LoadSpriteSheetFromJson(file);
+                        break;
                 }
-            }
             
-            if (file.EndsWith(".spritesheet"))
-            {
-                SpriteSheet? spriteSheet = LoadSpriteSheetFromJson(file);
-                if (spriteSheet != null)
-                {
-                    items.Add(file, spriteSheet);
-                }
+                if(item!=null)
+                    AddItemToManager(file, item);
             }
         }
         
@@ -62,33 +69,48 @@ internal static class ResourceManager
     public static T? GetItem<T>(string? path) where T : AssetBrowserAsset
     {
         path = path.ToLower();
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < _items.Count; i++)
         {
-            var item = items.ElementAt(i);
+            var item = _items.ElementAt(i);
             var p = item.Key;
+            p = p.ToLower();
             var type = item.Value;
             
             if (typeof(T) == type?.GetType())
-                if(p == path)
+            {
+                if (p == path)
+                {
                     return
                         (type as T)!;
+                }
+            }
         }
-
-        
         return null;
     }
-    
-    internal static Shader GetShader(ShaderData shaderLocations)
+
+    internal static Shader? GetShader(ShaderData shaderLocations)
     {
-        Shader shader;
-        if (!_shaders.TryGetValue(shaderLocations, out shader))
+        Shader? shader;
+        
+        if (!Shaders.TryGetValue(shaderLocations, out shader))
         {
             shader = new Shader(shaderLocations.VertexPath, shaderLocations.FragPath);
-            _shaders.Add(shaderLocations, shader);
+            Shaders.Add(shaderLocations, shader);
         }
         return shader;
     }
     
+    public static void AddItemToManager(string fullSaveName, AssetBrowserAsset item)
+    {
+        if (_items.TryGetValue(fullSaveName, out AssetBrowserAsset itemFoundItem))
+        {
+            _items[fullSaveName] = item;
+        }
+        else
+        {
+            _items.Add(fullSaveName, item);
+        }
+    }
     
     #region Saving and loading
     
@@ -108,10 +130,18 @@ internal static class ResourceManager
         var spriteData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
         File.WriteAllText(fullSaveName, spriteData);
         
-        items.Add(fullSaveName, sprite);
+        AddItemToManager(fullSaveName, sprite);
+
         AssetBrowserPanel.Refresh();
+
+        //TODO: MAKE THIS MORE EFFECIENT SO ONLY THE SPRITES WITH THE CHANGED SPRITE SHEET/FILE GET UPDATED
+        foreach (var spr in SpriteRenderers)
+        {
+            spr.RefreshSprite();
+        }
     }
-    
+
+
     public static Sprite? LoadSpriteFromJson(string? filename)
     {
         if (File.Exists(filename))
@@ -141,9 +171,17 @@ internal static class ResourceManager
         
         var textureData = JsonConvert.SerializeObject(texture, Formatting.Indented);
         File.WriteAllText(fullSaveName, textureData);
+        
         //TODO: ADDTEXTURE
-        // ResourceManager.AddSprite(fullSaveName, textureData);
+        //AddItem(fullSaveName,texture);
         AssetBrowserPanel.Refresh();
+        
+        
+        //TODO: MAKE THIS MORE EFFECIENT SO ONLY THE SPRITES WITH THE CHANGED SPRITE SHEET/FILE GET UPDATED
+        foreach (var spr in SpriteRenderers)
+        {
+            spr.RefreshSprite();
+        }
     }
     
     public static Texture? LoadTextureFromJson(string? filename)
@@ -175,8 +213,15 @@ internal static class ResourceManager
         var textureData = JsonConvert.SerializeObject(spriteSheet, Formatting.Indented);
         File.WriteAllText(fullSaveName, textureData);
         
-        items.Add(defaultSaveName, spriteSheet);
+        AddItemToManager(fullSaveName,spriteSheet);
         AssetBrowserPanel.Refresh();
+        
+        //TODO: MAKE THIS MORE EFFECIENT SO ONLY THE SPRITES WITH THE CHANGED SPRITE SHEET/FILE GET UPDATED
+        foreach (var spr in SpriteRenderers)
+        {
+            spr.RefreshSprite();
+        }
+
     }
     
     public static SpriteSheet? LoadSpriteSheetFromJson(string? filename)
@@ -185,6 +230,7 @@ internal static class ResourceManager
         {
             string spritesheet = File.ReadAllText(filename);
             Log.Succes("Loaded sprite sheet " + filename);
+            
             return JsonConvert.DeserializeObject<SpriteSheet>(spritesheet)!;
         }
         

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Runtime.InteropServices;
 using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
@@ -99,8 +100,6 @@ public class AssetBrowserPanel : UIElement
 
     public override void FileDrop(FileDropEventArgs obj)
     {
-        Console.WriteLine(IsHovering);
-        
         if (!IsHovering) return;
         
         List<FileInfo> imageFiles = new List<FileInfo>();
@@ -407,6 +406,8 @@ public class AssetBrowserPanel : UIElement
 
             AssetBrowserEntry entry = new AssetBrowserEntry(file.Name, file.FullName, file.Directory.FullName, ext,
                 tex, this);
+            
+           
             _entries.Add(entry);
         }
         
@@ -425,7 +426,9 @@ public class AssetBrowserEntry
     private AssetBrowserPanel _assetBrowserPanel;
 
     private bool _isSelected = false;
-    
+    private bool _currentlyDragging;
+    private GCHandle? _currentlyDraggedHandle;
+
     public AssetBrowserEntry(string label, string? fullPath, string parentPath, ESupportedFileTypes fileType, Texture texture, AssetBrowserPanel assetBrowserPanel)
     {
         Label = label;
@@ -443,7 +446,7 @@ public class AssetBrowserEntry
     }
 
     
-    public void Draw(int index)
+    public unsafe void Draw(int index)
     {
         ImGui.PushID(fullPath);
         bool clicked = false;
@@ -464,11 +467,28 @@ public class AssetBrowserEntry
             _fileType,
             _texture.TexID,
             _assetBrowserPanel.ImageSize,
-            new(0), new Vector2(1),
+            new(0,1), new Vector2(1,0),
             _assetBrowserPanel.Padding, _assetBrowserPanel.ImageAdjust,
             new Vector4(1),
             out clicked, out doubleClicked, out rightClicked, _isSelected);
 
+        if (ImGui.BeginDragDropSource())
+        {
+            _currentlyDragging = true;
+            _currentlyDraggedHandle ??= GCHandle.Alloc(fullPath);
+
+            switch (_fileType)
+            {
+                case ESupportedFileTypes.sprite:
+                    ImGui.SetDragDropPayload("sprite_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                        (uint)sizeof(IntPtr));
+                    break;
+            }
+
+
+            ImGui.EndDragDropSource();
+        }
+        
         if (ImGui.BeginPopupContextItem(Label + "popup")) // <-- This is using IsItemHovered()
         {
             _assetBrowserPanel._currentSelectedEntryIndex = index;
@@ -480,6 +500,7 @@ public class AssetBrowserEntry
                     Sprite sprite = new Sprite(fullPath);
                     sprite.Save();
                     AssetBrowserPanel.Refresh(); 
+                    ResourceManager.AddItemToManager(fullPath, sprite);
                 }
                 
                 if (ImGui.MenuItem("Create Sprite Sheet"))

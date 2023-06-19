@@ -33,7 +33,7 @@ public class RenderBatch : IComparable<RenderBatch>
 
     private const int c_vertexSize = 9;
     private const int c_vertexSizeInBytes = c_vertexSize * sizeof(float);
-    private readonly Shader _shader;
+    private readonly Shader? _shader;
 
     private readonly SpriteRenderer[] _sprites = new SpriteRenderer[c_maxBatchSize];
 
@@ -196,30 +196,30 @@ public class RenderBatch : IComparable<RenderBatch>
 
     private void LoadVertexProperties(int index)
     {
-        var sprite = _sprites[index];
+        var spriteRenderer = _sprites[index];
         var offset = index * 4 * c_vertexSize;
 
-        Vector4 color = new(sprite.Color.RNormalized, sprite.Color.GNormalized, sprite.Color.BNormalized, sprite.Color.ANormalized);
+        Vector4 color = new(spriteRenderer.Color.RNormalized, spriteRenderer.Color.GNormalized, spriteRenderer.Color.BNormalized, spriteRenderer.Color.ANormalized);
 
         var texID = -1;
-        var texCoords = sprite.GetTextureCoords();
+        var texCoords = spriteRenderer.TextureCoords;
 
-        if (sprite.Sprite?.Texture != null)
+        if (spriteRenderer.Sprite?.Texture != null)
             for (var i = 0; i < _textures.Length; i++)
-                if (_textures[i].Equals(sprite.Sprite.Texture))
+                if (_textures[i].Equals(spriteRenderer.Sprite.Texture))
                 {
                     texID = i + 1;
                     break;
                 }
 
-        Matrix4x4 translation = sprite.Parent.GetComponent<Transform>().GetTranslation();
+        Matrix4x4 translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
         
-        if (sprite.Sprite != null)
+        if (spriteRenderer.Sprite != null)
         {
-            var width =  sprite.Sprite.Texture.Width ;
-            var height = sprite.Sprite.Texture.Height;
+            var width =  spriteRenderer.Sprite.Texture.Width ;
+            var height = spriteRenderer.Sprite.Texture.Height;
 
-            translation = sprite.Parent.GetComponent<Transform>().GetTranslation();
+            translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
         }
         
 

@@ -1,16 +1,13 @@
-﻿using System.Net.Mime;
-using System.Numerics;
-using Engine2D.Components.Sprites;
+﻿using System.Numerics;
 using Engine2D.Core;
 using Engine2D.Managers;
-using Engine2D.SavingLoading;
-using Engine2D.UI;
+using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using Newtonsoft.Json;
 using OpenTK.Graphics.OpenGL4;
 
-namespace Engine2D.Rendering;
+namespace Engine2D.Components.Sprites;
 
 public class Sprite : AssetBrowserAsset
 {
@@ -21,12 +18,12 @@ public class Sprite : AssetBrowserAsset
     // -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom left
     // -0.5f,  0.5f, 0.0f,    0.0f, 1.0f    // top left 
     
-    public Vector2[] TextureCoords =
+    [JsonIgnore]public Vector2[] TextureCoords =
     {
-        new(0.0f, 0.0f),
-        new(1.0f, 0.0f),
-        new(1.0f, 1.0f),
-        new(0.0f, 1.0f)
+        new Vector2(1, 1),
+        new Vector2(1, 0),
+        new Vector2(0, 0),
+        new Vector2(0, 1f),
     };
 
     [JsonIgnore]public Texture? Texture { get; init; } = null;
@@ -57,10 +54,9 @@ public class Sprite : AssetBrowserAsset
   
     
     [JsonConstructor]
-    public Sprite(string type, Vector2[] textureCoords, string? texturePath, string? assetName ,string? fullPath)
+    public Sprite(string type,  string? texturePath, string? assetName ,string? fullPath)
     {
         this.Type = type;
-        this.TextureCoords = textureCoords;
         this.TexturePath = texturePath;
         this.AssetName = assetName;
         this.FullSavePath = fullPath;
@@ -83,11 +79,9 @@ public class Sprite : AssetBrowserAsset
         if(_unsaved) ImGui.Begin("Sprite editor", ImGuiWindowFlags.UnsavedDocument);
         else ImGui.Begin("Sprite editor");
         
-        
         if (ImGui.Button("Save"))
         {
             Save();
-            //TODO: ADD SPRITE RENDER MANAGER
         };
         
         var w = Width;

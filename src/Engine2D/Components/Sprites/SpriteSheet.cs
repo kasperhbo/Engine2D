@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Engine2D.Core;
+using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
@@ -76,11 +77,11 @@ public class SpriteSheet : AssetBrowserAsset
 
             Vector2[] texCoords =
             {
-                new(leftX, bottomY),
+                new(rightX, topY),
                 new(rightX, bottomY),
                 
-                new(rightX, topY),
-                new(leftX, topY)
+                new(leftX, bottomY),
+                new(leftX, topY),
             };
 
             var TextureCoords = (texCoords);
@@ -148,6 +149,7 @@ public class SpriteSheet : AssetBrowserAsset
                 bool clicked;
                 bool doubleClicked;
                 bool rightClicked;
+                var coord = entry.TextureCoords;
                 
                 bool _isSelected = false;
                     Gui.ImageButtonExTextDown(
@@ -155,7 +157,7 @@ public class SpriteSheet : AssetBrowserAsset
                     ESupportedFileTypes.sprite,
                     _texture.TexID,
                     new(90),
-                    entry.TextureCoords[0], entry.TextureCoords[2],
+                    coord[3],coord[1],
                     new(-1,-2), new(0,11),
                     new Vector4(1),
                     out clicked, out doubleClicked, out rightClicked, _isSelected, false);

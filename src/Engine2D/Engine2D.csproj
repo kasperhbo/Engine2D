@@ -174,9 +174,4 @@
       <Reference Include="System.Drawing.Common" />
     </ItemGroup>
 
-
-    <ItemGroup>
-      <Folder Include="Resources\" />
-    </ItemGroup>
-
 </Project>

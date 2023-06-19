@@ -30,7 +30,7 @@ public class LightMapRenderer
     private int _elementBufferObject;
     
     private TestFrameBuffer _lightMap;
-    private Shader _shader;
+    private Shader? _shader;
     
     private int _vertexArrayObject;
     private int _vertexBufferObject;

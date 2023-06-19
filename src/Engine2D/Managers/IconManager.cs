@@ -53,7 +53,7 @@ public static class IconManager
             return;
         }
         
-        Texture tex = new Texture(fInfo.FullName, "",true, TextureMinFilter.Linear, TextureMagFilter.Linear);
+        Texture tex = new Texture(fInfo.FullName, "",false, TextureMinFilter.Linear, TextureMagFilter.Linear);
         _icons.Add(name, tex);
     }
 

@@ -68,11 +68,11 @@ public class Transform : Component
         }
     }
 
-    public void Copy(Transform to)
+    public static void Copy(Transform to, Transform from)
     {
-        to.Position = this.Position;
-        to.Size = this.Size;
-        SetRotation(this.Rotation);
+        to.Position = from.Position;
+        to.Size = from.Size;
+        to.SetRotation(from.Rotation);
     }
 
     public bool Equals(Transform other)

@@ -12,7 +12,7 @@ internal static class Log
         Message(string.Format(format, arg0));
     }
 
-    internal static void Message(string message, [CallerMemberName] string memberName = "",
+    internal static void Message(string? message, [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = true,
         bool showLine = true, bool showFunction = true)
     {
@@ -27,7 +27,7 @@ internal static class Log
         Succes(string.Format(format, arg0));
     }
     
-    internal static void Succes(string message, [CallerMemberName] string memberName = "",
+    internal static void Succes(string? message, [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = true,
         bool showLine = true, bool showFunction = true)
     {
@@ -42,7 +42,7 @@ internal static class Log
         Warning(string.Format(format, arg0));
     }
 
-    internal static void Warning(string message, [CallerMemberName] string memberName = "",
+    internal static void Warning(string? message, [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = false,
         bool showLine = false, bool showFunction = false)
     {
@@ -57,7 +57,7 @@ internal static class Log
         Error(string.Format(format, arg0));
     }
     
-    internal static void Error(string message, [CallerMemberName] string memberName = "",
+    internal static void Error(string? message, [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = true,
         bool showLine = true, bool showFunction = true)
     {
@@ -68,7 +68,7 @@ internal static class Log
     }
 
 
-    private static string GetString(bool showFile, bool showLine, bool showFunction, string message, string memberName,
+    private static string GetString(bool showFile, bool showLine, bool showFunction, string? message, string memberName,
         string sourceFilePath, int sourceLineNumber)
     {
         var sb = new StringBuilder();

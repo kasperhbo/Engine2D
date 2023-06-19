@@ -1,4 +1,5 @@
-﻿using Engine2D.Components.TransformComponents;
+﻿using System.Numerics;
+using Engine2D.Components.TransformComponents;
 using Engine2D.Flags;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
@@ -29,12 +30,17 @@ public class PointLightComponent : Component
 
     public override void EditorUpdate(double dt)
     {
-        
-        if (!LastTransform.Equals(Parent.GetComponent<Transform>()))Parent.GetComponent<Transform>().Copy(this.LastTransform);
+
+        if (!LastTransform.Equals(Parent.GetComponent<Transform>()))
+        {
+            Transform.Copy(Parent.GetComponent<Transform>(), this.LastTransform);
+        }
 
         if (!_lastColor.Equals(Color)) _lastColor = new KDBColor(Color);
     }
 
+    
+    
     public override void GameUpdate(double dt)
     {
     }

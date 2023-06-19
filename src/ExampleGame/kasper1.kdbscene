@@ -5,207 +5,48 @@
     "PARENT_UID": -1,
     "components": [
       {
+        "_spriteSaveFile": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\texture-icon.sprite",
+        "ZIndex": 0,
         "Color": {
           "r": 0.0,
           "g": 255.0,
           "b": 255.0,
           "a": 255.0
         },
-        "_spritePath": "",
-        "ZIndex": 0,
+        "TextureCoords": [
+          {
+            "X": 1.0,
+            "Y": 1.0
+          },
+          {
+            "X": 1.0,
+            "Y": 0.0
+          },
+          {
+            "X": 0.0,
+            "Y": 0.0
+          },
+          {
+            "X": 0.0,
+            "Y": 1.0
+          }
+        ],
         "Type": "SpriteRenderer"
       },
       {
         "Position": {
-          "X": -41.397247,
-          "Y": 26.58992
+          "X": -9.000004,
+          "Y": 68.30357
         },
         "Size": {
-          "X": 1087.1364,
-          "Y": 1087.1364
-        },
-        "Rotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.9971295,
-          "W": 0.07571557,
-          "IsIdentity": false
-        },
-        "Type": "Transform"
-      }
-    ]
-  },
-  {
-    "UID": 2,
-    "Name": "GlobalLight: 21",
-    "PARENT_UID": -1,
-    "components": [
-      {
-        "Intensity": 1.0,
-        "Type": "GlobalLight"
-      },
-      {
-        "Position": {
-          "X": 531.6518,
-          "Y": 476.6345
-        },
-        "Size": {
-          "X": 1.0,
-          "Y": 1.0
+          "X": 52.0,
+          "Y": 52.0
         },
         "Rotation": {
           "X": 0.0,
           "Y": 0.0,
           "Z": 0.0,
           "W": 0.0,
-          "IsIdentity": false
-        },
-        "Type": "Transform"
-      }
-    ]
-  },
-  {
-    "UID": 3,
-    "Name": "PointLight: 31",
-    "PARENT_UID": -1,
-    "components": [
-      {
-        "Color": {
-          "r": 200.0,
-          "g": 255.0,
-          "b": 255.0,
-          "a": 255.0
-        },
-        "Intensity": 8.0,
-        "Type": "PointLight"
-      },
-      {
-        "Position": {
-          "X": 48.00004,
-          "Y": -43.017365
-        },
-        "Size": {
-          "X": 1.0,
-          "Y": 1.0
-        },
-        "Rotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.0,
-          "W": 0.0,
-          "IsIdentity": false
-        },
-        "Type": "Transform"
-      }
-    ]
-  },
-  {
-    "UID": 4,
-    "Name": "PointLight: 41",
-    "PARENT_UID": -1,
-    "components": [
-      {
-        "Color": {
-          "r": 255.0,
-          "g": 255.0,
-          "b": 255.0,
-          "a": 255.0
-        },
-        "Intensity": 1.0,
-        "Type": "PointLight"
-      },
-      {
-        "Position": {
-          "X": -35.999943,
-          "Y": -11.015577
-        },
-        "Size": {
-          "X": 9.0,
-          "Y": 1.0
-        },
-        "Rotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.0,
-          "W": 0.0,
-          "IsIdentity": false
-        },
-        "Type": "Transform"
-      }
-    ]
-  },
-  {
-    "UID": 5,
-    "Name": "Camera: 51",
-    "PARENT_UID": -1,
-    "components": [
-      {
-        "CameraType": 0,
-        "Size": 1.0,
-        "Near": 0.1,
-        "Far": 1000.0,
-        "ProjectionSize": {
-          "X": 1920.0,
-          "Y": 1080.0
-        },
-        "ClearColor": {
-          "r": 255.0,
-          "g": 255.0,
-          "b": 255.0,
-          "a": 255.0
-        },
-        "Type": "Camera"
-      },
-      {
-        "Position": {
-          "X": 0.0,
-          "Y": 0.0
-        },
-        "Size": {
-          "X": 1.0,
-          "Y": 1.0
-        },
-        "Rotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.0,
-          "W": 0.0,
-          "IsIdentity": false
-        },
-        "Type": "Transform"
-      }
-    ]
-  },
-  {
-    "UID": 6,
-    "Name": "SpriteRenderer: 61",
-    "PARENT_UID": -1,
-    "components": [
-      {
-        "Color": {
-          "r": 255.0,
-          "g": 255.0,
-          "b": 255.0,
-          "a": 255.0
-        },
-        "_spritePath": "",
-        "ZIndex": 0,
-        "Type": "SpriteRenderer"
-      },
-      {
-        "Position": {
-          "X": 106.00003,
-          "Y": 4.0024033
-        },
-        "Size": {
-          "X": 55.0,
-          "Y": 55.0
-        },
-        "Rotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": -0.3283736,
-          "W": 0.94454795,
           "IsIdentity": false
         },
         "Type": "Transform"

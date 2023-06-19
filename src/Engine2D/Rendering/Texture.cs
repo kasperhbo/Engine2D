@@ -3,6 +3,7 @@ using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.SavingLoading;
+using Engine2D.UI;
 using Engine2D.UI.Browsers;
 using ImGuiNET;
 using Newtonsoft.Json;
@@ -77,8 +78,8 @@ public class Texture : AssetBrowserAsset
 
     private void LoadFromImage()
     {
-        var flipVal = 0;
-        if (!Flipped) flipVal = 1;
+        var flipVal = 1;
+        if (!Flipped) flipVal = 0;
         StbImage.stbi_set_flip_vertically_on_load(flipVal);
 
         try
@@ -207,7 +208,7 @@ public class Texture : AssetBrowserAsset
             Save();
         }
 
-        ImGui.Image(this.TexID, new Vector2(w, h), new(0), new(1));
+        ImGui.Image(this.TexID, new Vector2(w, h), UISETTINGS.ImageUV0, UISETTINGS.ImageUV1);
 
         int currentIndexMinFilter = (MinFilter == TextureMinFilter.Linear) ? 0 : 1;
 

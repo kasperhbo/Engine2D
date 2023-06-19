@@ -49,7 +49,7 @@ public abstract class ViewportWindow
         ImGui.SetCursorPos(new(WindowPos.X, WindowPos.Y));
         
         ImGui.Image(_frameBuffer.TextureID, new(WindowSize.X, WindowSize.Y),
-            new(0, 1), new(1, 0));
+            UISETTINGS.ImageUV0, UISETTINGS.ImageUV1);
     
         SetCanvasData(new TileExtent());
 

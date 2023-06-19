@@ -141,14 +141,18 @@ public class Renderer
             _renderBatches.Add(batch);
             _renderBatches.Sort();
         }
-        
+
+        if (_spriteBatchDict.ContainsKey(spr.Parent.UID)) return;
         _spriteBatchDict.Add(spr.Parent.UID, addedToBatch);
     }
 
     internal void RemoveSprite(SpriteRenderer spr)
     {
-        _spriteBatchDict[spr.Parent.UID].RemoveSprite(spr);
-        _spriteBatchDict.Remove(spr.Parent.UID);
+        if(_spriteBatchDict.ContainsKey(spr.Parent.UID))
+        {
+            _spriteBatchDict[spr.Parent.UID].RemoveSprite(spr);
+            _spriteBatchDict.Remove(spr.Parent.UID);
+        }
     }
     
     public List<PointLightComponent> GetPointLightsToRender()
