@@ -1,12 +1,8 @@
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using Engine2D.Cameras;
 using Engine2D.Testing;
 using ImGuiNET;
-using Engine2D.Core;
-using Engine2D.Logging;
-using OpenTK.Mathematics;
-using Veldrid;
-using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.UI.Viewports;
 
@@ -14,11 +10,11 @@ public abstract class ViewportWindow
 {
     protected Canvas mCanvas = new();
     
-    protected Vector2 Origin = new();
-    protected Vector2 Sz = new();
+    protected Vector2 Origin;
+    protected Vector2 Sz;
 
-    public Vector2 WindowSize { get; private set; } = new();
-    public Vector2 WindowPos { get; set; } = new();
+    public Vector2 WindowSize { get; private set; }
+    public Vector2 WindowPos { get; set; }
 
     protected Camera Camera;
     protected TestFrameBuffer? _frameBuffer;
@@ -73,8 +69,8 @@ public abstract class ViewportWindow
         mCanvas.tiles_in_viewport_x = (int)(tiles_in_viewport.X) + 1;
         mCanvas.tiles_in_viewport_y = (int)(tiles_in_viewport.Y) + 1;
 
-        mCanvas.row_count    = (float)(extent.rows);
-        mCanvas.col_count    = (float)(extent.cols);
+        mCanvas.row_count    = extent.rows;
+        mCanvas.col_count    = extent.cols;
         mCanvas.content_size = new Vector2(mCanvas.col_count, mCanvas.row_count) * mCanvas.grid_size;
     }
 
@@ -166,4 +162,4 @@ public struct TileExtent {
              left.cols != right.cols);
 
     }
-};
+}

@@ -17,16 +17,16 @@ public abstract class UIElement
 
     protected ImGuiWindowFlags Flags = ImGuiWindowFlags.None;
     public bool IsVisible { get; protected set; } = true;
-    protected bool IsHovering = false;
+    protected bool IsHovering;
 
-    protected bool IsFocussed = false;
+    protected bool IsFocussed;
 
     protected TopBarButton _closeButton = new TopBarButton("X", new Vector4(1, 0, 0, 1));
     
 
     public UIElement(string title)
     {
-        this.Title = title;
+        Title = title;
     }
 
     public virtual void BeginRender()

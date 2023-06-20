@@ -1,13 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using Box2DSharp.Collision;
+﻿using System.Numerics;
 using Engine2D.Cameras;
-using Engine2D.Logging;
 using Engine2D.UI.Viewports;
 using Engine2D.Utilities;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
@@ -95,10 +90,10 @@ public static class Input
     {
         if (Settings.s_IsEngine || vp == null)
         {
-            return screenToWorld(Input.MouseScreenPos(), camera);
+            return screenToWorld(MouseScreenPos(), camera);
         }
 
-        return screenToWorld(Input.MouseScreenPos(), camera, vp);
+        return screenToWorld(MouseScreenPos(), camera, vp);
     }
     
     public static Vector2 worldToScreen(Vector2 worldCoords, Camera camera) {

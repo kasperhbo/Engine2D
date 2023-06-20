@@ -1,10 +1,8 @@
-﻿using Engine2D.Logging;
-
-namespace Engine2D.Managers;
+﻿namespace Engine2D.Managers;
 
 public static class UIDManager
 {
-    private static int s_uidcounter = 0;
+    private static int s_uidcounter;
     public static List<int> TakenUIDS = new();
 
     public static void AddUID(int uid)

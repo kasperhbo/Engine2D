@@ -5,10 +5,8 @@ using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.UI.Browsers;
-using Engine2D.Utilities;
 using KDBEngine.Shaders;
 using Newtonsoft.Json;
-using Vortice.Direct3D11;
 
 namespace Engine2D.Managers;
 

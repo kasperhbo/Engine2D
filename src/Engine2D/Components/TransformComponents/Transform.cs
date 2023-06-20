@@ -1,14 +1,9 @@
 ﻿using System.Numerics;
 using Engine2D.Logging;
-using Engine2D.UI;
 using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
-using OpenTK.Mathematics;
-using Quaternion = System.Numerics.Quaternion;
-using Vector2 = System.Numerics.Vector2;
-using Vector3 = System.Numerics.Vector3;
 
 namespace Engine2D.Components.TransformComponents;
 
@@ -34,8 +29,8 @@ public class Transform : Component
     [JsonConstructor]
     public Transform(Vector2 position, Vector2 size, Quaternion rotation)
     {
-        this.Position = position;
-        this.Size = size;
+        Position = position;
+        Size = size;
         SetRotation(rotation);
     }
 
@@ -77,9 +72,9 @@ public class Transform : Component
 
     public bool Equals(Transform other)
     {
-        return (this.Position == other.Position &&
-                this.Size == other.Size &&
-                this.Rotation == other.Rotation
+        return (Position == other.Position &&
+                Size == other.Size &&
+                Rotation == other.Rotation
                 );
     }
 

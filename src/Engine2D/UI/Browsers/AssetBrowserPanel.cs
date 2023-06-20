@@ -6,14 +6,11 @@ using Engine2D.Core.Inputs;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
-using Engine2D.SavingLoading;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using Veldrid.Sdl2;
-using Vortice;
 
 namespace Engine2D.UI.Browsers;
 
@@ -27,12 +24,12 @@ public enum ESupportedFileTypes
     spritesheet,
     tex      ,
     txt      ,
+    cs
 }
 
 public class AssetBrowserPanel : UIElement
 {
     public static List<AssetBrowserPanel> AssetBrowserPanels = new List<AssetBrowserPanel>();
-    
     
     private static readonly string BaseAssetDir = ProjectSettings.FullProjectPath + "\\Assets";
 
@@ -428,7 +425,7 @@ public class AssetBrowserEntry
     private readonly Texture _texture;
     private readonly AssetBrowserPanel _assetBrowserPanel;
 
-    private bool _isSelected = false;
+    private bool _isSelected;
     private GCHandle? _currentlyDraggedHandle;
 
     public AssetBrowserEntry(string label, string? fullPath, string parentPath, ESupportedFileTypes fileType, Texture texture, AssetBrowserPanel assetBrowserPanel)
@@ -443,7 +440,7 @@ public class AssetBrowserEntry
 
         if (_fileType == ESupportedFileTypes.tex)
         {
-            _texture = ResourceManager.LoadTextureFromJson(this.FullPath);
+            _texture = ResourceManager.LoadTextureFromJson(FullPath);
         }
     }
 
@@ -482,6 +479,10 @@ public class AssetBrowserEntry
             {
                 case ESupportedFileTypes.sprite:
                     ImGui.SetDragDropPayload("sprite_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                        (uint)sizeof(IntPtr));
+                    break;
+                case ESupportedFileTypes.cs:
+                    ImGui.SetDragDropPayload("script_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
                         (uint)sizeof(IntPtr));
                     break;
             }

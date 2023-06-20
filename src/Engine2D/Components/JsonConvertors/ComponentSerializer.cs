@@ -1,10 +1,9 @@
 ﻿using Engine2D.Cameras;
 using Engine2D.Components.TransformComponents;
-using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
-using Engine2D.Testing;
+using Engine2D.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -86,13 +85,25 @@ public class ComponentSerializer : JsonConverter
             case "Texture":
                 return JsonConvert.DeserializeObject<Texture>(jo.ToString(),
                     _specifiedSubclassConversion);
-
+            //ADD CUSTOM FROM HERE
+            case "ExampleGame.Assets.TestClass":
+            {
+                var t = AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass");
+                if(t != null)
+                {
+                    return JsonConvert.DeserializeObject(jo.ToString(), t.GetType(),
+                        _specifiedSubclassConversion);
+                }
+                else
+                {
+                    return null;
+                }
+            }
             default:
             {
                 Log.Error("Not Found" + jo["Type"].Value<string>());
                 return null;
             }
-            //}
         }
     }
 

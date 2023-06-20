@@ -4,15 +4,10 @@ using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Managers;
-using Engine2D.Testing;
 using Engine2D.Utilities;
-using GlmSharp;
 using KDBEngine.Shaders;
-using Microsoft.Win32.SafeHandles;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
 using TextureUnit = OpenTK.Graphics.OpenGL4.TextureUnit;
-using Vector3 = OpenTK.Mathematics.Vector3;
 using Vector4 = OpenTK.Mathematics.Vector4;
 
 namespace Engine2D.Rendering;

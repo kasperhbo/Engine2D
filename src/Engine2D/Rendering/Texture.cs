@@ -2,12 +2,9 @@
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
-using Engine2D.SavingLoading;
 using Engine2D.UI;
-using Engine2D.UI.Browsers;
 using ImGuiNET;
 using Newtonsoft.Json;
-using Octokit;
 using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
 
@@ -35,7 +32,7 @@ public class Texture : AssetBrowserAsset
     public Texture(string filepath, string? saveName, bool flipped, TextureMinFilter minFilter,
         TextureMagFilter magFilter)
     {
-        this._saveName = saveName;
+        _saveName = saveName;
         Filepath = filepath;
         MinFilter = minFilter;
         MagFilter = magFilter;
@@ -56,10 +53,10 @@ public class Texture : AssetBrowserAsset
         TextureMinFilter MinFilter,
         TextureMagFilter MagFilter)
     {
-        this._saveName = savePath;
-        this.EncodedData = encodedData;
-        this.Width = width;
-        this.Height = height;
+        _saveName = savePath;
+        EncodedData = encodedData;
+        Width = width;
+        Height = height;
         this.MagFilter = MagFilter;
         this.MinFilter = MinFilter;
 
@@ -215,7 +212,7 @@ public class Texture : AssetBrowserAsset
             Save();
         }
 
-        ImGui.Image(this.TexID, new Vector2(w, h), UISETTINGS.ImageUV0, UISETTINGS.ImageUV1);
+        ImGui.Image(TexID, new Vector2(w, h), UISETTINGS.ImageUV0, UISETTINGS.ImageUV1);
 
         int currentIndexMinFilter = (MinFilter == TextureMinFilter.Linear) ? 0 : 1;
 

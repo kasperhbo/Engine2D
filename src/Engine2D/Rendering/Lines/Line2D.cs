@@ -13,15 +13,15 @@ public class Line2D
     private int _lifeTime;
     
     public Line2D(Vector2 from, Vector2 to) {
-        this.From = from;
-        this.To = to;
+        From = from;
+        To = to;
         Color = new KDBColor(255, 0, 0, 255);
     }
     public Line2D(Vector2 from, Vector2 to, KDBColor color, int lifetime) {
-        this.From = from;
-        this.To = to;
-        this.Color = color;
-        this._lifeTime = lifetime;
+        From = from;
+        To = to;
+        Color = color;
+        _lifeTime = lifetime;
         Color = new KDBColor(255, 0, 0, 255);
     }
     

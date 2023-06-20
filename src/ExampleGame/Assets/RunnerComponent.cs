@@ -11,6 +11,8 @@ namespace ExampleGame.Assets;
 
 public class RunnerComponent : Component
 {
+    public int counter = 01;
+    
     public override void Init(Gameobject parent)
     {
         Log.Succes("Loaded RunnerComponent class");

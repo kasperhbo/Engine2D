@@ -1,6 +1,4 @@
-﻿using ImGuiNET;
-using Engine2D.Core;
-using Engine2D.Logging;
+﻿using Engine2D.Core;
 
 namespace Engine2D.UI;
 

@@ -10,6 +10,11 @@ namespace ExampleGame.Assets;
 
 public class TestClass : Component
 {
+    public int twospeed = 2;
+    public int speed = 10;
+    public string testName = "hello name";
+    
+    
     public override void Init(Gameobject parent)
     {
         Log.Succes("Loaded test class");
@@ -22,10 +27,11 @@ public class TestClass : Component
         base.Init(parent, renderer);
     }
 
+
     public override void EditorUpdate(double dt)
     {
-        Console.ForegroundColor = (System.ConsoleColor.Blue);
-        Console.WriteLine("Haha new function");
+        // Console.ForegroundColor = (System.ConsoleColor.Blue);
+        // Console.WriteLine(testName);
         base.EditorUpdate(dt);
     }
 

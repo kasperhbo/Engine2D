@@ -1,13 +1,14 @@
-﻿using Engine2D.Components;
+﻿using System.Numerics;
+using Engine2D.Components;
+using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.Scenes;
+using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using Newtonsoft.Json;
-using Engine2D.Components.TransformComponents;
-using Engine2D.UI.ImGuiExtension;
 
 namespace Engine2D.GameObjects;
 
@@ -22,19 +23,19 @@ public class Gameobject : Asset
     public int PARENT_UID = -1;
 
     //
-    public List<Component> components = new();
+    public List<Component?> components = new();
     
     [JsonIgnore] public List<Gameobject> Childs = new List<Gameobject>();
-    [JsonIgnore] protected Gameobject _parent = null;
+    [JsonIgnore] protected Gameobject _parent;
     
     public Gameobject(string name)
     {
         Name = name;
-        components = new List<Component>();
+        components = new List<Component?>();
         GetUID();
     }
     
-    public Gameobject(string name, List<Component> components)
+    public Gameobject(string name, List<Component?> components)
     {
         Name = name;
         this.components = components;
@@ -42,12 +43,12 @@ public class Gameobject : Asset
     }
     
     [JsonConstructor]
-    public Gameobject(string name, List<Component> components, int uid, int parentUid)
+    public Gameobject(string name, List<Component?> components, int uid, int parentUid)
     {
         Name = name;
         this.components = components;
-        this.UID = uid;
-        this.PARENT_UID = parentUid;
+        UID = uid;
+        PARENT_UID = parentUid;
         GetUID();
     }
 
@@ -60,13 +61,13 @@ public class Gameobject : Asset
 
     public void Init(Renderer? renderer)
     {
-        if(this.GetComponent<Transform>() == null)
+        if(GetComponent<Transform>() == null)
         {
-            Log.Warning(this.Name + " Has no Transform Component, Adding one");
+            Log.Warning(Name + " Has no Transform Component, Adding one");
             
             var t = new Transform();
 
-            t.Position = new System.Numerics.Vector2(0, 0);
+            t.Position = new Vector2(0, 0);
             AddComponent(t);
         }
         
@@ -93,46 +94,17 @@ public class Gameobject : Asset
         foreach (var component in components) component.Destroy();
     }
 
-    public void AddComponent(Component component, Renderer? renderer)
+    public void AddComponent(Component? component, Renderer? renderer)
     {
         component.Init(this, renderer);
         components.Add(component);
     }
     
-    public void AddComponent(Component component)
+    public Component? AddComponent(Component? component)
     {
         component.Init(this);
         components.Add(component);
-    }
-    
-    public override void OnGui()
-    {
-        ImGui.InputText("##name", ref Name, 256);
-        ImGui.SameLine();
-        ImGui.Text(" UID: " + UID);
-        ImGui.Separator();
-
-        OpenTkuiHelper.DrawComponentWindow("Transform", "Transform",
-            () =>
-            {
-                this.GetComponent<Transform>().ImGuiFields();
-                
-            }, this.GetComponent<Transform>().GetFieldSize()
-        );
-        
-        for (var i = 0; i < components.Count; i++)
-        {
-            if (components[i].GetType() == typeof(Transform)) return;
-            
-            ImGui.PushID(i);
-
-            OpenTkuiHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
-                () => { components[i].ImGuiFields(); }, components[i].GetFieldSize() 
-            );
-
-            ImGui.PopID();
-        }
-        
+        return component;
     }
 
     public T? GetComponent<T>() where T : Component
@@ -145,7 +117,7 @@ public class Gameobject : Asset
         return null;
     }
 
-    private void RemoveComponents(Component comp)
+    private void RemoveComponents(Component? comp)
     {
         components.Remove(comp);
     }
@@ -157,10 +129,10 @@ public class Gameobject : Asset
 
         Scene currentScene = Engine.Get().CurrentScene;
 
-        if (this._parent != null)
-            this._parent.Childs.Remove(this);
+        if (_parent != null)
+            _parent.Childs.Remove(this);
 
-        this.PARENT_UID = parentUID;
+        PARENT_UID = parentUID;
         Gameobject parent = currentScene.FindObjectByUID(parentUID);
         
         parent.AddGameObjectChild(this);
@@ -189,6 +161,36 @@ public class Gameobject : Asset
         }
 
         return false;
+    }
+    
+    public override void OnGui()
+    {
+        ImGui.InputText("##name", ref Name, 256);
+        ImGui.SameLine();
+        ImGui.Text(" UID: " + UID);
+        ImGui.Separator();
+
+        OpenTkuiHelper.DrawComponentWindow("Transform", "Transform",
+            () =>
+            {
+                GetComponent<Transform>().ImGuiFields();
+                
+            }, GetComponent<Transform>().GetFieldSize()
+        );
+        
+        for (var i = 0; i < components.Count; i++)
+        {
+            if (components[i].GetType() == typeof(Transform)) return;
+            
+            ImGui.PushID(i);
+
+            OpenTkuiHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
+                () => { components[i].ImGuiFields(); }, components[i].GetFieldSize() 
+            );
+
+            ImGui.PopID();
+        }
+        
     }
 
 }

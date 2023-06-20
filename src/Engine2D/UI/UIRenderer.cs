@@ -4,12 +4,9 @@ using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.UI.Browsers;
 using Engine2D.UI.Viewports;
-using ImGuiNET;
-using Newtonsoft.Json;
-using OpenTK.Windowing.Common;
-
-using System.Runtime.Serialization.Formatters.Soap;
 using Engine2D.Utilities;
+using ImGuiNET;
+using OpenTK.Windowing.Common;
 
 namespace Engine2D.UI;
 
@@ -122,7 +119,7 @@ public static class UiRenderer
             
         _engine.CurrentScene?.OnGui();
             
-        _editorViewport?.Begin("Editor", _engine.CurrentScene?.EditorCamera,
+        _editorViewport?.Begin("Launcher", _engine.CurrentScene?.EditorCamera,
             _engine.CurrentScene?.Renderer?.EditorGameBuffer);
             
         _gameViewport?.Begin("Game", _engine.CurrentScene?.CurrentMainGameCamera,

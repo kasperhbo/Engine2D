@@ -2,7 +2,7 @@
 
 public class SupportedFileTypesManager
 {
-    public static List<string> ImageFormats = new List<string>()
+    public static List<string> ImageFormats = new List<string>
     {
         "png"
     };

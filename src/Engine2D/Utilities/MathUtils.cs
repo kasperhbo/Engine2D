@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
 using System.Runtime.CompilerServices;
 using OpenTK.Mathematics;
+using Quaternion = System.Numerics.Quaternion;
+using Vector3 = System.Numerics.Vector3;
 using Vector4 = OpenTK.Mathematics.Vector4;
 
 namespace Engine2D.Utilities;
@@ -124,7 +126,7 @@ public static class MathUtils
 
     #region Rotations
 
-    public static System.Numerics.Vector3 Multiply(System.Numerics.Quaternion rotation, System.Numerics.Vector3 point)
+    public static Vector3 Multiply(Quaternion rotation, Vector3 point)
     {
         float num1 = rotation.X * 2f;
         float num2 = rotation.Y * 2f;
@@ -138,34 +140,34 @@ public static class MathUtils
         float num10 = rotation.W * num1;
         float num11 = rotation.W * num2;
         float num12 = rotation.W * num3;
-        System.Numerics.Vector3 vector3;
-        vector3.X = (float)((1.0 - ((double)num5 + (double)num6)) * (double)point.X +
-                            ((double)num7 - (double)num12) * (double)point.Y +
-                            ((double)num8 + (double)num11) * (double)point.Z);
-        vector3.Y = (float)(((double)num7 + (double)num12) * (double)point.X +
-                            (1.0 - ((double)num4 + (double)num6)) * (double)point.Y +
-                            ((double)num9 - (double)num10) * (double)point.Z);
-        vector3.Z = (float)(((double)num8 - (double)num11) * (double)point.X +
-                            ((double)num9 + (double)num10) * (double)point.Y +
-                            (1.0 - ((double)num4 + (double)num5)) * (double)point.Z);
+        Vector3 vector3;
+        vector3.X = (float)((1.0 - (num5 + (double)num6)) * point.X +
+                            (num7 - (double)num12) * point.Y +
+                            (num8 + (double)num11) * point.Z);
+        vector3.Y = (float)((num7 + (double)num12) * point.X +
+                            (1.0 - (num4 + (double)num6)) * point.Y +
+                            (num9 - (double)num10) * point.Z);
+        vector3.Z = (float)((num8 - (double)num11) * point.X +
+                            (num9 + (double)num10) * point.Y +
+                            (1.0 - (num4 + (double)num5)) * point.Z);
         return vector3;
     }
 
-    public static System.Numerics.Vector3 GetFront(System.Numerics.Quaternion quaternion)
+    public static Vector3 GetFront(Quaternion quaternion)
     {
-        System.Numerics.Vector3 front = new System.Numerics.Vector3(0.0f, 0.0f, 1f);
+        Vector3 front = new Vector3(0.0f, 0.0f, 1f);
         return Multiply(quaternion, front);
     }
 
-    public static System.Numerics.Vector3 GetUp(System.Numerics.Quaternion quaternion)
+    public static Vector3 GetUp(Quaternion quaternion)
     {
-        System.Numerics.Vector3 upVector = new System.Numerics.Vector3(0.0f, 1f, 0.0f);
+        Vector3 upVector = new Vector3(0.0f, 1f, 0.0f);
         return Multiply(quaternion, upVector);
     }
 
-    public static System.Numerics.Vector3 GetRight(System.Numerics.Quaternion quaternion)
+    public static Vector3 GetRight(Quaternion quaternion)
     {
-        System.Numerics.Vector3 rightVector = new System.Numerics.Vector3(1f, 0.0f, 0.0f);
+        Vector3 rightVector = new Vector3(1f, 0.0f, 0.0f);
         return Multiply(quaternion, rightVector);
     }
     
@@ -175,7 +177,7 @@ public static class MathUtils
     public static byte[] NormalizedVector4ToBytes(System.Numerics.Vector4 v)
     {
 
-        return new byte[]
+        return new[]
         {
             (byte)(v.X * byte.MaxValue),
             (byte)(v.Y * byte.MaxValue),

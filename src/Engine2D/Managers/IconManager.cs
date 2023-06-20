@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using Engine2D.Core;
+﻿using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using OpenTK.Graphics.OpenGL4;
@@ -69,7 +68,7 @@ public static class IconManager
             if (tex == null) return _textureNotFoundIcon;
             return tex;
         }
-        else
-            return _textureNotFoundIcon;
+
+        return _textureNotFoundIcon;
     }
 }

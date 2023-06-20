@@ -2,7 +2,10 @@
 using ImGuiNET;
 using ImTool;
 using OpenTK.Mathematics;
+using Quaternion = System.Numerics.Quaternion;
 using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
+using Vector4 = System.Numerics.Vector4;
 
 namespace Engine2D.UI.ImGuiExtension;
 
@@ -16,7 +19,7 @@ internal static class OpenTkuiHelper
         {
             ImGui.BeginChild("##child", new Vector2(0, size + 10), true);
             // ImGui.BeginChildFrame(1, new Vector2(0,size));
-            ImGui.PushStyleColor(ImGuiCol.TableBorderStrong, new System.Numerics.Vector4(.19f, .19f, .19f, 1)); //For visibility
+            ImGui.PushStyleColor(ImGuiCol.TableBorderStrong, new Vector4(.19f, .19f, .19f, 1)); //For visibility
             
             if (ImGui.BeginTable("##transform_t", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders | ImGuiTableFlags.SizingFixedFit))
             {
@@ -100,13 +103,13 @@ internal static class OpenTkuiHelper
     {
         bool changed = false;
         PrepareProperty(name);
-        float tempProp = (float)property;
+        float tempProp = property;
         if (Widgets.FloatLabel(ref tempProp, name)) changed = true;
         property = (int)tempProp;
         return changed;
     }
     
-    public static bool DrawProperty(string name, ref System.Numerics.Vector2 property, float dragSped = .1f)
+    public static bool DrawProperty(string name, ref Vector2 property, float dragSped = .1f)
     {
         PrepareProperty(name);
         return Vector2(ref property, name, dragSpeed:dragSped);
@@ -116,23 +119,23 @@ internal static class OpenTkuiHelper
     {
         bool changed = false;
         PrepareProperty(name);
-        System.Numerics.Vector2 tempProp = new(property.X, property.Y);
+        Vector2 tempProp = new(property.X, property.Y);
         if (Widgets.Vector2(ref tempProp, name)) changed = true;
         property = new(tempProp.X, tempProp.Y);
         return changed;
     }
     
-    public static bool DrawProperty(string name, ref OpenTK.Mathematics.Vector2i property)
+    public static bool DrawProperty(string name, ref Vector2i property)
     {
         bool changed = false;
         PrepareProperty(name);
-        System.Numerics.Vector2 tempProp = new(property.X, property.Y);
+        Vector2 tempProp = new(property.X, property.Y);
         if (Widgets.Vector2(ref tempProp, name)) changed = true;
         property = new((int)tempProp.X, (int)tempProp.Y);
         return changed;
     }
 
-    public static bool DrawProperty(string name, ref System.Numerics.Vector3 property)
+    public static bool DrawProperty(string name, ref Vector3 property)
     {
         PrepareProperty(name);
         return Widgets.Vector3(ref property, name);
@@ -142,7 +145,7 @@ internal static class OpenTkuiHelper
     {
         bool changed = false;
         PrepareProperty(name);
-        System.Numerics.Vector3 tempProp = new(property.X, property.Y, property.Z);
+        Vector3 tempProp = new(property.X, property.Y, property.Z);
         if (Widgets.Vector3(ref tempProp, name)) changed = true;
         return changed;
     }
@@ -164,7 +167,7 @@ internal static class OpenTkuiHelper
         return num5 != 0;
     }
     
-    public static bool DrawProperty(string name, ref System.Numerics.Vector4 property)
+    public static bool DrawProperty(string name, ref Vector4 property)
     {
         PrepareProperty(name);
         return Widgets.Vector4(ref property, name);
@@ -174,12 +177,12 @@ internal static class OpenTkuiHelper
     {
         bool changed = false;
         PrepareProperty(name);
-        System.Numerics.Vector4 tempProp = new(property.X, property.Y, property.Z, property.W);
+        Vector4 tempProp = new(property.X, property.Y, property.Z, property.W);
         if (Widgets.Vector4(ref tempProp, name)) changed = true;
         return changed;
     }
     
-    public static bool DrawProperty(string name, ref System.Numerics.Quaternion property)
+    public static bool DrawProperty(string name, ref Quaternion property)
     {
         PrepareProperty(name);
         return Widgets.Quaternion(ref property, name);
@@ -203,7 +206,7 @@ internal static class OpenTkuiHelper
         int num7 = num5 | num6;
         ImGui.PopID();
 
-        System.Numerics.Vector4 tempColor = new System.Numerics.Vector4(property.RNormalized, property.GNormalized, property.BNormalized, property.ANormalized);
+        Vector4 tempColor = new Vector4(property.RNormalized, property.GNormalized, property.BNormalized, property.ANormalized);
         
         ImGui.ColorEdit4(name, ref tempColor, ImGuiColorEditFlags.NoLabel | ImGuiColorEditFlags.NoInputs);
         
@@ -253,18 +256,18 @@ internal static class OpenTkuiHelper
     private static void CreateFloatLabel(string name, uint color)
     {
         ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 0.0f);
-        System.Numerics.Vector2 vector2 = new System.Numerics.Vector2(ImGui.CalcTextSize(name).X + 7f, 2f);
-        System.Numerics.Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
-        System.Numerics.Vector2 p_max =
-            cursorScreenPos + new System.Numerics.Vector2(vector2.X, ImGui.GetFrameHeight());
+        Vector2 vector2 = new Vector2(ImGui.CalcTextSize(name).X + 7f, 2f);
+        Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
+        Vector2 p_max =
+            cursorScreenPos + new Vector2(vector2.X, ImGui.GetFrameHeight());
         ImDrawListPtr windowDrawList = ImGui.GetWindowDrawList();
         windowDrawList.AddRectFilled(cursorScreenPos, p_max, color, 6f, ImDrawFlags.RoundCornersLeft);
-        windowDrawList.AddText(cursorScreenPos + new System.Numerics.Vector2(3f, 4f), uint.MaxValue, name);
+        windowDrawList.AddText(cursorScreenPos + new Vector2(3f, 4f), uint.MaxValue, name);
         ImGui.SetCursorPosX(ImGui.GetCursorPos().X + vector2.X);
         ImGui.PushItemWidth(80f);
     }
     
-    private static bool Vector2(ref System.Numerics.Vector2 vec, string name, float dragSpeed = 1)
+    private static bool Vector2(ref Vector2 vec, string name, float dragSpeed = 1)
     {
         ImGui.PushID(name);
         int num1 = 0 | (KDBFloat(ref vec.X, "X", dragSpeed:dragSpeed) ? 1 : 0);
@@ -285,7 +288,7 @@ internal static class OpenTkuiHelper
         return result;
     }
     
-    public static System.Numerics.Vector4 RectExpanded(System.Numerics.Vector4 rect, float x, float y)
+    public static Vector4 RectExpanded(Vector4 rect, float x, float y)
     {
         var result = rect;
 
@@ -303,7 +306,7 @@ internal static class OpenTkuiHelper
         IntPtr imageNormal,
         IntPtr imageHovered,
         IntPtr imagePressed,
-        System.Numerics.Vector4 rect
+        Vector4 rect
     )
     {
         if (ImGui.IsItemActive())
@@ -333,9 +336,9 @@ internal static class OpenTkuiHelper
             );
     }
 
-    public static System.Numerics.Vector4 GetItemRect()
+    public static Vector4 GetItemRect()
     {
-        return new System.Numerics.Vector4(
+        return new Vector4(
             ImGui.GetItemRectMin().X, ImGui.GetItemRectMin().Y,
             ImGui.GetItemRectMax().X, ImGui.GetItemRectMax().Y);
     }

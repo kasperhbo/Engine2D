@@ -1,19 +1,14 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Numerics;
+using System.Runtime.InteropServices;
 using Engine2D.Components;
 using Engine2D.Components.Sprites;
-using Engine2D.Core;
-using Engine2D.Flags;
-using Engine2D.Rendering;
-using Newtonsoft.Json;
 using Engine2D.Components.TransformComponents;
+using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
-using Engine2D.SavingLoading;
+using Engine2D.Rendering;
 using ImGuiNET;
-using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
-using SixLabors.ImageSharp.Processing.Processors.Dithering;
-using Vector2 = System.Numerics.Vector2;
+using Newtonsoft.Json;
 
 namespace Engine2D.GameObjects;
 
@@ -46,18 +41,18 @@ public class KDBColor
     
     public KDBColor()
     {
-        this.r = 255;
-        this.g = 255;
-        this.b = 255;
-        this.a = 255;
+        r = 255;
+        g = 255;
+        b = 255;
+        a = 255;
     }
     
     public KDBColor(KDBColor other)
     {
-        this.r = other.r;
-        this.g = other.g;
-        this.b = other.b;
-        this.a = other.a;
+        r = other.r;
+        g = other.g;
+        b = other.b;
+        a = other.a;
     }
 
     public KDBColor(float r, float g, float b, float a)
@@ -74,7 +69,7 @@ public class KDBColor
         if(obj == null) { Log.Error("Obj to check against not set  'KDB COLOR' ");
             return false;
         }
-        return (this.r == obj.r && this.g == obj.g && this.b == obj.b && this.a == obj.a);
+        return (r == obj.r && g == obj.g && b == obj.b && a == obj.a);
     }
 
     public static void Copy(KDBColor from, KDBColor to)
@@ -90,10 +85,10 @@ public class KDBColor
 public class SpriteRenderer : Component
 {
     [JsonProperty]private string _spriteSaveFile = "";
-    [JsonProperty]public int ZIndex = 0;
+    [JsonProperty]public int ZIndex;
     
     [JsonProperty]public KDBColor Color = new KDBColor();
-    [JsonIgnore]public Sprite? Sprite { get; private set; } = null;
+    [JsonIgnore]public Sprite? Sprite { get; private set; }
     [JsonIgnore]public bool IsDirty { get; set; }
 
     // 0.5f,   0.5f, 0.0f,    1.0f, 1.0f,   // top right

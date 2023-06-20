@@ -1,6 +1,5 @@
 ﻿using Engine2D.GameObjects;
 using Engine2D.Rendering;
-using Engine2D.Core;
 using Newtonsoft.Json;
 
 namespace Engine2D.Components;

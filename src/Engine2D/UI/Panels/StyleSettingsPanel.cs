@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-using Dear_ImGui_Sample;
-using Engine2D.Core;
+﻿using Engine2D.Core;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 
@@ -8,8 +6,8 @@ namespace Engine2D.UI;
 
 public class StyleSettingsPanel : UIElement
 {
-    private int _currentStyle = 0;
-    private int _currentFont = 0;
+    private int _currentStyle;
+    private int _currentFont;
     
     public StyleSettingsPanel(string title) : base(title)
     {

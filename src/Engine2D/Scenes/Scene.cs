@@ -1,19 +1,13 @@
 ﻿using System.Numerics;
-using System.Reflection;
 using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Cameras;
-
 using Engine2D.Components;
+using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
-
-
-using ImGuiNET;
-
-using Engine2D.Core;
 using Engine2D.Utilities;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -22,7 +16,7 @@ namespace Engine2D.Scenes;
 
 public class Scene
 {
-    public Renderer? Renderer { get; private set; } = null;
+    public Renderer? Renderer { get; private set; }
 
     #region onplay
     
@@ -45,7 +39,7 @@ public class Scene
             _isPlaying = value;
         }
     }
-    private World? _physicsWorld = null;
+    private World? _physicsWorld;
 
     #endregion
 
@@ -54,8 +48,8 @@ public class Scene
     public List<Gameobject> GameObjects = new List<Gameobject>();
     public GlobalLight GlobalLight { get; set; } = null;
     
-    internal Camera? EditorCamera = null;
-    internal Camera? CurrentMainGameCamera = null;
+    internal Camera? EditorCamera;
+    internal Camera? CurrentMainGameCamera;
     
     public List<Action<FrameEventArgs>> GetDefaultUpdateEvents()
     {
@@ -137,7 +131,7 @@ public class Scene
         var gos = SaveLoad.LoadScene(ScenePath);
         foreach (var go in gos)
         {
-            this.AddGameObjectToScene(go);
+            AddGameObjectToScene(go);
         }
 
         Start();
@@ -157,7 +151,10 @@ public class Scene
         EditorCamera = editorCameraGO.GetComponent<Camera>();
         editorCameraGO.Serialize = false;
         editorCameraGO.AddComponent(AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass"));
-        this.AddGameObjectToScene(editorCameraGO);
+        AddGameObjectToScene(editorCameraGO);
+
+        Console.WriteLine(GameObjects[0].Name + " gameobject name");
+        GameObjects[0].AddComponent(AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass"));
     }
     
     public virtual void EditorUpdate(FrameEventArgs args)

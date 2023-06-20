@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
-using Engine2D.Logging;
+using Engine2D.Core;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using ImGuizmoNET;
@@ -16,7 +16,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using Vector2 = System.Numerics.Vector2;
-using Vector4 = System.Numerics.Vector4;
+
 // using OpenTK.Mathematics;
 
 namespace Dear_ImGui_Sample
@@ -63,7 +63,7 @@ namespace Dear_ImGui_Sample
             //io.Fonts.AddFontDefault();
             
             //Load default font
-            ImGui.GetIO().Fonts.AddFontFromFileTTF(Engine2D.Core.Utils.GetBaseEngineDir()
+            ImGui.GetIO().Fonts.AddFontFromFileTTF(Utils.GetBaseEngineDir()
                                                    +"\\UI\\Fonts\\Roboto\\Roboto-Light.ttf", 16);  
 
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
@@ -161,7 +161,7 @@ void main()
         /// <summary>
         /// Recreates the device texture used to render text.
         /// </summary>
-        public static unsafe void RecreateFontDeviceTexture()
+        public static void RecreateFontDeviceTexture()
         {
             Console.WriteLine("Recreating Font Device Textures");
             

@@ -1,13 +1,8 @@
-﻿using System.Numerics;
-using Engine2D.Cameras;
+﻿using Engine2D.Cameras;
 using Engine2D.Components;
-using Engine2D.GameObjects;
-using Engine2D.Logging;
-using Engine2D.Testing;
-using ImGuiNET;
-using ImGuizmoNET;
 using Engine2D.Core;
-using Octokit;
+using Engine2D.GameObjects;
+using Engine2D.Testing;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 

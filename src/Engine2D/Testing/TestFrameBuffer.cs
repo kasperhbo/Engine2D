@@ -3,7 +3,6 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using TextureMagFilter = OpenTK.Graphics.OpenGL4.TextureMagFilter;
 using TextureMinFilter = OpenTK.Graphics.OpenGL4.TextureMinFilter;
-using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.Testing;
 
@@ -59,8 +58,8 @@ public class TestFrameBuffer
 
     public void Resize(int width, int height)
     {
-        this.Size.X = width;
-        this.Size.Y = height;
+        Size.X = width;
+        Size.Y = height;
         // resize renderbuffer
         
         GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, rboId);
@@ -93,7 +92,7 @@ public class TestFrameBuffer
 
     public TestFrameBuffer SetViewportSize(Vector2i viewportSize)
     {
-        if (viewportSize.X == this.Size.X) return null;
+        if (viewportSize.X == Size.X) return null;
         return new TestFrameBuffer(viewportSize);
     }
 }

@@ -82,16 +82,16 @@ namespace Engine2D.Core
         private void AssignDefaultEvents()
         {
             //Updates
-            base.UpdateFrame += Update;
-            base.RenderFrame += Render;
+            UpdateFrame += Update;
+            RenderFrame += Render;
 
             //Keyboards
             base.MouseWheel += MouseWheel;
             base.TextInput  += TextInput;
             
             //other events
-            base.Resize += OnResize;
-            base.Unload += OnClose;
+            Resize += OnResize;
+            Unload += OnClose;
         }
 
         private void OnClose()
@@ -109,7 +109,7 @@ namespace Engine2D.Core
             {
                 base.TextInput  -= CurrentScene.OnTextInput;
                 base.MouseWheel -= CurrentScene.OnMouseWheel;
-                base.Unload     -= CurrentScene.Close;
+                Unload     -= CurrentScene.Close;
                 
                 foreach (var eventA in CurrentScene.GetDefaultUpdateEvents())
                 {
@@ -121,7 +121,7 @@ namespace Engine2D.Core
             
             base.TextInput  += CurrentScene.OnTextInput;
             base.MouseWheel += CurrentScene.OnMouseWheel;
-            base.Unload     += CurrentScene.Close;
+            Unload     += CurrentScene.Close;
 
             foreach (var eventA in CurrentScene.GetDefaultUpdateEvents())
             {

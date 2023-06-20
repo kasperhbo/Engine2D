@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using OpenTK.Mathematics;
+using Quaternion = System.Numerics.Quaternion;
+using Vector3 = System.Numerics.Vector3;
 
 namespace Engine2D.Utilities;
 
@@ -13,15 +15,15 @@ public static class MathUtilsNumerics
         float num3 = quaternion.Y * quaternion.Y;
         float num4 = quaternion.Z * quaternion.Z;
         float num5 = num2 + num3 + num4 + num1;
-        float num6 = (float) ((double) quaternion.X * (double) quaternion.Z + (double) quaternion.W * (double) quaternion.Y);
+        float num6 = (float) (quaternion.X * (double) quaternion.Z + quaternion.W * (double) quaternion.Y);
         Vector3 eulerAngles;
-        if ((double) num6 > 0.4999994933605194 * (double) num5)
+        if (num6 > 0.4999994933605194 * num5)
         {
             eulerAngles.Z = 2f * MathF.Atan2(quaternion.X, quaternion.W);
             eulerAngles.Y = 1.5707964f;
             eulerAngles.X = 0.0f;
         }
-        else if ((double) num6 < -0.4999994933605194 * (double) num5)
+        else if (num6 < -0.4999994933605194 * num5)
         {
             eulerAngles.Z = -2f * MathF.Atan2(quaternion.X, quaternion.W);
             eulerAngles.Y = -1.5707964f;
@@ -29,9 +31,9 @@ public static class MathUtilsNumerics
         }
         else
         {
-            eulerAngles.Z = MathF.Atan2((float) (2.0 * ((double) quaternion.W * (double) quaternion.Z - (double) quaternion.X * (double) quaternion.Y)), num1 + num2 - num3 - num4);
+            eulerAngles.Z = MathF.Atan2((float) (2.0 * (quaternion.W * (double) quaternion.Z - quaternion.X * (double) quaternion.Y)), num1 + num2 - num3 - num4);
             eulerAngles.Y = MathF.Asin(2f * num6 / num5);
-            eulerAngles.X = MathF.Atan2((float) (2.0 * ((double) quaternion.W * (double) quaternion.X - (double) quaternion.Y * (double) quaternion.Z)), num1 - num2 - num3 + num4);
+            eulerAngles.X = MathF.Atan2((float) (2.0 * (quaternion.W * (double) quaternion.X - quaternion.Y * (double) quaternion.Z)), num1 - num2 - num3 + num4);
         }
         return eulerAngles;
     }
@@ -59,9 +61,9 @@ public static class MathUtilsNumerics
         float roll = eulerRadians.Z;
         
         // ° × π/180
-        float p = OpenTK.Mathematics.MathHelper.RadiansToDegrees(pitch);
-        float y = OpenTK.Mathematics.MathHelper.RadiansToDegrees(yaw);
-        float r = OpenTK.Mathematics.MathHelper.RadiansToDegrees(roll);
+        float p = MathHelper.RadiansToDegrees(pitch);
+        float y = MathHelper.RadiansToDegrees(yaw);
+        float r = MathHelper.RadiansToDegrees(roll);
         
         return new(p, y, r);
     }
@@ -73,9 +75,9 @@ public static class MathUtilsNumerics
         float roll = eulerDegrees.Z;
         
         // ° × π/180
-        float p = OpenTK.Mathematics.MathHelper.DegreesToRadians(pitch);
-        float y = OpenTK.Mathematics.MathHelper.DegreesToRadians(yaw);
-        float r = OpenTK.Mathematics.MathHelper.DegreesToRadians(roll);
+        float p = MathHelper.DegreesToRadians(pitch);
+        float y = MathHelper.DegreesToRadians(yaw);
+        float r = MathHelper.DegreesToRadians(roll);
         
         return new(p, y, r);
     }
@@ -112,17 +114,17 @@ public static class MathUtilsNumerics
         float num10 = rotation.W * num1;
         float num11 = rotation.W * num2;
         float num12 = rotation.W * num3;
-        System.Numerics.Vector3 vector3;
+        Vector3 vector3;
         
-        vector3.X = (float)((1.0 - ((double)num5 + (double)num6)) * (double)point.X +
-                            ((double)num7 - (double)num12) * (double)point.Y +
-                            ((double)num8 + (double)num11) * (double)point.Z);
-        vector3.Y = (float)(((double)num7 + (double)num12) * (double)point.X +
-                            (1.0 - ((double)num4 + (double)num6)) * (double)point.Y +
-                            ((double)num9 - (double)num10) * (double)point.Z);
-        vector3.Z = (float)(((double)num8 - (double)num11) * (double)point.X +
-                            ((double)num9 + (double)num10) * (double)point.Y +
-                            (1.0 - ((double)num4 + (double)num5)) * (double)point.Z);
+        vector3.X = (float)((1.0 - (num5 + (double)num6)) * point.X +
+                            (num7 - (double)num12) * point.Y +
+                            (num8 + (double)num11) * point.Z);
+        vector3.Y = (float)((num7 + (double)num12) * point.X +
+                            (1.0 - (num4 + (double)num6)) * point.Y +
+                            (num9 - (double)num10) * point.Z);
+        vector3.Z = (float)((num8 - (double)num11) * point.X +
+                            (num9 + (double)num10) * point.Y +
+                            (1.0 - (num4 + (double)num5)) * point.Z);
         return vector3;
     }
 

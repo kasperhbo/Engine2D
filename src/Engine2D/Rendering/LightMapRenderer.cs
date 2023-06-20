@@ -1,12 +1,12 @@
-﻿using Engine2D.Cameras;
+﻿using System.Numerics;
+using Engine2D.Cameras;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
-using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Testing;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
+using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace Engine2D.Rendering;
 
@@ -115,7 +115,7 @@ public class LightMapRenderer
 
         var lightsToRenderer = renderer.GetPointLightsToRender();
 
-        var lightPositions = new System.Numerics.Vector2[lightsToRenderer.Count];
+        var lightPositions = new Vector2[lightsToRenderer.Count];
         var lightColors = new Vector3[lightsToRenderer.Count];
 
         var lightIntensities = new float[lightsToRenderer.Count];

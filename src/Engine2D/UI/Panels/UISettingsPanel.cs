@@ -1,7 +1,5 @@
-﻿using System.Numerics;
-using Engine2D.UI.ImGuiExtension;
+﻿using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
-using imnodesNET;
 
 namespace Engine2D.UI;
 

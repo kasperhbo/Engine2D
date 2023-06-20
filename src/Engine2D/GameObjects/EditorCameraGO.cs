@@ -22,7 +22,7 @@ public class EditorCameraGO : Gameobject
     {
         var currentScene = Engine.Get().CurrentScene;
         
-        camera = new Camera()
+        camera = new Camera
         {
             Parent = this
         };
@@ -31,7 +31,7 @@ public class EditorCameraGO : Gameobject
         
         if (currentScene != null)
         {
-            Name = "Editor Camera: " + currentScene.GameObjects.Count + 1;
+            Name = "Launcher Camera: " + currentScene.GameObjects.Count + 1;
         }
     }
 
@@ -55,10 +55,10 @@ public class EditorCameraGO : Gameobject
             Vector2 delta = new(Input.ScreenX() - Input.ScreenLastX(), Input.ScreenY() - Input.ScreenLastY());
 
 
-            this.GetComponent<Transform>()!.Position.X
+            GetComponent<Transform>()!.Position.X
                 -= delta.X * (dt * dragSensitivity);
 
-            this.GetComponent<Transform>()!.Position.Y
+            GetComponent<Transform>()!.Position.Y
                 -= delta.Y * (dt * dragSensitivity);
         }
 

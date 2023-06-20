@@ -3,12 +3,10 @@ using Engine2D.Components;
 using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
-using Engine2D.UI;
 using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
-using Transform = Engine2D.Components.TransformComponents.Transform;
 
 namespace Engine2D.Cameras;
 
@@ -33,9 +31,9 @@ public class Camera : Component
     [JsonConstructor]
     public Camera(CameraTypes cameraType, float size, KDBColor clearColor)
     {
-        this.CameraType = cameraType;
-        this.Size = size;
-        this.ClearColor = clearColor;
+        CameraType = cameraType;
+        Size = size;
+        ClearColor = clearColor;
     }
     
     public Matrix4x4 GetViewMatrix()

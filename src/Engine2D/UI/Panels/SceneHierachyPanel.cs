@@ -1,14 +1,7 @@
-﻿using System.Numerics;
-using Box2DSharp.Dynamics;
-using Engine2D.Components;
-using Engine2D.Core;
+﻿using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
-using Engine2D.Testing;
 using ImGuiNET;
-using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
-using Vector3 = OpenTK.Mathematics.Vector3;
 
 namespace Engine2D.UI;
 
@@ -63,8 +56,8 @@ internal class SceneHierachyPanel : UIElement
 
     }
 
-    private Gameobject _currentlyDraggingOBJ = null;
-    private bool _currentlyDragging = false;
+    private Gameobject _currentlyDraggingOBJ;
+    private bool _currentlyDragging;
 
     private void HierachyItemDragDropped(Gameobject draggingObject)
     {

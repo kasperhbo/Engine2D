@@ -1,17 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.Serialization.Formatters.Soap;
-using System.Xml;
-using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
-using Engine2D.Managers;
-using Engine2D.Rendering;
 using Engine2D.Scenes;
 using Engine2D.UI;
-using Engine2D.UI.Browsers;
 using Newtonsoft.Json;
-using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Engine2D.SavingLoading;
 

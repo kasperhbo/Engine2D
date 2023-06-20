@@ -1,31 +1,22 @@
-using System.Drawing.Drawing2D;
 using System.Numerics;
 using Engine2D.Cameras;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
 using Engine2D.GameObjects;
-using Engine2D.Logging;
 using ImGuiNET;
 using ImGuizmoNET;
-using ImPlotNET;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using Quaternion = System.Numerics.Quaternion;
-using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.UI.Viewports;
 
 public class EditorViewport : ViewportWindow
 {
-    public bool IsWindowHovered = false;
+    public bool IsWindowHovered;
     
     OPERATION _currentOperation = OPERATION.TRANSLATE;
     MODE _currentMode = MODE.WORLD;
-    
-    public EditorViewport()
-    {
-    }
-    
+
     public override void BeforeImageRender()
     {
         Camera.ProjectionSize = GetVPSize();
@@ -168,12 +159,12 @@ public class EditorViewport : ViewportWindow
             (mCanvas.origin.Y % mCanvas.grid_size.Y)
         );
 
-        var end_x = ((float)(end_col) * mCanvas.grid_size.X) + offset.X;
-        var end_y = ((float)(end_row) * mCanvas.grid_size.Y) + offset.Y;
+        var end_x = (end_col * mCanvas.grid_size.X) + offset.X;
+        var end_y = (end_row * mCanvas.grid_size.Y) + offset.Y;
         
 
         for (var row = begin_row; row < end_row; ++row) {
-            var row_y = ((float)(row) * mCanvas.grid_size.Y) + offset.Y;
+            var row_y = (row * mCanvas.grid_size.Y) + offset.Y;
 
             var pt1 = new Vector2(0, row_y);
             var pt2 = new Vector2(end_x, row_y);
@@ -187,7 +178,7 @@ public class EditorViewport : ViewportWindow
 
         int size = 32;
         for (var col = begin_col; col < end_col; col++) {
-            var col_x = ((float)(col) * mCanvas.grid_size.X) + offset.X;
+            var col_x = (col * mCanvas.grid_size.X) + offset.X;
 
             var pt1 = new Vector2(col_x, 0);
             var pt2 = new Vector2(col_x, end_y);

@@ -1,11 +1,12 @@
-﻿using System.Numerics;
-using System.Reflection;
+﻿using System.Reflection;
 using Engine2D.Flags;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
-using Engine2D.UI;
 using Engine2D.UI.ImGuiExtension;
 using Newtonsoft.Json;
+using OpenTK.Mathematics;
+using Vector2 = System.Numerics.Vector2;
+using Vector4 = System.Numerics.Vector4;
 
 namespace Engine2D.Components;
 
@@ -56,7 +57,6 @@ public class Component
     {
     }
 
-
     public virtual void ImGuiFields()
     {
         int count = 0;
@@ -84,9 +84,9 @@ public class Component
 
             if (!ignore)
             {
-                if (type == typeof(OpenTK.Mathematics.Vector3))
+                if (type == typeof(Vector3))
                 {
-                    var val = (OpenTK.Mathematics.Vector3)value;
+                    var val = (Vector3)value;
                     OpenTkuiHelper.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
@@ -98,12 +98,12 @@ public class Component
                     field.SetValue(this, val);
                 }
 
-                // if (type == typeof(int))
-                // {
-                //     var val = (int)value;
-                //     OpenTKUIHelper.DrawProperty(name, ref val);
-                //     field.SetValue(this, val);
-                // }
+                if (type == typeof(int))
+                {
+                    var val = (int)value;
+                    OpenTkuiHelper.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
 
                 if (type == typeof(float))
                 {
@@ -126,9 +126,9 @@ public class Component
                     field.SetValue(this, val);
                 }
 
-                if (type == typeof(Vector3))
+                if (type == typeof(System.Numerics.Vector3))
                 {
-                    var val = (Vector3)value;
+                    var val = (System.Numerics.Vector3)value;
                     OpenTkuiHelper.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }

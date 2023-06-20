@@ -1,6 +1,5 @@
 ﻿using System.Numerics;
 using Engine2D.UI.Browsers;
-using Engine2D.Utilities;
 using ImGuiNET;
 using static ImGuiNET.ImGui;
 
@@ -157,7 +156,7 @@ public class TopBarButton
     
     public TopBarButton(string label)
     {
-        var style = ImGui.GetStyle();        
+        var style = GetStyle();        
         _hoverColor =style.Colors[(int)ImGuiCol.ButtonHovered]; 
         _label = label;
     }

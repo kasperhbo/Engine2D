@@ -26,17 +26,17 @@ public class Sprite : AssetBrowserAsset
         new Vector2(0, 1f),
     };
 
-    [JsonIgnore]public Texture? Texture { get; init; } = null;
+    [JsonIgnore]public Texture? Texture { get; init; }
     
     public string? TexturePath = "";
-    private bool _unsaved = false;
+    private bool _unsaved;
     public string? FullSavePath { get; set; }
     public int Width { get; set; }
     public int Height { get; set;}
     
     public Sprite(string? texturePath)
     {
-        this.TexturePath = texturePath;
+        TexturePath = texturePath;
 
         if (texturePath == "")
         {
@@ -48,7 +48,7 @@ public class Sprite : AssetBrowserAsset
             Texture = ResourceManager.LoadTextureFromJson(texturePath);
         }
 
-        AssetName = this.FullSavePath;
+        AssetName = FullSavePath;
     }
 
   
@@ -56,10 +56,10 @@ public class Sprite : AssetBrowserAsset
     [JsonConstructor]
     public Sprite(string type,  string? texturePath, string? assetName ,string? fullPath)
     {
-        this.Type = type;
-        this.TexturePath = texturePath;
-        this.AssetName = assetName;
-        this.FullSavePath = fullPath;
+        Type = type;
+        TexturePath = texturePath;
+        AssetName = assetName;
+        FullSavePath = fullPath;
         
         if (TexturePath != "")
         {
@@ -70,7 +70,7 @@ public class Sprite : AssetBrowserAsset
             Texture = IconManager.GetIcon("not-found-icon");
         }
         
-        AssetName = this.FullSavePath;
+        AssetName = FullSavePath;
     }
 
 

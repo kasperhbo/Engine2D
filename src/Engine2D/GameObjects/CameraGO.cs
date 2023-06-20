@@ -1,9 +1,5 @@
 ﻿using Engine2D.Cameras;
-using Engine2D.Components;
-using Engine2D.Components.TransformComponents;
-using Engine2D.Testing;
 using Engine2D.Core;
-using OpenTK.Mathematics;
 
 namespace Engine2D.GameObjects;
 

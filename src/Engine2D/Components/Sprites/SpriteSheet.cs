@@ -1,10 +1,8 @@
 ﻿using System.Numerics;
 using Engine2D.Core;
-using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
-using Engine2D.SavingLoading;
 using Engine2D.UI.Browsers;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
@@ -24,7 +22,7 @@ public class SpriteSheet : AssetBrowserAsset
 
     
     [JsonIgnore]private Texture _texture;
-    [JsonIgnore]private bool _unsaved = false;
+    [JsonIgnore]private bool _unsaved;
 
     public SpriteSheet(string? texturePath, int spriteWidth, int spriteHeight, int numSprites,
         int spacing, bool unsaved = false)
@@ -42,7 +40,7 @@ public class SpriteSheet : AssetBrowserAsset
 
     private void Init(string? texturePath,string? savePath,int spriteWidth, int spriteHeight, int numSprites, int spacing, bool unsaved = false)
     {
-        this._unsaved = unsaved;
+        _unsaved = unsaved;
         this.spacing = spacing;
         this.spriteHeight = spriteHeight;
         this.spriteWidth = spriteWidth;
@@ -95,7 +93,7 @@ public class SpriteSheet : AssetBrowserAsset
             sprite.Height = Height;
             sprite.TexturePath = texturePath;
 
-            this._sprites.Add(sprite);
+            _sprites.Add(sprite);
 
             currentX += spriteWidth + spacing;
             if (currentX >= _texture.Height)
