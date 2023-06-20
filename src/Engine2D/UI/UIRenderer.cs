@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using OpenTK.Windowing.Common;
 
 using System.Runtime.Serialization.Formatters.Soap;
+using Engine2D.Utilities;
 
 namespace Engine2D.UI;
 
@@ -67,6 +68,15 @@ public static class UiRenderer
     private static void Render(FrameEventArgs args)
     {
         KDBImGuiController.Update(_engine, args.Time);
+
+        ImGui.Begin("Debug Helper");
+        
+        if (ImGui.Button("Reload Assembly"))
+        {
+            AssemblyUtils.Reload();
+        }
+        
+        ImGui.End();
         
         DrawMainMenuBar();
         DrawToolbar();

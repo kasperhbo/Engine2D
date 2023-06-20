@@ -22,7 +22,7 @@ public abstract class UIElement
     protected bool IsFocussed = false;
 
     protected TopBarButton _closeButton = new TopBarButton("X", new Vector4(1, 0, 0, 1));
-
+    
 
     public UIElement(string title)
     {

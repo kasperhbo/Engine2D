@@ -15,14 +15,16 @@ namespace Engine2D.Rendering;
 
 public class Texture : AssetBrowserAsset
 {
+    private bool _enableLog = false;
+
     public string Type = "Texture";
 
     [JsonIgnore] public int TexID;
     [JsonIgnore] public byte[] Data;
     [JsonIgnore] public bool Flipped;
 
-    [JsonProperty]private string? _saveName = "";
-    
+    [JsonProperty] private string? _saveName = "";
+
     public string EncodedData;
     public int Height;
     public string Filepath;
@@ -30,14 +32,15 @@ public class Texture : AssetBrowserAsset
     public TextureMinFilter MinFilter;
     public TextureMagFilter MagFilter;
 
-    public Texture(string filepath, string? saveName, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
+    public Texture(string filepath, string? saveName, bool flipped, TextureMinFilter minFilter,
+        TextureMagFilter magFilter)
     {
         this._saveName = saveName;
         Filepath = filepath;
         MinFilter = minFilter;
         MagFilter = magFilter;
         Flipped = flipped;
-        
+
         Gen();
         LoadFromImage();
         CreateOpenGL();
@@ -65,7 +68,8 @@ public class Texture : AssetBrowserAsset
         Gen();
         CreateOpenGL();
 
-        Log.Succes("Create Image From JSON");
+        if (_enableLog)
+            Log.Succes("Create Image From JSON");
     }
 
     private void Gen()
@@ -94,7 +98,8 @@ public class Texture : AssetBrowserAsset
         }
         catch
         {
-            Log.Error("No file" + Filepath);
+            if (_enableLog)
+                Log.Error("No file" + Filepath);
             Filepath = Utils.GetBaseEngineDir() + "\\Images\\icons\\not-found-icon.jpg";
             using (Stream stream = File.OpenRead(Filepath))
             {
@@ -173,13 +178,15 @@ public class Texture : AssetBrowserAsset
     {
         if (obj == null)
         {
-            Log.Warning("Obj is null");
+            if (_enableLog)
+                Log.Warning("Obj is null");
             return false;
         }
 
         if (!(obj is Texture))
         {
-            Log.Warning("other object is not an texture");
+            if (_enableLog)
+                Log.Warning("other object is not an texture");
             return false;
         }
 
@@ -220,7 +227,7 @@ public class Texture : AssetBrowserAsset
             SelectNewMinFilter(currentIndexMinFilter);
             ImGui.EndCombo();
         }
-        
+
         int currentIndexMagFilter = (MagFilter == TextureMagFilter.Linear) ? 0 : 1;
 
         if (ImGui.Combo("Mag Filter: ", ref currentIndexMagFilter,
@@ -232,7 +239,7 @@ public class Texture : AssetBrowserAsset
             ImGui.EndCombo();
         }
 
-        
+
         ImGui.End();
     }
 
@@ -259,21 +266,22 @@ public class Texture : AssetBrowserAsset
             MagFilter = TextureMagFilter.Nearest;
         }
     }
-    
+
     public static void Use(TextureUnit unit, int textureID)
     {
         GL.ActiveTexture(unit);
         GL.BindTexture(TextureTarget.Texture2D, textureID);
     }
-    
+
     public void Save()
     {
         if (_saveName == "")
         {
-            Log.Error("Save name not set, not saving!");
+            if (_enableLog)
+                Log.Error("Save name not set, not saving!");
             return;
         }
-        
+
         ResourceManager.SaveTexture(_saveName, this, null, true);
     }
 }

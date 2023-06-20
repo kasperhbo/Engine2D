@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine2D", "Engine2D\Engine
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleGame", "ExampleGame\ExampleGame.csproj", "{BE528355-0169-403A-A0D1-31F60FEC315B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{AB6DCA2B-7655-4710-9E1C-A909CED37514}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BE528355-0169-403A-A0D1-31F60FEC315B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE528355-0169-403A-A0D1-31F60FEC315B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE528355-0169-403A-A0D1-31F60FEC315B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB6DCA2B-7655-4710-9E1C-A909CED37514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB6DCA2B-7655-4710-9E1C-A909CED37514}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB6DCA2B-7655-4710-9E1C-A909CED37514}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB6DCA2B-7655-4710-9E1C-A909CED37514}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

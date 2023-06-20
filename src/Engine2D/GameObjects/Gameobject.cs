@@ -4,7 +4,6 @@ using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.Scenes;
-using Engine2D.UI;
 using ImGuiNET;
 using Newtonsoft.Json;
 using Engine2D.Components.TransformComponents;
@@ -174,4 +173,22 @@ public class Gameobject : Asset
         gameObject._parent = this;
         Childs.Add(gameObject);
     }
+
+    private Type typeToRemove = null;
+    
+    public void RemoveComponent<T>() where T : Component
+    {
+        components.RemoveAll(IsRightComponent);
+    }
+
+    private bool IsRightComponent(Component obj)
+    {
+        if (obj.GetType() == typeToRemove)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
 }

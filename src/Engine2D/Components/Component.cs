@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 namespace Engine2D.Components;
 
 [JsonConverter(typeof(ComponentSerializer))]
-public abstract class Component
+public class Component
 {
     [JsonIgnore] private bool _initialized;
     [JsonIgnore] public Gameobject Parent;
@@ -19,7 +19,10 @@ public abstract class Component
     public string Type => GetItemType();
 
 
-    public abstract string GetItemType();
+    public virtual string GetItemType()
+    {
+        return "Component";
+    }
 
 
     public virtual void Init(Gameobject parent, Renderer? renderer)

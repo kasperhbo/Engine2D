@@ -261,7 +261,10 @@ public class AssetBrowserPanel : UIElement
             if (_currentSelectedEntryIndex == -1) return;
             if (_entries[_currentSelectedEntryIndex]._fileType == ESupportedFileTypes.folder)
             {
-                SwitchDirectory(new DirectoryInfo(_entries[_currentSelectedEntryIndex].fullPath));
+                var fullPath = _entries[_currentSelectedEntryIndex].FullPath;
+
+                if (fullPath != null)
+                    SwitchDirectory(new DirectoryInfo(fullPath));
             }
         }
         if (Input.KeyPressed(Keys.Right))
@@ -418,21 +421,20 @@ public class AssetBrowserPanel : UIElement
 public class AssetBrowserEntry
 {
     public string Label { get; private set; }
-    public string? fullPath;
+    public readonly string? FullPath;
     private string _parentPath;
 
-    public ESupportedFileTypes _fileType;
-    private Texture _texture;
-    private AssetBrowserPanel _assetBrowserPanel;
+    public readonly ESupportedFileTypes _fileType;
+    private readonly Texture _texture;
+    private readonly AssetBrowserPanel _assetBrowserPanel;
 
     private bool _isSelected = false;
-    private bool _currentlyDragging;
     private GCHandle? _currentlyDraggedHandle;
 
     public AssetBrowserEntry(string label, string? fullPath, string parentPath, ESupportedFileTypes fileType, Texture texture, AssetBrowserPanel assetBrowserPanel)
     {
         Label = label;
-        this.fullPath = fullPath;
+        FullPath = fullPath;
         _parentPath = parentPath;
         _fileType = fileType;
         
@@ -441,14 +443,14 @@ public class AssetBrowserEntry
 
         if (_fileType == ESupportedFileTypes.tex)
         {
-            _texture = ResourceManager.LoadTextureFromJson(this.fullPath);
+            _texture = ResourceManager.LoadTextureFromJson(this.FullPath);
         }
     }
 
     
     public unsafe void Draw(int index)
     {
-        ImGui.PushID(fullPath);
+        ImGui.PushID(FullPath);
         bool clicked = false;
         bool doubleClicked = false;
         bool rightClicked = false;
@@ -473,9 +475,8 @@ public class AssetBrowserEntry
             out clicked, out doubleClicked, out rightClicked, _isSelected);
 
         if (ImGui.BeginDragDropSource())
-        {
-            _currentlyDragging = true;
-            _currentlyDraggedHandle ??= GCHandle.Alloc(fullPath);
+        {            
+            _currentlyDraggedHandle ??= GCHandle.Alloc(FullPath);
 
             switch (_fileType)
             {
@@ -497,10 +498,10 @@ public class AssetBrowserEntry
             {
                 if (ImGui.MenuItem("Create Sprite From Texture"))
                 {
-                    Sprite sprite = new Sprite(fullPath);
+                    Sprite sprite = new Sprite(FullPath);
                     sprite.Save();
                     AssetBrowserPanel.Refresh(); 
-                    ResourceManager.AddItemToManager(fullPath, sprite);
+                    ResourceManager.AddItemToManager(FullPath, sprite);
                 }
                 
                 if (ImGui.MenuItem("Create Sprite Sheet"))
@@ -509,7 +510,7 @@ public class AssetBrowserEntry
                     savePath += Label.Remove(Label.Length - 4);
                     savePath += ".spritesheet";
                     
-                    SpriteSheet spriteSheet = new SpriteSheet(fullPath,savePath,16, 32, 42, 0);
+                    SpriteSheet spriteSheet = new SpriteSheet(FullPath,savePath,16, 32, 42, 0);
                     spriteSheet.Save();
                     AssetBrowserPanel.Refresh();
                 }
@@ -532,14 +533,14 @@ public class AssetBrowserEntry
             if (_fileType == ESupportedFileTypes.sprite)
             {
                 // Sprite sprite = SaveLoad.LoadSpriteFromJson(fullPath);
-                Sprite sprite = ResourceManager.GetItem<Sprite>(fullPath);
+                Sprite sprite = ResourceManager.GetItem<Sprite>(FullPath);
                 Engine.Get().CurrentSelectedAssetBrowserAsset = sprite;
             }
             
             if (_fileType == ESupportedFileTypes.spritesheet)
             {
                 // SpriteSheet sprite = SaveLoad.LoadSpriteSheetFromJson(fullPath);
-                SpriteSheet spriteSheet = ResourceManager.GetItem<SpriteSheet>(fullPath);
+                SpriteSheet spriteSheet = ResourceManager.GetItem<SpriteSheet>(FullPath);
                 Engine.Get().CurrentSelectedAssetBrowserAsset = spriteSheet;
             }
         }

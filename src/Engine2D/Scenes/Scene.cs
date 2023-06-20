@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-
+using System.Reflection;
 using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Cameras;
@@ -14,7 +14,7 @@ using Engine2D.SavingLoading;
 using ImGuiNET;
 
 using Engine2D.Core;
-
+using Engine2D.Utilities;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -153,16 +153,11 @@ public class Scene
             go.Start();
         }
 
-        //Set childs to parents based on UI
-
-        // if(Settings.s_IsEngine)
-        // {
-            EditorCameraGO editorCameraGO = new EditorCameraGO("EDITORCAMERA");
-            EditorCamera = editorCameraGO.GetComponent<Camera>();
-            editorCameraGO.Serialize = false;
-            
-            this.AddGameObjectToScene(editorCameraGO);
-        //}
+        EditorCameraGO editorCameraGO = new EditorCameraGO("EDITORCAMERA");
+        EditorCamera = editorCameraGO.GetComponent<Camera>();
+        editorCameraGO.Serialize = false;
+        editorCameraGO.AddComponent(AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass"));
+        this.AddGameObjectToScene(editorCameraGO);
     }
     
     public virtual void EditorUpdate(FrameEventArgs args)
@@ -172,6 +167,7 @@ public class Scene
         if(Engine.Get().IsKeyPressed(Keys.B))
             Engine.Get().SwitchScene("new");
     }
+    
     public virtual void Render(FrameEventArgs args)
     {
         Renderer.Render(EditorCamera, CurrentMainGameCamera);
@@ -183,12 +179,13 @@ public class Scene
         {
             Log.Succes(go.Name  + " Is the new Main Camera");
             CurrentMainGameCamera = go.GetComponent<Camera>();
-            // CurrentMainGameCamera.AdjustProjection(1920, 1080);
         }
 
         GameObjects.Add(go);
+        
         go.Init(Renderer);
         go.Start();
+        
         Engine.Get().CurrentSelectedAsset = go;
     }
 

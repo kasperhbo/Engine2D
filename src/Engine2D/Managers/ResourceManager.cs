@@ -8,6 +8,7 @@ using Engine2D.UI.Browsers;
 using Engine2D.Utilities;
 using KDBEngine.Shaders;
 using Newtonsoft.Json;
+using Vortice.Direct3D11;
 
 namespace Engine2D.Managers;
 
@@ -22,7 +23,8 @@ internal static class ResourceManager
     private static readonly Dictionary<ShaderData, Shader?> Shaders = new();
     private static Dictionary<string, AssetBrowserAsset?> _items = new Dictionary<string, AssetBrowserAsset?>();
     public static List<SpriteRenderer> SpriteRenderers = new List<SpriteRenderer>();
-    
+
+    private static bool _showDebug = false;
 
     static ResourceManager()
     {
@@ -63,7 +65,8 @@ internal static class ResourceManager
             }
         }
         
-        Log.Succes("Succesfully loaded all assets!");
+        if(_showDebug)
+            Log.Succes("Successfully loaded all assets!");
     }
 
     public static T? GetItem<T>(string? path) where T : AssetBrowserAsset
@@ -141,20 +144,19 @@ internal static class ResourceManager
         }
     }
 
-
     public static Sprite? LoadSpriteFromJson(string? filename)
     {
         if (File.Exists(filename))
         {
             string textureData = File.ReadAllText(filename);
-            Log.Succes("Loaded texture " + filename);
+            if(_showDebug)
+                Log.Succes("Loaded texture " + filename);
             return JsonConvert.DeserializeObject<Sprite>(textureData)!;
         }
         
         Log.Error("Can't load texture " + filename);
         return null;
     }
-
     
     //Save Textures
     public static void SaveTexture(string? defaultSaveName,Texture texture, DirectoryInfo? currentFolder = null, bool overWrite = false)
@@ -189,6 +191,7 @@ internal static class ResourceManager
         if (File.Exists(filename))
         {
             string textureData = File.ReadAllText(filename);
+            if(_showDebug)
             Log.Succes("Loaded texture " + filename);
             return JsonConvert.DeserializeObject<Texture>(textureData)!;
         }
@@ -223,21 +226,21 @@ internal static class ResourceManager
         }
 
     }
-    
+
     public static SpriteSheet? LoadSpriteSheetFromJson(string? filename)
     {
         if (File.Exists(filename))
         {
             string spritesheet = File.ReadAllText(filename);
-            Log.Succes("Loaded sprite sheet " + filename);
-            
+            if (_showDebug)
+                Log.Succes("Loaded sprite sheet " + filename);
+
             return JsonConvert.DeserializeObject<SpriteSheet>(spritesheet)!;
         }
-        
+
         Log.Error("Can't load texture " + filename);
         return null;
     }
-    
+
     #endregion
-    
 }

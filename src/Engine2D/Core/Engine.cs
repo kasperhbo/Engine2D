@@ -1,12 +1,8 @@
-﻿using System.Numerics;
-using Dear_ImGui_Sample;
-using Engine2D.Logging;
-using Engine2D.Managers;
+﻿using Engine2D.Logging;
 using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.UI;
-using Engine2D.UI.Viewports;
-using ImGuiNET;
+using Engine2D.Utilities;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -48,8 +44,9 @@ namespace Engine2D.Core
 
                 s_instance = new Engine(gameWindowSettings, ntwSettings);
 
+                s_instance.LoadProject();
                 s_instance.LoadEngine();
-
+                
                 GLFW.SetWindowAttrib(s_instance.WindowPtr, WindowAttribute.Decorated, WindowSettings.Decorated);
             }
             
@@ -73,8 +70,15 @@ namespace Engine2D.Core
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);
 
+          
         }
 
+        private void LoadProject()
+        {
+            AssemblyUtils.LoadAssembly(@"D:\dev\Engine2D\src\ExampleGame\bin\Debug\net7.0\ExampleGame.dll");
+            AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass");
+        }
+        
         private void AssignDefaultEvents()
         {
             //Updates
