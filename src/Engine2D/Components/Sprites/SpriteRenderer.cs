@@ -161,7 +161,7 @@ internal class SpriteRenderer : Component
         SetSprite(e.FullPath);
     }
 
-    internal override void ImGuiFields()
+    public override void ImGuiFields()
     {
         base.ImGuiFields();
         if (ImGui.Button("Sprite"))

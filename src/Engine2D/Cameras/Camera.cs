@@ -95,7 +95,7 @@ internal class Camera : Component
         return 100;
     }
 
-    internal override void ImGuiFields()
+    public override void ImGuiFields()
     {
         if (OpenTkuiHelper.DrawProperty("Size: ", ref Size, false))
         {

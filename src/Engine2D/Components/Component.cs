@@ -61,7 +61,7 @@ public class Component
     {
     }
 
-    internal virtual void ImGuiFields()
+    public virtual void ImGuiFields()
     {
         var count = 0;
         var fields = GetType().GetFields(

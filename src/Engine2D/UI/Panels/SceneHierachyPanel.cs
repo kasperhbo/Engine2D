@@ -17,6 +17,7 @@ internal class SceneHierachyPanel : UIElement
 
     internal SceneHierachyPanel(string title) : base(title)
     {
+        IsVisible = true;
     }
 
     private void CreateHierachy()

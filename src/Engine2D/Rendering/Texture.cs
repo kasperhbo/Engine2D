@@ -19,19 +19,19 @@ internal class Texture : AssetBrowserAsset
     private readonly bool _enableLog = false;
 
     [JsonProperty] private string? _saveName = "";
-    [JsonIgnore] internal byte[] Data;
+    [JsonProperty]internal string Filepath = "";
+    [JsonProperty]internal string EncodedData;
+    [JsonProperty]internal TextureMagFilter MagFilter;
+    [JsonProperty]internal int Height;
+    [JsonProperty]internal string Type = "Texture";
+    [JsonProperty]internal int Width;
+    [JsonProperty]internal TextureMinFilter MinFilter;
 
-    internal string EncodedData;
-    internal string Filepath;
+    [JsonIgnore] internal byte[] Data;
     [JsonIgnore] internal bool Flipped;
-    internal int Height;
-    internal TextureMagFilter MagFilter;
-    internal TextureMinFilter MinFilter;
 
     [JsonIgnore] internal int TexID;
 
-    internal string Type = "Texture";
-    internal int Width;
 
     internal Texture(string filepath, string? saveName, bool flipped, TextureMinFilter minFilter,
         TextureMagFilter magFilter)

@@ -25,4 +25,11 @@ public class TestClass : Component
     {
         return "ExampleGame.Assets.TestClass";
     }
+
+    public override void ImGuiFields()
+    {
+        base.ImGuiFields();
+        Console.ForegroundColor = (System.ConsoleColor.Red);
+        Console.WriteLine("New build");
+    }
 }

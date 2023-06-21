@@ -5,6 +5,7 @@ using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
+using Engine2D.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -71,6 +72,12 @@ public class ComponentSerializer : JsonConverter
         if (dynamicType != null)
         {
             return JsonConvert.DeserializeObject(jo.ToString(), dynamicType, _specifiedSubclassConversion);
+        }
+
+        if (AssemblyUtils.GetComponent(componentType) != null)
+        {
+            return JsonConvert.DeserializeObject(jo.ToString(), AssemblyUtils.GetComponent(componentType).GetType(),
+                _specifiedSubclassConversion);
         }
         
         Log.Error($"Unknown component type: {componentType}");

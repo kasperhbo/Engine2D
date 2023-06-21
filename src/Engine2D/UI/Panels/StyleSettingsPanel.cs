@@ -15,6 +15,7 @@ internal class StyleSettingsPanel : UIElement
 
     internal StyleSettingsPanel(string title) : base(title)
     {
+        
     }
 
     internal override void Render()

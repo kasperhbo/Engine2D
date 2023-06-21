@@ -44,7 +44,7 @@ internal class Transform : Component
         EulerDegrees = MathUtilsNumerics.RadiansToDegrees(EulerRadians);
     }
 
-    internal override void ImGuiFields()
+    public override void ImGuiFields()
     {
         OpenTkuiHelper.DrawProperty("Position", ref Position);
         OpenTkuiHelper.DrawProperty("Size", ref Size);

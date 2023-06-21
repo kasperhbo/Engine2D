@@ -2,15 +2,10 @@
   {
     "components": [
       {
-        "_spriteSaveFile": "",
-        "Color": {
-          "a": 255.0,
-          "b": 255.0,
-          "g": 255.0,
-          "r": 255.0
-        },
-        "ZIndex": 0,
-        "Type": "Engine2D.GameObjects.SpriteRenderer"
+        "twospeed": 2,
+        "speed": 1222,
+        "testName": "hello name",
+        "Type": "ExampleGame.Assets.TestClass"
       },
       {
         "Position": {
@@ -25,13 +20,48 @@
           "IsIdentity": false
         },
         "Size": {
-          "X": 0.0,
-          "Y": 0.0
+          "X": 1.0,
+          "Y": 1.0
         },
         "Type": "Engine2D.Components.TransformComponents.Transform"
       }
     ],
     "Name": "SpriteRenderer: 11",
+    "PARENT_UID": -1
+  },
+  {
+    "components": [
+      {
+        "_spriteSaveFile": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\terminal-icon.sprite",
+        "Color": {
+          "a": 255.0,
+          "b": 255.0,
+          "g": 255.0,
+          "r": 0.0
+        },
+        "ZIndex": 0,
+        "Type": "Engine2D.GameObjects.SpriteRenderer"
+      },
+      {
+        "Position": {
+          "X": -210.99995,
+          "Y": -69.07312
+        },
+        "Rotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
+          "W": 0.0,
+          "IsIdentity": false
+        },
+        "Size": {
+          "X": 83.5,
+          "Y": 85.6
+        },
+        "Type": "Engine2D.Components.TransformComponents.Transform"
+      }
+    ],
+    "Name": "SpriteRenderer: 21",
     "PARENT_UID": -1
   }
 ]

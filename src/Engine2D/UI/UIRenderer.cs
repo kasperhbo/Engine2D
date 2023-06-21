@@ -21,10 +21,10 @@ internal static class UiRenderer
     private static EditorViewport? _editorViewport;
     private static List<UIElement> _windowsToRemoveEndOfFrame = new();
 
-    internal static int _hierarchyWindowCount;
-    internal static int _inspectorWindowCount;
-    internal static int _assetBrowserWindowCount;
-    internal static int _styleSettingsWindowCount;
+    internal static int _hierarchyWindowCount = 1;
+    internal static int _inspectorWindowCount = 1;
+    internal static int _assetBrowserWindowCount = 1;
+    internal static int _styleSettingsWindowCount = 1;
 
     private static GameViewport? _gameViewport;
 
@@ -105,12 +105,14 @@ internal static class UiRenderer
     private static void RenderUiWindows()
     {
         foreach (var window in _windows)
-            if (window.IsVisible)
-            {
-                window.BeginRender();
-                window.Render();
-                window.EndRender();
-            }
+            // if (window.IsVisible)
+            // {
+        {
+            window.BeginRender();
+            window.Render();
+            window.EndRender();
+        }
+            //}
 
         _engine.CurrentScene?.OnGui();
 
@@ -279,9 +281,7 @@ internal static class UiRenderer
         _assetBrowserWindowCount = 0;
 
         for (var i = 0; i < hierCo; i++) CreateHierachyWindow();
-
         for (var i = 0; i < inspCo; i++) CreateInspectWindow();
-
         for (var i = 0; i < assCo; i++) CreateAssetBrowserWindow();
     }
 

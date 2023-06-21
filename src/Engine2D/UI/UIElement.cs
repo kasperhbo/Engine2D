@@ -31,7 +31,7 @@ internal abstract class UIElement
         Title = title;
     }
 
-    internal bool IsVisible { get; private set; } = true;
+    protected internal bool IsVisible { get; set; } = true;
 
     internal virtual void BeginRender()
     {

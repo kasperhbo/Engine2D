@@ -20,7 +20,7 @@ internal class ScriptHolderComponent : Component
         base.Init(parent, renderer);
     }
 
-    internal override void ImGuiFields()
+    public override void ImGuiFields()
     {
         base.ImGuiFields();
         float f = 0;

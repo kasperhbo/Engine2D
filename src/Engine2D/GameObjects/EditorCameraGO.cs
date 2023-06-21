@@ -32,7 +32,7 @@ internal class EditorCameraGO : Gameobject
 
         components.Add(camera);
 
-        if (currentScene != null) Name = "Launcher Camera: " + currentScene.GameObjects.Count + 1;
+        if (currentScene != null) Name = "Editor Camera: " + currentScene.GameObjects.Count + 1;
     }
 
     internal override void EditorUpdate(double dt)

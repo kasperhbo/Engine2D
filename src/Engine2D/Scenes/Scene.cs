@@ -123,7 +123,7 @@ internal class Scene
         var editorCameraGO = new EditorCameraGO("EDITORCAMERA");
         EditorCamera = editorCameraGO.GetComponent<Camera>();
         editorCameraGO.Serialize = false;
-        // editorCameraGO.AddComponent(AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass"));
+        
         AddGameObjectToScene(editorCameraGO);
     }
 

@@ -12,6 +12,7 @@ internal class InspectorPanel : UIElement
 
     internal InspectorPanel(string title) : base(title)
     {
+        IsVisible = true;
     }
 
     internal override void Render()
