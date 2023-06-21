@@ -110,6 +110,8 @@ internal static class ResourceManager
             _items[fullSaveName] = item;
         else
             _items.Add(fullSaveName, item);
+        
+        foreach (var spr in SpriteRenderers) spr.Refresh();
     }
 
     #region Saving and loading
@@ -137,7 +139,7 @@ internal static class ResourceManager
 
 
         //TODO: MAKE THIS MORE EFFECIENT SO ONLY THE SPRITES WITH THE CHANGED SPRITE SHEET/FILE GET UPDATED
-        // foreach (var spr in SpriteRenderers) spr.RefreshSprite();
+        foreach (var spr in SpriteRenderers) spr.Refresh();
     }
 
     internal static Texture? LoadTextureFromJson(string? filename)
@@ -150,7 +152,7 @@ internal static class ResourceManager
             return JsonConvert.DeserializeObject<Texture>(textureData)!;
         }
 
-        Log.Error("Can't load texture " + filename);
+        foreach (var spr in SpriteRenderers) spr.Refresh();
         return null;
     }
 
@@ -173,9 +175,9 @@ internal static class ResourceManager
 
         AddItemToManager(fullSaveName, spriteSheet);
         AssetBrowserPanel.Refresh();
-
+        
         //TODO: MAKE THIS MORE EFFECIENT SO ONLY THE SPRITES WITH THE CHANGED SPRITE SHEET/FILE GET UPDATED
-        // foreach (var spr in SpriteRenderers) spr.RefreshSprite();
+        foreach (var spr in SpriteRenderers) spr.Refresh();
     }
 
     internal static SpriteSheet? LoadSpriteSheetFromJson(string? filename)

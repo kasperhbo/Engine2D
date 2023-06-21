@@ -2,6 +2,8 @@
   {
     "components": [
       {
+        "HasSpriteSheet": true,
+        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
         "ZIndex": 0,
         "Color": {
           "a": 255.0,
@@ -9,15 +11,13 @@
           "g": 255.0,
           "r": 255.0
         },
-        "HasSpriteSheet": true,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
         "SpriteSheetSpriteIndex": 0,
         "Type": "Engine2D.GameObjects.SpriteRenderer"
       },
       {
         "Position": {
-          "X": 56.599926,
-          "Y": -1.0002327
+          "X": -77.0,
+          "Y": -55.009598
         },
         "Rotation": {
           "X": 0.0,
@@ -27,13 +27,13 @@
           "IsIdentity": false
         },
         "Size": {
-          "X": 162.08664,
-          "Y": 162.08664
+          "X": 218.82,
+          "Y": 218.82
         },
         "Type": "Engine2D.Components.TransformComponents.Transform"
       }
     ],
-    "Name": "SpriteRenderer: 11",
+    "Name": "Sprite 69",
     "PARENT_UID": -1
   }
 ]

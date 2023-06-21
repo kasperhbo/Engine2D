@@ -60,27 +60,28 @@ public class ComponentSerializer : JsonConverter
         currentType = jo;
         specifiedSubclassConversion = _specifiedSubclassConversion;
 
-
-        var customComponent = ComponentGameSerializer.GetCustomGameComponent(jo, specifiedSubclassConversion);
-        if (customComponent != null) return customComponent;
-
         string componentType = jo["Type"].Value<string>();
         
         string dynamicClassName = (componentType);
         Type dynamicType = Type.GetType(dynamicClassName);
         
+        //Try converting to a component type that is in the Engine assembly
         if (dynamicType != null)
         {
             return JsonConvert.DeserializeObject(jo.ToString(), dynamicType, _specifiedSubclassConversion);
         }
 
+        //Try converting to a component type that is in the Game assembly
         if (AssemblyUtils.GetComponent(componentType) != null)
         {
             return JsonConvert.DeserializeObject(jo.ToString(), AssemblyUtils.GetComponent(componentType).GetType(),
                 _specifiedSubclassConversion);
         }
         
+        //If all else fails, log an error and return null
         Log.Error($"Unknown component type: {componentType}");
+        
+        
         
         return null;
         

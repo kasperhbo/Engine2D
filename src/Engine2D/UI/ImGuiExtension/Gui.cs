@@ -34,7 +34,19 @@ internal static class Gui
         KDragFloat("##"+label,ref value);
         PopID();
     }
-    
+
+    internal static bool DrawProperty(string label, ref int value, int min, int max)
+    {
+        PushID(label);
+        TableNextRow();
+        TableSetColumnIndex(0);
+        Text(label);
+        TableSetColumnIndex(1);
+        bool dragged = KDragInt("##"+label,ref value, min, max);
+        PopID();
+        return dragged;
+    }
+
     internal static void DrawProperty(string label, ref int value)
     {
         PushID(label);
@@ -197,6 +209,27 @@ internal static class Gui
         
         if(buttonColor != Vector4.Zero)
             PopStyleColor();
+    }
+    
+    internal static bool KDragInt(string label, ref int intRef, int min, int max, Vector4 buttonColor = new(), float dragSpeed = 0.1f)
+    {
+        bool dragged = false;
+        PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
+        if(buttonColor != Vector4.Zero)
+            PushStyleColor(ImGuiCol.Button, buttonColor);
+        
+        if (Button(label)) intRef = 0;
+        SameLine();
+        if (DragInt(("##" + label), ref intRef, dragSpeed, min, max))
+        {
+            dragged = true;
+        }
+        PopStyleVar();
+        
+        if(buttonColor != Vector4.Zero)
+            PopStyleColor();
+
+        return dragged;
     }
     
     

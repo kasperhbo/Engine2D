@@ -211,6 +211,7 @@ internal class SpriteSheet : AssetBrowserAsset
         Init(_texturePath, SavePath, _spriteWidth, _spriteHeight, _numSprites, _spacing);
         AssetName = SavePath;
         ResourceManager.SaveSpriteSheet(SavePath, this, null, true);
+        
         _unsaved = false;
     }
 }
