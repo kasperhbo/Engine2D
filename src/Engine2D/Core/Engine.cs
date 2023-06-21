@@ -1,4 +1,6 @@
-﻿using Engine2D.Logging;
+﻿#region
+
+using Engine2D.Logging;
 using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.UI;
@@ -9,24 +11,88 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
+#endregion
+
 namespace Engine2D.Core
 {
     public class Engine : GameWindow
     {
         private static Engine? s_instance;
-        
-        public  Scene? CurrentScene { get; private set; }
-        public AssetBrowserAsset? CurrentSelectedAssetBrowserAsset;
-        public Asset? CurrentSelectedAsset;
 
         private readonly Dictionary<string, UIElement> _guiWindows = new();
 
+
+        private int _frameCounter;
+        internal Asset? CurrentSelectedAsset;
+        internal AssetBrowserAsset? CurrentSelectedAssetBrowserAsset;
+
+        internal Scene? CurrentScene { get; private set; }
+
+        internal void SwitchScene(string newSceneName)
+        {
+            if (CurrentScene != null)
+            {
+                base.TextInput -= CurrentScene.OnTextInput;
+                base.MouseWheel -= CurrentScene.OnMouseWheel;
+                Unload -= CurrentScene.Close;
+
+                foreach (var eventA in CurrentScene.GetDefaultUpdateEvents()) UpdateFrame -= eventA;
+            }
+
+            CurrentScene = new Scene();
+
+            base.TextInput += CurrentScene.OnTextInput;
+            base.MouseWheel += CurrentScene.OnMouseWheel;
+            Unload += CurrentScene.Close;
+
+            foreach (var eventA in CurrentScene.GetDefaultUpdateEvents()) UpdateFrame += eventA;
+
+            CurrentScene.Init(newSceneName);
+        }
+
+        private void Update(FrameEventArgs args)
+        {
+        }
+
+        private void Render(FrameEventArgs args)
+        {
+            SetTitle((float)args.Time);
+            CurrentScene?.Render(args);
+            SwapBuffers();
+        }
+
+
+        private new void OnResize(ResizeEventArgs e)
+        {
+            GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
+
+            CurrentScene?.OnResized(e);
+        }
+
+        private void TextInput(TextInputEventArgs e)
+        {
+        }
+
+        private void MouseWheel(MouseWheelEventArgs e)
+        {
+        }
+
+        private void SetTitle(float time)
+        {
+            var fps = 1.0f / time;
+            _frameCounter++;
+            if (_frameCounter == 30)
+            {
+                Title = string.Format("KDB ENGIN V{0} | Scene : {1} | FPS : {2}", 0.1, CurrentScene.ScenePath, fps);
+                _frameCounter = 0;
+            }
+        }
+
         #region setup
 
-        public Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
+        internal Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
             gameWindowSettings, nativeWindowSettings)
         {
-            
         }
 
         public static unsafe Engine Get()
@@ -46,10 +112,10 @@ namespace Engine2D.Core
 
                 s_instance.LoadProject();
                 s_instance.LoadEngine();
-                
+
                 GLFW.SetWindowAttrib(s_instance.WindowPtr, WindowAttribute.Decorated, WindowSettings.Decorated);
             }
-            
+
             return s_instance;
         }
 
@@ -69,8 +135,6 @@ namespace Engine2D.Core
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);
-
-          
         }
 
         private void LoadProject()
@@ -78,7 +142,7 @@ namespace Engine2D.Core
             AssemblyUtils.LoadAssembly(@"D:\dev\Engine2D\src\ExampleGame\bin\Debug\net7.0\ExampleGame.dll");
             AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass");
         }
-        
+
         private void AssignDefaultEvents()
         {
             //Updates
@@ -87,8 +151,8 @@ namespace Engine2D.Core
 
             //Keyboards
             base.MouseWheel += MouseWheel;
-            base.TextInput  += TextInput;
-            
+            base.TextInput += TextInput;
+
             //other events
             Resize += OnResize;
             Unload += OnClose;
@@ -102,102 +166,34 @@ namespace Engine2D.Core
         }
 
         #endregion
-
-        public void SwitchScene(string newSceneName)
-        {
-            if (CurrentScene != null)
-            {
-                base.TextInput  -= CurrentScene.OnTextInput;
-                base.MouseWheel -= CurrentScene.OnMouseWheel;
-                Unload     -= CurrentScene.Close;
-                
-                foreach (var eventA in CurrentScene.GetDefaultUpdateEvents())
-                {
-                    UpdateFrame -= eventA;
-                }
-            }
-
-            CurrentScene = new Scene();
-            
-            base.TextInput  += CurrentScene.OnTextInput;
-            base.MouseWheel += CurrentScene.OnMouseWheel;
-            Unload     += CurrentScene.Close;
-
-            foreach (var eventA in CurrentScene.GetDefaultUpdateEvents())
-            {
-                UpdateFrame += eventA;
-            }
-            
-            CurrentScene.Init(newSceneName);
-        }
-
-        private void Update(FrameEventArgs args)
-        {
-        }
-
-        private void Render(FrameEventArgs args)
-        {
-            SetTitle((float)args.Time);
-            CurrentScene?.Render(args);
-            SwapBuffers();
-        }
-        
-
-        private new void OnResize(ResizeEventArgs e)
-        {
-            GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
-
-            CurrentScene?.OnResized(e);
-        }
-
-        private void TextInput(TextInputEventArgs e)
-        {
-        }
-
-        private void MouseWheel(MouseWheelEventArgs e)
-        {
-        }
-        
-
-        private int _frameCounter;
-        private void SetTitle(float time)
-        {
-            var fps = 1.0f / time;
-            _frameCounter++;
-            if (_frameCounter == 30)
-            {
-                Title = string.Format("KDB ENGIN V{0} | Scene : {1} | FPS : {2}", 0.1, CurrentScene.ScenePath, fps);
-                _frameCounter = 0;
-            }
-        }
     }
 }
 
-public static class EngineSettings
+internal static class EngineSettings
 {
-     public static float DefaultFontSize  = 18;
-     public static bool SaveOnClose       = true;
+    internal static float DefaultFontSize = 18;
+    internal static bool SaveOnClose = true;
 }
 
-public static class WindowSettings
+internal static class WindowSettings
 {
-    public static string Title            { get; }= "Kasper Engine";
-    public static Vector2i Size           { get; }= new(1920, 1080);
-    public static float UpdateFrequency   { get; }= 60;
-    public static float RenderFrequency   { get; }= 60;
-    public static WindowState FullScreen  { get; }= WindowState.Maximized ;
-    public static bool Decorated          { get; } = true;
+    internal static string Title { get; } = "Kasper Engine";
+    internal static Vector2i Size { get; } = new(1920, 1080);
+    internal static float UpdateFrequency { get; } = 60;
+    internal static float RenderFrequency { get; } = 60;
+    internal static WindowState FullScreen { get; } = WindowState.Maximized;
+    internal static bool Decorated { get; } = true;
 }
 
-public static class Settings
+internal static class Settings
 {
-    public static bool s_IsEngine = true;
-    public static bool s_RenderDebugWindowSeperate = true;
+    internal static bool s_IsEngine = true;
+    internal static bool s_RenderDebugWindowSeperate = true;
 }
 
-public static class ProjectSettings
+internal static class ProjectSettings
 {
-    public static string ProjectName     {get;} = "ExampleGame";
-    public static string ProjectLocation {get;} = @"D:\dev\Engine2D\src\";
-    public static string FullProjectPath {get;} = ProjectLocation + ProjectName;
+    internal static string ProjectName { get; } = "ExampleGame";
+    internal static string ProjectLocation { get; } = @"D:\dev\Engine2D\src\";
+    internal static string FullProjectPath { get; } = ProjectLocation + ProjectName;
 }

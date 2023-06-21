@@ -1,12 +1,15 @@
-﻿using Engine2D.Cameras;
+﻿#region
+
+using Engine2D.Cameras;
 using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
-using Engine2D.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+
+#endregion
 
 namespace Engine2D.Components;
 
@@ -35,11 +38,10 @@ public class ComponentSerializer : JsonConverter
         {
             ContractResolver = new BaseSpecifiedConcreteClassConverter()
         };
-    
+
 
     public static JObject currentType;
     public static JsonSerializerSettings? specifiedSubclassConversion;
-    public static object? obj = null;
 
     public override bool CanWrite => false;
 
@@ -49,6 +51,7 @@ public class ComponentSerializer : JsonConverter
             objectType == typeof(Component) ||
             objectType == typeof(Gameobject);
     }
+
     public override object? ReadJson(JsonReader reader, Type objectType, object existingValue,
         JsonSerializer serializer)
     {
@@ -56,54 +59,56 @@ public class ComponentSerializer : JsonConverter
         currentType = jo;
         specifiedSubclassConversion = _specifiedSubclassConversion;
 
-        if (obj != null) return obj;
+
+        var customComponent = ComponentGameSerializer.GetCustomGameComponent(jo, specifiedSubclassConversion);
+        if (customComponent != null) return customComponent;
+
+        string componentType = jo["Type"].Value<string>();
+        
+        string dynamicClassName = (componentType);
+        Type dynamicType = Type.GetType(dynamicClassName);
+        
+        if (dynamicType != null)
+        {
+            return JsonConvert.DeserializeObject(jo.ToString(), dynamicType, _specifiedSubclassConversion);
+        }
+        
+        Log.Error($"Unknown component type: {componentType}");
+        
+        return null;
         
         switch (jo["Type"].Value<string>())
         {
-            case "Component":
-                Log.Error("is component");
-                return null;
-            case "SpriteRenderer":
-                return JsonConvert.DeserializeObject<SpriteRenderer>(jo.ToString(), _specifiedSubclassConversion);
-            case "Rigidbody":
-                return JsonConvert.DeserializeObject<RigidBody>(jo.ToString(), _specifiedSubclassConversion);
-            case "BoxCollider2D":
-                return JsonConvert.DeserializeObject<BoxCollider2D>(jo.ToString(), _specifiedSubclassConversion);
-            case "PointLight":
-                return JsonConvert.DeserializeObject<PointLightComponent>(jo.ToString(), _specifiedSubclassConversion);
-            case "GlobalLight":
-                return JsonConvert.DeserializeObject<GlobalLight>(jo.ToString(), _specifiedSubclassConversion);
-            case "ScriptHolderComponent":
-                return JsonConvert.DeserializeObject<ScriptHolderComponent>(jo.ToString(),
-                    _specifiedSubclassConversion);
-            case "Transform":
-                return JsonConvert.DeserializeObject<Transform>(jo.ToString(),
-                    _specifiedSubclassConversion);
-            case "Camera":
-                return JsonConvert.DeserializeObject<Camera>(jo.ToString(),
-                    _specifiedSubclassConversion);
-            case "Texture":
-                return JsonConvert.DeserializeObject<Texture>(jo.ToString(),
-                    _specifiedSubclassConversion);
-            //ADD CUSTOM FROM HERE
-            case "ExampleGame.Assets.TestClass":
-            {
-                var t = AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass");
-                if(t != null)
-                {
-                    return JsonConvert.DeserializeObject(jo.ToString(), t.GetType(),
-                        _specifiedSubclassConversion);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            default:
-            {
-                Log.Error("Not Found" + jo["Type"].Value<string>());
-                return null;
-            }
+            // case "Component":
+            //     Log.Error("is component");
+            //     return null;
+            // case "SpriteRenderer":
+            //     return JsonConvert.DeserializeObject<SpriteRenderer>(jo.ToString(), _specifiedSubclassConversion);
+            // case "Rigidbody":
+            //     return JsonConvert.DeserializeObject<RigidBody>(jo.ToString(), _specifiedSubclassConversion);
+            // case "BoxCollider2D":
+            //     return JsonConvert.DeserializeObject<BoxCollider2D>(jo.ToString(), _specifiedSubclassConversion);
+            // case "PointLight":
+            //     return JsonConvert.DeserializeObject<PointLightComponent>(jo.ToString(), _specifiedSubclassConversion);
+            // case "GlobalLight":
+            //     return JsonConvert.DeserializeObject<GlobalLight>(jo.ToString(), _specifiedSubclassConversion);
+            // case "ScriptHolderComponent":
+            //     return JsonConvert.DeserializeObject<ScriptHolderComponent>(jo.ToString(),
+            //         _specifiedSubclassConversion);
+            // case "Transform":
+            //     return JsonConvert.DeserializeObject<Transform>(jo.ToString(),
+            //         _specifiedSubclassConversion);
+            // case "Camera":
+            //     return JsonConvert.DeserializeObject<Camera>(jo.ToString(),
+            //         _specifiedSubclassConversion);
+            // case "Texture":
+            //     return JsonConvert.DeserializeObject<Texture>(jo.ToString(),
+            //         _specifiedSubclassConversion);
+            // default:
+            // {
+            //     Log.Error("Not Found" + jo["Type"].Value<string>());
+            //     return null;
+            // }
         }
     }
 
@@ -111,4 +116,5 @@ public class ComponentSerializer : JsonConverter
     {
         throw new NotImplementedException(); // won't be called because CanWrite returns false
     }
+    
 }

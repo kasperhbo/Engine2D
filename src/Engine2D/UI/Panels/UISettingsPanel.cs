@@ -1,23 +1,14 @@
-﻿using Engine2D.UI.ImGuiExtension;
+﻿#region
+
+using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
+
+#endregion
 
 namespace Engine2D.UI;
 
-public class UISettingsPanel : UIElement
+internal class UISettingsPanel : UIElement
 {
-    private ImGuiStylePtr style;
-    
-    public UISettingsPanel(string title) : base(title)
-    {
-        style = ImGui.GetStyle();
-    }
-
-
-    public override void Render()
-    {
-        GetColorComponents();
-    }
-
     private readonly string[] colors =
     {
         "Text",
@@ -74,16 +65,24 @@ public class UISettingsPanel : UIElement
         "NavHighlight",
         "NavWindowingHighlight",
         "NavWindowingDimBg",
-        "ModalWindowDimBg",
+        "ModalWindowDimBg"
     };
+
+    private ImGuiStylePtr style;
+
+    internal UISettingsPanel(string title) : base(title)
+    {
+        style = ImGui.GetStyle();
+    }
+
+
+    internal override void Render()
+    {
+        GetColorComponents();
+    }
 
     private void GetColorComponents()
     {
-        for (int i = 0; i < colors.Length; i++)
-        {
-            OpenTkuiHelper.DrawProperty(colors[i], ref style.Colors[i]);
-        }
+        for (var i = 0; i < colors.Length; i++) OpenTkuiHelper.DrawProperty(colors[i], ref style.Colors[i]);
     }
-    
-    
 }

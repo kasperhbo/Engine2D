@@ -1,16 +1,20 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using Vector2 = OpenTK.Mathematics.Vector2;
 using Vector3 = OpenTK.Mathematics.Vector3;
 using Vector4 = OpenTK.Mathematics.Vector4;
 
+#endregion
+
 namespace KDBEngine.Shaders;
 
 // A simple class meant to help create shaders.
-public class Shader
+internal class Shader
 {
-    //public readonly int Handle;
+    //internal readonly int Handle;
 
     //private readonly Dictionary<string, int> _uniformLocations;
 
@@ -18,7 +22,7 @@ public class Shader
     //// Shaders are written in GLSL, which is a language very similar to C in its semantics.
     //// The GLSL source is compiled *at runtime*, so it can optimize itself for the graphics card it's currently being used on.
     //// A commented example of GLSL can be found in shader.vert.
-    //public Shader(string vertPath, string fragPath)
+    //internal Shader(string vertPath, string fragPath)
     //{
 
     //    // There are several different types of shaders, but the only two you need for basic rendering are the vertex and fragment shaders.
@@ -118,14 +122,14 @@ public class Shader
     //}
 
     //// A wrapper function that enables the shader program.
-    //public void Use()
+    //internal void Use()
     //{
     //    GL.UseProgram(Handle);
     //}
 
     //// The shader sources provided with this project use hardcoded layout(location)-s. If you want to do it dynamically,
     //// you can omit the layout(location=X) lines in the vertex shader, and use this in VertexAttribPointer instead of the hardcoded values.
-    //public int GetAttribLocation(string attribName)
+    //internal int GetAttribLocation(string attribName)
     //{
     //    return GL.GetAttribLocation(Handle, attribName);
     //}
@@ -144,7 +148,7 @@ public class Shader
     ///// </summary>
     ///// <param name="name">The name of the uniform</param>
     ///// <param name="data">The data to set</param>
-    //public void SetInt(string name, int data)
+    //internal void SetInt(string name, int data)
     //{
     //    GL.UseProgram(Handle);
     //    GL.Uniform1(_uniformLocations[name], data);
@@ -155,7 +159,7 @@ public class Shader
     ///// </summary>
     ///// <param name="name">The name of the uniform</param>
     ///// <param name="data">The data to set</param>
-    //public void SetFloat(string name, float data)
+    //internal void SetFloat(string name, float data)
     //{
     //    GL.UseProgram(Handle);
     //    GL.Uniform1(_uniformLocations[name], data);
@@ -171,7 +175,7 @@ public class Shader
     /////   The matrix is transposed before being sent to the shader.
     /////   </para>
     ///// </remarks>
-    //public void SetMatrix4(string name, Matrix4 data)
+    //internal void SetMatrix4(string name, Matrix4 data)
     //{
     //    GL.UseProgram(Handle);
     //    GL.UniformMatrix4(_uniformLocations[name], true, ref data);
@@ -182,7 +186,7 @@ public class Shader
     ///// </summary>
     ///// <param name="name">The name of the uniform</param>
     ///// <param name="data">The data to set</param>
-    //public void SetVector3(string name, Vector3 data)
+    //internal void SetVector3(string name, Vector3 data)
     //{
     //    GL.UseProgram(Handle);
     //    GL.Uniform3(_uniformLocations[name], data);
@@ -198,14 +202,14 @@ public class Shader
     private readonly string vertexSource;
     private int shaderProgramID;
 
-    public Shader(string vertexFilePath, string fragmentFilePath)
+    internal Shader(string vertexFilePath, string fragmentFilePath)
     {
         vertexSource = File.ReadAllText(vertexFilePath);
         fragmentSource = File.ReadAllText(fragmentFilePath);
         Compile(vertexSource, fragmentSource);
     }
 
-    public void Compile(string vertexSource, string fragmentSource)
+    internal void Compile(string vertexSource, string fragmentSource)
     {
         int vertexID, fragmentID;
 
@@ -245,24 +249,24 @@ public class Shader
             throw new Exception($"Error occurred whilst linking Program({shaderProgramID})");
     }
 
-    public void use()
+    internal void use()
     {
         GL.UseProgram(shaderProgramID);
     }
 
-    public void detach()
+    internal void detach()
     {
         GL.UseProgram(0);
     }
 
-    public void uploadMat4f(string varName, Matrix4 mat4)
+    internal void uploadMat4f(string varName, Matrix4 mat4)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
         GL.UniformMatrix4(varLocation, false, ref mat4);
     }
 
-    public void uploadMat3f(string varName, Matrix3 mat3)
+    internal void uploadMat3f(string varName, Matrix3 mat3)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
@@ -270,7 +274,7 @@ public class Shader
         GL.UniformMatrix3(varLocation, false, ref mat3);
     }
 
-    public void uploadVec4f(string varName, Vector4 vec)
+    internal void uploadVec4f(string varName, Vector4 vec)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
@@ -278,7 +282,7 @@ public class Shader
         GL.Uniform4(varLocation, vec);
     }
 
-    public void uploadVec3f(string varName, Vector3 vec)
+    internal void uploadVec3f(string varName, Vector3 vec)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
@@ -286,24 +290,24 @@ public class Shader
         GL.Uniform3(varLocation, vec);
     }
 
-    public void uploadVec2f(string varName, Vector2 vec)
+    internal void uploadVec2f(string varName, Vector2 vec)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
         GL.Uniform2(varLocation, vec);
     }
-    
+
     /// <summary>
-    /// Overload for System.numerics
+    ///     Overload for System.numerics
     /// </summary>
     /// <param name="varName"></param>
     /// <param name="vec"></param>
-    public void uploadVec2f(string varName, System.Numerics.Vector2 vec)
+    internal void uploadVec2f(string varName, System.Numerics.Vector2 vec)
     {
         uploadVec2f(varName, new Vector2(vec.X, vec.Y));
     }
 
-    public void uploadFloat(string varName, float val)
+    internal void uploadFloat(string varName, float val)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
@@ -311,7 +315,7 @@ public class Shader
         GL.Uniform1(varLocation, val);
     }
 
-    public void uploadInt(string varName, int val)
+    internal void uploadInt(string varName, int val)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
@@ -319,7 +323,7 @@ public class Shader
         GL.Uniform1(varLocation, val);
     }
 
-    public void uploadTexture(string varName, int slot)
+    internal void uploadTexture(string varName, int slot)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
@@ -333,21 +337,7 @@ public class Shader
         GL.Uniform1(varLocation, values.Length, values);
     }
 
-    public void uploadVec2fArray(string varName, Vector2[] vec)
-    {
-        use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
-        var vals = new float[vec.Length * 2];
-        for (var i = 0; i < vec.Length; i++)
-        {
-            vals[i * 2] = vec[i].X;
-            vals[i * 2 + 1] = vec[i].Y;
-        }
-
-        GL.Uniform2(varLocation, vec.Length, vals);
-    }
-    
-    public void uploadVec2fArray(string varName, System.Numerics.Vector2[] vec)
+    internal void uploadVec2fArray(string varName, Vector2[] vec)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
@@ -361,8 +351,22 @@ public class Shader
         GL.Uniform2(varLocation, vec.Length, vals);
     }
 
+    internal void uploadVec2fArray(string varName, System.Numerics.Vector2[] vec)
+    {
+        use();
+        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var vals = new float[vec.Length * 2];
+        for (var i = 0; i < vec.Length; i++)
+        {
+            vals[i * 2] = vec[i].X;
+            vals[i * 2 + 1] = vec[i].Y;
+        }
 
-    public void uploadVec3fArray(string varName, Vector3[] vec)
+        GL.Uniform2(varLocation, vec.Length, vals);
+    }
+
+
+    internal void uploadVec3fArray(string varName, Vector3[] vec)
     {
         var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
         use();
@@ -377,27 +381,27 @@ public class Shader
         GL.Uniform3(varLocation, vec.Length, vals);
     }
 
-    public int GetAttribLocation(string attribName)
+    internal int GetAttribLocation(string attribName)
     {
         return GL.GetAttribLocation(shaderProgramID, attribName);
     }
 
-    public void uploadFloatArray(string v, float[] values)
+    internal void uploadFloatArray(string v, float[] values)
     {
         use();
         var varLocation = GL.GetUniformLocation(shaderProgramID, v);
         GL.Uniform1(varLocation, values.Length, values);
     }
 
-    public void uploadMat4f(string varName, Matrix4x4 v)
+    internal void uploadMat4f(string varName, Matrix4x4 v)
     {
-        Matrix4 val = new Matrix4(
+        var val = new Matrix4(
             new Vector4(v.M11, v.M12, v.M13, v.M14),
             new Vector4(v.M21, v.M22, v.M23, v.M24),
             new Vector4(v.M31, v.M32, v.M33, v.M34),
             new Vector4(v.M41, v.M42, v.M43, v.M44)
         );
-        
+
         uploadMat4f(varName, val);
     }
 }

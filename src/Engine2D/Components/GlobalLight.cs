@@ -1,15 +1,19 @@
-﻿using Engine2D.GameObjects;
+﻿#region
+
+using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Newtonsoft.Json;
+
+#endregion
 
 namespace Engine2D.Components;
 
 [JsonConverter(typeof(ComponentSerializer))]
-public class GlobalLight : Component
+internal class GlobalLight : Component
 {
-    public float Intensity = 1;
+    [JsonProperty]internal float Intensity = 1;
 
-    public override void Init(Gameobject parent, Renderer? renderer)
+    internal override void Init(Gameobject parent, Renderer? renderer)
     {
         base.Init(parent, renderer);
         renderer.GlobalLight = this;
@@ -21,6 +25,6 @@ public class GlobalLight : Component
 
     public override string GetItemType()
     {
-        return "GlobalLight";
+        return this.GetType().FullName;
     }
 }

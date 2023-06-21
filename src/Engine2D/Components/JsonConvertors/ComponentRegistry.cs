@@ -1,4 +1,8 @@
-﻿using Engine2D.Logging;
+﻿#region
+
+using Engine2D.Logging;
+
+#endregion
 
 namespace Engine2D.Components;
 

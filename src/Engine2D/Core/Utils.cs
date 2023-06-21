@@ -1,9 +1,13 @@
-﻿using System.Diagnostics;
+﻿#region
+
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Soap;
 using Engine2D.Logging;
 using ImGuiNET;
 using Microsoft.Win32;
+
+#endregion
 
 namespace Engine2D.Core;
 
@@ -36,7 +40,7 @@ public static class Utils
         foreach (var file in dir.GetFiles())
         {
             var targetFilePath = Path.Combine(destinationDir, file.Name);
-            
+
             file.CopyTo(targetFilePath);
         }
 
@@ -130,7 +134,7 @@ public static class Utils
         return null;
     }
 
-    public static bool SaveWithSoapStaticClass(Type static_class, string filename)
+    internal static bool SaveWithSoapStaticClass(Type static_class, string filename)
     {
         try
         {
@@ -163,7 +167,7 @@ public static class Utils
         }
     }
 
-    public static bool LoadWithSoapStaticClass(Type static_class, string filename)
+    internal static bool LoadWithSoapStaticClass(Type static_class, string filename)
     {
         try
         {
@@ -190,17 +194,17 @@ public static class Utils
         }
     }
 
-    public static unsafe bool IsValidPayload(this ImGuiPayloadPtr payload)
+    internal static unsafe bool IsValidPayload(this ImGuiPayloadPtr payload)
     {
         return payload.NativePtr != null;
     }
 
-    public static string[] GetAllScriptFiles()
+    internal static string[] GetAllScriptFiles()
     {
         return Directory.GetFiles(ProjectSettings.FullProjectPath, "*.cs", SearchOption.AllDirectories);
     }
 
-    public static string GetFilePath(string file)
+    internal static string GetFilePath(string file)
     {
         var res = Directory.GetFiles(ProjectSettings.FullProjectPath, file, SearchOption.AllDirectories);
         if (res.Length == 0)
@@ -213,7 +217,7 @@ public static class Utils
         return path;
     }
 
-    public static void CreateEntry(string fileName, string lineToWriteTo, string lineToAdd) //npcName = "item1"
+    internal static void CreateEntry(string fileName, string lineToWriteTo, string lineToAdd) //npcName = "item1"
     {
         var endTag = string.Format("{0}", lineToWriteTo);
 
@@ -224,6 +228,4 @@ public static class Utils
 
         File.WriteAllLines(fileName, txtLines); //Add the lines including the new one.
     }
-    
-    
 }

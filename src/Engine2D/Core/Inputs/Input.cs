@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
 using Engine2D.Cameras;
 using Engine2D.UI.Viewports;
 using Engine2D.Utilities;
@@ -7,181 +9,179 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
 
+#endregion
+
 namespace Engine2D.Core.Inputs;
 
-public static class Input
+internal static class Input
 {
-    
-
     #region mouse
-    public static bool MousePressed(MouseButton button)
+
+    internal static bool MousePressed(MouseButton button)
     {
         return Engine.Get().IsMouseButtonPressed(button);
     }
-    
-    public static bool MouseReleased(MouseButton button)
+
+    internal static bool MouseReleased(MouseButton button)
     {
         return Engine.Get().IsMouseButtonReleased(button);
     }
-    
-    public static bool MouseDown(MouseButton button)
+
+    internal static bool MouseDown(MouseButton button)
     {
         return Engine.Get().IsMouseButtonDown(button);
     }
 
-    public static bool IsAnyMouseButtonDown()
+    internal static bool IsAnyMouseButtonDown()
     {
         return Engine.Get().IsAnyMouseButtonDown;
     }
-    
-    public static Vector2 MouseScreenPos()
+
+    internal static Vector2 MouseScreenPos()
     {
-        return new(ScreenX(), ScreenY());
+        return new Vector2(ScreenX(), ScreenY());
     }
-    
-    public static Vector2 MousePrevPos()
+
+    internal static Vector2 MousePrevPos()
     {
-        return new(ScreenLastX(), ScreenLastY());
+        return new Vector2(ScreenLastX(), ScreenLastY());
     }
-    
-    public static float ScreenX()
+
+    internal static float ScreenX()
     {
         return Engine.Get().MouseState.Position.X;
     }
 
-    public static float ScreenY()
+    internal static float ScreenY()
     {
         return Engine.Get().MouseState.Position.Y;
     }
 
-    public static float ScreenLastX()
+    internal static float ScreenLastX()
     {
         return Engine.Get().MouseState.PreviousX;
     }
- 
-    public static float ScreenLastY()
+
+    internal static float ScreenLastY()
     {
         return Engine.Get().MouseState.PreviousY;
     }
 
-   
-    public static Vector2 MouseDelta()
+
+    internal static Vector2 MouseDelta()
     {
         var delta = new Vector2(Engine.Get().MouseState.Delta.X,
             Engine.Get().MouseState.Delta.X);
-        
+
         return delta;
     }
-    
-    
-    public static bool MouseScroll()
+
+
+    internal static bool MouseScroll()
     {
         return Engine.Get().MouseState.ScrollDelta != OpenTK.Mathematics.Vector2.Zero;
     }
 
-    public static Vector2 MouseScrollDelta()
+    internal static Vector2 MouseScrollDelta()
     {
-        return new(Engine.Get().MouseState.ScrollDelta.X, Engine.Get().MouseState.ScrollDelta.Y);
+        return new Vector2(Engine.Get().MouseState.ScrollDelta.X, Engine.Get().MouseState.ScrollDelta.Y);
     }
-    
+
     #region World
 
-    public static Vector2 GetWorld(ViewportWindow? vp, Camera camera)
+    internal static Vector2 GetWorld(ViewportWindow? vp, Camera camera)
     {
-        if (Settings.s_IsEngine || vp == null)
-        {
-            return screenToWorld(MouseScreenPos(), camera);
-        }
+        if (Settings.s_IsEngine || vp == null) return screenToWorld(MouseScreenPos(), camera);
 
         return screenToWorld(MouseScreenPos(), camera, vp);
     }
-    
-    public static Vector2 worldToScreen(Vector2 worldCoords, Camera camera) {
-        
-        Vector4 ndcSpacePos = new Vector4(worldCoords.X, worldCoords.Y, 0, 1);
-        Matrix4x4 view = camera.GetViewMatrix();
-        Matrix4x4 projection = camera.GetProjectionMatrix();
 
-        Matrix4x4 viewprojection = Matrix4x4.Multiply(projection, (view));
-        Vector4 end = MathUtils.Multiply(viewprojection, ndcSpacePos) ;
+    internal static Vector2 worldToScreen(Vector2 worldCoords, Camera camera)
+    {
+        var ndcSpacePos = new Vector4(worldCoords.X, worldCoords.Y, 0, 1);
+        var view = camera.GetViewMatrix();
+        var projection = camera.GetProjectionMatrix();
 
-        Vector2 windowSpace = new Vector2(end.X, end.Y) * (1.0f / end.W);
+        var viewprojection = Matrix4x4.Multiply(projection, view);
+        var end = MathUtils.Multiply(viewprojection, ndcSpacePos);
 
-        windowSpace += (new Vector2(1.0f, 1.0f));
-        windowSpace /=(2f);
+        var windowSpace = new Vector2(end.X, end.Y) * (1.0f / end.W);
+
+        windowSpace += new Vector2(1.0f, 1.0f);
+        windowSpace /= 2f;
         windowSpace *= new Vector2(Engine.Get().Size.X, Engine.Get().Size.Y);
 
         return windowSpace;
     }
 
-    public static Vector2 screenToWorld(Vector2 screenCoords, Camera camera) {
-        
-        Vector2 normalizedScreenCords = new Vector2(
+    internal static Vector2 screenToWorld(Vector2 screenCoords, Camera camera)
+    {
+        var normalizedScreenCords = new Vector2(
             screenCoords.X / Engine.Get().Size.X,
             screenCoords.Y / Engine.Get().Size.Y
         );
 
         normalizedScreenCords *= new Vector2(2.0f);
         normalizedScreenCords -= new Vector2(1.0f, 1.0f);
-        
-        
-        Vector4 tmp = new Vector4(normalizedScreenCords.X, normalizedScreenCords.Y,
-            0.0f, 1.0f);
-        
-        Matrix4x4 inverseView = (camera.getInverseView());
-        Matrix4x4 inverseProjection = (camera.getInverseProjection());
-        
-        Matrix4 inverseViewTK = MathUtils.NumericsToTK(inverseView);
-        Matrix4 inverseProjectionTK = MathUtils.NumericsToTK(inverseProjection);
 
-        Matrix4 viewProjectionTK = Matrix4.Mult(inverseViewTK, inverseProjectionTK);
-        
+
+        var tmp = new Vector4(normalizedScreenCords.X, normalizedScreenCords.Y,
+            0.0f, 1.0f);
+
+        var inverseView = camera.getInverseView();
+        var inverseProjection = camera.getInverseProjection();
+
+        var inverseViewTK = MathUtils.NumericsToTK(inverseView);
+        var inverseProjectionTK = MathUtils.NumericsToTK(inverseProjection);
+
+        var viewProjectionTK = Matrix4.Mult(inverseViewTK, inverseProjectionTK);
+
         var end = MathUtils.Multiply(viewProjectionTK, new OpenTK.Mathematics.Vector4(tmp.X, tmp.Y, tmp.Z, tmp.W));
-        
+
         return new Vector2(end.X, end.Y);
     }
-    
-    public static Vector2 screenToWorld(Vector2 screenCoords, Camera camera, ViewportWindow vp) {
-        float currentX = screenCoords.X - vp.gameViewportPos.X;
-        currentX = (2.0f * (currentX / vp.gameViewportSize.X)) - 1.0f;
-        
-        float currentY = (screenCoords.Y - vp.gameViewportPos.Y);
-        currentY = (2.0f * (1.0f - (currentY / vp.gameViewportSize.Y))) - 1;
-        
-        Vector4 tmp = new Vector4(currentX, currentY, 0, 1);
-        Matrix4x4 inverseView = camera.getInverseView();
-        Matrix4x4 inverseProjection = camera.getInverseProjection();
-        Matrix4x4 viewProjection = Matrix4x4.Multiply(inverseView, inverseProjection);
+
+    internal static Vector2 screenToWorld(Vector2 screenCoords, Camera camera, ViewportWindow vp)
+    {
+        var currentX = screenCoords.X - vp.gameViewportPos.X;
+        currentX = 2.0f * (currentX / vp.gameViewportSize.X) - 1.0f;
+
+        var currentY = screenCoords.Y - vp.gameViewportPos.Y;
+        currentY = 2.0f * (1.0f - currentY / vp.gameViewportSize.Y) - 1;
+
+        var tmp = new Vector4(currentX, currentY, 0, 1);
+        var inverseView = camera.getInverseView();
+        var inverseProjection = camera.getInverseProjection();
+        var viewProjection = Matrix4x4.Multiply(inverseView, inverseProjection);
         var end = MathUtils.Multiply(viewProjection, tmp);
         return new Vector2(end.X, end.Y);
     }
 
     #endregion
-    
+
     #endregion
-    
+
     #region keyboard
 
-    public static bool KeyDown(Keys key)
+    internal static bool KeyDown(Keys key)
     {
         return Engine.Get().IsKeyDown(key);
     }
 
-    public static bool KeyPressed(Keys key)
+    internal static bool KeyPressed(Keys key)
     {
         return Engine.Get().IsKeyPressed(key);
     }
 
-    public static bool KeyReleased(Keys key)
+    internal static bool KeyReleased(Keys key)
     {
         return Engine.Get().IsKeyReleased(key);
     }
 
-    public static bool AnyKeyDown()
+    internal static bool AnyKeyDown()
     {
         return Engine.Get().IsAnyKeyDown;
     }
 
     #endregion
-
 }

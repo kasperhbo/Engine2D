@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
 using System.Runtime.InteropServices;
 using Engine2D.Components;
 using Engine2D.Components.Sprites;
@@ -10,44 +12,26 @@ using Engine2D.Rendering;
 using ImGuiNET;
 using Newtonsoft.Json;
 
+#endregion
+
 namespace Engine2D.GameObjects;
 
-public class KDBColor
+internal class KDBColor
 {
-    [JsonRequired]public float r;
-    [JsonRequired]public float g;
-    [JsonRequired]public float b;
-    [JsonRequired]public float a;
-                  
-    [JsonIgnore]public float RNormalized
-    {
-        get { return r / 255; }
-    }
-    
-    [JsonIgnore]public float GNormalized
-    {
-        get { return g / 255; }
-    }
-    
-    [JsonIgnore]public float BNormalized
-    {
-        get { return b / 255; }
-    }
-    
-    [JsonIgnore]public float ANormalized
-    {
-        get { return a / 255; }
-    }
-    
-    public KDBColor()
+    [JsonRequired] internal float a;
+    [JsonRequired] internal float b;
+    [JsonRequired] internal float g;
+    [JsonRequired] internal float r;
+
+    internal KDBColor()
     {
         r = 255;
         g = 255;
         b = 255;
         a = 255;
     }
-    
-    public KDBColor(KDBColor other)
+
+    internal KDBColor(KDBColor other)
     {
         r = other.r;
         g = other.g;
@@ -55,7 +39,7 @@ public class KDBColor
         a = other.a;
     }
 
-    public KDBColor(float r, float g, float b, float a)
+    internal KDBColor(float r, float g, float b, float a)
     {
         this.r = r;
         this.g = g;
@@ -63,16 +47,24 @@ public class KDBColor
         this.a = a;
     }
 
+    [JsonIgnore] internal float RNormalized => r / 255;
+    [JsonIgnore] internal float GNormalized => g / 255;
+    [JsonIgnore] internal float BNormalized => b / 255;
+    [JsonIgnore] internal float ANormalized => a / 255;
 
-    public bool Equals(KDBColor? obj)
+
+    internal bool Equals(KDBColor? obj)
     {
-        if(obj == null) { Log.Error("Obj to check against not set  'KDB COLOR' ");
+        if (obj == null)
+        {
+            Log.Error("Obj to check against not set  'KDB COLOR' ");
             return false;
         }
-        return (r == obj.r && g == obj.g && b == obj.b && a == obj.a);
+
+        return r == obj.r && g == obj.g && b == obj.b && a == obj.a;
     }
 
-    public static void Copy(KDBColor from, KDBColor to)
+    internal static void Copy(KDBColor from, KDBColor to)
     {
         from.r = to.r;
         from.g = to.g;
@@ -82,57 +74,56 @@ public class KDBColor
 }
 
 [JsonConverter(typeof(ComponentSerializer))]
-public class SpriteRenderer : Component
+internal class SpriteRenderer : Component
 {
-    [JsonProperty]private string _spriteSaveFile = "";
-    [JsonProperty]public int ZIndex;
-    
-    [JsonProperty]public KDBColor Color = new KDBColor();
-    [JsonIgnore]public Sprite? Sprite { get; private set; }
-    [JsonIgnore]public bool IsDirty { get; set; }
+    [JsonIgnore] private readonly Vector2[] _defaultTextureCoords =
+    {
+        new(1.0f, 1.0f),
+        new(1.0f, 0.0f),
+        new(0.0f, 0.0f),
+        new(0.0f, 1.0f)
+    };
+
+    [JsonIgnore] private readonly KDBColor _lastColor = new();
 
     // 0.5f,   0.5f, 0.0f,    1.0f, 1.0f,   // top right
     // 0.5f,  -0.5f, 0.0f,    1.0f, 0.0f,   // bottom right
     // -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom left
     // -0.5f,  0.5f, 0.0f,    0.0f, 1.0f    // top left 
-    [JsonIgnore] private Transform _lastTransform = new Transform();
-    [JsonIgnore] private KDBColor _lastColor = new KDBColor();
-    [JsonIgnore]private Vector2[] _defaultTextureCoords =
-    {
-        new(1.0f, 1.0f),
-        new(1.0f, 0.0f),
-        new(0.0f, 0.0f),
-        new(0.0f, 1.0f),
-    };
-    
-    public Vector2[] TextureCoords {
-        get
-        {
-            if (Sprite == null) return _defaultTextureCoords;
-            
-            return Sprite.TextureCoords;
-        }
-    }
+    [JsonIgnore] private readonly Transform _lastTransform = new();
+    [JsonProperty] private string _spriteSaveFile = "";
+    [JsonProperty] internal KDBColor Color = new();
+    [JsonProperty] internal int ZIndex;
+    private int index = 1;
 
     [JsonConstructor]
-    public SpriteRenderer()
+    internal SpriteRenderer()
     {
         IsDirty = true;
     }
 
-    public override void Init(Gameobject parent, Renderer? renderer)
+    [JsonIgnore] internal Sprite? Sprite { get; private set; }
+    [JsonIgnore] internal bool IsDirty { get; set; }
+
+    internal Vector2[] TextureCoords
+    {
+        get
+        {
+            if (Sprite == null) return _defaultTextureCoords;
+
+            return Sprite.TextureCoords;
+        }
+    }
+
+    internal override void Init(Gameobject parent, Renderer? renderer)
     {
         ResourceManager.SpriteRenderers.Add(this);
         base.Init(parent, renderer);
-        
+
         if (_spriteSaveFile == "")
-        {
             Engine.Get().CurrentScene.Renderer.AddSpriteRenderer(this);
-        }
         else
-        {
             SetSprite(_spriteSaveFile);
-        }
     }
 
     public override void EditorUpdate(double dt)
@@ -145,22 +136,19 @@ public class SpriteRenderer : Component
             KDBColor.Copy(_lastColor, Color);
             Transform.Copy(_lastTransform, Parent.GetComponent<Transform>());
         }
-        
     }
 
-    private FileSystemWatcher _fileSystemWatcher;
-
-    public void RefreshSprite()
+    internal void RefreshSprite()
     {
         SetSprite(_spriteSaveFile);
     }
-    
-    public void SetSprite(string newSprite)
+
+    internal void SetSprite(string newSprite)
     {
         Engine.Get().CurrentScene?.Renderer?.RemoveSprite(this);
-        
+
         IsDirty = true;
-        string oldSprite = _spriteSaveFile;
+        var oldSprite = _spriteSaveFile;
         _spriteSaveFile = newSprite;
 
         Sprite = ResourceManager.GetItem<Sprite>(_spriteSaveFile);
@@ -173,13 +161,12 @@ public class SpriteRenderer : Component
         SetSprite(e.FullPath);
     }
 
-    private int index = 1;
-    public override void ImGuiFields()
+    internal override void ImGuiFields()
     {
         base.ImGuiFields();
         if (ImGui.Button("Sprite"))
         {
-            if(index == 1)
+            if (index == 1)
             {
                 index = 2;
                 SetSprite(ProjectSettings.FullProjectPath + "\\Assets\\folder-open-icon.sprite");
@@ -190,7 +177,7 @@ public class SpriteRenderer : Component
                 SetSprite(ProjectSettings.FullProjectPath + "\\Assets\\bigSpritesheet.sprite");
             }
         }
-        
+
         if (ImGui.BeginDragDropTarget())
         {
             var payload = ImGui.AcceptDragDropPayload("sprite_drop");
@@ -199,6 +186,7 @@ public class SpriteRenderer : Component
                 var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
                 SetSprite(filename);
             }
+
             ImGui.EndDragDropTarget();
         }
 
@@ -210,10 +198,5 @@ public class SpriteRenderer : Component
             ImGui.InputFloat2("2", ref Sprite.TextureCoords[2]);
             ImGui.InputFloat2("3", ref Sprite.TextureCoords[3]);
         }
-    }
-
-    public override string GetItemType()
-    {
-        return "SpriteRenderer";
     }
 }

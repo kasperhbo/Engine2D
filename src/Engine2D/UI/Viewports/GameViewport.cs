@@ -1,32 +1,35 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
 using ImGuiNET;
+
+#endregion
 
 namespace Engine2D.UI.Viewports;
 
 internal class GameViewport : ViewportWindow
 {
-    public static bool IsInViewport { get; } = false;
+    internal static bool IsInViewport { get; } = false;
 
-    public override void BeforeImageRender()
+    internal override void BeforeImageRender()
     {
-        
     }
 
-    public override void AfterImageRender()
+    internal override void AfterImageRender()
     {
-        
     }
 
-    public override Vector2 GetVPSize()
+    internal override Vector2 GetVPSize()
     {
         var ws = ImGui.GetContentRegionAvail();
 
         float targetAspectRatio = 16 / 9;
-        float aspectWidth = ws.X;
-        
-        float aspectHeight = aspectWidth / targetAspectRatio;
-        
-        if (aspectHeight > ws.Y) {
+        var aspectWidth = ws.X;
+
+        var aspectHeight = aspectWidth / targetAspectRatio;
+
+        if (aspectHeight > ws.Y)
+        {
             // We must switch to pillarbox mode
             aspectHeight = ws.Y;
             aspectWidth = aspectHeight * targetAspectRatio;

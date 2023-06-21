@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
@@ -8,28 +10,30 @@ using Newtonsoft.Json;
 using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
 
+#endregion
+
 namespace Engine2D.Rendering;
 
-public class Texture : AssetBrowserAsset
+internal class Texture : AssetBrowserAsset
 {
-    private bool _enableLog = false;
-
-    public string Type = "Texture";
-
-    [JsonIgnore] public int TexID;
-    [JsonIgnore] public byte[] Data;
-    [JsonIgnore] public bool Flipped;
+    private readonly bool _enableLog = false;
 
     [JsonProperty] private string? _saveName = "";
+    [JsonIgnore] internal byte[] Data;
 
-    public string EncodedData;
-    public int Height;
-    public string Filepath;
-    public int Width;
-    public TextureMinFilter MinFilter;
-    public TextureMagFilter MagFilter;
+    internal string EncodedData;
+    internal string Filepath;
+    [JsonIgnore] internal bool Flipped;
+    internal int Height;
+    internal TextureMagFilter MagFilter;
+    internal TextureMinFilter MinFilter;
 
-    public Texture(string filepath, string? saveName, bool flipped, TextureMinFilter minFilter,
+    [JsonIgnore] internal int TexID;
+
+    internal string Type = "Texture";
+    internal int Width;
+
+    internal Texture(string filepath, string? saveName, bool flipped, TextureMinFilter minFilter,
         TextureMagFilter magFilter)
     {
         _saveName = saveName;
@@ -46,7 +50,7 @@ public class Texture : AssetBrowserAsset
 
     //
     [JsonConstructor]
-    public Texture(
+    internal Texture(
         string? savePath,
         string encodedData,
         int height, int width,
@@ -141,10 +145,10 @@ public class Texture : AssetBrowserAsset
         GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
     }
 
-    public static int GenTexture(int width, int height, TextureMagFilter magFilter, TextureMinFilter minFilter,
+    internal static int GenTexture(int width, int height, TextureMagFilter magFilter, TextureMinFilter minFilter,
         TextureTarget textureTarget = TextureTarget.Texture2D)
     {
-        int id = GL.GenTexture();
+        var id = GL.GenTexture();
 
         var nullPtr = IntPtr.Zero;
 
@@ -161,12 +165,12 @@ public class Texture : AssetBrowserAsset
         return id;
     }
 
-    public void bind()
+    internal void bind()
     {
         GL.BindTexture(TextureTarget.Texture2D, TexID);
     }
 
-    public void unbind()
+    internal void unbind()
     {
         GL.BindTexture(TextureTarget.Texture2D, 0);
     }
@@ -192,7 +196,7 @@ public class Texture : AssetBrowserAsset
                && oTex.Filepath.Equals(Filepath);
     }
 
-    public override void OnGui()
+    internal override void OnGui()
     {
         ImGui.Begin("Texture inspect");
         ImGui.Text("Image Preview");
@@ -202,19 +206,16 @@ public class Texture : AssetBrowserAsset
 
         if (h > 32)
         {
-            int dif = Height - 32;
+            var dif = Height - 32;
             w = w - dif;
             h = h - dif;
         }
 
-        if (ImGui.Button("Save"))
-        {
-            Save();
-        }
+        if (ImGui.Button("Save")) Save();
 
         ImGui.Image(TexID, new Vector2(w, h), UISETTINGS.ImageUV0, UISETTINGS.ImageUV1);
 
-        int currentIndexMinFilter = (MinFilter == TextureMinFilter.Linear) ? 0 : 1;
+        var currentIndexMinFilter = MinFilter == TextureMinFilter.Linear ? 0 : 1;
 
         if (ImGui.Combo("Min Filter: ", ref currentIndexMinFilter,
                 "TextureMinFilter.Linear\0" +
@@ -225,7 +226,7 @@ public class Texture : AssetBrowserAsset
             ImGui.EndCombo();
         }
 
-        int currentIndexMagFilter = (MagFilter == TextureMagFilter.Linear) ? 0 : 1;
+        var currentIndexMagFilter = MagFilter == TextureMagFilter.Linear ? 0 : 1;
 
         if (ImGui.Combo("Mag Filter: ", ref currentIndexMagFilter,
                 "TextureMagFilter.Linear\0" +
@@ -243,34 +244,26 @@ public class Texture : AssetBrowserAsset
     private void SelectNewMinFilter(int index)
     {
         if (index == 0)
-        {
             MinFilter = TextureMinFilter.Linear;
-        }
         else
-        {
             MinFilter = TextureMinFilter.Nearest;
-        }
     }
 
     private void SelectNewMagFilter(int index)
     {
         if (index == 0)
-        {
             MagFilter = TextureMagFilter.Linear;
-        }
         else
-        {
             MagFilter = TextureMagFilter.Nearest;
-        }
     }
 
-    public static void Use(TextureUnit unit, int textureID)
+    internal static void Use(TextureUnit unit, int textureID)
     {
         GL.ActiveTexture(unit);
         GL.BindTexture(TextureTarget.Texture2D, textureID);
     }
 
-    public void Save()
+    internal void Save()
     {
         if (_saveName == "")
         {

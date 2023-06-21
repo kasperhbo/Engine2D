@@ -1,12 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#region
+
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
+
+#endregion
 
 namespace Engine2D.Logging;
 
 public static class Log
 {
-    
     public static void Message([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0)
     {
         Message(string.Format(format, arg0));
@@ -26,7 +29,7 @@ public static class Log
     {
         Succes(string.Format(format, arg0));
     }
-    
+
     public static void Succes(string? message, [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = true,
         bool showLine = true, bool showFunction = true)
@@ -36,7 +39,7 @@ public static class Log
             sourceLineNumber));
         Console.ForegroundColor = ConsoleColor.White;
     }
-    
+
     public static void Warning([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0)
     {
         Warning(string.Format(format, arg0));
@@ -56,7 +59,7 @@ public static class Log
     {
         Error(string.Format(format, arg0));
     }
-    
+
     public static void Error(string? message, [CallerMemberName] string memberName = "",
         [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = true,
         bool showLine = true, bool showFunction = true)

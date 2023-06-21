@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿#region
+
 using Engine2D.Cameras;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
@@ -7,12 +8,14 @@ using Engine2D.Managers;
 using Engine2D.Utilities;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using TextureUnit = OpenTK.Graphics.OpenGL4.TextureUnit;
-using Vector4 = OpenTK.Mathematics.Vector4;
+
+#endregion
 
 namespace Engine2D.Rendering;
 
-public class RenderBatch : IComparable<RenderBatch>
+internal class RenderBatch : IComparable<RenderBatch>
 {
     private const int c_maxBatchSize = 20000;
 
@@ -36,8 +39,21 @@ public class RenderBatch : IComparable<RenderBatch>
     private readonly int[] _textureUnits = new int[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
     private readonly float[] _vertices = new float[c_maxBatchSize * c_vertexSize];
 
+    // 0.5f,   0.5f, 0.0f,    1.0f, 1.0f,   // top right
+    // 0.5f,  -0.5f, 0.0f,    1.0f, 0.0f,   // bottom right
+    // -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom left
+    // -0.5f,  0.5f, 0.0f,    0.0f, 1.0f    // top left 
+
+    private readonly Vector4[] quadVertexPositions =
+    {
+        new(0.5f, 0.5f, 0.0f, 1.0f),
+        new(0.5f, -0.5f, 0.0f, 1.0f),
+        new(-0.5f, -0.5f, 0.0f, 1.0f),
+        new(-0.5f, 0.5f, 0.0f, 1.0f)
+    };
+
     private int _vaoId, _vboId;
-    public int ZIndex;
+    internal int ZIndex;
 
     internal RenderBatch(int zIndex)
     {
@@ -55,7 +71,7 @@ public class RenderBatch : IComparable<RenderBatch>
         _vertices = new float[c_maxBatchSize * c_vertexSize * 4];
     }
 
-    public bool HasRoom => _spriteCount < c_maxBatchSize;
+    internal bool HasRoom => _spriteCount < c_maxBatchSize;
     private int _spriteCount { get; set; }
 
 
@@ -103,7 +119,7 @@ public class RenderBatch : IComparable<RenderBatch>
         GL.EnableVertexAttribArray(3);
     }
 
-    public void AddSprite(SpriteRenderer spr)
+    internal void AddSprite(SpriteRenderer spr)
     {
         var index = _spriteCount;
         _sprites[index] = spr;
@@ -121,7 +137,7 @@ public class RenderBatch : IComparable<RenderBatch>
         LoadVertexProperties(index);
     }
 
-    public void Render(Camera camera, int lightmapTexture)
+    internal void Render(Camera camera, int lightmapTexture)
     {
         var projectionMatrix = camera.GetProjectionMatrix();
         var viewMatrix = camera.GetViewMatrix();
@@ -176,25 +192,13 @@ public class RenderBatch : IComparable<RenderBatch>
         _shader.detach();
     }
 
-    // 0.5f,   0.5f, 0.0f,    1.0f, 1.0f,   // top right
-    // 0.5f,  -0.5f, 0.0f,    1.0f, 0.0f,   // bottom right
-    // -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom left
-    // -0.5f,  0.5f, 0.0f,    0.0f, 1.0f    // top left 
-    
-    private Vector4[] quadVertexPositions =
-    {
-        new( 0.5f,  0.5f, 0.0f, 1.0f),
-        new( 0.5f, -0.5f, 0.0f, 1.0f),
-        new(-0.5f, -0.5f, 0.0f, 1.0f ),
-        new(-0.5f,  0.5f, 0.0f, 1.0f ),
-    };
-
     private void LoadVertexProperties(int index)
     {
         var spriteRenderer = _sprites[index];
         var offset = index * 4 * c_vertexSize;
 
-        Vector4 color = new(spriteRenderer.Color.RNormalized, spriteRenderer.Color.GNormalized, spriteRenderer.Color.BNormalized, spriteRenderer.Color.ANormalized);
+        Vector4 color = new(spriteRenderer.Color.RNormalized, spriteRenderer.Color.GNormalized,
+            spriteRenderer.Color.BNormalized, spriteRenderer.Color.ANormalized);
 
         var texID = -1;
         var texCoords = spriteRenderer.TextureCoords;
@@ -207,19 +211,19 @@ public class RenderBatch : IComparable<RenderBatch>
                     break;
                 }
 
-        Matrix4x4 translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
-        
+        var translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
+
         if (spriteRenderer.Sprite != null)
         {
-            var width =  spriteRenderer.Sprite.Texture.Width ;
+            var width = spriteRenderer.Sprite.Texture.Width;
             var height = spriteRenderer.Sprite.Texture.Height;
 
             translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
         }
-        
+
 
         {
-            Vector4 currentPos =
+            var currentPos =
                 MathUtils.Multiply(translation, quadVertexPositions[0]); //quadVertexPositions[0] * translation;
             _vertices[offset + 0] = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
@@ -240,7 +244,7 @@ public class RenderBatch : IComparable<RenderBatch>
         }
 
         {
-            Vector4 currentPos =MathUtils.Multiply(translation, quadVertexPositions[1]);
+            var currentPos = MathUtils.Multiply(translation, quadVertexPositions[1]);
             _vertices[offset + 0] = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
 
@@ -261,7 +265,7 @@ public class RenderBatch : IComparable<RenderBatch>
         }
 
         {
-            Vector4 currentPos = MathUtils.Multiply(translation, quadVertexPositions[2]);
+            var currentPos = MathUtils.Multiply(translation, quadVertexPositions[2]);
             _vertices[offset + 0] = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
 
@@ -280,10 +284,10 @@ public class RenderBatch : IComparable<RenderBatch>
 
             offset += c_vertexSize;
         }
-            
-        
+
+
         {
-            Vector4 currentPos = MathUtils.Multiply(translation, quadVertexPositions[3]);
+            var currentPos = MathUtils.Multiply(translation, quadVertexPositions[3]);
             _vertices[offset + 0] = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
 
@@ -300,7 +304,6 @@ public class RenderBatch : IComparable<RenderBatch>
             //Load tex id
             _vertices[offset + 8] = texID;
         }
-
     }
 
     private int[] GenerateIndices()
@@ -331,7 +334,7 @@ public class RenderBatch : IComparable<RenderBatch>
     }
 
 
-    public void RemoveSprite(SpriteRenderer spr)
+    internal void RemoveSprite(SpriteRenderer spr)
     {
         for (var i = 0; i < _spriteCount; i++)
             if (_sprites[i] == spr)

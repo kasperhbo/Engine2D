@@ -1,17 +1,13 @@
 ﻿namespace Engine2D.Utilities;
 
-public static class StringUtils
+internal static class StringUtils
 {
-    public static string CharToString(char[] chars)
+    internal static string CharToString(char[] chars)
     {
-        string text = "";
+        var text = "";
 
-        for (int i = 0; i < chars.Length; i++)
-        {
-            text += chars[i];
-        }
-        
+        for (var i = 0; i < chars.Length; i++) text += chars[i];
+
         return text;
     }
-
 }

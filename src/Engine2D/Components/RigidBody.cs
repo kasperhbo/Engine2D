@@ -1,25 +1,29 @@
-﻿using Box2DSharp.Dynamics;
+﻿#region
+
+using Box2DSharp.Dynamics;
 using Newtonsoft.Json;
+
+#endregion
 
 namespace Engine2D.Components;
 
 [JsonConverter(typeof(ComponentSerializer))]
-public class RigidBody : Component
+internal class RigidBody : Component
 {
-    public bool FixedRotation = false;
+    [JsonProperty]internal bool FixedRotation = false;
 
-    [JsonIgnore] public Body RuntimeBody = null;
+    [JsonIgnore] internal Body RuntimeBody = null;
 
-    public RigidBody()
+    internal RigidBody()
     {
     }
 
-    public RigidBody(BodyType bodyType)
+    internal RigidBody(BodyType bodyType)
     {
         BodyType = bodyType;
     }
 
-    public BodyType BodyType { get; set; }
+    internal BodyType BodyType { get; set; }
 
 
     public override void GameUpdate(double dt)
@@ -31,6 +35,6 @@ public class RigidBody : Component
 
     public override string GetItemType()
     {
-        return "Rigidbody";
+        return this.GetType().FullName;
     }
 }

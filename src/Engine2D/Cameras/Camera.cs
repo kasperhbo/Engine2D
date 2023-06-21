@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
 using Engine2D.Components;
 using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
@@ -8,48 +10,49 @@ using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
 
+#endregion
+
 namespace Engine2D.Cameras;
 
-public class Camera : Component
+internal class Camera : Component
 {
-    public CameraTypes CameraType = CameraTypes.ORTHO;
-    
-    public float Size = 1f;
-    public float Near = 0.1f;
-    public float Far = 1000f;
-   
+    internal CameraTypes CameraType = CameraTypes.ORTHO;
+    internal float Far = 1000f;
+    internal float Near = 0.1f;
+
     // private Vector2 _projectionSize = new(1920,1080);
-    public Vector2 ProjectionSize = new Vector2(1920,1080);
-    
-    public KDBColor ClearColor { get; set; } = new();
-    
-    public Camera()
+    internal Vector2 ProjectionSize = new(1920, 1080);
+
+    internal float Size = 1f;
+
+    internal Camera()
     {
-        
     }
 
     [JsonConstructor]
-    public Camera(CameraTypes cameraType, float size, KDBColor clearColor)
+    internal Camera(CameraTypes cameraType, float size, KDBColor clearColor)
     {
         CameraType = cameraType;
         Size = size;
         ClearColor = clearColor;
     }
-    
-    public Matrix4x4 GetViewMatrix()
+
+    internal KDBColor ClearColor { get; set; } = new();
+
+    internal Matrix4x4 GetViewMatrix()
     {
-        Transform transform = Parent.GetComponent<Transform>();
-        
-        if(transform == null)
+        var transform = Parent.GetComponent<Transform>();
+
+        if (transform == null)
         {
             Log.Error(Parent.Name + " Has no transform component!");
             return Matrix4x4.Identity;
         }
-        
-        Vector2 pos = transform.Position;
 
-        Vector3 frontTemp = MathUtilsNumerics.GetFrontAxis(transform.Rotation);
-        Vector3 upTemp = MathUtilsNumerics.GetUpAxis(transform.Rotation);
+        var pos = transform.Position;
+
+        var frontTemp = MathUtilsNumerics.GetFrontAxis(transform.Rotation);
+        var upTemp = MathUtilsNumerics.GetUpAxis(transform.Rotation);
 
         return Matrix4x4.CreateLookAt(new Vector3(
                 pos.X, pos.Y, 20.0f),
@@ -58,32 +61,27 @@ public class Camera : Component
             upTemp
         );
     }
-    
-    public Matrix4x4 GetProjectionMatrix()
+
+    internal Matrix4x4 GetProjectionMatrix()
     {
-        Matrix4x4 projectionMatrix = Matrix4x4.Identity;
-        
-        int zoom = 1;
-        if(CameraType == CameraTypes.ORTHO)
-        {
-             projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(
-                       -(ProjectionSize.X * Size / 2), ProjectionSize.X * Size/2,
-                    -(ProjectionSize.Y * Size / 2),  ProjectionSize.Y * Size/2, 0.0f, 100.0f
+        var projectionMatrix = Matrix4x4.Identity;
+
+        var zoom = 1;
+        if (CameraType == CameraTypes.ORTHO)
+            projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(
+                -(ProjectionSize.X * Size / 2), ProjectionSize.X * Size / 2,
+                -(ProjectionSize.Y * Size / 2), ProjectionSize.Y * Size / 2, 0.0f, 100.0f
             );
-        }
-        
-        if (CameraType == CameraTypes.PERSPECTIVE)
-        {
-            throw new NotImplementedException();
-        }
-        
+
+        if (CameraType == CameraTypes.PERSPECTIVE) throw new NotImplementedException();
+
 
         return projectionMatrix;
     }
 
     public override string GetItemType()
     {
-        return "Camera";
+        return this.GetType().FullName;
     }
 
     public override void EditorUpdate(double dt)
@@ -92,41 +90,40 @@ public class Camera : Component
     }
 
 
-
-    public override float GetFieldSize()
+    internal override float GetFieldSize()
     {
         return 100;
     }
 
-    public override void ImGuiFields()
+    internal override void ImGuiFields()
     {
-        if (OpenTkuiHelper.DrawProperty("Size: ", ref Size, label: false))
+        if (OpenTkuiHelper.DrawProperty("Size: ", ref Size, false))
         {
         }
-        
+
         ImGui.Separator();
         ImGui.Text("Clipping Planes");
 
-        if (OpenTkuiHelper.DrawProperty("Near: ", ref Near, label: false) ||
-            OpenTkuiHelper.DrawProperty("Far: ", ref Far, label: false))
+        if (OpenTkuiHelper.DrawProperty("Near: ", ref Near, false) ||
+            OpenTkuiHelper.DrawProperty("Far: ", ref Far, false))
         {
-        }   
+        }
     }
 
-    public Matrix4x4 getInverseView()
+    internal Matrix4x4 getInverseView()
     {
         Matrix4x4.Invert(GetViewMatrix(), out var matrix4X4);
         return matrix4X4;
     }
-    
-    public Matrix4x4 getInverseProjection()
+
+    internal Matrix4x4 getInverseProjection()
     {
         Matrix4x4.Invert(GetProjectionMatrix(), out var matrix4X4);
         return matrix4X4;
     }
 }
 
-public enum CameraTypes
+internal enum CameraTypes
 {
     ORTHO,
     PERSPECTIVE

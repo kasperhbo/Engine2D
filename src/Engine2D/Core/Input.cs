@@ -14,27 +14,27 @@
 //        mouse = mouseState;
 //    }
 
-//    public static bool KeyPress(Keys key)
+//    internal static bool KeyPress(Keys key)
 //    {
 //        return keyboardState.IsKeyPressed(key);
 //    }
 
-//    public static bool KeyReleased(Keys key)
+//    internal static bool KeyReleased(Keys key)
 //    {
 //        return keyboardState.IsKeyReleased(key);
 //    }
 
-//    public static bool KeyDown(Keys key)
+//    internal static bool KeyDown(Keys key)
 //    {
 //        return keyboardState.IsKeyDown(key);
 //    }
 
-//    public static Vector2 MouseLocation()
+//    internal static Vector2 MouseLocation()
 //    {
 //        return mouse.Position;
 //    }
 
-//    public static Vector2 GetWorld()
+//    internal static Vector2 GetWorld()
 //    {
 //        float currentX = mouse.Position.X - GameViewportPos.X;
 //        float currentY = mouse.Position.Y - GameViewportPos.Y;;
@@ -105,7 +105,7 @@
 
 //    //}
 
-//    //public static bool IsKeyPressed(Keys key)
+//    //internal static bool IsKeyPressed(Keys key)
 //    //    {
 //    //        return (
 //    //                _keysDown.Contains(key) 
@@ -114,7 +114,7 @@
 //    //            );
 //    //    }
 
-//    //public static bool KeyDown(Keys key)
+//    //internal static bool KeyDown(Keys key)
 //    //    {
 //    //        return (_keysDown.Contains(key));
 //    //    }

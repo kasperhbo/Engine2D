@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Engine2D\Engine2D.csproj" />
+        <ProjectReference Include="..\Engine2D\Engine2D.csproj"/>
     </ItemGroup>
 
 </Project>

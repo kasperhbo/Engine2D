@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿#region
+
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Soap;
 using Engine2D.Core;
 using Engine2D.GameObjects;
@@ -7,25 +9,29 @@ using Engine2D.Scenes;
 using Engine2D.UI;
 using Newtonsoft.Json;
 
+#endregion
+
 namespace Engine2D.SavingLoading;
 
 internal static class SaveLoad
 {
-    public static bool SaveStatic(Type static_class, string filename)
+    internal static bool SaveStatic(Type static_class, string filename)
     {
         try
         {
-            FieldInfo[] fields = static_class.GetFields(BindingFlags.Static | BindingFlags.Public);
-            object[,] a = new object[fields.Length,2];
-            int i = 0;
-            foreach (FieldInfo field in fields)
+            var fields = static_class.GetFields(BindingFlags.Static | BindingFlags.Public);
+            var a = new object[fields.Length, 2];
+            var i = 0;
+            foreach (var field in fields)
             {
                 a[i, 0] = field.Name;
                 a[i, 1] = field.GetValue(null);
                 i++;
-            };
+            }
+
+            ;
             Stream f = File.Open(filename, FileMode.Create);
-            SoapFormatter formatter = new SoapFormatter();                
+            var formatter = new SoapFormatter();
             formatter.Serialize(f, a);
             f.Close();
             return true;
@@ -36,26 +42,25 @@ internal static class SaveLoad
         }
     }
 
-    public static bool LoadStatic(Type static_class, string filename)
+    internal static bool LoadStatic(Type static_class, string filename)
     {
         try
         {
-            FieldInfo[] fields = static_class.GetFields(BindingFlags.Static | BindingFlags.Public);                
+            var fields = static_class.GetFields(BindingFlags.Static | BindingFlags.Public);
             object[,] a;
             Stream f = File.Open(filename, FileMode.Open);
-            SoapFormatter formatter = new SoapFormatter();
+            var formatter = new SoapFormatter();
             a = formatter.Deserialize(f) as object[,];
             f.Close();
             if (a.GetLength(0) != fields.Length) return false;
-            int i = 0;
-            foreach (FieldInfo field in fields)
+            var i = 0;
+            foreach (var field in fields)
             {
-                if (field.Name == (a[i, 0] as string))
-                {
-                    field.SetValue(null, a[i,1]);
-                }
+                if (field.Name == a[i, 0] as string) field.SetValue(null, a[i, 1]);
                 i++;
-            };                
+            }
+
+            ;
             return true;
         }
         catch
@@ -63,42 +68,74 @@ internal static class SaveLoad
             return false;
         }
     }
-    
-    
-    
+
+
     internal static void LoadWindowSettings()
     {
         var saveLocation = Utils.GetBaseEngineDir() + "\\Settings\\";
         var saveFile = saveLocation + "WindowSettings.dat";
         Utils.LoadWithSoapStaticClass(typeof(UiRenderer), saveFile);
     }
-    
+
     internal static void SaveWindowSettings()
     {
         var saveLocation = Utils.GetBaseEngineDir() + "\\Settings\\";
         var saveFile = saveLocation + "WindowSettings.dat";
         var ok = Utils.SaveWithSoapStaticClass(typeof(UiRenderer), saveFile);
     }
-    
-    
+
+    internal static string? GetNextFreeName(string? name, DirectoryInfo folder)
+    {
+        var fullName = folder.FullName + "\\" + name;
+
+        if (File.Exists(fullName))
+        {
+            var fInfo = GetFileInfo(folder.GetFiles(), name);
+            var extensionIndex = name.IndexOf(fInfo.Extension);
+            name = name.Remove(extensionIndex);
+            name += "1";
+            name += fInfo.Extension;
+            return GetNextFreeName(name, folder);
+        }
+
+        return name;
+    }
+
+    private static FileInfo GetFileInfo(FileInfo[] files, string? name)
+    {
+        foreach (var file in files)
+            if (name == file.Name)
+                return file;
+
+        return null;
+    }
+
+
+    internal static void LoadEngineSettings()
+    {
+    }
+
+    internal static void SaveEngineSettings()
+    {
+    }
+
+
     #region scenes
 
     internal static void SaveScene(Scene scene)
     {
         Log.Message("Saving: " + scene.ScenePath);
-        
+
         //TODO: Remove this and make just an seperate array/list in the scene
-        List<Gameobject> tempList = new List<Gameobject>();
-        
+        var tempList = new List<Gameobject>();
+
         foreach (var go in scene.GameObjects)
-        {
-            if(go.Serialize)tempList.Add(go);
-        }
-        
+            if (go.Serialize)
+                tempList.Add(go);
+
         var gameObjectArray = tempList.ToArray();
 
-        
-        
+
         var sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
         //So we can see where the go array stops when we deserialize the file
         sceneData += "\n////GAMEOBJECTS////\n";
@@ -122,7 +159,7 @@ internal static class SaveLoad
 
     internal static List<Gameobject> LoadScene(string sceneToLoad)
     {
-        List<Gameobject?> objs = new List<Gameobject?>();
+        var objs = new List<Gameobject?>();
         if (File.Exists(sceneToLoad))
         {
             var lines = File.ReadAllLines(sceneToLoad);
@@ -149,7 +186,6 @@ internal static class SaveLoad
 
             //Load gameobjects
             objs = JsonConvert.DeserializeObject<List<Gameobject>>(gos)!;
-
         }
 
         Log.Succes("qloaded: " + sceneToLoad);
@@ -157,43 +193,4 @@ internal static class SaveLoad
     }
 
     #endregion
-
-    public static string? GetNextFreeName(string? name, DirectoryInfo folder)
-    {
-        string fullName = folder.FullName + "\\" + name;
-        
-        if(File.Exists(fullName))
-        {
-            var fInfo = GetFileInfo(folder.GetFiles(), name);
-            int extensionIndex = name.IndexOf(fInfo.Extension);
-            name = name.Remove(extensionIndex);
-            name += "1";
-            name += fInfo.Extension;
-            return GetNextFreeName(name, folder);
-        }
-
-        return name;
-    }
-
-    private static FileInfo GetFileInfo(FileInfo[] files, string? name)
-    {
-        foreach (var file in files)
-        {
-            if (name == file.Name)
-            {
-                return file;
-            }
-        }
-
-        return null;
-    }
-
-
-    public static void LoadEngineSettings()
-    {
-    }
-
-    public static void SaveEngineSettings()
-    {
-    }
 }

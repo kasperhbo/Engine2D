@@ -1,18 +1,18 @@
 ﻿namespace Engine2D.Managers;
 
-public static class UIDManager
+internal static class UIDManager
 {
     private static int s_uidcounter;
-    public static List<int> TakenUIDS = new();
+    internal static List<int> TakenUIDS = new();
 
-    public static void AddUID(int uid)
+    internal static void AddUID(int uid)
     {
         TakenUIDS.Add(uid);
     }
-    
-    public static int GetUID()
+
+    internal static int GetUID()
     {
-        int uid = s_uidcounter;
+        var uid = s_uidcounter;
         s_uidcounter++;
 
         //Recursive call

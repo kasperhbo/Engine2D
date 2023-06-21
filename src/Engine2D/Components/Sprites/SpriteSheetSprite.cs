@@ -1,10 +1,15 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
+using Newtonsoft.Json;
+
+#endregion
 
 namespace Engine2D.Components.Sprites;
 
-public class SpriteSheetSprite
+internal class SpriteSheetSprite
 {
-    public Vector2[] TextureCoords =
+    [JsonProperty]internal Vector2[] TextureCoords =
     {
         new(0.0f, 0.0f),
         new(1.0f, 0.0f),
@@ -12,11 +17,7 @@ public class SpriteSheetSprite
         new(0.0f, 1.0f)
     };
 
-    public string FullSavePath { get; set; }
-    public int Width { get; set; }
-    public int Height { get; set;}
-
-    public string? TexturePath = "";
-
-
+    [JsonProperty]internal string FullSavePath { get; set; }
+    [JsonProperty]internal int Width { get; set; }
+    [JsonProperty]internal int Height { get; set; }
 }

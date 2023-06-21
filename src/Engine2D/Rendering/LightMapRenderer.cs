@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
 using Engine2D.Cameras;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
@@ -8,9 +10,11 @@ using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL4;
 using Vector3 = OpenTK.Mathematics.Vector3;
 
+#endregion
+
 namespace Engine2D.Rendering;
 
-public class LightMapRenderer
+internal class LightMapRenderer
 {
     private readonly uint[] _indices =
     {
@@ -28,21 +32,22 @@ public class LightMapRenderer
     };
 
     private int _elementBufferObject;
-    
-    private TestFrameBuffer _lightMap;
-    private Shader? _shader;
-    
-    private int _vertexArrayObject;
-    private int _vertexBufferObject;
 
     private bool _firstRun = true;
 
-    public void Init()
+    private TestFrameBuffer _lightMap;
+    private Shader? _shader;
+
+    private int _vertexArrayObject;
+    private int _vertexBufferObject;
+
+    internal void Init()
     {
         _firstRun = false;
-        
+
         var offset = 0;
-        _vertices[offset]     = Engine.Get().Size.X; ;
+        _vertices[offset] = Engine.Get().Size.X;
+        ;
         _vertices[offset + 1] = Engine.Get().Size.Y;
         _vertices[offset + 2] = Engine.Get().Size.X;
         _vertices[offset + 3] = -Engine.Get().Size.Y;
@@ -81,10 +86,10 @@ public class LightMapRenderer
         _shader.use();
     }
 
-    public int Render(Renderer renderer, Camera camera)
+    internal int Render(Renderer renderer, Camera camera)
     {
-        if(_firstRun)Init();
-        
+        if (_firstRun) Init();
+
         _lightMap.Bind();
 
         GL.ClearColor(1, 1, 1, 1);
@@ -103,7 +108,7 @@ public class LightMapRenderer
         return _lightMap.TextureID;
     }
 
-    public void Resize()
+    internal void Resize()
     {
         _lightMap = new TestFrameBuffer(Engine.Get().Size.X, Engine.Get().Size.Y);
     }

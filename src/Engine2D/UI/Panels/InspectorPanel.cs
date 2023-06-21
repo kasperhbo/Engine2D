@@ -1,4 +1,8 @@
-﻿using Engine2D.Core;
+﻿#region
+
+using Engine2D.Core;
+
+#endregion
 
 namespace Engine2D.UI;
 
@@ -6,11 +10,11 @@ internal class InspectorPanel : UIElement
 {
     //internal Gameobject CurrentSelectedGameObject;
 
-    public InspectorPanel(string title) : base(title)
+    internal InspectorPanel(string title) : base(title)
     {
     }
 
-    public override void Render()
+    internal override void Render()
     {
         Engine.Get().CurrentSelectedAsset?.OnGui();
     }

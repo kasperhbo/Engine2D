@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿#region
+
+using System.Reflection;
 using Engine2D.Flags;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
@@ -8,32 +10,34 @@ using OpenTK.Mathematics;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
 
+#endregion
+
 namespace Engine2D.Components;
 
 [JsonConverter(typeof(ComponentSerializer))]
 public class Component
 {
     [JsonIgnore] private bool _initialized;
-    [JsonIgnore] public Gameobject Parent;
-
+    [JsonIgnore] internal Gameobject Parent;
     protected float sizeYGUI;
-    public string Type => GetItemType();
+    
+    [JsonProperty]internal string Type => GetItemType();
 
 
     public virtual string GetItemType()
     {
-        return "Component";
+        return this.GetType().FullName;
     }
 
 
-    public virtual void Init(Gameobject parent, Renderer? renderer)
+    internal virtual void Init(Gameobject parent, Renderer? renderer)
     {
         if (_initialized) return;
         _initialized = true;
         Parent = parent;
     }
-    
-    public virtual void Init(Gameobject parent)
+
+    internal virtual void Init(Gameobject parent)
     {
         if (_initialized) return;
         _initialized = true;
@@ -57,9 +61,9 @@ public class Component
     {
     }
 
-    public virtual void ImGuiFields()
+    internal virtual void ImGuiFields()
     {
-        int count = 0;
+        var count = 0;
         var fields = GetType().GetFields(
             BindingFlags.DeclaredOnly
             | BindingFlags.Public
@@ -90,7 +94,7 @@ public class Component
                     OpenTkuiHelper.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
-                
+
                 if (type == typeof(KDBColor))
                 {
                     var val = (KDBColor)value;
@@ -143,7 +147,7 @@ public class Component
         }
     }
 
-    public virtual float GetFieldSize()
+    internal virtual float GetFieldSize()
     {
         return 80;
     }

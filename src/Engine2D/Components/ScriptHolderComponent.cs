@@ -1,22 +1,26 @@
-﻿using Engine2D.GameObjects;
+﻿#region
+
+using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using ImGuiNET;
 using Newtonsoft.Json;
 
+#endregion
+
 namespace Engine2D.Components;
 
 [JsonConverter(typeof(ComponentSerializer))]
-public class ScriptHolderComponent : Component
+internal class ScriptHolderComponent : Component
 {
-    //public string refFile = "";
-    public Component component = null;
+    //internal string refFile = "";
+    [JsonProperty]internal Component component = null;
 
-    public override void Init(Gameobject parent, Renderer? renderer)
+    internal override void Init(Gameobject parent, Renderer? renderer)
     {
         base.Init(parent, renderer);
     }
 
-    public override void ImGuiFields()
+    internal override void ImGuiFields()
     {
         base.ImGuiFields();
         float f = 0;
@@ -31,6 +35,6 @@ public class ScriptHolderComponent : Component
 
     public override string GetItemType()
     {
-        return "ScriptHolderComponent";
+        return this.GetType().FullName;
     }
 }

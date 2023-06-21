@@ -1,7 +1,7 @@
 ﻿namespace Engine2D.Core;
 
-public abstract class AssetBrowserAsset
+internal abstract class AssetBrowserAsset
 {
-    public string? AssetName;
-    public abstract void OnGui();
+    internal string? AssetName;
+    internal abstract void OnGui();
 }

@@ -1,4 +1,8 @@
-﻿using ImGuiNET;
+﻿#region
+
+using ImGuiNET;
+
+#endregion
 
 namespace Engine2D.UI;
 
@@ -13,9 +17,8 @@ internal class EngineSettingsPanel : UIElement
     }
 
 
-    public override void Render()
+    internal override void Render()
     {
-
         ImGui.Columns(2);
 
 

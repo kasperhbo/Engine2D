@@ -1,38 +1,42 @@
-﻿using Engine2D.Rendering;
+﻿#region
+
+using Engine2D.Rendering;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using TextureMagFilter = OpenTK.Graphics.OpenGL4.TextureMagFilter;
 using TextureMinFilter = OpenTK.Graphics.OpenGL4.TextureMinFilter;
 
+#endregion
+
 namespace Engine2D.Testing;
 
-public class TestFrameBuffer
+internal class TestFrameBuffer
 {
     private int fboId;
-    public Vector2i Size;
     private int rboId;
+    internal Vector2i Size;
 
-    public TestFrameBuffer(Vector2i size)
+    internal TestFrameBuffer(Vector2i size)
     {
         Init(size.X, size.Y);
     }
 
-    public TestFrameBuffer(int width, int height)
+    internal TestFrameBuffer(int width, int height)
     {
         Init(width, height);
     }
 
-    public int TextureID { get; private set; } = -1;
+    internal int TextureID { get; private set; } = -1;
 
     private void Init(int width, int height)
     {
-        Size = new(width, height);
+        Size = new Vector2i(width, height);
         // Generate framebuffer
         fboId = GL.GenFramebuffer();
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
 
         TextureID = Texture.GenTexture(width, height, TextureMagFilter.Linear, TextureMinFilter.Linear);
-        
+
         GL.FramebufferTexture2D(
             FramebufferTarget.Framebuffer,
             FramebufferAttachment.ColorAttachment0,
@@ -52,45 +56,45 @@ public class TestFrameBuffer
         );
         GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer,
             FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, rboId);
-    
+
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
 
-    public void Resize(int width, int height)
+    internal void Resize(int width, int height)
     {
         Size.X = width;
         Size.Y = height;
         // resize renderbuffer
-        
+
         GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, rboId);
         GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent32,
             width, height);
         GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
-        
+
         GL.BindTexture(TextureTarget.Texture2D, TextureID);
-        GL.TexImage2D(TextureTarget.Texture2D, 0, 
+        GL.TexImage2D(TextureTarget.Texture2D, 0,
             PixelInternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
-        
+
         // GL.GenerateMipmap(GenerateMipmapTarget.Texture2D); // do i need this?
     }
 
-    public void Bind()
+    internal void Bind()
     {
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
     }
 
-    public void UnBind()
+    internal void UnBind()
     {
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }
 
-    public void BindToSlot(int unit)
+    internal void BindToSlot(int unit)
     {
         GL.ActiveTexture(TextureUnit.Texture0 + unit);
         GL.BindTexture(TextureTarget.Texture2D, TextureID);
     }
 
-    public TestFrameBuffer SetViewportSize(Vector2i viewportSize)
+    internal TestFrameBuffer SetViewportSize(Vector2i viewportSize)
     {
         if (viewportSize.X == Size.X) return null;
         return new TestFrameBuffer(viewportSize);

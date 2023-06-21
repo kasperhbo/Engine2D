@@ -1,23 +1,22 @@
-﻿using Engine2D.Cameras;
+﻿#region
+
+using Engine2D.Cameras;
 using Engine2D.Core;
+
+#endregion
 
 namespace Engine2D.GameObjects;
 
-public class CameraGO : Gameobject
+internal class CameraGO : Gameobject
 {
-    public CameraGO(string name) : base(name)
+    internal CameraGO(string name) : base(name)
     {
         var currentScene = Engine.Get().CurrentScene;
-        Camera camera = new Camera();
+        var camera = new Camera();
         camera.Parent = this;
         components.Add(camera);
-        
-        if (currentScene != null)
-        {
-            Name = "Camera: " + currentScene.GameObjects.Count + 1;
 
-            // currentScene.AddGameObjectToScene(this);
-        }
-
+        if (currentScene != null) Name = "Camera: " + currentScene.GameObjects.Count + 1;
+        // currentScene.AddGameObjectToScene(this);
     }
 }

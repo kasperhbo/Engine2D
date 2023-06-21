@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
 using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Cameras;
@@ -12,62 +14,39 @@ using Engine2D.Utilities;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
+#endregion
+
 namespace Engine2D.Scenes;
 
-public class Scene
+internal class Scene
 {
-    public Renderer? Renderer { get; private set; }
+    internal Camera? CurrentMainGameCamera;
 
-    #region onplay
-    
-    private bool _isPlaying;
-    public bool IsPlaying
-    {
-        get => _isPlaying;
-        set
-        {
-            if (value)
-            {
-                SaveLoad.SaveScene(this);
-                StartPlay();
-            }
-            else
-            {
-                StopPlay();
-            }
+    internal Camera? EditorCamera;
 
-            _isPlaying = value;
-        }
-    }
-    private World? _physicsWorld;
-
-    #endregion
+    internal List<Gameobject> GameObjects = new();
+    internal Renderer? Renderer { get; private set; }
 
     internal string ScenePath { get; private set; } = "NoScene";
-    
-    public List<Gameobject> GameObjects = new List<Gameobject>();
-    public GlobalLight GlobalLight { get; set; } = null;
-    
-    internal Camera? EditorCamera;
-    internal Camera? CurrentMainGameCamera;
-    
-    public List<Action<FrameEventArgs>> GetDefaultUpdateEvents()
+    internal GlobalLight GlobalLight { get; set; } = null;
+
+    internal List<Action<FrameEventArgs>> GetDefaultUpdateEvents()
     {
         List<Action<FrameEventArgs>> res = new();
-        
-        if(Settings.s_IsEngine|| Settings.s_RenderDebugWindowSeperate)
+
+        if (Settings.s_IsEngine || Settings.s_RenderDebugWindowSeperate)
             res.Add(EditorUpdate);
-        
-        if(_isPlaying)
+
+        if (_isPlaying)
             res.Add(GameUpdate);
-        
+
         return res;
     }
-    
+
     private void StartPlay()
     {
         Engine.Get().UpdateFrame += GameUpdate;
-        
+
         SaveLoad.SaveScene(this);
 
         _physicsWorld = new World(new Vector2(0, -9.8f));
@@ -101,7 +80,7 @@ public class Scene
             }
     }
 
-    public void GameUpdate(FrameEventArgs args)
+    internal void GameUpdate(FrameEventArgs args)
     {
         var velocityItterations = 6;
         var positionItterations = 2;
@@ -117,85 +96,111 @@ public class Scene
     }
 
     /// <summary>
-    /// Runs before anything
+    ///     Runs before anything
     /// </summary>
     /// <param name="scenePath"></param>
     internal virtual void Init(string scenePath)
     {
         Renderer = new Renderer();
         Renderer.Init();
-        
+
         ScenePath = scenePath;
-        
+
         //Try to load scene if non existent this returns a new list 
         var gos = SaveLoad.LoadScene(ScenePath);
-        foreach (var go in gos)
-        {
-            AddGameObjectToScene(go);
-        }
+        foreach (var go in gos) AddGameObjectToScene(go);
 
         Start();
     }
 
     /// <summary>
-    /// Runs at scene start | NOT GAME PLAY!
+    ///     Runs at scene start | NOT GAME PLAY!
     /// </summary>
-    public virtual void Start()
+    internal virtual void Start()
     {
-        foreach (var go in GameObjects)
-        {
-            go.Start();
-        }
+        foreach (var go in GameObjects) go.Start();
 
-        EditorCameraGO editorCameraGO = new EditorCameraGO("EDITORCAMERA");
+        var editorCameraGO = new EditorCameraGO("EDITORCAMERA");
         EditorCamera = editorCameraGO.GetComponent<Camera>();
         editorCameraGO.Serialize = false;
-        editorCameraGO.AddComponent(AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass"));
+        // editorCameraGO.AddComponent(AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass"));
         AddGameObjectToScene(editorCameraGO);
-
-        Console.WriteLine(GameObjects[0].Name + " gameobject name");
-        GameObjects[0].AddComponent(AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass"));
     }
-    
-    public virtual void EditorUpdate(FrameEventArgs args)
+
+    internal virtual void EditorUpdate(FrameEventArgs args)
     {
         foreach (var obj in GameObjects) obj.EditorUpdate(args.Time);
-        
-        if(Engine.Get().IsKeyPressed(Keys.B))
+
+        if (Engine.Get().IsKeyPressed(Keys.B))
             Engine.Get().SwitchScene("new");
     }
-    
-    public virtual void Render(FrameEventArgs args)
+
+    internal virtual void Render(FrameEventArgs args)
     {
         Renderer.Render(EditorCamera, CurrentMainGameCamera);
     }
-    
-    public void AddGameObjectToScene(Gameobject go)
+
+    internal void AddGameObjectToScene(Gameobject go)
     {
         if (go.GetComponent<Camera>() != null && (go.Name != "EDITORCAMERA" || CurrentMainGameCamera == null))
         {
-            Log.Succes(go.Name  + " Is the new Main Camera");
+            Log.Succes(go.Name + " Is the new Main Camera");
             CurrentMainGameCamera = go.GetComponent<Camera>();
         }
 
         GameObjects.Add(go);
-        
+
         go.Init(Renderer);
         go.Start();
-        
+
         Engine.Get().CurrentSelectedAsset = go;
     }
 
-    public virtual void Close()
+    internal virtual void Close()
     {
         if (EngineSettings.SaveOnClose)
             SaveLoad.SaveScene(this);
     }
 
-    public void OnGui()
+    internal void OnGui()
     {
-        
     }
+
+    internal Gameobject FindObjectByUID(int uid)
+    {
+        foreach (var go in GameObjects)
+            if (go.UID == uid)
+                return go;
+
+        throw new Exception(string.Format("Gameobject with {0} not found", uid));
+    }
+
+    #region onplay
+
+    private bool _isPlaying;
+
+    internal bool IsPlaying
+    {
+        get => _isPlaying;
+        set
+        {
+            if (value)
+            {
+                SaveLoad.SaveScene(this);
+                StartPlay();
+            }
+            else
+            {
+                StopPlay();
+            }
+
+            _isPlaying = value;
+        }
+    }
+
+    private World? _physicsWorld;
+
+    #endregion
 
     #region inputs
 
@@ -212,21 +217,7 @@ public class Scene
 
     internal virtual void OnTextInput(TextInputEventArgs inputEventArgs)
     {
-        
     }
 
     #endregion
-
-    public Gameobject FindObjectByUID(int uid)
-    {
-        foreach (var go in GameObjects)
-        {
-            if (go.UID == uid)
-            {
-                return go;
-            }
-        }
-
-        throw new Exception(string.Format("Gameobject with {0} not found", uid));
-    }
 }

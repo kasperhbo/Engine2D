@@ -14,20 +14,6 @@ public class TestClass : Component
     public int speed = 10;
     public string testName = "hello name";
     
-    
-    public override void Init(Gameobject parent)
-    {
-        Log.Succes("Loaded test class");
-        base.Init(parent);
-    }
-
-    public override void Init(Gameobject parent, Renderer? renderer)
-    {
-        Log.Succes("Loaded test class");
-        base.Init(parent, renderer);
-    }
-
-
     public override void EditorUpdate(double dt)
     {
         // Console.ForegroundColor = (System.ConsoleColor.Blue);

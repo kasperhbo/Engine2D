@@ -1,4 +1,6 @@
-﻿using Engine2D.Cameras;
+﻿#region
+
+using Engine2D.Cameras;
 using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.GameObjects;
@@ -6,17 +8,15 @@ using Engine2D.Testing;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 
+#endregion
+
 namespace Engine2D.Rendering;
 
-public class Renderer
+internal class Renderer
 {
-    public int LightmapTexture;
-    
-    public TestFrameBuffer? GameBuffer{get; private set;}
-    public TestFrameBuffer? EditorGameBuffer{get; set;}
-
     private static readonly List<RenderBatch> _renderBatches = new();
     private static readonly Dictionary<int, RenderBatch> _spriteBatchDict = new();
+    private readonly int _maxLights = 250;
 
     #region Debugging
 
@@ -25,11 +25,14 @@ public class Renderer
     #endregion
 
     private LightMapRenderer _lightMapRenderer = new();
-    
-    private List<PointLightComponent> _pointLights = new();
-    private readonly int _maxLights = 250;
 
-    public GlobalLight GlobalLight { get; set; }
+    private List<PointLightComponent> _pointLights = new();
+    private int LightmapTexture;
+
+    internal TestFrameBuffer? GameBuffer { get; private set; }
+    internal TestFrameBuffer? EditorGameBuffer { get; set; }
+
+    internal GlobalLight GlobalLight { get; set; }
 
     internal void Init()
     {
@@ -40,13 +43,13 @@ public class Renderer
     {
         _renderBatches.Clear();
         _spriteBatchDict.Clear();
-        
+
         //Create light data
         _lightMapRenderer = new LightMapRenderer();
         _lightMapRenderer.Init();
         _pointLights = new List<PointLightComponent>();
-        
-        
+
+
         //Create frame buffers
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
@@ -54,39 +57,38 @@ public class Renderer
     internal void Render(Camera editorCamera, Camera gameCamera)
     {
         _drawCalls = 0;
-        
-        if(Settings.s_RenderDebugWindowSeperate)
+
+        if (Settings.s_RenderDebugWindowSeperate)
         {
             if (editorCamera == null) return;
             //Render Lights
             {
-                GL.ClearColor(0,0,0,0);
+                GL.ClearColor(0, 0, 0, 0);
                 LightmapTexture = _lightMapRenderer.Render(this, editorCamera);
             }
 
             //Render the scene
             {
                 if (editorCamera == null) return;
-                
-                if(Settings.s_IsEngine)
+
+                if (Settings.s_IsEngine)
                     EditorGameBuffer.Bind();
                 else
                     Engine.Get().Title = "EDITOR";
-                
-                
+
+
                 if (gameCamera != null)
-                {
-                    GL.ClearColor(gameCamera.ClearColor.RNormalized, gameCamera.ClearColor.GNormalized, gameCamera.ClearColor.BNormalized,
+                    GL.ClearColor(gameCamera.ClearColor.RNormalized, gameCamera.ClearColor.GNormalized,
+                        gameCamera.ClearColor.BNormalized,
                         gameCamera.ClearColor.ANormalized);
-                }
                 GL.Clear(ClearBufferMask.ColorBufferBit);
                 GL.Disable(EnableCap.Blend);
                 GL.Enable(EnableCap.Blend);
                 GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
-                
+
                 foreach (var batch in _renderBatches) batch.Render(editorCamera, LightmapTexture);
-                
-                if(Settings.s_IsEngine)
+
+                if (Settings.s_IsEngine)
                     EditorGameBuffer.UnBind();
             }
         }
@@ -96,7 +98,7 @@ public class Renderer
     {
     }
 
-    
+
     internal void OnClose()
     {
     }
@@ -117,8 +119,8 @@ public class Renderer
     {
         var added = false;
         RenderBatch addedToBatch = null;
-        
-        
+
+
         foreach (var batch in _renderBatches)
             if (batch.HasRoom && batch.ZIndex == spr.ZIndex)
             {
@@ -143,14 +145,14 @@ public class Renderer
 
     internal void RemoveSprite(SpriteRenderer spr)
     {
-        if(_spriteBatchDict.ContainsKey(spr.Parent.UID))
+        if (_spriteBatchDict.ContainsKey(spr.Parent.UID))
         {
             _spriteBatchDict[spr.Parent.UID].RemoveSprite(spr);
             _spriteBatchDict.Remove(spr.Parent.UID);
         }
     }
-    
-    public List<PointLightComponent> GetPointLightsToRender()
+
+    internal List<PointLightComponent> GetPointLightsToRender()
     {
         var pointLights = new List<PointLightComponent>();
         var count = 0;

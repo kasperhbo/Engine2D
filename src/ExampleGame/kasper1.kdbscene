@@ -1,52 +1,21 @@
 [
   {
-    "UID": 1,
-    "Name": "SpriteRenderer: 11",
-    "PARENT_UID": -1,
     "components": [
       {
         "_spriteSaveFile": "",
-        "ZIndex": 0,
         "Color": {
-          "r": 255.0,
-          "g": 255.0,
+          "a": 255.0,
           "b": 255.0,
-          "a": 255.0
+          "g": 255.0,
+          "r": 255.0
         },
-        "TextureCoords": [
-          {
-            "X": 1.0,
-            "Y": 1.0
-          },
-          {
-            "X": 1.0,
-            "Y": 0.0
-          },
-          {
-            "X": 0.0,
-            "Y": 0.0
-          },
-          {
-            "X": 0.0,
-            "Y": 1.0
-          }
-        ],
-        "Type": "SpriteRenderer"
-      },
-      {
-        "twospeed": 2,
-        "speed": 27,
-        "testName": "hello name",
-        "Type": "ExampleGame.Assets.TestClass"
+        "ZIndex": 0,
+        "Type": "Engine2D.GameObjects.SpriteRenderer"
       },
       {
         "Position": {
           "X": 0.0,
           "Y": 0.0
-        },
-        "Size": {
-          "X": 1.0,
-          "Y": 1.0
         },
         "Rotation": {
           "X": 0.0,
@@ -55,15 +24,15 @@
           "W": 0.0,
           "IsIdentity": false
         },
-        "Type": "Transform"
-      },
-      {
-        "twospeed": 2,
-        "speed": 10,
-        "testName": "hello name",
-        "Type": "ExampleGame.Assets.TestClass"
+        "Size": {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        "Type": "Engine2D.Components.TransformComponents.Transform"
       }
-    ]
+    ],
+    "Name": "SpriteRenderer: 11",
+    "PARENT_UID": -1
   }
 ]
 ////GAMEOBJECTS////

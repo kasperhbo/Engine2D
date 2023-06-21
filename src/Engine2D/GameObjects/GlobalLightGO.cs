@@ -1,23 +1,22 @@
-﻿using Engine2D.Components;
+﻿#region
+
+using Engine2D.Components;
 using Engine2D.Core;
+
+#endregion
 
 namespace Engine2D.GameObjects;
 
-public class GlobalLightGO : Gameobject
+internal class GlobalLightGO : Gameobject
 {
-    public GlobalLightGO(string name) : base(name)
+    internal GlobalLightGO(string name) : base(name)
     {
         var currentScene = Engine.Get().CurrentScene;
-        GlobalLight gl = new GlobalLight();
+        var gl = new GlobalLight();
         gl.Parent = this;
         components.Add(gl);
 
-        if (currentScene != null)
-        {
-            Name = "GlobalLight: " + currentScene.GameObjects.Count + 1;
-            
-            // currentScene.AddGameObjectToScene(this);
-        }
-
+        if (currentScene != null) Name = "GlobalLight: " + currentScene.GameObjects.Count + 1;
+        // currentScene.AddGameObjectToScene(this);
     }
 }

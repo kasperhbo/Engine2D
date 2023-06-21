@@ -1,14 +1,19 @@
-﻿using Engine2D.GameObjects;
+﻿#region
+
+using Engine2D.GameObjects;
+
+#endregion
 
 namespace Engine2D.Utilities;
 
-public static class ArrayUtils
+internal static class ArrayUtils
 {
-    public static List<SpriteRenderer> ShiftSpriteRenderers(List<SpriteRenderer> spriteRenderers, SpriteRenderer toRemove)
+    internal static List<SpriteRenderer> ShiftSpriteRenderers(List<SpriteRenderer> spriteRenderers,
+        SpriteRenderer toRemove)
     {
-        SpriteRenderer[] spriteRenderersAr = spriteRenderers.ToArray();
-        int count = spriteRenderers.Count();
-        
+        var spriteRenderersAr = spriteRenderers.ToArray();
+        var count = spriteRenderers.Count();
+
         for (var i = 0; i < count; i++)
             if (spriteRenderersAr[i] == toRemove)
             {

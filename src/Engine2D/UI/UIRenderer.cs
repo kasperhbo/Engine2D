@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
 using Dear_ImGui_Sample;
 using Engine2D.Core;
 using Engine2D.Logging;
@@ -8,22 +10,26 @@ using Engine2D.Utilities;
 using ImGuiNET;
 using OpenTK.Windowing.Common;
 
+#endregion
+
 namespace Engine2D.UI;
 
-public static class UiRenderer
+internal static class UiRenderer
 {
-    private static List<UIElement> _windows = new List<UIElement>();
-    private static Engine _engine = null!;    
+    private static List<UIElement> _windows = new();
+    private static Engine _engine = null!;
     private static EditorViewport? _editorViewport;
-    private static List<UIElement> _windowsToRemoveEndOfFrame = new List<UIElement>();
-    
-    public static int _hierarchyWindowCount     ;    
-    public static int _inspectorWindowCount     ;    
-    public static int _assetBrowserWindowCount  ; 
-    public static int _styleSettingsWindowCount ;
+    private static List<UIElement> _windowsToRemoveEndOfFrame = new();
+
+    internal static int _hierarchyWindowCount;
+    internal static int _inspectorWindowCount;
+    internal static int _assetBrowserWindowCount;
+    internal static int _styleSettingsWindowCount;
+
+    private static GameViewport? _gameViewport;
 
 
-    public static EditorViewport? CurrentEditorViewport
+    internal static EditorViewport? CurrentEditorViewport
     {
         get
         {
@@ -32,14 +38,12 @@ public static class UiRenderer
                 Log.Error("There is currently no editor vp, please open one first");
                 return null;
             }
-                
+
             return _editorViewport;
-        } 
+        }
     }
-        
-    private static GameViewport? _gameViewport;
- 
-    public static void Init(Engine engine, bool createDefaultWindows)
+
+    internal static void Init(Engine engine, bool createDefaultWindows)
     {
         _engine = engine;
 
@@ -48,45 +52,38 @@ public static class UiRenderer
         _engine.MouseWheel += OnMouseWheel;
         _engine.TextInput += OnTextInput;
         _engine.Resize += OnResize;
-        
+
         _windows = new List<UIElement>();
-        
+
         KDBImGuiController.Init(Engine.Get().Size.X, Engine.Get().Size.Y);
 
         if (createDefaultWindows) CreateDefaultWindows();
     }
 
-    
+
     private static void Update(FrameEventArgs args)
     {
-        
     }
-    
+
     private static void Render(FrameEventArgs args)
     {
         KDBImGuiController.Update(_engine, args.Time);
 
         ImGui.Begin("Debug Helper");
-        
-        if (ImGui.Button("Reload Assembly"))
-        {
-            AssemblyUtils.Reload();
-        }
-        
+
+        if (ImGui.Button("Reload Assembly")) AssemblyUtils.Reload();
+
         ImGui.End();
-        
+
         DrawMainMenuBar();
         DrawToolbar();
         SetupDockSpace();
-        
+
         var currentSelectedAssetBrowserAsset = Engine.Get().CurrentSelectedAssetBrowserAsset;
-        if (currentSelectedAssetBrowserAsset != null)
-        {
-            currentSelectedAssetBrowserAsset.OnGui();
-        }
+        if (currentSelectedAssetBrowserAsset != null) currentSelectedAssetBrowserAsset.OnGui();
 
         ImGui.ShowDemoWindow();
-        
+
         KDBImGuiController.Render();
     }
 
@@ -104,42 +101,37 @@ public static class UiRenderer
     {
         KDBImGuiController.WindowResized(args);
     }
-    
+
     private static void RenderUiWindows()
     {
         foreach (var window in _windows)
-        {
             if (window.IsVisible)
             {
                 window.BeginRender();
                 window.Render();
                 window.EndRender();
             }
-        }
-            
+
         _engine.CurrentScene?.OnGui();
-            
+
         _editorViewport?.Begin("Launcher", _engine.CurrentScene?.EditorCamera,
             _engine.CurrentScene?.Renderer?.EditorGameBuffer);
-            
+
         _gameViewport?.Begin("Game", _engine.CurrentScene?.CurrentMainGameCamera,
             _engine.CurrentScene?.Renderer?.GameBuffer);
 
-        foreach (var window in _windowsToRemoveEndOfFrame)
-        {
-            _windows.Remove(window);
-        }
+        foreach (var window in _windowsToRemoveEndOfFrame) _windows.Remove(window);
 
         _windowsToRemoveEndOfFrame = new List<UIElement>();
     }
 
-    public static void AddGuiWindow(UIElement window)
+    internal static void AddGuiWindow(UIElement window)
     {
         Engine.Get().FileDrop += window.FileDrop;
         _windows.Add(window);
     }
 
-    public static void RemoveGuiWindow(UIElement window)
+    internal static void RemoveGuiWindow(UIElement window)
     {
         if (window.GetType() == typeof(SceneHierachyPanel)) _hierarchyWindowCount--;
         if (window.GetType() == typeof(InspectorPanel)) _inspectorWindowCount--;
@@ -147,11 +139,13 @@ public static class UiRenderer
         {
             AssetBrowserPanel.AssetBrowserPanels.Remove((AssetBrowserPanel)window);
             _assetBrowserWindowCount--;
-        };
+        }
+
+        ;
         if (window.GetType() == typeof(StyleSettingsPanel)) _styleSettingsWindowCount--;
 
         Engine.Get().FileDrop -= window.FileDrop;
-        
+
         // _engine.FileDrop -= window.OnFileDrop;
         _windowsToRemoveEndOfFrame.Add(window);
     }
@@ -171,11 +165,11 @@ public static class UiRenderer
         ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0.0f, 0.0f));
 
-        bool open = false;
+        var open = false;
         ImGui.Begin("DockSpaceViewport", ref open, hostWindowFlags);
         ImGui.PopStyleVar(3);
 
-        uint id = ImGui.GetID("DockSpace");
+        var id = ImGui.GetID("DockSpace");
         ImGui.DockSpace(id, new Vector2(0, 0));
         ImGui.End();
 
@@ -186,9 +180,12 @@ public static class UiRenderer
     {
         ImGui.SetNextWindowSize(new Vector2(_engine.Size.X, 55));
         ImGui.SetNextWindowPos(new Vector2(0, 1));
-        ImGui.Begin("titlebar", ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoNav );
-        ImGui.BeginMenuBar(); 
-      
+        ImGui.Begin("titlebar",
+            ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoMove |
+            ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDecoration |
+            ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoNav);
+        ImGui.BeginMenuBar();
+
 
         if (ImGui.BeginMenu("File"))
         {
@@ -198,126 +195,96 @@ public static class UiRenderer
 
         if (ImGui.BeginMenu("View"))
         {
-            if (ImGui.MenuItem("Asset Browser"))
-            {
-                CreateAssetBrowserWindow();
-            }
-            
+            if (ImGui.MenuItem("Asset Browser")) CreateAssetBrowserWindow();
+
             if (ImGui.BeginMenu("Settings"))
             {
-                if (ImGui.MenuItem("Style Settings"))
-                {
-                    CreateStyleSettingsWindow();
-                }
+                if (ImGui.MenuItem("Style Settings")) CreateStyleSettingsWindow();
 
                 ImGui.EndMenu();
             }
 
             if (ImGui.BeginMenu("View"))
             {
-                if (ImGui.MenuItem("Hierarchy"))
-                {
-                    CreateHierachyWindow();
-                }
-            
-                if (ImGui.MenuItem("Inspector"))
-                {
-                    CreateInspectWindow();
-                }
+                if (ImGui.MenuItem("Hierarchy")) CreateHierachyWindow();
+
+                if (ImGui.MenuItem("Inspector")) CreateInspectWindow();
 
                 if (ImGui.BeginMenu("Layouts"))
                 {
                     if (ImGui.MenuItem("Default"))
-                    {
                         ImGui.LoadIniSettingsFromDisk(Utils.GetBaseEngineDir() + "\\Layouts\\Default.ini");
-                    }
                     if (ImGui.MenuItem("Layout01"))
-                    {
                         ImGui.LoadIniSettingsFromDisk(Utils.GetBaseEngineDir() + "\\Layouts\\Layout01.ini");
-                    }
                     ImGui.EndMenu();
                 }
-                
+
                 ImGui.EndMenu();
             }
 
             ImGui.EndMenu();
         }
-        
+
         if (ImGui.BeginMenu("Help"))
         {
-            if (ImGui.MenuItem("Website"))
-            {
-                Log.Error("Not Implemented");
-            }
-            if (ImGui.MenuItem("WIKI"))
-            {
-                Log.Error("Not Implemented");
-            }
+            if (ImGui.MenuItem("Website")) Log.Error("Not Implemented");
+            if (ImGui.MenuItem("WIKI")) Log.Error("Not Implemented");
             ImGui.EndMenu();
         }
+
         ImGui.EndMenuBar();
     }
 
     private static void CreateStyleSettingsWindow()
     {
         if (_styleSettingsWindowCount >= 1) return;
-        
+
         var styleSettings = new StyleSettingsPanel("Style Settings");
         _styleSettingsWindowCount++;
         AddGuiWindow(styleSettings);
     }
-    
+
     private static void CreateHierachyWindow()
     {
-        var hierarch = new SceneHierachyPanel("Hierarchy "  + _hierarchyWindowCount);
+        var hierarch = new SceneHierachyPanel("Hierarchy " + _hierarchyWindowCount);
         _hierarchyWindowCount++;
         AddGuiWindow(hierarch);
     }
-    
+
     private static void CreateInspectWindow()
     {
-        var Inspector = new InspectorPanel("Inspector "  + _inspectorWindowCount);
+        var Inspector = new InspectorPanel("Inspector " + _inspectorWindowCount);
         _inspectorWindowCount++;
         AddGuiWindow(Inspector);
     }
-    
+
     private static void CreateAssetBrowserWindow()
     {
-        var assetBrowserWindow = new AssetBrowserPanel("Asset Browser "  + _assetBrowserWindowCount);
+        var assetBrowserWindow = new AssetBrowserPanel("Asset Browser " + _assetBrowserWindowCount);
         _assetBrowserWindowCount++;
         AddGuiWindow(assetBrowserWindow);
     }
-    
+
     private static void CreateDefaultWindows()
     {
         _editorViewport = new EditorViewport();
         _gameViewport = new GameViewport();
 
-        var hierCo = _hierarchyWindowCount; 
-        var inspCo = _inspectorWindowCount; 
-        var assCo = _assetBrowserWindowCount; 
-        
-        _hierarchyWindowCount    = 0;
-        _inspectorWindowCount    = 0;
-        _assetBrowserWindowCount = 0;
-        
-        for (int i = 0; i < hierCo; i++)
-        {
-            CreateHierachyWindow();
-        }
+        var hierCo = _hierarchyWindowCount;
+        var inspCo = _inspectorWindowCount;
+        var assCo = _assetBrowserWindowCount;
 
-        for (int i = 0; i < inspCo; i++)
-        {
-            CreateInspectWindow();
-        }
-        
-        for (int i = 0; i < assCo; i++)
-        {
-            CreateAssetBrowserWindow();
-        }
+        _hierarchyWindowCount = 0;
+        _inspectorWindowCount = 0;
+        _assetBrowserWindowCount = 0;
+
+        for (var i = 0; i < hierCo; i++) CreateHierachyWindow();
+
+        for (var i = 0; i < inspCo; i++) CreateInspectWindow();
+
+        for (var i = 0; i < assCo; i++) CreateAssetBrowserWindow();
     }
-    
+
     private static void DrawToolbar()
     {
         ImGui.Button("Button");
@@ -326,7 +293,7 @@ public static class UiRenderer
         ImGui.End();
     }
 
-    public static void ChangeFont(string path, float size)
+    internal static void ChangeFont(string path, float size)
     {
         Console.WriteLine("Changing font");
         ImGui.GetIO().Fonts.AddFontFromFileTTF(path, size);

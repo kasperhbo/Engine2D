@@ -1,49 +1,50 @@
-﻿using System.Numerics;
+﻿#region
+
+using System.Numerics;
 using Engine2D.Components;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
-using Engine2D.Scenes;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using Newtonsoft.Json;
 
+#endregion
+
 namespace Engine2D.GameObjects;
 
-public class Gameobject : Asset
+internal class Gameobject : Asset
 {
-    [JsonIgnore] public bool Serialize = true;
+    [JsonProperty]internal List<Component?> components = new();
+    [JsonProperty]internal string Name = "";
+    [JsonProperty]internal int PARENT_UID = -1;
     
-    //UIDS
-    public int UID = -1;
-    public string Name = "";
-    
-    public int PARENT_UID = -1;
-
-    //
-    public List<Component?> components = new();
-    
-    [JsonIgnore] public List<Gameobject> Childs = new List<Gameobject>();
+    private readonly Type typeToRemove = null;
     [JsonIgnore] protected Gameobject _parent;
-    
-    public Gameobject(string name)
+    [JsonIgnore] internal List<Gameobject> Childs = new();
+    [JsonIgnore] internal bool Serialize = true;
+
+    //UIDS
+    internal int UID = -1;
+
+    internal Gameobject(string name)
     {
         Name = name;
         components = new List<Component?>();
         GetUID();
     }
-    
-    public Gameobject(string name, List<Component?> components)
+
+    internal Gameobject(string name, List<Component?> components)
     {
         Name = name;
         this.components = components;
         GetUID();
     }
-    
+
     [JsonConstructor]
-    public Gameobject(string name, List<Component?> components, int uid, int parentUid)
+    internal Gameobject(string name, List<Component?> components, int uid, int parentUid)
     {
         Name = name;
         this.components = components;
@@ -59,60 +60,69 @@ public class Gameobject : Asset
     }
 
 
-    public void Init(Renderer? renderer)
+    internal void Init(Renderer? renderer)
     {
-        if(GetComponent<Transform>() == null)
+        if (GetComponent<Transform>() == null)
         {
             Log.Warning(Name + " Has no Transform Component, Adding one");
-            
+
             var t = new Transform();
 
             t.Position = new Vector2(0, 0);
             AddComponent(t);
         }
-        
+
         foreach (var component in components) component.Init(this, renderer);
     }
 
-    public void Start()
+    internal void Start()
     {
         foreach (var component in components) component.Start();
     }
 
-    public virtual void EditorUpdate(double dt)
+    internal virtual void EditorUpdate(double dt)
     {
         foreach (var component in components) component.EditorUpdate(dt);
     }
 
-    public void GameUpdate(double dt)
+    internal void GameUpdate(double dt)
     {
         foreach (var component in components) component.GameUpdate(dt);
     }
 
-    public void Destroy()
+    internal void Destroy()
     {
         foreach (var component in components) component.Destroy();
     }
 
-    public void AddComponent(Component? component, Renderer? renderer)
+    internal void AddComponent(Component? component, Renderer? renderer)
     {
         component.Init(this, renderer);
         components.Add(component);
     }
-    
-    public Component? AddComponent(Component? component)
+
+    internal Component? AddComponent(Component? component)
     {
+        if (component == null) return null;
         component.Init(this);
         components.Add(component);
         return component;
     }
 
-    public T? GetComponent<T>() where T : Component
+    internal T? GetComponent<T>() where T : Component
     {
         foreach (var component in components)
+        {
+            if (component == null)
+            {
+                components.Remove(component);
+                break;
+            }
+
             if (typeof(T) == component.GetType())
                 return
                     (component as T)!;
+        }
 
         return null;
     }
@@ -122,48 +132,43 @@ public class Gameobject : Asset
         components.Remove(comp);
     }
 
-    public void SetParent(int parentUID)
+    internal void SetParent(int parentUID)
     {
         //TODO: DETACH THIS FROM PREV PARENT AND MAKE THIS SELF OWNED OBJ
         if (parentUID == -1) return;
 
-        Scene currentScene = Engine.Get().CurrentScene;
+        var currentScene = Engine.Get().CurrentScene;
 
         if (_parent != null)
             _parent.Childs.Remove(this);
 
         PARENT_UID = parentUID;
-        Gameobject parent = currentScene.FindObjectByUID(parentUID);
-        
+        var parent = currentScene.FindObjectByUID(parentUID);
+
         parent.AddGameObjectChild(this);
-        
-        Log.Succes(string.Format("Succesfully attached uid: {0} to uid: {1}",UID, PARENT_UID));
+
+        Log.Succes(string.Format("Succesfully attached uid: {0} to uid: {1}", UID, PARENT_UID));
     }
- 
+
     private void AddGameObjectChild(Gameobject gameObject)
     {
         gameObject._parent = this;
         Childs.Add(gameObject);
     }
 
-    private Type typeToRemove = null;
-    
-    public void RemoveComponent<T>() where T : Component
+    internal void RemoveComponent<T>() where T : Component
     {
         components.RemoveAll(IsRightComponent);
     }
 
     private bool IsRightComponent(Component obj)
     {
-        if (obj.GetType() == typeToRemove)
-        {
-            return true;
-        }
+        if (obj.GetType() == typeToRemove) return true;
 
         return false;
     }
-    
-    public override void OnGui()
+
+    internal override void OnGui()
     {
         ImGui.InputText("##name", ref Name, 256);
         ImGui.SameLine();
@@ -171,26 +176,20 @@ public class Gameobject : Asset
         ImGui.Separator();
 
         OpenTkuiHelper.DrawComponentWindow("Transform", "Transform",
-            () =>
-            {
-                GetComponent<Transform>().ImGuiFields();
-                
-            }, GetComponent<Transform>().GetFieldSize()
+            () => { GetComponent<Transform>().ImGuiFields(); }, GetComponent<Transform>().GetFieldSize()
         );
-        
+
         for (var i = 0; i < components.Count; i++)
         {
             if (components[i].GetType() == typeof(Transform)) return;
-            
+
             ImGui.PushID(i);
 
             OpenTkuiHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
-                () => { components[i].ImGuiFields(); }, components[i].GetFieldSize() 
+                () => { components[i].ImGuiFields(); }, components[i].GetFieldSize()
             );
 
             ImGui.PopID();
         }
-        
     }
-
 }
