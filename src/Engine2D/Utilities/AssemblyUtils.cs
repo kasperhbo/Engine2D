@@ -19,8 +19,6 @@ internal static class AssemblyUtils
     private static Assembly _loadedGameAssembly;
     private static List<Type> _loadedComponents = new();
 
-    private static Dictionary<Gameobject, List<string>> _toReAddAfterReloadingAssembly = new();
-
     /// <summary>
     ///     Loads an assembly from a path
     /// </summary>
@@ -160,6 +158,11 @@ internal static class AssemblyUtils
                 }
             }
         }
+    }
+
+    internal static List<Type> GetComponents()
+    {
+        return _loadedComponents;
     }
 }
 

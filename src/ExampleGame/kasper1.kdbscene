@@ -2,10 +2,15 @@
   {
     "components": [
       {
-        "twospeed": 2,
-        "speed": 1222,
-        "testName": "hello name",
-        "Type": "ExampleGame.Assets.TestClass"
+        "_spriteSaveFile": "",
+        "Color": {
+          "a": 255.0,
+          "b": 255.0,
+          "g": 255.0,
+          "r": 255.0
+        },
+        "ZIndex": 0,
+        "Type": "Engine2D.GameObjects.SpriteRenderer"
       },
       {
         "Position": {
@@ -24,6 +29,16 @@
           "Y": 1.0
         },
         "Type": "Engine2D.Components.TransformComponents.Transform"
+      },
+      {
+        "twospeed": 2,
+        "speed": 10,
+        "testName": "hello name",
+        "Type": "ExampleGame.Assets.TestClass"
+      },
+      {
+        "counter": 1,
+        "Type": "ExampleGame.Assets.RunnerComponent"
       }
     ],
     "Name": "SpriteRenderer: 11",
@@ -32,20 +47,13 @@
   {
     "components": [
       {
-        "_spriteSaveFile": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\terminal-icon.sprite",
-        "Color": {
-          "a": 255.0,
-          "b": 255.0,
-          "g": 255.0,
-          "r": 0.0
-        },
-        "ZIndex": 0,
-        "Type": "Engine2D.GameObjects.SpriteRenderer"
+        "Intensity": 1.0,
+        "Type": "Engine2D.Components.GlobalLight"
       },
       {
         "Position": {
-          "X": -210.99995,
-          "Y": -69.07312
+          "X": 0.0,
+          "Y": 0.0
         },
         "Rotation": {
           "X": 0.0,
@@ -55,13 +63,23 @@
           "IsIdentity": false
         },
         "Size": {
-          "X": 83.5,
-          "Y": 85.6
+          "X": 1.0,
+          "Y": 1.0
         },
         "Type": "Engine2D.Components.TransformComponents.Transform"
+      },
+      {
+        "counter": 1,
+        "Type": "ExampleGame.Assets.RunnerComponent"
+      },
+      {
+        "twospeed": 2,
+        "speed": 10,
+        "testName": "hello name",
+        "Type": "ExampleGame.Assets.TestClass"
       }
     ],
-    "Name": "SpriteRenderer: 21",
+    "Name": "GlobalLight: 21",
     "PARENT_UID": -1
   }
 ]

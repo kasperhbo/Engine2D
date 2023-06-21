@@ -16,8 +16,6 @@ public class TestClass : Component
     
     public override void EditorUpdate(double dt)
     {
-        // Console.ForegroundColor = (System.ConsoleColor.Blue);
-        // Console.WriteLine(testName);
         base.EditorUpdate(dt);
     }
 
@@ -31,5 +29,6 @@ public class TestClass : Component
         base.ImGuiFields();
         Console.ForegroundColor = (System.ConsoleColor.Red);
         Console.WriteLine("New build");
+        Console.WriteLine("Updating imgui fields");
     }
 }

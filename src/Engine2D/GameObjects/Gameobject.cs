@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Engine2D.Components;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
@@ -8,6 +9,7 @@ using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
+using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
 
@@ -168,28 +170,58 @@ internal class Gameobject : Asset
         return false;
     }
 
+    bool isPopupOpen = false;
+    
     internal override void OnGui()
     {
         ImGui.InputText("##name", ref Name, 256);
+
         ImGui.SameLine();
         ImGui.Text(" UID: " + UID);
         ImGui.Separator();
+        
+        if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X - 30, 30)))
+        {
+            isPopupOpen = true;
+        }
+        
+        if (isPopupOpen)
+        {
+            ImGui.OpenPopup("Components Popup");
+        }
 
-        OpenTkuiHelper.DrawComponentWindow("Transform", "Transform",
-            () => { GetComponent<Transform>().ImGuiFields(); }, GetComponent<Transform>().GetFieldSize()
-        );
+        if (ImGui.BeginPopup("Components Popup"))
+        {
+            //List all components in a menu
+            foreach (var component in AssemblyUtils.GetComponents())
+            {
+                if (ImGui.MenuItem(component.Name))
+                {
+                    AddComponent(AssemblyUtils.GetComponent(component.FullName));
+                    isPopupOpen = false;
+                }
+            }
+            
+            ImGui.EndPopup();
+        }
 
         for (var i = 0; i < components.Count; i++)
         {
-            if (components[i].GetType() == typeof(Transform)) return;
-
+            if (components[i] == null)
+            {
+                components.RemoveAt(i);
+                continue;
+            }
+            
             ImGui.PushID(i);
-
+           
             OpenTkuiHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
                 () => { components[i].ImGuiFields(); }, components[i].GetFieldSize()
             );
 
             ImGui.PopID();
         }
+        
+
     }
 }

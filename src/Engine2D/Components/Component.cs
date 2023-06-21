@@ -65,10 +65,7 @@ public class Component
     {
         var count = 0;
         var fields = GetType().GetFields(
-            BindingFlags.DeclaredOnly
-            | BindingFlags.Public
-            | BindingFlags.NonPublic
-            | BindingFlags.Instance
+            BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.CreateInstance | BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.IgnoreCase 
         );
         foreach (var field in fields)
         {
@@ -149,6 +146,32 @@ public class Component
 
     internal virtual float GetFieldSize()
     {
-        return 80;
+        //Calculate size automaticly based on fields
+        var count = 0;
+        sizeYGUI = 0;
+        var fields = GetType().GetFields(
+            BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.CreateInstance | BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.IgnoreCase 
+        );
+        foreach (var field in fields)
+        {
+            var type = field.FieldType;
+            var value = field.GetValue(this);
+            var name = field.Name;
+
+            var attrs = (ShowUIAttribute[])field.GetCustomAttributes
+                (typeof(ShowUIAttribute), false);
+
+            var ignore = false;
+            foreach (var attr in attrs)
+                if (!attr.show)
+                    ignore = true;
+
+            if (!ignore)
+            {
+                count++;
+            }
+        }
+
+        return 20 * count;
     }
 }

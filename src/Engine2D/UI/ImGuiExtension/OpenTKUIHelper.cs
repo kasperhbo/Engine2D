@@ -36,7 +36,6 @@ internal static class OpenTkuiHelper
 
 
             ImGui.PopStyleColor();
-            // ImGui.EndChild();
         }
 
         ImGui.PopID();

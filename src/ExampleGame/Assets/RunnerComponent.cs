@@ -13,7 +13,6 @@ public class RunnerComponent : Component
     public override void EditorUpdate(double dt)
     {
 
-
         base.EditorUpdate(dt);
     }
 
