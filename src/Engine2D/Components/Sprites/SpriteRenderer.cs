@@ -165,14 +165,17 @@ internal class SpriteRenderer : Component
 
             ImGui.EndDragDropTarget();
         }
-       
     }
     
+    
+    /// <summary>
+    /// For loading the sprites from the sprite sheet for drag and drop
+    /// </summary>
+    /// <param name="sprite"></param>
+    /// <returns>byte[] with sprite data</returns>
     // Serialize a sprite into a byte array
     internal static byte[] SerializeSprite(SpriteSheetSprite sprite)
     {
-        // Implement your serialization logic here
-        // For simplicity, let's assume you're using JSON serialization
         string jsonString = JsonConvert.SerializeObject(sprite);
         return Encoding.UTF8.GetBytes(jsonString);
     }
@@ -180,8 +183,6 @@ internal class SpriteRenderer : Component
     // Deserialize a sprite from a byte array
     internal static SpriteSheetSprite DeserializeSprite(byte[] data)
     {
-        // Implement your deserialization logic here
-        // For simplicity, let's assume you're using JSON deserialization
         string jsonString = Encoding.UTF8.GetString(data);
         return JsonConvert.DeserializeObject<SpriteSheetSprite>(jsonString);
     }
