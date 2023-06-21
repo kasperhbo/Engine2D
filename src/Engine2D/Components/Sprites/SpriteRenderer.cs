@@ -6,6 +6,7 @@ using Engine2D.Components;
 using Engine2D.Components.Sprites;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
+using Engine2D.Flags;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
@@ -76,7 +77,7 @@ internal class KDBColor
 [JsonConverter(typeof(ComponentSerializer))]
 internal class SpriteRenderer : Component
 {
-    [JsonIgnore] private readonly Vector2[] _defaultTextureCoords =
+    [ShowUI(show = false)][JsonIgnore] private readonly Vector2[] _defaultTextureCoords =
     {
         new(1.0f, 1.0f),
         new(1.0f, 0.0f),
@@ -84,17 +85,17 @@ internal class SpriteRenderer : Component
         new(0.0f, 1.0f)
     };
 
-    [JsonIgnore] private readonly KDBColor _lastColor = new();
+    [ShowUI(show = false)][JsonIgnore] private readonly KDBColor _lastColor = new();
 
     // 0.5f,   0.5f, 0.0f,    1.0f, 1.0f,   // top right
     // 0.5f,  -0.5f, 0.0f,    1.0f, 0.0f,   // bottom right
     // -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom left
     // -0.5f,  0.5f, 0.0f,    0.0f, 1.0f    // top left 
-    [JsonIgnore] private readonly Transform _lastTransform = new();
-    [JsonProperty] private string _spriteSaveFile = "";
+    [ShowUI(show = false)][JsonIgnore] private readonly Transform _lastTransform = new();
+    [ShowUI(show = false)][JsonProperty] private string _spriteSaveFile = "";
     [JsonProperty] internal KDBColor Color = new();
     [JsonProperty] internal int ZIndex;
-    private int index = 1;
+    
 
     [JsonConstructor]
     internal SpriteRenderer()
@@ -164,20 +165,7 @@ internal class SpriteRenderer : Component
     public override void ImGuiFields()
     {
         base.ImGuiFields();
-        if (ImGui.Button("Sprite"))
-        {
-            if (index == 1)
-            {
-                index = 2;
-                SetSprite(ProjectSettings.FullProjectPath + "\\Assets\\folder-open-icon.sprite");
-            }
-            else
-            {
-                index = 1;
-                SetSprite(ProjectSettings.FullProjectPath + "\\Assets\\bigSpritesheet.sprite");
-            }
-        }
-
+       
         if (ImGui.BeginDragDropTarget())
         {
             var payload = ImGui.AcceptDragDropPayload("sprite_drop");
@@ -189,14 +177,14 @@ internal class SpriteRenderer : Component
 
             ImGui.EndDragDropTarget();
         }
-
-
-        if (Sprite != null)
-        {
-            ImGui.InputFloat2("0", ref Sprite.TextureCoords[0]);
-            ImGui.InputFloat2("1", ref Sprite.TextureCoords[1]);
-            ImGui.InputFloat2("2", ref Sprite.TextureCoords[2]);
-            ImGui.InputFloat2("3", ref Sprite.TextureCoords[3]);
-        }
+        //
+        //
+        // if (Sprite != null)
+        // {
+        //     ImGui.InputFloat2("0", ref Sprite.TextureCoords[0]);
+        //     ImGui.InputFloat2("1", ref Sprite.TextureCoords[1]);
+        //     ImGui.InputFloat2("2", ref Sprite.TextureCoords[2]);
+        //     ImGui.InputFloat2("3", ref Sprite.TextureCoords[3]);
+        // }
     }
 }

@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Numerics;
+using Engine2D.GameObjects;
 using Engine2D.UI.Browsers;
 using ImGuiNET;
 using static ImGuiNET.ImGui;
@@ -11,6 +12,211 @@ namespace Engine2D.UI.ImGuiExtension;
 
 internal static class Gui
 {
+    internal static void DrawTable(string label, Action tableComponents)
+    {
+        if (CollapsingHeader(label, ImGuiTreeNodeFlags.DefaultOpen))
+        {
+            BeginTable("##table", 2, ImGuiTableFlags.None | ImGuiTableFlags.Resizable);
+            tableComponents.Invoke();
+            EndTable();
+            Separator();
+        }
+    }
+    
+    internal static void DrawProperty(string label, ref float value)
+    {
+        PushID(label);
+        TableNextRow();
+        TableSetColumnIndex(0);
+        Text(label);
+        TableSetColumnIndex(1);
+        KDragFloat("##"+label,ref value);
+        PopID();
+    }
+    
+    internal static void DrawProperty(string label, ref int value)
+    {
+        PushID(label);
+        TableNextRow();
+        TableSetColumnIndex(0);
+        Text(label);
+        TableSetColumnIndex(1);
+        KDragInt("##"+label,ref value);
+        PopID();
+    }
+    
+    internal static void DrawProperty(string label, ref string value)
+    {
+        PushID(label);
+        TableNextRow();
+        TableSetColumnIndex(0);
+        Text(label);
+        TableSetColumnIndex(1);
+        KStringInput("##"+label,ref value);
+        PopID();
+    }
+    
+    internal static void DrawProperty(string label, ref bool value)
+    {
+        PushID(label);
+        TableNextRow();
+        TableSetColumnIndex(0);
+        Text(label);
+        TableSetColumnIndex(1);
+        KBoolInput("##"+label,ref value);
+        PopID();
+    }
+    
+
+    internal static void DrawProperty(string label, ref OpenTK.Mathematics.Vector2 value)
+    {
+        Vector2 v = new Vector2(value.X, value.Y);
+        DrawProperty(label, ref v);
+        value.X = v.X;
+        value.Y = v.Y;
+    }
+
+    
+    internal static void DrawProperty(string label, ref Vector2 value)
+    {
+        PushID(label);
+        TableNextRow();
+        TableSetColumnIndex(0);
+        Text(label);
+        TableSetColumnIndex(1);
+        Vector2Prop(ref value);
+        PopID();
+    }
+
+    internal static void DrawProperty(string label, ref OpenTK.Mathematics.Vector3 value)
+    {
+        Vector3 v = new Vector3(value.X, value.Y, value.Z);
+        DrawProperty(label, ref v);
+        value.X = v.X;
+        value.Y = v.Y;
+        value.Z = v.Z;
+    }
+
+    internal static void DrawProperty(string label, ref Vector3 value)
+    {
+        PushID(label);
+        TableNextRow();
+        TableSetColumnIndex(0);
+        Text(label);
+        TableSetColumnIndex(1);
+        Vector3Prop(ref value);
+        PopID();
+    }
+    
+    internal static void DrawProperty(string label, ref OpenTK.Mathematics.Vector4 value)
+    {
+        Vector4 v = new Vector4(value.X, value.Y, value.Z, value.W);
+        DrawProperty(label, ref v);
+        value.X = v.X;
+        value.Y = v.Y;
+        value.Z = v.Z;
+        value.W = v.W;
+    }
+
+    internal static void DrawProperty(string label, ref KDBColor value)
+    {
+        Vector4 v = new Vector4(value.r, value.g, value.b, value.a);
+        DrawProperty(label, ref v);
+        value.r = v.X;
+        value.g = v.Y;
+        value.b = v.Z;
+        value.a = v.W;
+    }
+
+    internal static void DrawProperty(string label, ref Vector4 value)
+    {
+        PushID(label);
+        TableNextRow();
+        TableSetColumnIndex(0);
+        Text(label);
+        TableSetColumnIndex(1);
+        Vector4Prop(ref value);
+        PopID();
+    }
+    
+    internal static void Vector2Prop(ref Vector2 value)
+    {
+        PushItemWidth(100);
+        KDragFloat("X", ref value.X, new Vector4(1,0,0,1),0.1f);
+        SameLine();
+        KDragFloat("Y", ref value.Y, new Vector4(0,1,0,1),0.1f);
+        PopItemWidth();
+    }
+    
+    internal static void Vector3Prop(ref Vector3 value)
+    {
+        PushItemWidth(100);
+        KDragFloat("X", ref value.X, new Vector4(1,0,0,1),0.1f);
+        SameLine();
+        KDragFloat("Y", ref value.Y, new Vector4(0,1,0,1),0.1f);
+        SameLine();
+        KDragFloat("Z", ref value.Z, new Vector4(0,0,1,1),0.1f);
+        PopItemWidth();
+    }
+    
+    internal static void Vector4Prop(ref Vector4 value)
+    {
+        PushItemWidth(100);
+        KDragFloat("X", ref value.X, new Vector4(1,0,0,1),0.1f);
+        SameLine();
+        KDragFloat("Y", ref value.Y, new Vector4(0,1,0,1),0.1f);
+        SameLine();
+        KDragFloat("Z", ref value.Z, new Vector4(0,0,1,1),0.1f);
+        SameLine();
+        KDragFloat("W", ref value.W, new Vector4(1,0,1,1),0.1f);
+        PopItemWidth();
+    }
+    
+    
+    internal static void KStringInput(string label, ref string value)
+    {
+        InputText(("##" + label), ref value, 256);
+    }
+    
+    internal static void KBoolInput(string label, ref bool value)
+    {
+        Checkbox(("##" + label), ref value);
+    }
+    
+    internal static void KDragInt(string label, ref int intRef, Vector4 buttonColor = new(), float dragSpeed = 0.1f)
+    {
+        PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
+        if(buttonColor != Vector4.Zero)
+            PushStyleColor(ImGuiCol.Button, buttonColor);
+        
+        if (Button(label)) intRef = 0;
+        SameLine();
+        DragInt(("##" + label), ref intRef, dragSpeed);
+        PopStyleVar();
+        
+        if(buttonColor != Vector4.Zero)
+            PopStyleColor();
+    }
+    
+    
+    
+    private static void KDragFloat(string label, ref float floatRef,  Vector4 buttonColor = new(), float dragSpeed = 0.1f)
+    {
+        
+        PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
+        if(buttonColor != Vector4.Zero)
+            PushStyleColor(ImGuiCol.Button, buttonColor);
+        
+        if (Button(label)) floatRef = 0;
+        SameLine();
+        DragFloat(("##" + label), ref floatRef, dragSpeed);
+        PopStyleVar();
+        
+        if(buttonColor != Vector4.Zero)
+            PopStyleColor();
+    }
+    
+    
     internal static bool ImageButtonExTextDown(
         string label,
         ESupportedFileTypes fileType,

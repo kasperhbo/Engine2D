@@ -4,15 +4,16 @@ using Engine2D.Components;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
+using Newtonsoft.Json;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace ExampleGame.Assets;
 
 public class TestClass : Component
 {
-    public int twospeed = 2;
-    public int speed = 10;
-    public string testName = "hello name";
+    [JsonProperty]public int twospeed = 2;
+    [JsonProperty]public int speed = 10;
+    [JsonProperty]public string testName = "hello name";
     
     public override void EditorUpdate(double dt)
     {

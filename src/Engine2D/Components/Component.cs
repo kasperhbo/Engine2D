@@ -6,8 +6,8 @@ using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
 using Newtonsoft.Json;
-using OpenTK.Mathematics;
 using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
 
 #endregion
@@ -19,7 +19,6 @@ public class Component
 {
     [JsonIgnore] private bool _initialized;
     [JsonIgnore] internal Gameobject Parent;
-    protected float sizeYGUI;
     
     [JsonProperty]internal string Type => GetItemType();
 
@@ -63,9 +62,9 @@ public class Component
 
     public virtual void ImGuiFields()
     {
-        var count = 0;
         var fields = GetType().GetFields(
-            BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.CreateInstance | BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.IgnoreCase 
+            BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public 
+            | BindingFlags.Static | BindingFlags.CreateInstance | BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.IgnoreCase 
         );
         foreach (var field in fields)
         {
@@ -75,69 +74,88 @@ public class Component
 
             var attrs = (ShowUIAttribute[])field.GetCustomAttributes
                 (typeof(ShowUIAttribute), false);
+            
+            var attrsjson = (JsonArrayAttribute[])field.GetCustomAttributes
+                (typeof(JsonArrayAttribute), false);
 
             var ignore = false;
             foreach (var attr in attrs)
                 if (!attr.show)
                     ignore = true;
 
-            count++;
-
             if (!ignore)
             {
-                if (type == typeof(Vector3))
-                {
-                    var val = (Vector3)value;
-                    OpenTkuiHelper.DrawProperty(name, ref val);
-                    field.SetValue(this, val);
-                }
-
                 if (type == typeof(KDBColor))
                 {
                     var val = (KDBColor)value;
-                    OpenTkuiHelper.DrawProperty(name, ref val);
+                    Gui.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
-
-                if (type == typeof(int))
-                {
-                    var val = (int)value;
-                    OpenTkuiHelper.DrawProperty(name, ref val);
-                    field.SetValue(this, val);
-                }
-
-                if (type == typeof(float))
-                {
-                    var val = (float)value;
-                    OpenTkuiHelper.DrawProperty(name, ref val);
-                    field.SetValue(this, val);
-                }
-
-                if (type == typeof(bool))
-                {
-                    var val = (bool)value;
-                    OpenTkuiHelper.DrawProperty(name, ref val);
-                    field.SetValue(this, val);
-                }
-
                 if (type == typeof(Vector2))
                 {
                     var val = (Vector2)value;
-                    OpenTkuiHelper.DrawProperty(name, ref val);
+                    Gui.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
+                if (type == typeof(OpenTK.Mathematics.Vector2))
+                {
+                    var val = (OpenTK.Mathematics.Vector2)value;
+                    Gui.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
+                
+                if (type == typeof(Vector3))
+                {
+                    var val = (Vector3)value;
+                    Gui.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
 
-                if (type == typeof(System.Numerics.Vector3))
+                if (type == typeof(OpenTK.Mathematics.Vector3))
                 {
-                    var val = (System.Numerics.Vector3)value;
-                    OpenTkuiHelper.DrawProperty(name, ref val);
+                    var val = (OpenTK.Mathematics.Vector3)value;
+                    Gui.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
 
                 if (type == typeof(Vector4))
                 {
                     var val = (Vector4)value;
-                    OpenTkuiHelper.DrawProperty(name, ref val);
+                    Gui.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
+                if (type == typeof(OpenTK.Mathematics.Vector4))
+                {
+                    var val = (OpenTK.Mathematics.Vector4)value;
+                    Gui.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
+
+                if (type == typeof(float))
+                {
+                    var val = (float)value;
+                    Gui.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
+
+                if (type == typeof(int))
+                {
+                    var val = (int)value;
+                    Gui.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
+
+                if (type == typeof(bool))
+                {
+                    var val = (bool)value;
+                    Gui.DrawProperty(name, ref val);
+                    field.SetValue(this, val);
+                }
+
+                if (type == typeof(string))
+                {
+                    var val = (string)value;
+                    Gui.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
             }
@@ -148,7 +166,7 @@ public class Component
     {
         //Calculate size automaticly based on fields
         var count = 0;
-        sizeYGUI = 0;
+        
         var fields = GetType().GetFields(
             BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.CreateInstance | BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.IgnoreCase 
         );

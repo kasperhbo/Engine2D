@@ -4,9 +4,9 @@
       {
         "_spriteSaveFile": "",
         "Color": {
-          "a": 255.0,
+          "a": 258.6,
           "b": 255.0,
-          "g": 255.0,
+          "g": 0.0,
           "r": 255.0
         },
         "ZIndex": 0,
@@ -14,30 +14,34 @@
       },
       {
         "Position": {
-          "X": 0.0,
-          "Y": 0.0
+          "X": 11.199984,
+          "Y": 13.013763
         },
         "Rotation": {
           "X": 0.0,
           "Y": 0.0,
-          "Z": 0.0,
-          "W": 0.0,
+          "Z": 0.86902505,
+          "W": -0.49476805,
           "IsIdentity": false
         },
         "Size": {
-          "X": 1.0,
-          "Y": 1.0
+          "X": 96.528595,
+          "Y": 95.55715
         },
         "Type": "Engine2D.Components.TransformComponents.Transform"
       },
       {
-        "twospeed": 2,
-        "speed": 10,
-        "testName": "hello name",
+        "twospeed": 27,
+        "speed": 11,
+        "testName": "hello darkness my old friend",
         "Type": "ExampleGame.Assets.TestClass"
       },
       {
-        "counter": 1,
+        "counter": 32,
+        "Type": "ExampleGame.Assets.RunnerComponent"
+      },
+      {
+        "counter": -42,
         "Type": "ExampleGame.Assets.RunnerComponent"
       }
     ],
@@ -52,7 +56,7 @@
       },
       {
         "Position": {
-          "X": 0.0,
+          "X": 7.8,
           "Y": 0.0
         },
         "Rotation": {

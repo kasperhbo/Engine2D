@@ -19,20 +19,7 @@ internal class ScriptHolderComponent : Component
     {
         base.Init(parent, renderer);
     }
-
-    public override void ImGuiFields()
-    {
-        base.ImGuiFields();
-        float f = 0;
-
-        // if (component != null) f = f + component.ImGuiFields();
-
-        sizeYGUI += f;
-        ImGui.TableNextColumn();
-        //ImGui.ImageButton("", IntPtr.Zero, new System.Numerics.Vector2(56, 56));
-        throw new NotImplementedException();
-    }
-
+    
     public override string GetItemType()
     {
         return this.GetType().FullName;

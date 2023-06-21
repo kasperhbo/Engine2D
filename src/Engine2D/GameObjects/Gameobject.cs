@@ -214,11 +214,9 @@ internal class Gameobject : Asset
             }
             
             ImGui.PushID(i);
-           
-            OpenTkuiHelper.DrawComponentWindow(i.ToString(), components[i].GetItemType(),
-                () => { components[i].ImGuiFields(); }, components[i].GetFieldSize()
-            );
 
+            Gui.DrawTable(components[i].GetItemType(), components[i].ImGuiFields);
+            
             ImGui.PopID();
         }
         
