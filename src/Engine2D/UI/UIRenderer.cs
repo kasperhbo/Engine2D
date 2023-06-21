@@ -58,13 +58,80 @@ internal static class UiRenderer
         KDBImGuiController.Init(Engine.Get().Size.X, Engine.Get().Size.Y);
 
         if (createDefaultWindows) CreateDefaultWindows();
+        GenerateSampleKeyframes();
     }
+    
+    private static void GenerateSampleKeyframes()
+    {
+        // Generate 10 sample keyframes
+        for (int i = 0; i < 10; i++)
+        {
+            float time = i * (endTime - startTime) / 9f;  // Equally spaced along the timeline
+            float value = MathF.Sin(time); // Sample value based on time (sine wave)
+
+            keyframes.Add(new Keyframe(time, value));
+        }
+    }
+    
+    private static void HandleKeyframeDragAndDrop(float timelineWidth)
+    {
+        // Handle dragging keyframes
+        // if (isDraggingKeyframe)
+        // {
+        //     // Update the position of the dragging keyframe based on the mouse cursor
+        //     float draggingKeyframeTime = (ImGui.GetMousePos().X - ImGui.GetCursorScreenPos().X) / timelineWidth * (endTime - startTime) + startTime;
+        //     keyframes[draggingKeyframeIndex].Time = draggingKeyframeTime;
+        //
+        //     // Check for mouse release to stop dragging
+        //     if (ImGui.IsMouseReleased(ImGuiMouseButton.Left))
+        //     {
+        //         isDraggingKeyframe = false;
+        //     }
+        // }
+        //
+        // // Handle dropping keyframes
+        // if (ImGui.BeginDragDropTarget())
+        // {
+        //     // Check if there is a payload being dropped
+        //     if (ImGui.AcceptDragDropPayload(
+        //             "KEYFRAME_PAYLOAD", ImGuiDragDropFlags.AcceptBeforeDelivery))
+        //     {
+        //         // Get the dropped payload data
+        //         Keyframe droppedKeyframe = (Keyframe)ImGui.GetDragDropPayloadData();
+        //
+        //         // Add the dropped keyframe to the timeline
+        //         keyframes.Add(new Keyframe(droppedKeyframe.Time, droppedKeyframe.Value));
+        //     }
+        //
+        //     ImGui.EndDragDropTarget();
+        // }
+    }
+
 
 
     private static void Update(FrameEventArgs args)
     {
     }
+    
+    private static List<Keyframe> keyframes = new List<Keyframe>();
+    private static float currentTime = 0f;
+    private static float startTime = 0f;
+    private static float endTime = 10f;
+    private static bool isDraggingKeyframe = false;
+    private static int draggingKeyframeIndex = -1;
+    
+    public struct Keyframe
+    {
+        public float Time;
+        public float Value;
 
+        public Keyframe(float time, float value)
+        {
+            Time = time;
+            Value = value;
+        }
+    }
+    
     private static void Render(FrameEventArgs args)
     {
         KDBImGuiController.Update(_engine, args.Time);
@@ -74,18 +141,23 @@ internal static class UiRenderer
         if (ImGui.Button("Reload Assembly")) AssemblyUtils.Reload();
 
         ImGui.End();
-
+        
         DrawMainMenuBar();
         DrawToolbar();
         SetupDockSpace();
 
-        var currentSelectedAssetBrowserAsset = Engine.Get().CurrentSelectedAssetBrowserAsset;
-        if (currentSelectedAssetBrowserAsset != null) currentSelectedAssetBrowserAsset.OnGui();
+        var currentSelectedAssetBrowserAssets = Engine.Get().CurrentSelectedAssetBrowserAsset;
+        
+        foreach (var asset in currentSelectedAssetBrowserAssets)
+        {
+            asset.OnGui();
+        }
 
         ImGui.ShowDemoWindow();
 
         KDBImGuiController.Render();
     }
+
 
     private static void OnMouseWheel(MouseWheelEventArgs args)
     {

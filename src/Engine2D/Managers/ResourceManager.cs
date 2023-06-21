@@ -1,5 +1,6 @@
 ﻿#region
 
+using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.GameObjects;
@@ -35,7 +36,7 @@ internal static class ResourceManager
         var baseAssetPath = ProjectSettings.FullProjectPath + "\\assets";
 
         var files = Directory.GetFiles(baseAssetPath, "*.*", SearchOption.AllDirectories)
-            .Where(s => s.EndsWith(".tex") || s.EndsWith(".sprite") || s.EndsWith(".spritesheet"));
+            .Where(s => s.EndsWith(".tex") || s.EndsWith(".sprite") || s.EndsWith(".spritesheet") || s.EndsWith(".animation"));
         ;
 
         var enumerable = files as string[] ?? files.ToArray();
@@ -61,6 +62,9 @@ internal static class ResourceManager
                     case ESupportedFileTypes.spritesheet:
                         item = LoadSpriteSheetFromJson(file);
                         break;
+                    case ESupportedFileTypes.animation:
+                        item = LoadAnimationFromJson(file);
+                        break;
                 }
 
                 if (item != null)
@@ -70,6 +74,21 @@ internal static class ResourceManager
 
         if (_showDebug)
             Log.Succes("Successfully loaded all assets!");
+    }
+
+    private static AssetBrowserAsset? LoadAnimationFromJson(string file)
+    {
+        Animation anim = null;
+        try
+        {
+            anim = JsonConvert.DeserializeObject<Animation>(File.ReadAllText(file));
+        }
+        catch (Exception e)
+        {
+            Log.Error($"Failed to load animation {file}! {e.Message}");
+        }
+
+        return anim;
     }
 
     internal static T? GetItem<T>(string? path) where T : AssetBrowserAsset
@@ -196,4 +215,25 @@ internal static class ResourceManager
     }
 
     #endregion
+
+    internal static void SaveAnimation(string savePath, Animation animation,  DirectoryInfo? currentFolder = null, bool overWrite = false)
+    {
+        var name = savePath;
+
+        if (!overWrite)
+            name = SaveLoad.GetNextFreeName(savePath, currentFolder);
+
+        var fullSaveName = name;
+
+        if (currentFolder != null)
+            fullSaveName = currentFolder.FullName + "\\" + name;
+
+        var animationData = JsonConvert.SerializeObject(animation, Formatting.Indented);
+        File.WriteAllText(fullSaveName, animationData);
+
+        AddItemToManager(fullSaveName, animation);
+        AssetBrowserPanel.Refresh();
+    }
+    
+    
 }

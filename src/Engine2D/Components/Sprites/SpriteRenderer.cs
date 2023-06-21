@@ -27,7 +27,7 @@ namespace Engine2D.GameObjects;
 internal class SpriteRenderer : Component
 {
     [JsonIgnore][ShowUI (show = false)] internal bool IsDirty = true;
-    [JsonIgnore] internal SpriteSheetSprite? Sprite;    
+    [JsonIgnore] internal Sprite? Sprite;    
     [JsonIgnore] private SpriteSheet? _spriteSheet;
     
     [JsonIgnore]
@@ -92,7 +92,7 @@ internal class SpriteRenderer : Component
         this.IsDirty = true;
     }
 
-    private void SetSprite(int spriteSheetIndex, string spriteSheet)
+    internal void SetSprite(int spriteSheetIndex, string spriteSheet)
     {
         var sprs = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
         if (sprs == null)
@@ -156,7 +156,7 @@ internal class SpriteRenderer : Component
                 Marshal.Copy(payload.Data, payloadData, 0, payloadData.Length);
 
                 // Deserialize the sprite from the payload data
-                SpriteSheetSprite droppedSprite = DeserializeSprite(payloadData);
+                Sprite droppedSprite = DeserializeSprite(payloadData);
 
                 // Do something with the dropped sprite...
                 // For example, display a message with the sprite name
@@ -174,16 +174,16 @@ internal class SpriteRenderer : Component
     /// <param name="sprite"></param>
     /// <returns>byte[] with sprite data</returns>
     // Serialize a sprite into a byte array
-    internal static byte[] SerializeSprite(SpriteSheetSprite sprite)
+    internal static byte[] SerializeSprite(Sprite sprite)
     {
         string jsonString = JsonConvert.SerializeObject(sprite);
         return Encoding.UTF8.GetBytes(jsonString);
     }
 
     // Deserialize a sprite from a byte array
-    internal static SpriteSheetSprite DeserializeSprite(byte[] data)
+    internal static Sprite DeserializeSprite(byte[] data)
     {
         string jsonString = Encoding.UTF8.GetString(data);
-        return JsonConvert.DeserializeObject<SpriteSheetSprite>(jsonString);
+        return JsonConvert.DeserializeObject<Sprite>(jsonString);
     }
 }

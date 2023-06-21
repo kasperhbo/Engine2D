@@ -42,7 +42,7 @@ internal static class AssemblyUtils
     /// </summary>
     private static void CopyAssembly()
     {
-        File.Copy(_loadedAssemblyOrigin, ProjectSettings.FullProjectPath + "\\project.DLL", true);
+        File.Copy(_loadedAssemblyOrigin, ProjectSettings.FullProjectPath+ "\\project.DLL", true);
     }
 
     /// <summary>

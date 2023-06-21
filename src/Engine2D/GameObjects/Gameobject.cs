@@ -3,6 +3,7 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Engine2D.Components;
+using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Logging;
@@ -200,6 +201,17 @@ internal class Gameobject : Asset
                     AddComponent(AssemblyUtils.GetComponent(component.FullName));
                     isPopupOpen = false;
                 }
+            }
+            if(ImGui.MenuItem("Sprite renderer"))
+            {
+                AddComponent(new SpriteRenderer());
+                isPopupOpen = false;
+            }
+            
+            if(ImGui.MenuItem("Sprite Animator"))
+            {
+                AddComponent(new SpriteAnimator());
+                isPopupOpen = false;
             }
             
             ImGui.EndPopup();

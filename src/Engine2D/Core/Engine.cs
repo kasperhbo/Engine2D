@@ -23,8 +23,28 @@ namespace Engine2D.Core
 
 
         private int _frameCounter;
+        private double _previousTime;
+        
         internal Asset? CurrentSelectedAsset;
-        internal AssetBrowserAsset? CurrentSelectedAssetBrowserAsset;
+        internal List<AssetBrowserAsset?> CurrentSelectedAssetBrowserAsset { get; private set; }= new();
+        internal void AddItemToCurrentSelectedAssetBrowserAsset(AssetBrowserAsset? asset)
+        {
+            if (asset == null) return;
+            List<AssetBrowserAsset> toRemove = new List<AssetBrowserAsset>();
+            foreach (var assetC in CurrentSelectedAssetBrowserAsset)          
+            {
+                if (assetC.GetType() == asset.GetType())
+                {
+                    toRemove.Add(asset);
+                }
+            }
+            foreach (var assetC in toRemove)
+            {
+                CurrentSelectedAssetBrowserAsset.Remove(assetC);
+            }
+            
+            s_instance!.CurrentSelectedAssetBrowserAsset.Add(asset);
+        }
 
         internal Scene? CurrentScene { get; private set; }
 
@@ -54,10 +74,18 @@ namespace Engine2D.Core
         {
         }
 
+        public static double DeltaTime = 0;
+        
         private void Render(FrameEventArgs args)
         {
-            SetTitle((float)args.Time);
-            CurrentScene?.Render(args);
+            
+            // Calculate delta time
+            double currentTime = TimeSinceStart;
+            DeltaTime = currentTime - _previousTime;
+            _previousTime = currentTime;
+            
+            SetTitle((float)DeltaTime);
+            CurrentScene?.Render((float)DeltaTime);
             SwapBuffers();
         }
 
@@ -93,6 +121,7 @@ namespace Engine2D.Core
         internal Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
             gameWindowSettings, nativeWindowSettings)
         {
+            
         }
 
         public static unsafe Engine Get()
@@ -135,6 +164,8 @@ namespace Engine2D.Core
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);
+
+            _previousTime = TimeSinceStart;
         }
 
         private void LoadProject()
@@ -163,6 +194,11 @@ namespace Engine2D.Core
             Log.Message("Closing engine");
             SaveLoad.SaveWindowSettings();
             SaveLoad.SaveEngineSettings();
+        }
+        
+        private double TimeSinceStart
+        {
+            get { return (double)DateTime.Now.Ticks / TimeSpan.TicksPerSecond; }
         }
 
         #endregion

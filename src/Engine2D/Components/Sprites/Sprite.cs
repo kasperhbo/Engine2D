@@ -9,9 +9,9 @@ using Newtonsoft.Json;
 
 namespace Engine2D.Components.Sprites;
 
-internal class SpriteSheetSprite
+internal class Sprite
 {
-    public SpriteSheetSprite(string fullSavePath, Vector2[] texCoords, int spriteWidth, int spriteHeight, int index)
+    public Sprite(string fullSavePath, Vector2[] texCoords, int spriteWidth, int spriteHeight, int index)
     {
         FullSavePath = fullSavePath;
         TextureCoords = texCoords;

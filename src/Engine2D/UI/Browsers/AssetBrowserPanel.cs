@@ -2,6 +2,7 @@
 
 using System.Numerics;
 using System.Runtime.InteropServices;
+using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
@@ -28,7 +29,8 @@ internal enum ESupportedFileTypes
     spritesheet,
     tex,
     txt,
-    cs
+    cs,
+    animation
 }
 
 internal class AssetBrowserPanel : UIElement
@@ -68,9 +70,9 @@ internal class AssetBrowserPanel : UIElement
     internal static void Refresh()
     {
         var cur = Engine.Get().CurrentSelectedAssetBrowserAsset;
-        Engine.Get().CurrentSelectedAssetBrowserAsset = null;
+
         foreach (var panel in AssetBrowserPanels) panel.SwitchDirectory(panel.CurrentDirectory);
-        Engine.Get().CurrentSelectedAssetBrowserAsset = cur;
+
     }
 
     internal override void RenderTopBar()
@@ -194,9 +196,6 @@ internal class AssetBrowserPanel : UIElement
 
             ImGui.TableSetColumnIndex(1);
 
-            const float topBarHeight = 26.0f;
-            const float bottomBarHeight = 32.0f;
-
             ImGui.BeginChild("ccbrowser");
             {
                 if (ImGui.BeginPopupContextWindow("windowpoup"))
@@ -222,10 +221,6 @@ internal class AssetBrowserPanel : UIElement
                     {
                         var entry = _entries[i];
                         entry.Draw(i);
-                        if (ImGui.IsItemClicked())
-                        {
-                        }
-
                         ImGui.NextColumn();
                     }
                 }
@@ -462,6 +457,17 @@ internal class AssetBrowserEntry
                     spriteSheet.Save();
                     AssetBrowserPanel.Refresh();
                 }
+
+                if (ImGui.MenuItem("Create Animation"))
+                {
+                    var savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
+                    savePath += Label.Remove(Label.Length - 4);
+                    savePath += ".animation";
+
+                    var animation = new Animation(savePath);
+                    animation.Save();
+                    AssetBrowserPanel.Refresh();
+                }
             }
 
             if (ImGui.MenuItem(Label + " label"))
@@ -475,18 +481,27 @@ internal class AssetBrowserEntry
         if (ImGui.IsItemClicked())
             _assetBrowserPanel._currentSelectedEntryIndex = index;
 
+        //Loading items on clicked to show their inspector
         if (ImGui.IsItemClicked() && ImGui.IsMouseClicked(ImGuiMouseButton.Left))
         {
-            if (_fileType == ESupportedFileTypes.tex) Engine.Get().CurrentSelectedAssetBrowserAsset = _texture;
+            if (_fileType == ESupportedFileTypes.tex) 
+                Engine.Get().AddItemToCurrentSelectedAssetBrowserAsset(_texture);
             
             if (_fileType == ESupportedFileTypes.spritesheet)
             {
                 // SpriteSheet sprite = SaveLoad.LoadSpriteSheetFromJson(fullPath);
                 var spriteSheet = ResourceManager.GetItem<SpriteSheet>(FullPath);
-                Engine.Get().CurrentSelectedAssetBrowserAsset = spriteSheet;
+                Engine.Get().AddItemToCurrentSelectedAssetBrowserAsset(spriteSheet);
             }
-        }
 
+            if (_fileType == ESupportedFileTypes.animation)
+            {
+                Log.Warning("Clicked animation");
+                var animation = ResourceManager.GetItem<Animation>(FullPath);
+                Engine.Get().AddItemToCurrentSelectedAssetBrowserAsset(animation);
+            }
+            
+        }
 
         ImGui.PopID();
     }

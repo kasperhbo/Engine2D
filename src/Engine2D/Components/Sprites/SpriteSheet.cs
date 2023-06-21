@@ -22,7 +22,7 @@ internal class SpriteSheet : AssetBrowserAsset
     [JsonIgnore] public Texture Texture => ResourceManager.GetItem<Texture>(_texturePath);
     [JsonIgnore] private bool _unsaved;
     
-    [JsonProperty] internal List<SpriteSheetSprite> Sprites = new();
+    [JsonProperty] internal List<Sprite> Sprites = new();
 
 
     [JsonProperty] private string? _texturePath = "";
@@ -94,7 +94,7 @@ internal class SpriteSheet : AssetBrowserAsset
                 new(leftX, topY)
             };
              
-            var sprite = new SpriteSheetSprite(savePath, texCoords, spriteWidth, spriteHeight, i);
+            var sprite = new Sprite(savePath, texCoords, spriteWidth, spriteHeight, i);
 
             Sprites.Add(sprite);
 
@@ -128,7 +128,7 @@ internal class SpriteSheet : AssetBrowserAsset
         {
             Init(_texturePath, SavePath, _spriteWidth, _spriteHeight, _numSprites, _spacing, true);
 
-            Engine.Get().CurrentSelectedAssetBrowserAsset = this;
+            Engine.Get().CurrentSelectedAssetBrowserAsset.Add(this);
             _unsaved = true;
         }
 
@@ -171,9 +171,6 @@ internal class SpriteSheet : AssetBrowserAsset
 
                 if (ImGui.BeginDragDropSource())
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.WriteLine(entry.TextureCoords[0]);
-                    
                     byte[] spriteData = SpriteRenderer.SerializeSprite(entry);
                 
                     // Set payload data
