@@ -442,15 +442,17 @@ internal class AssetBrowserEntry
 
             if (_fileType == ESupportedFileTypes.tex)
             {
-                if (ImGui.MenuItem("Create Sprite From Texture"))
+                if (ImGui.MenuItem("Create Sprite)"))
                 {
-                    var sprite = new Sprite(FullPath);
-                    sprite.Save();
-                    AssetBrowserPanel.Refresh();
-                    ResourceManager.AddItemToManager(FullPath, sprite);
-                }
+                    var savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
+                    savePath += Label.Remove(Label.Length - 4);
+                    savePath += ".spritesheet";
 
-                if (ImGui.MenuItem("Create Sprite Sheet"))
+                    var spriteSheet = new SpriteSheet(FullPath, savePath);
+                    spriteSheet.Save();
+                    AssetBrowserPanel.Refresh();
+                }
+                if (ImGui.MenuItem("Create Sprite(Sheet)"))
                 {
                     var savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
                     savePath += Label.Remove(Label.Length - 4);
@@ -476,13 +478,7 @@ internal class AssetBrowserEntry
         if (ImGui.IsItemClicked() && ImGui.IsMouseClicked(ImGuiMouseButton.Left))
         {
             if (_fileType == ESupportedFileTypes.tex) Engine.Get().CurrentSelectedAssetBrowserAsset = _texture;
-            if (_fileType == ESupportedFileTypes.sprite)
-            {
-                // Sprite sprite = SaveLoad.LoadSpriteFromJson(fullPath);
-                var sprite = ResourceManager.GetItem<Sprite>(FullPath);
-                Engine.Get().CurrentSelectedAssetBrowserAsset = sprite;
-            }
-
+            
             if (_fileType == ESupportedFileTypes.spritesheet)
             {
                 // SpriteSheet sprite = SaveLoad.LoadSpriteSheetFromJson(fullPath);

@@ -1,0 +1,34 @@
+{
+  "Sprites": [
+    {
+      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\player.spritesheet",
+      "Index": 0,
+      "Width": 33,
+      "Height": 33,
+      "TextureCoords": [
+        {
+          "X": 1.0,
+          "Y": 1.0
+        },
+        {
+          "X": 1.0,
+          "Y": 0.0
+        },
+        {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        {
+          "X": 0.0,
+          "Y": 1.0
+        }
+      ]
+    }
+  ],
+  "_texturePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\player.tex",
+  "SavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\player.spritesheet",
+  "_numSprites": 1,
+  "_spacing": 0,
+  "_spriteHeight": 33,
+  "_spriteWidth": 33
+}

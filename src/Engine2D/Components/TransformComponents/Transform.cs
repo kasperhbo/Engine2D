@@ -13,11 +13,9 @@ namespace Engine2D.Components.TransformComponents;
 
 internal class Transform : Component
 {
-    [JsonIgnore] internal Vector3 EulerDegrees;
-
-    [JsonIgnore] internal Vector3 EulerRadians;
-    
     [JsonProperty]internal Vector2 Position;
+    [JsonIgnore] internal Vector3 EulerDegrees;
+    [JsonIgnore] internal Vector3 EulerRadians;
     [JsonProperty]internal Quaternion Rotation;
     [JsonProperty]internal Vector2 Size;
 

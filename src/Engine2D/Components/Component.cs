@@ -5,6 +5,7 @@ using Engine2D.Flags;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
+using Engine2D.Utilities;
 using Newtonsoft.Json;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
@@ -75,9 +76,6 @@ public class Component
             var attrs = (ShowUIAttribute[])field.GetCustomAttributes
                 (typeof(ShowUIAttribute), false);
             
-            var attrsjson = (JsonArrayAttribute[])field.GetCustomAttributes
-                (typeof(JsonArrayAttribute), false);
-
             var ignore = false;
             foreach (var attr in attrs)
                 if (!attr.show)

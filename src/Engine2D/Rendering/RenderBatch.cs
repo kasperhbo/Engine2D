@@ -125,15 +125,16 @@ internal class RenderBatch : IComparable<RenderBatch>
         _sprites[index] = spr;
         _spriteCount++;
 
-        if (spr.Sprite?.Texture != null)
-            if (!_textures.Contains(spr.Sprite.Texture))
-                for (var i = 0; i < _textures.Length; i++)
-                    if (_textures[i] == null)
-                    {
-                        _textures[i] = spr.Sprite.Texture;
-                        break;
-                    }
-
+            if (spr.Sprite?.Texture != null)
+                if (!_textures.Contains(spr.Sprite.Texture))
+                    for (var i = 0; i < _textures.Length; i++)
+                        if (_textures[i] == null)
+                        {
+                            _textures[i] = spr.Sprite.Texture;
+                            break;
+                        }
+        
+        
         LoadVertexProperties(index);
     }
 
@@ -203,21 +204,24 @@ internal class RenderBatch : IComparable<RenderBatch>
         var texID = -1;
         var texCoords = spriteRenderer.TextureCoords;
 
+
         if (spriteRenderer.Sprite?.Texture != null)
+        {
             for (var i = 0; i < _textures.Length; i++)
-                if (_textures[i].Equals(spriteRenderer.Sprite.Texture))
+                if (_textures[i] != null)
                 {
-                    texID = i + 1;
-                    break;
+                    if (_textures[i].Equals(spriteRenderer.Sprite.Texture))
+                    {
+                        texID = i + 1;
+                        break;
+                    }
                 }
+        }
 
         var translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
 
         if (spriteRenderer.Sprite != null)
         {
-            var width = spriteRenderer.Sprite.Texture.Width;
-            var height = spriteRenderer.Sprite.Texture.Height;
-
             translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
         }
 

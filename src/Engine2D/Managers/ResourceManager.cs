@@ -53,7 +53,7 @@ internal static class ResourceManager
                 switch (ext)
                 {
                     case ESupportedFileTypes.sprite:
-                        item = LoadSpriteFromJson(file);
+                        // item = LoadSpriteFromJson(file);
                         break;
                     case ESupportedFileTypes.tex:
                         item = LoadTextureFromJson(file);
@@ -114,45 +114,6 @@ internal static class ResourceManager
 
     #region Saving and loading
 
-    //Save Sprites
-    internal static void SaveSprite(string? defaultSaveName, Sprite sprite, DirectoryInfo? currentFolder = null,
-        bool overWrite = false)
-    {
-        var name = defaultSaveName;
-
-        if (!overWrite)
-            name = SaveLoad.GetNextFreeName(defaultSaveName, currentFolder);
-
-        var fullSaveName = name;
-
-        if (currentFolder != null)
-            fullSaveName = currentFolder.FullName + "\\" + name;
-
-        var spriteData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
-        File.WriteAllText(fullSaveName, spriteData);
-
-        AddItemToManager(fullSaveName, sprite);
-
-        AssetBrowserPanel.Refresh();
-
-        //TODO: MAKE THIS MORE EFFECIENT SO ONLY THE SPRITES WITH THE CHANGED SPRITE SHEET/FILE GET UPDATED
-        foreach (var spr in SpriteRenderers) spr.RefreshSprite();
-    }
-
-    internal static Sprite? LoadSpriteFromJson(string? filename)
-    {
-        if (File.Exists(filename))
-        {
-            var textureData = File.ReadAllText(filename);
-            if (_showDebug)
-                Log.Succes("Loaded texture " + filename);
-            return JsonConvert.DeserializeObject<Sprite>(textureData)!;
-        }
-
-        Log.Error("Can't load texture " + filename);
-        return null;
-    }
-
     //Save Textures
     internal static void SaveTexture(string? defaultSaveName, Texture texture, DirectoryInfo? currentFolder = null,
         bool overWrite = false)
@@ -176,7 +137,7 @@ internal static class ResourceManager
 
 
         //TODO: MAKE THIS MORE EFFECIENT SO ONLY THE SPRITES WITH THE CHANGED SPRITE SHEET/FILE GET UPDATED
-        foreach (var spr in SpriteRenderers) spr.RefreshSprite();
+        // foreach (var spr in SpriteRenderers) spr.RefreshSprite();
     }
 
     internal static Texture? LoadTextureFromJson(string? filename)
@@ -214,7 +175,7 @@ internal static class ResourceManager
         AssetBrowserPanel.Refresh();
 
         //TODO: MAKE THIS MORE EFFECIENT SO ONLY THE SPRITES WITH THE CHANGED SPRITE SHEET/FILE GET UPDATED
-        foreach (var spr in SpriteRenderers) spr.RefreshSprite();
+        // foreach (var spr in SpriteRenderers) spr.RefreshSprite();
     }
 
     internal static SpriteSheet? LoadSpriteSheetFromJson(string? filename)

@@ -121,7 +121,9 @@ internal class Scene
         foreach (var go in GameObjects) go.Start();
 
         var editorCameraGO = new EditorCameraGO("EDITORCAMERA");
+        
         EditorCamera = editorCameraGO.GetComponent<Camera>();
+        
         editorCameraGO.Serialize = false;
         
         AddGameObjectToScene(editorCameraGO);

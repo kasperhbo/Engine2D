@@ -2,6 +2,7 @@
 
 using System.Numerics;
 using Engine2D.Cameras;
+using Engine2D.Components.Sprites;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
@@ -31,7 +32,7 @@ internal class EditorCameraGO : Gameobject
         };
 
         components.Add(camera);
-
+        
         if (currentScene != null) Name = "Editor Camera: " + currentScene.GameObjects.Count + 1;
     }
 

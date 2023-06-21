@@ -2,189 +2,162 @@
 
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Text;
 using Engine2D.Components;
 using Engine2D.Components.Sprites;
-using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
-using Engine2D.Flags;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
+using Engine2D.SavingLoading;
+using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 #endregion
 
 namespace Engine2D.GameObjects;
 
-internal class KDBColor
-{
-    [JsonRequired] internal float a;
-    [JsonRequired] internal float b;
-    [JsonRequired] internal float g;
-    [JsonRequired] internal float r;
-
-    internal KDBColor()
-    {
-        r = 255;
-        g = 255;
-        b = 255;
-        a = 255;
-    }
-
-    internal KDBColor(KDBColor other)
-    {
-        r = other.r;
-        g = other.g;
-        b = other.b;
-        a = other.a;
-    }
-
-    internal KDBColor(float r, float g, float b, float a)
-    {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
-    }
-
-    [JsonIgnore] internal float RNormalized => r / 255;
-    [JsonIgnore] internal float GNormalized => g / 255;
-    [JsonIgnore] internal float BNormalized => b / 255;
-    [JsonIgnore] internal float ANormalized => a / 255;
-
-
-    internal bool Equals(KDBColor? obj)
-    {
-        if (obj == null)
-        {
-            Log.Error("Obj to check against not set  'KDB COLOR' ");
-            return false;
-        }
-
-        return r == obj.r && g == obj.g && b == obj.b && a == obj.a;
-    }
-
-    internal static void Copy(KDBColor from, KDBColor to)
-    {
-        from.r = to.r;
-        from.g = to.g;
-        from.b = to.b;
-        from.a = to.a;
-    }
-}
 
 [JsonConverter(typeof(ComponentSerializer))]
 internal class SpriteRenderer : Component
 {
-    [ShowUI(show = false)][JsonIgnore] private readonly Vector2[] _defaultTextureCoords =
-    {
-        new(1.0f, 1.0f),
-        new(1.0f, 0.0f),
-        new(0.0f, 0.0f),
-        new(0.0f, 1.0f)
-    };
-
-    [ShowUI(show = false)][JsonIgnore] private readonly KDBColor _lastColor = new();
-
-    // 0.5f,   0.5f, 0.0f,    1.0f, 1.0f,   // top right
-    // 0.5f,  -0.5f, 0.0f,    1.0f, 0.0f,   // bottom right
-    // -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom left
-    // -0.5f,  0.5f, 0.0f,    0.0f, 1.0f    // top left 
-    [ShowUI(show = false)][JsonIgnore] private readonly Transform _lastTransform = new();
-    [ShowUI(show = false)][JsonProperty] private string _spriteSaveFile = "";
-    [JsonProperty] internal KDBColor Color = new();
-    [JsonProperty] internal int ZIndex;
-    
-
-    [JsonConstructor]
-    internal SpriteRenderer()
-    {
-        IsDirty = true;
-    }
-
-    [JsonIgnore] internal Sprite? Sprite { get; private set; }
-    [JsonIgnore] internal bool IsDirty { get; set; }
-
+    [JsonIgnore] internal bool IsDirty = true;
+    [JsonIgnore] internal SpriteSheetSprite? Sprite;    
+    [JsonIgnore]
     internal Vector2[] TextureCoords
     {
         get
         {
-            if (Sprite == null) return _defaultTextureCoords;
-
-            return Sprite.TextureCoords;
+            if (Sprite != null)
+                return Sprite.TextureCoords;
+            else
+                return _defaultTextureCoords;
         }
     }
 
+    
+    
+    [JsonIgnore] private Renderer? _renderer;
+    [JsonIgnore]
+    private Vector2[] _defaultTextureCoords =
+    {
+        new(1, 1),
+        new(1, 0),
+        new(0, 0),
+        new(0, 1f)
+    };
+
+    [JsonProperty] internal int ZIndex = 0;
+    [JsonProperty] internal KDBColor Color;
+    [JsonProperty] internal bool HasSpriteSheet = false;
+    [JsonProperty] internal string? SpriteSheetPath = "";
+    [JsonProperty] internal int SpriteSheetSpriteIndex = 0;
+
     internal override void Init(Gameobject parent, Renderer? renderer)
     {
-        ResourceManager.SpriteRenderers.Add(this);
         base.Init(parent, renderer);
+        _renderer = renderer;
+        Initialize();
+    }
 
-        if (_spriteSaveFile == "")
-            Engine.Get().CurrentScene.Renderer.AddSpriteRenderer(this);
-        else
-            SetSprite(_spriteSaveFile);
+    internal override void Init(Gameobject parent)
+    {
+        base.Init(parent);
+        
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        if (_renderer == null)
+        {
+            _renderer = Engine.Get().CurrentScene.Renderer;
+        }
+
+        if (SpriteSheetPath != "" && HasSpriteSheet == true)
+        {
+            //Load sprite sheet
+            var spriteSheet = ResourceManager.GetItem<SpriteSheet>(SpriteSheetPath);
+            SetSprite(SpriteSheetSpriteIndex, spriteSheet);
+        }
     }
 
     public override void EditorUpdate(double dt)
     {
         base.EditorUpdate(dt);
+        this.IsDirty = true;
+    }
 
-        if (!_lastColor.Equals(Color) || !_lastTransform.Equals(Parent.GetComponent<Transform>()))
+    private void SetSprite(int spriteSheetIndex, string spriteSheet)
+    {
+        var sprs = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
+        if (sprs == null)
         {
-            IsDirty = true;
-            KDBColor.Copy(_lastColor, Color);
-            Transform.Copy(_lastTransform, Parent.GetComponent<Transform>());
+            Log.Error("Couldn't find sprite sheet: " + spriteSheet);
+            return;
         }
+        
+        SetSprite(spriteSheetIndex, sprs);
     }
 
-    internal void RefreshSprite()
+    private void SetSprite(int spriteSheetIndex, SpriteSheet spriteSheet)
     {
-        SetSprite(_spriteSaveFile);
+        _renderer.RemoveSprite(this);
+        HasSpriteSheet = true;
+        
+        Sprite = spriteSheet.Sprites[spriteSheetIndex];
+        SpriteSheetPath = spriteSheet.SavePath;
+        SpriteSheetSpriteIndex = spriteSheetIndex;
+        
+        _renderer.AddSpriteRenderer(this);
     }
+    
 
-    internal void SetSprite(string newSprite)
-    {
-        Engine.Get().CurrentScene?.Renderer?.RemoveSprite(this);
-
-        IsDirty = true;
-        var oldSprite = _spriteSaveFile;
-        _spriteSaveFile = newSprite;
-
-        Sprite = ResourceManager.GetItem<Sprite>(_spriteSaveFile);
-        Engine.Get().CurrentScene?.Renderer?.AddSpriteRenderer(this);
-    }
-
-    private void SetSprite(object sender, FileSystemEventArgs e)
-    {
-        Console.WriteLine("Folder changed");
-        SetSprite(e.FullPath);
-    }
-
-    public override void ImGuiFields()
+    public override unsafe void ImGuiFields()
     {
         base.ImGuiFields();
        
+        ImGui.Button("set sprite");
+        
         if (ImGui.BeginDragDropTarget())
         {
-            var payload = ImGui.AcceptDragDropPayload("sprite_drop");
+            var payload = ImGui.AcceptDragDropPayload("spritesheet_drop");
             if (payload.IsValidPayload())
             {
-                var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
-                SetSprite(filename);
+                // Retrieve the payload data as byte array
+                byte[] payloadData = new byte[payload.DataSize];
+                Marshal.Copy(payload.Data, payloadData, 0, payloadData.Length);
+
+                // Deserialize the sprite from the payload data
+                SpriteSheetSprite droppedSprite = DeserializeSprite(payloadData);
+
+                // Do something with the dropped sprite...
+                // For example, display a message with the sprite name
+                SetSprite(droppedSprite.Index, droppedSprite.FullSavePath);
             }
 
             ImGui.EndDragDropTarget();
         }
-        //
-        //
-        // if (Sprite != null)
-        // {
-        //     ImGui.InputFloat2("0", ref Sprite.TextureCoords[0]);
-        //     ImGui.InputFloat2("1", ref Sprite.TextureCoords[1]);
-        //     ImGui.InputFloat2("2", ref Sprite.TextureCoords[2]);
-        //     ImGui.InputFloat2("3", ref Sprite.TextureCoords[3]);
-        // }
+       
+    }
+    
+    // Serialize a sprite into a byte array
+    internal static byte[] SerializeSprite(SpriteSheetSprite sprite)
+    {
+        // Implement your serialization logic here
+        // For simplicity, let's assume you're using JSON serialization
+        string jsonString = JsonConvert.SerializeObject(sprite);
+        return Encoding.UTF8.GetBytes(jsonString);
+    }
+
+    // Deserialize a sprite from a byte array
+    internal static SpriteSheetSprite DeserializeSprite(byte[] data)
+    {
+        // Implement your deserialization logic here
+        // For simplicity, let's assume you're using JSON deserialization
+        string jsonString = Encoding.UTF8.GetString(data);
+        return JsonConvert.DeserializeObject<SpriteSheetSprite>(jsonString);
     }
 }

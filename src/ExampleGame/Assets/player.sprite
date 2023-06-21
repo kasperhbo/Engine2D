@@ -1,0 +1,21 @@
+{
+  "TextureCoords": [
+    {
+      "X": 1.0,
+      "Y": 1.0
+    },
+    {
+      "X": 1.0,
+      "Y": 0.0
+    },
+    {
+      "X": 0.0,
+      "Y": 0.0
+    },
+    {
+      "X": 0.0,
+      "Y": 1.0
+    }
+  ],
+  "TexturePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\player.tex"
+}
