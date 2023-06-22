@@ -75,23 +75,22 @@ internal class SpriteSheet : AssetBrowserAsset
         if (Texture == null) Log.Error("No texture");
 
 
-        var currentX = 0;
-        var currentY = Texture.Height - spriteHeight;
-
+        int currentX = 0;
+        int currentY = Texture.Height - spriteHeight;
+        
         for (var i = 0; i < numSprites; i++)
         {
-            var topY = (currentY + spriteHeight) / (float)Texture.Height;
-            var rightX = (currentX + spriteWidth) / (float)Texture.Width;
-            var leftX = currentX / (float)Texture.Width;
-            var bottomY = currentY / (float)Texture.Height;
-
+            float topY = (currentY + spriteHeight) / (float)Texture.Height;
+            float rightX = (currentX + spriteWidth) / (float)Texture.Width;
+            float leftX = currentX / (float)Texture.Width;
+            float bottomY = currentY / (float)Texture.Height;
+            
             Vector2[] texCoords =
             {
-                new(rightX, topY),
-                new(rightX, bottomY),
-
-                new(leftX, bottomY),
-                new(leftX, topY)
+                new Vector2(rightX, topY),
+                new Vector2(rightX, bottomY),
+                new Vector2(leftX, bottomY),
+                new Vector2(leftX, topY)
             };
              
             var sprite = new Sprite(savePath, texCoords, spriteWidth, spriteHeight, i);
@@ -99,8 +98,7 @@ internal class SpriteSheet : AssetBrowserAsset
             Sprites.Add(sprite);
 
             currentX += spriteWidth + spacing;
-            if (currentX >= Texture.Height)
-            {
+            if (currentX >= Texture.Width) {
                 currentX = 0;
                 currentY -= spriteHeight + spacing;
             }
@@ -127,8 +125,7 @@ internal class SpriteSheet : AssetBrowserAsset
             ImGui.InputInt("padding", ref _spacing))
         {
             Init(_texturePath, SavePath, _spriteWidth, _spriteHeight, _numSprites, _spacing, true);
-
-            Engine.Get().CurrentSelectedAssetBrowserAsset.Add(this);
+            Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset = this;            
             _unsaved = true;
         }
 

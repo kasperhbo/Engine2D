@@ -1,6 +1,9 @@
 ﻿#region
 
+using Engine2D.Components.SpriteAnimations;
+using Engine2D.Components.Sprites;
 using Engine2D.Logging;
+using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.UI;
@@ -26,25 +29,13 @@ namespace Engine2D.Core
         private double _previousTime;
         
         internal Asset? CurrentSelectedAsset;
-        internal List<AssetBrowserAsset?> CurrentSelectedAssetBrowserAsset { get; private set; }= new();
-        internal void AddItemToCurrentSelectedAssetBrowserAsset(AssetBrowserAsset? asset)
-        {
-            if (asset == null) return;
-            List<AssetBrowserAsset> toRemove = new List<AssetBrowserAsset>();
-            foreach (var assetC in CurrentSelectedAssetBrowserAsset)          
-            {
-                if (assetC.GetType() == asset.GetType())
-                {
-                    toRemove.Add(asset);
-                }
-            }
-            foreach (var assetC in toRemove)
-            {
-                CurrentSelectedAssetBrowserAsset.Remove(assetC);
-            }
+        
+        
+        internal SpriteSheet? CurrentSelectedSpriteSheetAssetBrowserAsset { get; set; }= null;
+        internal Texture? CurrentSelectedTextureAssetBrowserAsset     { get; set; } = null;
+        internal Animation? CurrentSelectedAnimationAssetBrowserAsset   { get; set; } = null;
+        
             
-            s_instance!.CurrentSelectedAssetBrowserAsset.Add(asset);
-        }
 
         internal Scene? CurrentScene { get; private set; }
 
@@ -200,6 +191,8 @@ namespace Engine2D.Core
         {
             get { return (double)DateTime.Now.Ticks / TimeSpan.TicksPerSecond; }
         }
+
+        
 
         #endregion
     }

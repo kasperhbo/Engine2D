@@ -76,8 +76,6 @@ internal class Animation : AssetBrowserAsset
 
     private void ShowTimeLine()
     {
-        // Create ImGui window
-        
         ImGui.Begin("Timeline Example", ImGuiWindowFlags.NoCollapse);
 
         ImGui.Text("Timeline");
@@ -87,23 +85,90 @@ internal class Animation : AssetBrowserAsset
         }
 
         var fullSizeX = ImGui.GetContentRegionMax().X;
-        ImGui.BeginChild("TimelineChild", new Vector2(fullSizeX, 150), true, ImGuiWindowFlags.HorizontalScrollbar);
-
+        ImGui.BeginChild("TimelineChild", new Vector2(fullSizeX, TimeLineHeight + 50), true, ImGuiWindowFlags.HorizontalScrollbar);
         
-        // Draw timeline background
-        // ImGui.GetWindowDrawList().AddRectFilled(ImGui.GetCursorScreenPos(), ImGui.GetCursorScreenPos() + new Vector2(fullSizeX, timeLineHeight), ImGui.GetColorU32(new Vector4(1,0,0,1)), 4);
         ImGui.GetWindowDrawList().AddRectFilled(ImGui.GetCursorScreenPos(), ImGui.GetCursorScreenPos() + new Vector2(fullSizeX-5, TimeLineHeight), ImGui.GetColorU32(ImGuiCol.FrameBgActive), 4);
-        // Add an invisible button on top of the timeline background to capture mouse events
+        
         var timeLineWidth = fullSizeX - 20;
+        InvisibleButtonForMouseEvents(timeLineWidth);
+
+        // Calculate the width per time step
+        float timeStepWidth = timeLineWidth / (_endTime - _startTime);
+
+        GetMouseTime(fullSizeX, timeStepWidth);
+
+        DrawTimeText(timeLineWidth, timeStepWidth);
+
+        DrawKeyFrameMarkers(timeLineWidth);
+        
+        // Calculate the current time position on the timeline
+        float currentTimePos = ImGui.GetCursorScreenPos().X + ((_currentTime - _startTime) / (_endTime - _startTime)) * timeLineWidth;
+
+        // Draw current time indicator
+        ImGui.GetWindowDrawList().AddLine(new Vector2(currentTimePos, ImGui.GetCursorScreenPos().Y), new Vector2(currentTimePos, ImGui.GetCursorScreenPos().Y + TimeLineHeight), ImGui.GetColorU32(ImGuiCol.Text), 2);
+        
+        ImGui.EndChild();
+        
+        RenderUnderTimeLineItems();
+        RenderAnimationPreview();
+
+        ImGui.End();
+    }
+
+    private void RenderAnimationPreview()
+    {
+        if (_keyframes.Count <= 0) return;
+        
+        Frame currentFrame = _keyframes[GetCurrentKeyframeIndex()].Frame;
+        SpriteSheet spriteSheet = ResourceManager.GetItem<SpriteSheet>(currentFrame.SpriteSheetPath);
+        int spriteIndex = currentFrame.SpriteSheetSpriteIndex;
+
+        Sprite sprite = spriteSheet.Sprites[spriteIndex];
+
+        if(sprite != null)
+        {
+            ImGui.Image(sprite.Texture.TexID, new Vector2(128), sprite.TextureCoords[3],
+                sprite.TextureCoords[1]);
+        }
+    }
+
+    private void RenderUnderTimeLineItems()
+    {
+        string timeText =  _endTime.ToString();
+        ImGui.InputText("End Time Input", ref timeText, 10);
+        float.TryParse(timeText, out _endTime);
+        
+        ImGui.DragFloat("End Time", ref _endTime, 0, 1000, 0.1f);
+        if (_isPlaying)
+        {
+            if (ImGui.Button("Pause"))
+            {
+                _isPlaying = false;
+            }
+        }
+        else
+        {
+            if (ImGui.Button("Play"))
+            {
+                _isPlaying = true;
+            }
+        }
+    }
+
+    private void InvisibleButtonForMouseEvents(float timeLineWidth)
+    {
         var pos = ImGui.GetCursorScreenPos();
         var pos2 = ImGui.GetCursorPos();
         
         ImGui.InvisibleButton("##TimelineBackground", new Vector2(timeLineWidth, TimeLineHeight));
+        HandleSpriteDrop();
         
         ImGui.SetCursorScreenPos(pos);
         ImGui.SetCursorPos(pos2);
-        
-        
+    }
+
+    private void HandleSpriteDrop()
+    {
         if (ImGui.BeginDragDropTarget())
         {
             var payload = ImGui.AcceptDragDropPayload("spritesheet_drop");
@@ -123,13 +188,30 @@ internal class Animation : AssetBrowserAsset
 
             ImGui.EndDragDropTarget();
         }
-        
-        // Calculate the width per time step
-        float timeStepWidth = timeLineWidth / (_endTime - _startTime);
 
-        GetMouseTime(fullSizeX, timeStepWidth);
+    }
 
+    private void DrawKeyFrameMarkers (float timeLineWidth)
+    {
+        // Draw keyframe markers
+        for (int i = 0; i < _keyframes.Count; i++)
+        {
+            var keyframe = _keyframes[i];
+            float markerX = ImGui.GetCursorScreenPos().X + ((keyframe.Time - _startTime) / (_endTime - _startTime)) * timeLineWidth;
+
+            ImGui.PushID(i); // Push ID for ImGui widget differentiation
+
+            ImGui.GetWindowDrawList().AddLine(new Vector2(markerX, ImGui.GetCursorScreenPos().Y), new Vector2(markerX, ImGui.GetCursorScreenPos().Y + TimeLineHeight), ImGui.GetColorU32(new Vector4(1,0,0,1)), 2);
+            
+            ImGui.PopID(); // Pop ID
+        }
+
+    }
+
+    private void DrawTimeText(float timeLineWidth, float timeStepWidth)
+    {
         var ogPos = ImGui.GetCursorScreenPos();
+
         float y = ImGui.GetCursorScreenPos().Y + TimeLineHeight;
 
         // Calculate the number of steps based on the minimum step width (e.g., 50 pixels)
@@ -154,61 +236,7 @@ internal class Animation : AssetBrowserAsset
             ImGui.PopStyleColor();
         }
         
-        
-        //Reset position
         ImGui.SetCursorScreenPos(ogPos);
-        // Draw keyframe markers
-        for (int i = 0; i < _keyframes.Count; i++)
-        {
-            var keyframe = _keyframes[i];
-            float markerX = ImGui.GetCursorScreenPos().X + ((keyframe.Time - _startTime) / (_endTime - _startTime)) * timeLineWidth;
-
-            ImGui.PushID(i); // Push ID for ImGui widget differentiation
-
-            ImGui.GetWindowDrawList().AddLine(new Vector2(markerX, ImGui.GetCursorScreenPos().Y), new Vector2(markerX, ImGui.GetCursorScreenPos().Y + TimeLineHeight), ImGui.GetColorU32(new Vector4(1,0,0,1)), 2);
-            
-            ImGui.PopID(); // Pop ID
-        }
-
-        // Calculate the current time position on the timeline
-        float currentTimePos = ImGui.GetCursorScreenPos().X + ((_currentTime - _startTime) / (_endTime - _startTime)) * timeLineWidth;
-
-        // Draw current time indicator
-        ImGui.GetWindowDrawList().AddLine(new Vector2(currentTimePos, ImGui.GetCursorScreenPos().Y), new Vector2(currentTimePos, ImGui.GetCursorScreenPos().Y + TimeLineHeight), ImGui.GetColorU32(ImGuiCol.Text), 2);
-        
-        ImGui.EndChild();
-
-        if (_isPlaying)
-        {
-            if (ImGui.Button("Pause"))
-            {
-                _isPlaying = false;
-            }
-        }
-        else
-        {
-            if (ImGui.Button("Play"))
-            {
-                _isPlaying = true;
-            }
-        }
-
-        ImGui.SliderFloat("End Time", ref _endTime, 0, 100);
-        
-
-        Frame currentFrame = _keyframes[GetCurrentKeyframeIndex()].Frame;
-        SpriteSheet spriteSheet = ResourceManager.GetItem<SpriteSheet>(currentFrame.SpriteSheetPath);
-        int spriteIndex = currentFrame.SpriteSheetSpriteIndex;
-       
-        Sprite sprite = spriteSheet.Sprites[spriteIndex];
-
-        if(sprite != null)
-        {
-            ImGui.Image(sprite.Texture.TexID, new Vector2(128), sprite.TextureCoords[3],
-                sprite.TextureCoords[1]);
-        }
-
-        ImGui.End();
     }
     
     private int GetCurrentKeyframeIndex()

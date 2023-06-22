@@ -69,10 +69,7 @@ internal class AssetBrowserPanel : UIElement
 
     internal static void Refresh()
     {
-        var cur = Engine.Get().CurrentSelectedAssetBrowserAsset;
-
         foreach (var panel in AssetBrowserPanels) panel.SwitchDirectory(panel.CurrentDirectory);
-
     }
 
     internal override void RenderTopBar()
@@ -453,7 +450,7 @@ internal class AssetBrowserEntry
                     savePath += Label.Remove(Label.Length - 4);
                     savePath += ".spritesheet";
 
-                    var spriteSheet = new SpriteSheet(FullPath, savePath, 16, 32, 42, 0);
+                    var spriteSheet = new SpriteSheet(FullPath, savePath, 16, 16, 1, 0);
                     spriteSheet.Save();
                     AssetBrowserPanel.Refresh();
                 }
@@ -484,21 +481,21 @@ internal class AssetBrowserEntry
         //Loading items on clicked to show their inspector
         if (ImGui.IsItemClicked() && ImGui.IsMouseClicked(ImGuiMouseButton.Left))
         {
-            if (_fileType == ESupportedFileTypes.tex) 
-                Engine.Get().AddItemToCurrentSelectedAssetBrowserAsset(_texture);
+            if (_fileType == ESupportedFileTypes.tex)
+                Engine.Get().CurrentSelectedTextureAssetBrowserAsset = _texture;
             
             if (_fileType == ESupportedFileTypes.spritesheet)
             {
                 // SpriteSheet sprite = SaveLoad.LoadSpriteSheetFromJson(fullPath);
                 var spriteSheet = ResourceManager.GetItem<SpriteSheet>(FullPath);
-                Engine.Get().AddItemToCurrentSelectedAssetBrowserAsset(spriteSheet);
+                Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset = spriteSheet;
             }
 
             if (_fileType == ESupportedFileTypes.animation)
             {
                 Log.Warning("Clicked animation");
                 var animation = ResourceManager.GetItem<Animation>(FullPath);
-                Engine.Get().AddItemToCurrentSelectedAssetBrowserAsset(animation);
+                Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = animation;
             }
             
         }

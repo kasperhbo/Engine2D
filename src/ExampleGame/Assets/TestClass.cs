@@ -28,8 +28,5 @@ public class TestClass : Component
     public override void ImGuiFields()
     {
         base.ImGuiFields();
-        Console.ForegroundColor = (System.ConsoleColor.Red);
-        Console.WriteLine("New build");
-        Console.WriteLine("Updating imgui fields");
     }
 }

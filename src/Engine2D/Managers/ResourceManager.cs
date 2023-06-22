@@ -93,6 +93,8 @@ internal static class ResourceManager
 
     internal static T? GetItem<T>(string? path) where T : AssetBrowserAsset
     {
+        if (path == null) return null;
+        
         path = path.ToLower();
         for (var i = 0; i < _items.Count; i++)
         {

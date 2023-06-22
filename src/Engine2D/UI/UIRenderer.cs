@@ -80,12 +80,10 @@ internal static class UiRenderer
         DrawToolbar();
         SetupDockSpace();
 
-        var currentSelectedAssetBrowserAssets = Engine.Get().CurrentSelectedAssetBrowserAsset;
+        Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset?.OnGui(); 
+        Engine.Get().CurrentSelectedTextureAssetBrowserAsset?.OnGui();     
+        Engine.Get().CurrentSelectedAnimationAssetBrowserAsset?.OnGui();   
         
-        foreach (var asset in currentSelectedAssetBrowserAssets)
-        {
-            asset.OnGui();
-        }
 
         ImGui.ShowDemoWindow();
 

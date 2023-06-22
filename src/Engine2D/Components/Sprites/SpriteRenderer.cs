@@ -95,6 +95,7 @@ internal class SpriteRenderer : Component
     internal void SetSprite(int spriteSheetIndex, string spriteSheet)
     {
         var sprs = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
+        
         if (sprs == null)
         {
             Log.Error("Couldn't find sprite sheet: " + spriteSheet);
@@ -161,6 +162,7 @@ internal class SpriteRenderer : Component
                 // Do something with the dropped sprite...
                 // For example, display a message with the sprite name
                 SetSprite(droppedSprite.Index, droppedSprite.FullSavePath);
+                Console.WriteLine("Set Sprite");
             }
 
             ImGui.EndDragDropTarget();
