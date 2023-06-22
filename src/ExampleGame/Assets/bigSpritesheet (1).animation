@@ -1,108 +1,60 @@
 {
-  "_endTime": 7.253,
-  "keyframes": [
+  "_endTime": 6.787,
+  "_keyframes": [
     {
-      "Time": 0.0,
+      "Time": 0.027175175,
       "Frame": {
-        "FrameTime": 0.1,
-        "SpriteSheetSpriteIndex": 10,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
-      }
-    },
-    {
-      "Time": 0.1,
-      "Frame": {
-        "FrameTime": 0.1,
-        "SpriteSheetSpriteIndex": 12,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
-      }
-    },
-    {
-      "Time": 0.2,
-      "Frame": {
-        "FrameTime": 0.1,
-        "SpriteSheetSpriteIndex": 21,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
-      }
-    },
-    {
-      "Time": 0.3,
-      "Frame": {
-        "FrameTime": 0.1,
-        "SpriteSheetSpriteIndex": 31,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
-      }
-    },
-    {
-      "Time": 0.4,
-      "Frame": {
-        "FrameTime": 0.1,
-        "SpriteSheetSpriteIndex": 12,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
-      }
-    },
-    {
-      "Time": 0.5,
-      "Frame": {
-        "FrameTime": 0.1,
-        "SpriteSheetSpriteIndex": 40,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
-      }
-    },
-    {
-      "Time": 0.6,
-      "Frame": {
-        "FrameTime": 0.1,
-        "SpriteSheetSpriteIndex": 6,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
-      }
-    },
-    {
-      "Time": 0.70000005,
-      "Frame": {
-        "FrameTime": 0.1,
+        "FrameTime": 0.027175175,
         "SpriteSheetSpriteIndex": 7,
         "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
       }
     },
     {
-      "Time": 0.8000001,
+      "Time": 0.713248,
       "Frame": {
-        "FrameTime": 0.1,
-        "SpriteSheetSpriteIndex": 8,
+        "FrameTime": 0.713248,
+        "SpriteSheetSpriteIndex": 5,
         "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
       }
     },
     {
-      "Time": 1.9000001,
+      "Time": 1.053038,
       "Frame": {
-        "FrameTime": 0.1,
-        "SpriteSheetSpriteIndex": 9,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
-      }
-    },
-    {
-      "Time": 3.6519108,
-      "Frame": {
-        "FrameTime": 3.6519108,
+        "FrameTime": 1.053038,
         "SpriteSheetSpriteIndex": 0,
+        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\player.spritesheet"
+      }
+    },
+    {
+      "Time": 1.8109813,
+      "Frame": {
+        "FrameTime": 1.8109813,
+        "SpriteSheetSpriteIndex": 4,
+        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\player.spritesheet"
+      }
+    },
+    {
+      "Time": 1.847912,
+      "Frame": {
+        "FrameTime": 1.847912,
+        "SpriteSheetSpriteIndex": 1,
         "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
       }
     },
     {
-      "Time": 4.0076637,
+      "Time": 2.6412466,
       "Frame": {
-        "FrameTime": 4.0076637,
-        "SpriteSheetSpriteIndex": 38,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
+        "FrameTime": 2.6412466,
+        "SpriteSheetSpriteIndex": 4,
+        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\player.spritesheet"
       }
     },
     {
-      "Time": 5.452455,
+      "Time": 3.075882,
       "Frame": {
-        "FrameTime": 5.452455,
-        "SpriteSheetSpriteIndex": 41,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet"
+        "FrameTime": 3.075882,
+        "SpriteSheetSpriteIndex": 4,
+        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\player.spritesheet"
       }
     }
   ],
