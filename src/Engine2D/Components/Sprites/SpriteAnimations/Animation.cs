@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System.Globalization;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Engine2D.Components.Sprites;
 using Engine2D.Core;
@@ -7,7 +9,10 @@ using Engine2D.Managers;
 using Engine2D.UI;
 using ImGuiNET;
 using ImGuizmoNET;
+using ImTool;
 using Newtonsoft.Json;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using Vortice.Direct3D11;
 
 namespace Engine2D.Components.SpriteAnimations;
 
@@ -26,21 +31,32 @@ internal class Keyframe
 
 internal class Animation : AssetBrowserAsset
 {
+    [JsonIgnore]  private const float TimeLineHeight = 100;
+    [JsonIgnore]  private const float KeyFrameMarkerRadius = 4f;
+    [JsonIgnore]  private float _startTime = 0f;
+    [JsonIgnore]  private float _currentTime = 0f;
+    [JsonIgnore]  private float _mouseTime = 0;
+    [JsonIgnore]  private bool _isDraggingTimeline;
+    [JsonIgnore]  private bool _isDraggingKeyframe;
+    [JsonIgnore]  private Keyframe? _currentDraggingKeyFrame = null;
     
-    [JsonIgnore]private float _startTime = 0f;
-    [JsonIgnore]private float _currentTime = 0f;
-    [JsonIgnore]private SpriteSheet? _spriteSheet = null;
-    [JsonIgnore]private bool _isPlaying = false;
-    [JsonIgnore]private float _mouseTime = 0;
-    [JsonIgnore] private const float TimeLineHeight = 100;
+    [JsonIgnore]  public bool IsPlaying = false;
+    [JsonIgnore]  public bool AttachedToSpriteRenderer = false;
+    
+    [JsonProperty]public float _endTime = 0;
+    [JsonProperty]public List<Keyframe> _keyframes = new List<Keyframe>();
+    [JsonProperty]public string SavePath = "";
+    
 
-    [JsonProperty]private float _endTime = 0;
-    [JsonProperty]private List<Keyframe> _keyframes = new List<Keyframe>();
-    [JsonProperty]private string _savePath = "";
-
+    
+    public Animation()
+    {
+        
+    }
+    
     internal Animation(string savePath)
     {
-        this._savePath = savePath;
+        this.SavePath = savePath;
     }
 
 
@@ -48,35 +64,58 @@ internal class Animation : AssetBrowserAsset
     internal Animation(List<Keyframe> keyframes, string savePath)
     {
         this._keyframes = keyframes;
-        this._savePath = savePath;
+        this.SavePath = savePath;
+    }
+
+    private void Init(List<Keyframe> keyframes, string savePath)
+    {
+        this._keyframes = keyframes;
+        this.SavePath = savePath;
     }
 
 
-    internal override void OnGui()
+    internal void Update(double dt)
     {
-        ShowTimeLine();
-
-        if (_isPlaying)
+        if (IsPlaying)
         {
-            _currentTime += (float)Engine.DeltaTime;
+            _currentTime += (float)dt;
             if (_currentTime >= _endTime)
             {
                 _currentTime = 0f;
             }
-
         }
     }
 
+    internal override void OnGui()
+    {
+        if(!AttachedToSpriteRenderer)Update(Engine.DeltaTime);
+        
+        ShowTimeLine();
+
+        if (_isDraggingKeyframe)
+            HandleKeyFrameDragging();
+    }
+
+    internal override void Refresh()
+    {
+        Init(this._keyframes, this.SavePath);
+    }
+
+    private void SortKeyFrames()
+    {
+        _keyframes.Sort((kf1, kf2) => kf1.Time.CompareTo(kf2.Time));
+    }
+    
     private void AddKeyFrame(Keyframe keyFrame)
     {
         _keyframes.Add(keyFrame);
-        _keyframes.Sort((kf1, kf2) => kf1.Time.CompareTo(kf2.Time));
+        SortKeyFrames();
         Save();
     }
 
     private void ShowTimeLine()
     {
-        ImGui.Begin("Timeline Example", ImGuiWindowFlags.NoCollapse);
+        ImGui.Begin("Timeline", ImGuiWindowFlags.NoCollapse);
 
         ImGui.Text("Timeline");
         if (ImGui.Button("Save"))
@@ -119,17 +158,23 @@ internal class Animation : AssetBrowserAsset
     {
         if (_keyframes.Count <= 0) return;
         
+        Sprite sprite = GetCurrentSprite();
+        
+        if(sprite != null)
+        {
+            // if (sprite.Texture == null) return;
+            ImGui.Image(sprite.Texture.TexID, new Vector2(128), sprite.TextureCoords[3],
+                sprite.TextureCoords[1]);
+        }
+    }
+
+    public Sprite? GetCurrentSprite()
+    {
         Frame currentFrame = _keyframes[GetCurrentKeyframeIndex()].Frame;
         SpriteSheet spriteSheet = ResourceManager.GetItem<SpriteSheet>(currentFrame.SpriteSheetPath);
         int spriteIndex = currentFrame.SpriteSheetSpriteIndex;
 
-        Sprite sprite = spriteSheet.Sprites[spriteIndex];
-
-        if(sprite != null)
-        {
-            ImGui.Image(sprite.Texture.TexID, new Vector2(128), sprite.TextureCoords[3],
-                sprite.TextureCoords[1]);
-        }
+        return spriteSheet.Sprites[spriteIndex];
     }
 
     private void RenderUnderTimeLineItems()
@@ -139,18 +184,18 @@ internal class Animation : AssetBrowserAsset
         float.TryParse(timeText, out _endTime);
         
         ImGui.DragFloat("End Time", ref _endTime, 0, 1000, 0.1f);
-        if (_isPlaying)
+        if (IsPlaying)
         {
             if (ImGui.Button("Pause"))
             {
-                _isPlaying = false;
+                IsPlaying = false;
             }
         }
         else
         {
             if (ImGui.Button("Play"))
             {
-                _isPlaying = true;
+                IsPlaying = true;
             }
         }
     }
@@ -180,7 +225,6 @@ internal class Animation : AssetBrowserAsset
 
                 // Deserialize the sprite from the payload data
                 Sprite droppedSprite = SpriteRenderer.DeserializeSprite(payloadData);
-                Console.WriteLine("dropped sprite at time" + _mouseTime);
                 Frame frame = new Frame( droppedSprite.Index, droppedSprite.FullSavePath,_mouseTime);
                 Keyframe keyFrame = new Keyframe(_mouseTime, frame);
                 AddKeyFrame(keyFrame);
@@ -191,23 +235,61 @@ internal class Animation : AssetBrowserAsset
 
     }
 
+
+
     private void DrawKeyFrameMarkers (float timeLineWidth)
     {
         // Draw keyframe markers
         for (int i = 0; i < _keyframes.Count; i++)
         {
             var keyframe = _keyframes[i];
-            float markerX = ImGui.GetCursorScreenPos().X + ((keyframe.Time - _startTime) / (_endTime - _startTime)) * timeLineWidth;
+            float markerX = ImGui.GetCursorScreenPos().X +
+                            ((keyframe.Time - _startTime) / (_endTime - _startTime)) * timeLineWidth;
 
             ImGui.PushID(i); // Push ID for ImGui widget differentiation
 
-            ImGui.GetWindowDrawList().AddLine(new Vector2(markerX, ImGui.GetCursorScreenPos().Y), new Vector2(markerX, ImGui.GetCursorScreenPos().Y + TimeLineHeight), ImGui.GetColorU32(new Vector4(1,0,0,1)), 2);
+            ImGui.GetWindowDrawList().AddLine(
+                new Vector2(markerX, ImGui.GetCursorScreenPos().Y),
+                new Vector2(markerX, ImGui.GetCursorScreenPos().Y + TimeLineHeight),
+                ImGui.GetColorU32(new Vector4(1, 0, 0, 1)), KeyFrameMarkerRadius);
+
+            // Check if mouse is hovering over the keyframe marker
+            if (ImGui.IsMouseHoveringRect(
+                    new Vector2(markerX - KeyFrameMarkerRadius, ImGui.GetCursorScreenPos().Y),
+                    new Vector2(markerX + KeyFrameMarkerRadius, ImGui.GetCursorScreenPos().Y + TimeLineHeight)))
+            {
+                if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
+                {
+                    if(_isDraggingTimeline == false)
+                    {
+                        if (_isDraggingKeyframe == false)
+                        {
+                            _isDraggingKeyframe = true;
+                            _currentDraggingKeyFrame = keyframe;
+                        }
+                    }
+                }
+            }
+
+            if (_isDraggingKeyframe && ImGui.IsMouseReleased(ImGuiMouseButton.Left))
+            {
+                _isDraggingKeyframe = false;
+                _currentDraggingKeyFrame.Time = _mouseTime;
+                _currentDraggingKeyFrame = null;
+                SortKeyFrames();
+            }
             
             ImGui.PopID(); // Pop ID
         }
-
     }
 
+    private void HandleKeyFrameDragging()
+    {
+        if (_currentDraggingKeyFrame == null) return;
+
+        _currentDraggingKeyFrame.Time = _mouseTime;
+    }
+    
     private void DrawTimeText(float timeLineWidth, float timeStepWidth)
     {
         var ogPos = ImGui.GetCursorScreenPos();
@@ -268,7 +350,22 @@ internal class Animation : AssetBrowserAsset
         {
             // Calculate the corresponding time based on the mouse position
             _mouseTime = _startTime + mousePos.X / timeStepWidth;
+            
+            if(ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+            {
+                _currentTime = _mouseTime;
+            }
 
+            if (ImGui.IsMouseDragging(ImGuiMouseButton.Left))
+            {
+                _isDraggingTimeline = true;
+                _currentTime = _mouseTime;
+            }
+            else
+            {
+                _isDraggingTimeline = false;
+            }
+            
             // Draw a tooltip with the cursor time
             ImGui.BeginTooltip();
             ImGui.Text("Cursor Time: " + _mouseTime.ToString("0.00"));
@@ -278,8 +375,11 @@ internal class Animation : AssetBrowserAsset
     
     internal void Save()
     {
-        AssetName = _savePath;
-        ResourceManager.SaveAnimation(_savePath,
+        AssetName = SavePath;
+        var animc = new SaveAnimationClass(SavePath,
             this, null, true);
+        ResourceManager.AnimationsToSave.Add(animc);
     }
+    
+    
 }

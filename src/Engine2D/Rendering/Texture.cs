@@ -29,7 +29,6 @@ internal class Texture : AssetBrowserAsset
 
     [JsonIgnore] internal byte[] Data;
     [JsonIgnore] internal bool Flipped;
-
     [JsonIgnore] internal int TexID;
 
 
@@ -241,6 +240,12 @@ internal class Texture : AssetBrowserAsset
         ImGui.End();
     }
 
+    internal override void Refresh()
+    {
+        // Gen();
+        // CreateOpenGL();
+    }
+
     private void SelectNewMinFilter(int index)
     {
         if (index == 0)
@@ -272,6 +277,7 @@ internal class Texture : AssetBrowserAsset
             return;
         }
 
-        ResourceManager.SaveTexture(_saveName, this, null, true);
+        SaveTextureClass sc = new(_saveName, this, null, true);
+        ResourceManager.TexturesToSave.Add(sc);
     }
 }

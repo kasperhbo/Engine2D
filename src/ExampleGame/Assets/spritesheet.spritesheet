@@ -1,7 +1,7 @@
 {
   "Sprites": [
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 0,
       "Width": 16,
       "Height": 16,
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 1,
       "Width": 16,
       "Height": 16,
@@ -49,7 +49,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 2,
       "Width": 16,
       "Height": 16,
@@ -73,7 +73,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 3,
       "Width": 16,
       "Height": 16,
@@ -97,7 +97,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 4,
       "Width": 16,
       "Height": 16,
@@ -121,7 +121,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 5,
       "Width": 16,
       "Height": 16,
@@ -145,7 +145,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 6,
       "Width": 16,
       "Height": 16,
@@ -169,7 +169,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 7,
       "Width": 16,
       "Height": 16,
@@ -193,7 +193,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 8,
       "Width": 16,
       "Height": 16,
@@ -217,7 +217,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 9,
       "Width": 16,
       "Height": 16,
@@ -241,7 +241,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 10,
       "Width": 16,
       "Height": 16,
@@ -265,7 +265,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 11,
       "Width": 16,
       "Height": 16,
@@ -289,7 +289,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 12,
       "Width": 16,
       "Height": 16,
@@ -313,7 +313,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 13,
       "Width": 16,
       "Height": 16,
@@ -337,7 +337,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 14,
       "Width": 16,
       "Height": 16,
@@ -361,7 +361,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 15,
       "Width": 16,
       "Height": 16,
@@ -385,7 +385,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 16,
       "Width": 16,
       "Height": 16,
@@ -409,7 +409,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 17,
       "Width": 16,
       "Height": 16,
@@ -433,7 +433,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 18,
       "Width": 16,
       "Height": 16,
@@ -457,7 +457,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 19,
       "Width": 16,
       "Height": 16,
@@ -481,7 +481,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 20,
       "Width": 16,
       "Height": 16,
@@ -505,7 +505,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 21,
       "Width": 16,
       "Height": 16,
@@ -529,7 +529,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 22,
       "Width": 16,
       "Height": 16,
@@ -553,7 +553,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 23,
       "Width": 16,
       "Height": 16,
@@ -577,7 +577,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 24,
       "Width": 16,
       "Height": 16,
@@ -601,7 +601,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
       "Index": 25,
       "Width": 16,
       "Height": 16,
@@ -625,8 +625,8 @@
       ]
     }
   ],
-  "_texturePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.tex",
-  "SavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\spritesheet.spritesheet",
+  "_texturePath": "\\Assets\\spritesheet.tex",
+  "_savePath": "\\Assets\\spritesheet.spritesheet",
   "_numSprites": 26,
   "_spacing": 0,
   "_spriteHeight": 16,

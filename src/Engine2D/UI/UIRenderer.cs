@@ -4,6 +4,7 @@ using System.Numerics;
 using Dear_ImGui_Sample;
 using Engine2D.Core;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.UI.Browsers;
 using Engine2D.UI.Viewports;
 using Engine2D.Utilities;
@@ -71,7 +72,13 @@ internal static class UiRenderer
         KDBImGuiController.Update(_engine, args.Time);
 
         ImGui.Begin("Debug Helper");
-
+        ImGui.BeginChild("Renderer", new(-1, 90), true);
+        
+        ImGui.Text($"FPS: {1 / args.Time:0.00}");
+        ImGui.Text($"Frame Time: {args.Time * 1000:0.00}ms");
+        ImGui.Text("Render batches: " + Engine.Get().CurrentScene.Renderer.RenderBatches.Count);
+        
+        ImGui.EndChild();
         if (ImGui.Button("Reload Assembly")) AssemblyUtils.Reload();
 
         ImGui.End();
@@ -88,6 +95,8 @@ internal static class UiRenderer
         ImGui.ShowDemoWindow();
 
         KDBImGuiController.Render();
+        
+        ResourceManager.OnGUI();
     }
 
 

@@ -14,7 +14,9 @@ namespace Engine2D.Rendering;
 
 internal class Renderer
 {
-    private static readonly List<RenderBatch> _renderBatches = new();
+    internal List<RenderBatch> RenderBatches { get; private set; } = new();
+    internal List<RenderBatch> RenderBatchesToRemoveEndOfFrame { get; set; } = new();
+    
     private static readonly Dictionary<int, RenderBatch> _spriteBatchDict = new();
     private readonly int _maxLights = 250;
 
@@ -33,6 +35,7 @@ internal class Renderer
     internal TestFrameBuffer? EditorGameBuffer { get; set; }
 
     internal GlobalLight GlobalLight { get; set; }
+    
 
     internal void Init()
     {
@@ -41,7 +44,7 @@ internal class Renderer
 
     internal void Flush()
     {
-        _renderBatches.Clear();
+        RenderBatches.Clear();
         _spriteBatchDict.Clear();
 
         //Create light data
@@ -56,6 +59,8 @@ internal class Renderer
 
     internal void Render(Camera editorCamera, Camera gameCamera)
     {
+        RenderBatchesToRemoveEndOfFrame = new();
+        
         _drawCalls = 0;
 
         if (Settings.s_RenderDebugWindowSeperate)
@@ -86,11 +91,21 @@ internal class Renderer
                 GL.Enable(EnableCap.Blend);
                 GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
 
-                foreach (var batch in _renderBatches) batch.Render(editorCamera, LightmapTexture);
+                foreach (var batch in RenderBatches) batch.Render(editorCamera, LightmapTexture, this);
 
                 if (Settings.s_IsEngine)
                     EditorGameBuffer.UnBind();
             }
+        }
+
+        RemoveOldBatches();
+    }
+
+    private void RemoveOldBatches()
+    {
+        foreach (var batch in RenderBatchesToRemoveEndOfFrame)
+        {
+            RenderBatches.Remove(batch);
         }
     }
 
@@ -121,8 +136,8 @@ internal class Renderer
         RenderBatch addedToBatch = null;
 
 
-        foreach (var batch in _renderBatches)
-            if (batch.HasRoom && batch.ZIndex == spr.ZIndex)
+        foreach (var batch in RenderBatches)
+            if (batch.HasRoom && batch.ZIndex == spr.ZIndex && batch.HasTexture(spr))
             {
                 added = true;
                 batch.AddSprite(spr);
@@ -135,8 +150,8 @@ internal class Renderer
             addedToBatch = batch;
             batch.Init();
             batch.AddSprite(spr);
-            _renderBatches.Add(batch);
-            _renderBatches.Sort();
+            RenderBatches.Add(batch);
+            RenderBatches.Sort();
         }
 
         if (_spriteBatchDict.ContainsKey(spr.Parent.UID)) return;

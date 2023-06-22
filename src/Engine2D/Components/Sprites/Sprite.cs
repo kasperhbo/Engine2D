@@ -26,5 +26,5 @@ internal class Sprite
     [JsonProperty]internal int Width { get; set; }
     [JsonProperty]internal int Height { get; set; }
     [JsonProperty]internal Vector2[] TextureCoords { get; set; } = new Vector2[4];
-    [JsonIgnore]internal Texture Texture => ResourceManager.GetItem<SpriteSheet>(FullSavePath).Texture;
+    [JsonIgnore]internal Texture? Texture => ResourceManager.GetItem<SpriteSheet>(FullSavePath)?.Texture;
 }

@@ -21,12 +21,11 @@ internal class SpriteSheet : AssetBrowserAsset
     [JsonIgnore] private GCHandle? _currentlyDraggedHandle;
     [JsonIgnore] public Texture Texture => ResourceManager.GetItem<Texture>(_texturePath);
     [JsonIgnore] private bool _unsaved;
-    
     [JsonProperty] internal List<Sprite> Sprites = new();
 
 
     [JsonProperty] private string? _texturePath = "";
-    [JsonProperty] public string? SavePath = "";
+    [JsonProperty] private string? _savePath = "";
     [JsonProperty] private int _numSprites;
     [JsonProperty] private int _spacing;
     [JsonProperty] private int _spriteHeight;
@@ -48,10 +47,16 @@ internal class SpriteSheet : AssetBrowserAsset
     private void Init(string? texturePath, string? savePath, int spriteWidth, int spriteHeight, int numSprites,
         int spacing, bool unsaved = false)
     {
+        Sprites = new();
+        if (texturePath == null)
+        {
+            Log.Error("texture path null");
+            return;
+        }
         _unsaved = unsaved;
         
         _spacing = spacing;
-        SavePath = savePath;
+        _savePath = savePath;
         _numSprites = numSprites;
 
         Sprites = new();
@@ -65,13 +70,7 @@ internal class SpriteSheet : AssetBrowserAsset
         
         this._spriteHeight = spriteHeight;
         this._spriteWidth = spriteWidth;
-        
-        if (!File.Exists(_texturePath))
-        {
-            Log.Error(_texturePath + " Texture doesnt exsist");
-            return;
-        }
-        
+    
         if (Texture == null) Log.Error("No texture");
 
 
@@ -93,7 +92,7 @@ internal class SpriteSheet : AssetBrowserAsset
                 new Vector2(leftX, topY)
             };
              
-            var sprite = new Sprite(savePath, texCoords, spriteWidth, spriteHeight, i);
+            var sprite = new Sprite(_savePath, texCoords, spriteWidth, spriteHeight, i);
 
             Sprites.Add(sprite);
 
@@ -105,7 +104,7 @@ internal class SpriteSheet : AssetBrowserAsset
         }
     }
 
-    internal unsafe override void OnGui()
+    internal override unsafe void OnGui()
     {
         if (_unsaved)
             ImGui.Begin("Sprite sheet inspector", ImGuiWindowFlags.UnsavedDocument);
@@ -117,14 +116,14 @@ internal class SpriteSheet : AssetBrowserAsset
         if (ImGui.Button("Save")) Save();
 
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 10));
-        ImGui.Text(SavePath);
+        ImGui.Text(_savePath);
 
         if (ImGui.InputInt("sprite width", ref _spriteWidth) ||
             ImGui.InputInt("sprite height", ref _spriteHeight) ||
             ImGui.InputInt("num of sprites", ref _numSprites) ||
             ImGui.InputInt("padding", ref _spacing))
         {
-            Init(_texturePath, SavePath, _spriteWidth, _spriteHeight, _numSprites, _spacing, true);
+            Init(_texturePath, _savePath, _spriteWidth, _spriteHeight, _numSprites, _spacing, true);
             Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset = this;            
             _unsaved = true;
         }
@@ -193,19 +192,25 @@ internal class SpriteSheet : AssetBrowserAsset
         ImGui.End();
     }
 
+    internal override void Refresh()
+    {
+        Init(_texturePath, _savePath, _spriteWidth, _spriteHeight, _numSprites, _spacing);
+    }
+    
     internal void Save()
     {
-        if (SavePath == "")
+        if (_savePath == "")
         {
             var path = _texturePath.Remove(_texturePath.Length - 4);
             path += ".spritesheet";
-            SavePath = path;
+            _savePath = path;
         }
 
-        Init(_texturePath, SavePath, _spriteWidth, _spriteHeight, _numSprites, _spacing);
-        AssetName = SavePath;
-        ResourceManager.SaveSpriteSheet(SavePath, this, null, true);
+        Init(_texturePath, _savePath, _spriteWidth, _spriteHeight, _numSprites, _spacing);
+        AssetName = _savePath;
         
+        var sprc = new SaveSpriteSheetClass(_savePath, this, null, true);
+        ResourceManager.SpriteSheetsToSave.Add(sprc);
         _unsaved = false;
     }
 }

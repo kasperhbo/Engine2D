@@ -81,19 +81,20 @@ internal class SpriteRenderer : Component
         {
             _renderer = Engine.Get().CurrentScene.Renderer;
         }
-        ResourceManager.SpriteRenderers.Add(this);
-        
         Refresh();
     }
 
     public override void EditorUpdate(double dt)
     {
         base.EditorUpdate(dt);
-        this.IsDirty = true;
+
+        IsDirty = true;
     }
 
     internal void SetSprite(int spriteSheetIndex, string spriteSheet)
     {
+        _renderer.RemoveSprite(this);
+        
         var sprs = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
         
         if (sprs == null)
@@ -102,30 +103,26 @@ internal class SpriteRenderer : Component
             return;
         }
         
-        SetSprite(spriteSheetIndex, sprs);
-    }
-
-    private void SetSprite(int spriteSheetIndex, SpriteSheet spriteSheet)
-    {
-        _renderer.RemoveSprite(this);
         HasSpriteSheet = true;
         
-        Sprite = spriteSheet.Sprites[spriteSheetIndex];
-        SpriteSheetPath = spriteSheet.SavePath;
+        _spriteSheet = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
+
+        if (spriteSheetIndex >= _spriteSheet.Sprites.Count)
+        {
+            spriteSheetIndex--;
+        }
+        Sprite = _spriteSheet.Sprites[spriteSheetIndex];
+        SpriteSheetPath = spriteSheet;
         SpriteSheetSpriteIndex = spriteSheetIndex;
 
-        _spriteSheet = spriteSheet;
-        
         _renderer.AddSpriteRenderer(this);
     }
-
+    
     public void Refresh()
     {
         if (SpriteSheetPath != "" && HasSpriteSheet == true)
         {
-            //Load sprite sheet
-            var spriteSheet = ResourceManager.GetItem<SpriteSheet>(SpriteSheetPath);
-            SetSprite(SpriteSheetSpriteIndex, spriteSheet);
+            SetSprite(SpriteSheetSpriteIndex, SpriteSheetPath);
         }
         else
         {
@@ -135,16 +132,15 @@ internal class SpriteRenderer : Component
 
     public override unsafe void ImGuiFields()
     {
-        Gui.DrawProperty("ZIndex", ref ZIndex);
-        Gui.DrawProperty("Color", ref Color);
+        base.ImGuiFields();
         
-        if(SpriteSheetPath != "")
-            if (Gui.DrawProperty("Sprite sheet index", ref SpriteSheetSpriteIndex, 0, 
-                    _spriteSheet.Sprites.Count - 1))
-            {
-                Refresh();
-            }
-        
+        // if(SpriteSheetPath != "")
+        //     if (Gui.DrawProperty("Sprite sheet index", ref SpriteSheetSpriteIndex, 0, 
+        //             _spriteSheet.Sprites.Count - 1))
+        //     {
+        //         Refresh();
+        //     }
+        //
         ImGui.Button("set sprite");
            
         if (ImGui.BeginDragDropTarget())

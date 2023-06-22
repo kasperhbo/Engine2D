@@ -110,9 +110,16 @@ internal class AssetBrowserPanel : UIElement
         {
             var extensionLength = imageFiles[i].Extension.Length;
             var saveName = imageFiles[i].Name.Remove(imageFiles[i].Name.Length - extensionLength, extensionLength);
-            saveName += ".tex";
-            var texture = new Texture(imageFiles[i].FullName, CurrentDirectory.FullName + "\\" + saveName, true,
+            saveName += ".tex"; 
+            saveName = saveName.Insert(0, CurrentDirectory.FullName + "\\");
+            saveName = saveName.Replace(ProjectSettings.FullProjectPath, "");
+            
+            
+            var texture = new Texture(imageFiles[i].FullName, saveName, true,
                 TextureMinFilter.Linear, TextureMagFilter.Linear);
+
+    
+            
             texture.Save();
             Log.Succes(string.Format("Succesfully made texture from {0}, and save it to {1}",
                 imageFiles[i].FullName, CurrentDirectory + "\\" + imageFiles[i].Name));
@@ -407,10 +414,13 @@ internal class AssetBrowserEntry
             _assetBrowserPanel.Padding, _assetBrowserPanel.ImageAdjust,
             new Vector4(1),
             out clicked, out doubleClicked, out rightClicked, _isSelected);
-
+        
+        var relativePath = FullPath?.Replace(ProjectSettings.FullProjectPath, "");
+        
         if (ImGui.BeginDragDropSource())
         {
-            _currentlyDraggedHandle ??= GCHandle.Alloc(FullPath);
+            
+            _currentlyDraggedHandle ??= GCHandle.Alloc(relativePath);
 
             switch (_fileType)
             {
@@ -418,6 +428,12 @@ internal class AssetBrowserEntry
                     ImGui.SetDragDropPayload("sprite_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
                         (uint)sizeof(IntPtr));
                     break;
+                case ESupportedFileTypes.animation:
+                {
+                    ImGui.SetDragDropPayload("animation_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                        (uint)sizeof(IntPtr));
+                    break;
+                }
                 case ESupportedFileTypes.cs:
                     ImGui.SetDragDropPayload("script_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
                         (uint)sizeof(IntPtr));
@@ -434,13 +450,15 @@ internal class AssetBrowserEntry
 
             if (_fileType == ESupportedFileTypes.tex)
             {
+                
                 if (ImGui.MenuItem("Create Sprite)"))
                 {
                     var savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
                     savePath += Label.Remove(Label.Length - 4);
                     savePath += ".spritesheet";
+                    savePath = savePath?.Replace(ProjectSettings.FullProjectPath, "");
 
-                    var spriteSheet = new SpriteSheet(FullPath, savePath);
+                    var spriteSheet = new SpriteSheet(relativePath, savePath);
                     spriteSheet.Save();
                     AssetBrowserPanel.Refresh();
                 }
@@ -449,8 +467,9 @@ internal class AssetBrowserEntry
                     var savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
                     savePath += Label.Remove(Label.Length - 4);
                     savePath += ".spritesheet";
+                    savePath = savePath?.Replace(ProjectSettings.FullProjectPath, "");
 
-                    var spriteSheet = new SpriteSheet(FullPath, savePath, 16, 16, 1, 0);
+                    var spriteSheet = new SpriteSheet(relativePath, savePath, 16, 16, 1, 0);
                     spriteSheet.Save();
                     AssetBrowserPanel.Refresh();
                 }
@@ -460,6 +479,7 @@ internal class AssetBrowserEntry
                     var savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
                     savePath += Label.Remove(Label.Length - 4);
                     savePath += ".animation";
+                    savePath = savePath?.Replace(ProjectSettings.FullProjectPath, "");
 
                     var animation = new Animation(savePath);
                     animation.Save();
@@ -487,14 +507,14 @@ internal class AssetBrowserEntry
             if (_fileType == ESupportedFileTypes.spritesheet)
             {
                 // SpriteSheet sprite = SaveLoad.LoadSpriteSheetFromJson(fullPath);
-                var spriteSheet = ResourceManager.GetItem<SpriteSheet>(FullPath);
+                var spriteSheet = ResourceManager.GetItem<SpriteSheet>(relativePath);
                 Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset = spriteSheet;
             }
 
             if (_fileType == ESupportedFileTypes.animation)
             {
                 Log.Warning("Clicked animation");
-                var animation = ResourceManager.GetItem<Animation>(FullPath);
+                var animation = ResourceManager.GetItem<Animation>(relativePath);
                 Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = animation;
             }
             

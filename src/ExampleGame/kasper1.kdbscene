@@ -1,2 +1,40 @@
-[]
+[
+  {
+    "components": [
+      {
+        "HasSpriteSheet": true,
+        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet",
+        "ZIndex": 0,
+        "Color": {
+          "a": 255.0,
+          "b": 255.0,
+          "g": 255.0,
+          "r": 149.1
+        },
+        "SpriteSheetSpriteIndex": 2,
+        "Type": "Engine2D.GameObjects.SpriteRenderer"
+      },
+      {
+        "Position": {
+          "X": 15.999998,
+          "Y": -11.017875
+        },
+        "Rotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
+          "W": 0.0,
+          "IsIdentity": false
+        },
+        "Size": {
+          "X": 49.0,
+          "Y": 49.0
+        },
+        "Type": "Engine2D.Components.TransformComponents.Transform"
+      }
+    ],
+    "Name": "SpriteRenderer: 11",
+    "PARENT_UID": -1
+  }
+]
 ////GAMEOBJECTS////
