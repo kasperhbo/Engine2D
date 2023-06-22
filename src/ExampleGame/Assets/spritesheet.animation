@@ -1,0 +1,62 @@
+{
+  "_endTime": 1.0,
+  "_keyframes": [
+    {
+      "Time": 0.0,
+      "Frame": {
+        "FrameTime": 0.0,
+        "SpriteSheetSpriteIndex": 8,
+        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
+      }
+    },
+    {
+      "Time": 0.21502209,
+      "Frame": {
+        "FrameTime": 0.21502209,
+        "SpriteSheetSpriteIndex": 13,
+        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
+      }
+    },
+    {
+      "Time": 0.21502209,
+      "Frame": {
+        "FrameTime": 0.21502209,
+        "SpriteSheetSpriteIndex": 13,
+        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
+      }
+    },
+    {
+      "Time": 0.359352,
+      "Frame": {
+        "FrameTime": 0.359352,
+        "SpriteSheetSpriteIndex": 12,
+        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
+      }
+    },
+    {
+      "Time": 0.45360824,
+      "Frame": {
+        "FrameTime": 0.45360824,
+        "SpriteSheetSpriteIndex": 11,
+        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
+      }
+    },
+    {
+      "Time": 0.53460974,
+      "Frame": {
+        "FrameTime": 0.53460974,
+        "SpriteSheetSpriteIndex": 10,
+        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
+      }
+    },
+    {
+      "Time": 0.6082474,
+      "Frame": {
+        "FrameTime": 0.6082474,
+        "SpriteSheetSpriteIndex": 9,
+        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
+      }
+    }
+  ],
+  "SavePath": "\\Assets\\spritesheet.animation"
+}

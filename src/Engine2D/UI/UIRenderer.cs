@@ -87,6 +87,7 @@ internal static class UiRenderer
         DrawToolbar();
         SetupDockSpace();
 
+        Engine.Get().CurrentScene.Renderer.OnGui();
         Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset?.OnGui(); 
         Engine.Get().CurrentSelectedTextureAssetBrowserAsset?.OnGui();     
         Engine.Get().CurrentSelectedAnimationAssetBrowserAsset?.OnGui();   

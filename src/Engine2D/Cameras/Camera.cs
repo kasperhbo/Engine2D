@@ -30,14 +30,14 @@ internal class Camera : Component
     }
 
     [JsonConstructor]
-    internal Camera(CameraTypes cameraType, float size, KDBColor clearColor)
+    internal Camera(CameraTypes cameraType, float size, Vector4 clearColor)
     {
         CameraType = cameraType;
         Size = size;
         ClearColor = clearColor;
     }
 
-    internal KDBColor ClearColor { get; set; } = new();
+    internal Vector4 ClearColor { get; set; } = new(100, 149, 237, 255);
 
     internal Matrix4x4 GetViewMatrix()
     {

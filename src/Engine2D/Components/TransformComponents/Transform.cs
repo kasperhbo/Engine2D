@@ -14,8 +14,8 @@ namespace Engine2D.Components.TransformComponents;
 internal class Transform : Component
 {
     [JsonProperty]internal Vector2 Position;
-    [JsonIgnore] internal Vector3 EulerDegrees;
-    [JsonIgnore] internal Vector3 EulerRadians;
+    [JsonIgnore]  internal Vector3 EulerDegrees;
+    [JsonIgnore]  internal Vector3 EulerRadians;
     [JsonProperty]internal Quaternion Rotation;
     [JsonProperty]internal Vector2 Size;
 
@@ -59,9 +59,9 @@ internal class Transform : Component
 
     internal bool Equals(Transform other)
     {
-        return Position == other.Position &&
-               Size == other.Size &&
-               Rotation == other.Rotation;
+        return Position != other.Position ||
+               Size != other.Size ||
+               Rotation != other.Rotation;
     }
 
     internal Matrix4x4 GetTranslation()

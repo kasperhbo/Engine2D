@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Engine2D.Components;
 using Engine2D.Components.Sprites;
+using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.Logging;
@@ -15,7 +16,6 @@ using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using ResourceManager = Engine2D.Managers.ResourceManager;
 
 #endregion
@@ -45,19 +45,23 @@ internal class SpriteRenderer : Component
     
     
     [JsonIgnore] private Renderer? _renderer;
-    [JsonIgnore]
-    private Vector2[] _defaultTextureCoords =
+    [JsonIgnore] private Vector2[] _defaultTextureCoords =
     {
         new(1, 1),
         new(1, 0),
         new(0, 0),
         new(0, 1f)
     };
+    
+    [JsonIgnore] [ShowUI(show = false)]private Transform _parentTransform { get; set; } = null!;
+    [JsonIgnore] [ShowUI(show = false)]private Transform _lastTransform { get; set; } = new();
+    [JsonIgnore]  [ShowUI(show = false)] private Vector4 _lastColor { get; set; } = new();
+    
     [JsonProperty][ShowUI (show = false)] internal bool HasSpriteSheet = false;
     [JsonProperty][ShowUI (show = false)] internal string? SpriteSheetPath = "";
 
     [JsonProperty] internal int ZIndex = 0;
-    [JsonProperty] internal KDBColor Color = new();
+    [JsonProperty] internal Vector4 Color = new(255,255,255,255);
     [JsonProperty] internal int SpriteSheetSpriteIndex = 0;
     
 
@@ -74,21 +78,36 @@ internal class SpriteRenderer : Component
         
         Initialize();
     }
-
+    
     private void Initialize()
     {
         if (_renderer == null)
         {
             _renderer = Engine.Get().CurrentScene.Renderer;
         }
+
+        _parentTransform = Parent.GetComponent<Transform>();
         Refresh();
     }
+
+    
 
     public override void EditorUpdate(double dt)
     {
         base.EditorUpdate(dt);
 
-        IsDirty = true;
+        if (Color != (_lastColor))
+        {
+            _lastColor = Color;
+            IsDirty = true;
+        }
+        
+        if (_parentTransform.Equals(_lastTransform))
+        {
+            Transform.Copy(_lastTransform, _parentTransform);
+            IsDirty = true;
+        }
+        
     }
 
     internal void SetSprite(int spriteSheetIndex, string spriteSheet)
@@ -128,6 +147,8 @@ internal class SpriteRenderer : Component
         {
             _renderer.AddSpriteRenderer(this);
         }
+
+        IsDirty = true;
     }
 
     public override unsafe void ImGuiFields()

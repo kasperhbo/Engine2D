@@ -60,8 +60,11 @@ namespace Engine2D.Managers
             
             AnimationsToSave = new();
             
+            
+            //TODO:NEEDS TO BE IMPROVED
             if(refreshobjects){
-                Log.Message("Start refreshing objects");
+                //Just flush the renderer for now
+                Engine.Get().CurrentScene.Renderer.Flush();
                 
                 foreach (var keyvp in _items)
                 {

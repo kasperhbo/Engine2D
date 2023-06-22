@@ -174,4 +174,9 @@
         <Reference Include="System.Drawing.Common" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <Folder Include="Rendering\Lines\" />
+    </ItemGroup>
+
 </Project>

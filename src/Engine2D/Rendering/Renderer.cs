@@ -5,6 +5,7 @@ using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Testing;
+using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 
@@ -36,7 +37,6 @@ internal class Renderer
 
     internal GlobalLight GlobalLight { get; set; }
     
-
     internal void Init()
     {
         Flush();
@@ -83,9 +83,9 @@ internal class Renderer
 
 
                 if (gameCamera != null)
-                    GL.ClearColor(gameCamera.ClearColor.RNormalized, gameCamera.ClearColor.GNormalized,
-                        gameCamera.ClearColor.BNormalized,
-                        gameCamera.ClearColor.ANormalized);
+                    GL.ClearColor(gameCamera.ClearColor.X/255, gameCamera.ClearColor.Y/255,
+                        gameCamera.ClearColor.Z/255,
+                        gameCamera.ClearColor.W/255);
                 GL.Clear(ClearBufferMask.ColorBufferBit);
                 GL.Disable(EnableCap.Blend);
                 GL.Enable(EnableCap.Blend);
@@ -134,15 +134,19 @@ internal class Renderer
     {
         var added = false;
         RenderBatch addedToBatch = null;
-
+        
+        if(_spriteBatchDict.ContainsKey(spr.Parent.UID))
+            RemoveSprite(spr);
 
         foreach (var batch in RenderBatches)
-            if (batch.HasRoom && batch.ZIndex == spr.ZIndex && batch.HasTexture(spr))
+        {
+            if (batch.HasRoom && batch.ZIndex == spr.ZIndex && (batch.HasTexture(spr)))
             {
                 added = true;
                 batch.AddSprite(spr);
                 addedToBatch = batch;
             }
+        }
 
         if (!added)
         {
@@ -153,18 +157,20 @@ internal class Renderer
             RenderBatches.Add(batch);
             RenderBatches.Sort();
         }
-
-        if (_spriteBatchDict.ContainsKey(spr.Parent.UID)) return;
+       
         _spriteBatchDict.Add(spr.Parent.UID, addedToBatch);
     }
 
     internal void RemoveSprite(SpriteRenderer spr)
     {
-        if (_spriteBatchDict.ContainsKey(spr.Parent.UID))
+        if (!_spriteBatchDict.ContainsKey(spr.Parent.UID))
         {
-            _spriteBatchDict[spr.Parent.UID].RemoveSprite(spr);
-            _spriteBatchDict.Remove(spr.Parent.UID);
+            Console.WriteLine("Does not contain sprite");
+            return;
         }
+            
+        _spriteBatchDict[spr.Parent.UID].RemoveSprite(spr);
+        _spriteBatchDict.Remove(spr.Parent.UID);
     }
 
     internal List<PointLightComponent> GetPointLightsToRender()
@@ -182,5 +188,22 @@ internal class Renderer
 
 
         return pointLights;
+    }
+
+    internal void OnGui()
+    {
+        for (int i = 0; i < RenderBatches.Count; i++)
+        {
+            RenderBatchWindow(RenderBatches[i], i);
+        }
+    }
+
+    private void RenderBatchWindow(RenderBatch batch, int index)
+    {
+        ImGui.Begin("Batch " + index);
+        ImGui.Text("ZIndex: " + batch.ZIndex);
+        // ImGui.Text("Sprites: " + batch.SpriteCount);
+        // ImGui.Text("Free texture room" + batch.GetTextureRoom());
+        ImGui.End();
     }
 }

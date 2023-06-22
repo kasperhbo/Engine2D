@@ -33,7 +33,9 @@ internal class RenderBatch : IComparable<RenderBatch>
     private const int c_vertexSizeInBytes = c_vertexSize * sizeof(float);
     private readonly Shader? _shader;
 
-    private readonly SpriteRenderer[] _sprites = new SpriteRenderer[c_maxBatchSize];
+    private SpriteRenderer[] _sprites = new SpriteRenderer[c_maxBatchSize];
+    
+    private Dictionary<SpriteRenderer, Texture> _spriteTextureMap = new();
 
     public readonly Texture?[] Textures = new Texture[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
     private readonly int[] _textureUnits = new int[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
@@ -238,8 +240,8 @@ internal class RenderBatch : IComparable<RenderBatch>
         var spriteRenderer = _sprites[index];
         var offset = index * 4 * c_vertexSize;
 
-        Vector4 color = new(spriteRenderer.Color.RNormalized, spriteRenderer.Color.GNormalized,
-            spriteRenderer.Color.BNormalized, spriteRenderer.Color.ANormalized);
+        Vector4 color = new(spriteRenderer.Color.X/255, spriteRenderer.Color.Y/255,
+            spriteRenderer.Color.Z/255, spriteRenderer.Color.W/255);
 
         var texID = -1;
         var texCoords = spriteRenderer.TextureCoords;
@@ -380,6 +382,8 @@ internal class RenderBatch : IComparable<RenderBatch>
 
     internal void RemoveSprite(SpriteRenderer spr)
     {
+        if(spr.Sprite?.Texture != null)RemoveTexture(spr.Sprite.Texture);
+        
         for (var i = 0; i < _spriteCount; i++)
             if (_sprites[i] == spr)
             {
@@ -391,5 +395,14 @@ internal class RenderBatch : IComparable<RenderBatch>
 
                 _spriteCount--;
             }
+    }
+
+    internal void RemoveTexture(Texture tex)
+    {
+        for (int i = 0; i < Textures.Length; i++)
+        {
+            if (Textures[i]?.TexID == (tex.TexID))
+                Textures[i] = null;
+        }
     }
 }

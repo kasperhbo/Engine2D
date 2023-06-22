@@ -242,8 +242,9 @@ internal class Texture : AssetBrowserAsset
 
     internal override void Refresh()
     {
-        // Gen();
-        // CreateOpenGL();
+        GL.DeleteTexture(TexID);
+        Gen();
+        CreateOpenGL();
     }
 
     private void SelectNewMinFilter(int index)
