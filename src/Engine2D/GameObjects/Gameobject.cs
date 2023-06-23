@@ -171,7 +171,7 @@ internal class Gameobject : Asset
         return false;
     }
 
-    bool isPopupOpen = false;
+    bool _isPopupOpen = false;
     
     internal override void OnGui()
     {
@@ -183,10 +183,10 @@ internal class Gameobject : Asset
         
         if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X - 30, 30)))
         {
-            isPopupOpen = true;
+            _isPopupOpen = true;
         }
         
-        if (isPopupOpen)
+        if (_isPopupOpen)
         {
             ImGui.OpenPopup("Components Popup");
         }
@@ -199,22 +199,27 @@ internal class Gameobject : Asset
                 if (ImGui.MenuItem(component.Name))
                 {
                     AddComponent(AssemblyUtils.GetComponent(component.FullName));
-                    isPopupOpen = false;
+                    _isPopupOpen = false;
                 }
             }
             if(ImGui.MenuItem("Sprite renderer"))
             {
                 AddComponent(new SpriteRenderer());
-                isPopupOpen = false;
+                _isPopupOpen = false;
             }
             
             if(ImGui.MenuItem("Sprite Animator"))
             {
                 AddComponent(new SpriteAnimator());
-                isPopupOpen = false;
+                _isPopupOpen = false;
             }
             
             ImGui.EndPopup();
+        }
+
+        if (ImGui.IsAnyMouseDown())
+        {
+            _isPopupOpen = false;
         }
 
         for (var i = 0; i < components.Count; i++)

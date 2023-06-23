@@ -235,7 +235,7 @@ internal class Animation : AssetBrowserAsset
 
     }
 
-
+    private bool _isOpenPopup = false;
 
     private void DrawKeyFrameMarkers (float timeLineWidth)
     {
@@ -269,6 +269,34 @@ internal class Animation : AssetBrowserAsset
                         }
                     }
                 }
+
+                if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
+                {
+                    if (_isDraggingTimeline == false)
+                    {
+                        _isOpenPopup = true;
+                    }
+                }
+            }
+            
+            if (_isOpenPopup)
+            {
+                ImGui.OpenPopup("Components Popup");
+            }
+            
+            if (ImGui.BeginPopup("Components Popup"))
+            {
+                if (ImGui.Selectable("Delete"))
+                {
+                    _keyframes.RemoveAt(i);
+                    SortKeyFrames();
+                }
+                ImGui.EndPopup();
+            }
+            
+            if (ImGui.IsAnyMouseDown())
+            {
+                _isOpenPopup = false;
             }
 
             if (_isDraggingKeyframe && ImGui.IsMouseReleased(ImGuiMouseButton.Left))
