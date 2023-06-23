@@ -10,7 +10,7 @@
       }
     },
     {
-      "Time": 0.15494506,
+      "Time": 0.18241759,
       "Frame": {
         "FrameTime": 0.05824176,
         "SpriteSheetSpriteIndex": 2,
@@ -18,7 +18,7 @@
       }
     },
     {
-      "Time": 0.31648353,
+      "Time": 0.32307693,
       "Frame": {
         "FrameTime": 0.2736264,
         "SpriteSheetSpriteIndex": 3,
@@ -26,7 +26,7 @@
       }
     },
     {
-      "Time": 0.521978,
+      "Time": 0.4989011,
       "Frame": {
         "FrameTime": 0.42747253,
         "SpriteSheetSpriteIndex": 2,
@@ -38,6 +38,14 @@
       "Frame": {
         "FrameTime": 0.66263735,
         "SpriteSheetSpriteIndex": 6,
+        "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
+      }
+    },
+    {
+      "Time": 0.8362637,
+      "Frame": {
+        "FrameTime": 0.8362637,
+        "SpriteSheetSpriteIndex": 8,
         "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
       }
     }

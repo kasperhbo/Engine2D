@@ -367,8 +367,9 @@ internal class Animation : AssetBrowserAsset
     private void HandleKeyFrameDragging()
     {
         if (_currentDraggingKeyFrame == null) return;
-
+        
         _currentDraggingKeyFrame.Time = _mouseTime;
+        SortKeyFrames();
     }
     
     private void DrawTimeText(float timeLineWidth, float timeStepWidth)
