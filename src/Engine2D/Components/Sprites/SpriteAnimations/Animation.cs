@@ -187,43 +187,49 @@ internal class Animation : AssetBrowserAsset
 
     private void RenderUnderTimeLineItems()
     {
-        ImGui.Text("Start time: ");
-        ImGui.SameLine();
-        if (ImGui.Button("+", new(22)))
-        {
-            _startTime += 1;
-        }
 
-        ImGui.SameLine();
-        ImGui.SetNextItemWidth(50);
-        ImGui.DragFloat("##StartTime", ref _startTime, 0, 1000, 0.1f);
-        ImGui.SameLine();
-        if (ImGui.Button("-", new(22)))
         {
-            _startTime -= 1;
+            ImGui.Text("Start time: ");
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(50);
+            ImGui.DragFloat("##start", ref _startTime, 0.01f, 0, 1000);
+            ImGui.SameLine();
+            if (ImGui.Button("-", new Vector2(22)))
+            {
+                _startTime -= .1f;
+                if(_startTime < 0) _startTime = 0;
+            }
+            ImGui.SameLine();
+            if (ImGui.Button("+", new Vector2(22)))
+            {
+                _startTime += .1f;
+            }
         }
-
+        
         ImGui.SameLine();
         ImGui.Dummy(new(20, 0));
         ImGui.SameLine();
-        ImGui.Text("End time: ");
-        ImGui.SameLine();
-        ImGui.PushID("PLUSEND");
-        if (ImGui.Button("+", new(22)))
+
         {
-            Console.WriteLine("End");
-            _endTime += 1;
-        }
-        ImGui.SameLine();
-        ImGui.SetNextItemWidth(50);
-        ImGui.DragFloat("##EndTime", ref _endTime, 0, 1000, 0.1f);
-        ImGui.SameLine();
-        if (ImGui.Button("-", new(22)))
-        {
-            _endTime -= 1;
+            ImGui.PushID("PLUSEND");
+            ImGui.Text("End time: ");
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(50);
+            ImGui.DragFloat("##end", ref _endTime, 0.01f, 0, 1000);
+            ImGui.SameLine();
+            if (ImGui.Button("-", new Vector2(22)))
+            {
+                _endTime -= .1f;
+                if (_endTime < 0) _endTime = 0;
+            }
+            ImGui.SameLine();
+            if (ImGui.Button("+", new Vector2(22)))
+            {
+                _endTime += .1f;
+            }
+            ImGui.PopID();
         }
         
-        ImGui.PopID();
         
         ImGui.Text("save path: " + SavePath);
 
