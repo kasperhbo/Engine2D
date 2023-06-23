@@ -106,7 +106,7 @@ internal class SceneHierachyPanel : UIElement
         {
             var go = Engine.Get().CurrentScene.GameObjects[i];
 
-            if (go.PARENT_UID == -1) _gameobjectsWithoutParents.Add(go);
+            if (go.ParentUid == -1) _gameobjectsWithoutParents.Add(go);
         }
 
         return _gameobjectsWithoutParents;

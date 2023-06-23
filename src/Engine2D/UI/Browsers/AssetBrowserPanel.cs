@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.Sprites;
+using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
 using Engine2D.Logging;
@@ -208,6 +209,19 @@ internal class AssetBrowserPanel : UIElement
 
                     ImGui.MenuItem("Item1");
                     ImGui.MenuItem("Item2");
+                    
+                    if(ImGui.MenuItem("Create animation"))
+                    {
+                        var savePath = CurrentDirectory.FullName + "\\";
+                        savePath += "NewAnimation";
+                        savePath += ".animation";
+                        
+                        savePath = savePath.Replace(ProjectSettings.FullProjectPath, "");
+                        
+                        var animation = new Animation(savePath);
+                        animation.Save();
+                    }
+                    
                     ImGui.EndPopup();
                 }
 
@@ -471,18 +485,6 @@ internal class AssetBrowserEntry
 
                     var spriteSheet = new SpriteSheet(relativePath, savePath, 16, 16, 1, 0);
                     spriteSheet.Save();
-                    AssetBrowserPanel.Refresh();
-                }
-
-                if (ImGui.MenuItem("Create Animation"))
-                {
-                    var savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
-                    savePath += Label.Remove(Label.Length - 4);
-                    savePath += ".animation";
-                    savePath = savePath?.Replace(ProjectSettings.FullProjectPath, "");
-
-                    var animation = new Animation(savePath);
-                    animation.Save();
                     AssetBrowserPanel.Refresh();
                 }
             }

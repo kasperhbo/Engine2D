@@ -20,14 +20,14 @@ namespace Engine2D.GameObjects;
 
 internal class Gameobject : Asset
 {
-    [JsonProperty]internal List<Component?> components = new();
+    [JsonProperty]internal List<Component?> Components = new();
     [JsonProperty]internal string Name = "";
-    [JsonProperty]internal int PARENT_UID = -1;
+    [JsonProperty]internal int ParentUid = -1;
     
-    private readonly Type typeToRemove = null;
-    [JsonIgnore] protected Gameobject _parent;
+    [JsonIgnore] private Gameobject _parent;
     [JsonIgnore] internal List<Gameobject> Childs = new();
     [JsonIgnore] internal bool Serialize = true;
+    [JsonIgnore]bool _isPopupOpen = false;
 
     //UIDS
     internal int UID = -1;
@@ -35,14 +35,14 @@ internal class Gameobject : Asset
     internal Gameobject(string name)
     {
         Name = name;
-        components = new List<Component?>();
+        Components = new List<Component?>();
         GetUID();
     }
 
     internal Gameobject(string name, List<Component?> components)
     {
         Name = name;
-        this.components = components;
+        this.Components = components;
         GetUID();
     }
 
@@ -50,9 +50,9 @@ internal class Gameobject : Asset
     internal Gameobject(string name, List<Component?> components, int uid, int parentUid)
     {
         Name = name;
-        this.components = components;
+        this.Components = components;
         UID = uid;
-        PARENT_UID = parentUid;
+        ParentUid = parentUid;
         GetUID();
     }
 
@@ -75,50 +75,50 @@ internal class Gameobject : Asset
             AddComponent(t);
         }
 
-        foreach (var component in components) component.Init(this, renderer);
+        foreach (var component in Components) component.Init(this, renderer);
     }
 
     internal void Start()
     {
-        foreach (var component in components) component.Start();
+        foreach (var component in Components) component.Start();
     }
 
     internal virtual void EditorUpdate(double dt)
     {
-        foreach (var component in components) component.EditorUpdate(dt);
+        foreach (var component in Components) component.EditorUpdate(dt);
     }
 
     internal void GameUpdate(double dt)
     {
-        foreach (var component in components) component.GameUpdate(dt);
+        foreach (var component in Components) component.GameUpdate(dt);
     }
 
     internal void Destroy()
     {
-        foreach (var component in components) component.Destroy();
+        foreach (var component in Components) component.Destroy();
     }
 
     internal void AddComponent(Component? component, Renderer? renderer)
     {
         component.Init(this, renderer);
-        components.Add(component);
+        Components.Add(component);
     }
 
     internal Component? AddComponent(Component? component)
     {
         if (component == null) return null;
         component.Init(this);
-        components.Add(component);
+        Components.Add(component);
         return component;
     }
 
     internal T? GetComponent<T>() where T : Component
     {
-        foreach (var component in components)
+        foreach (var component in Components)
         {
             if (component == null)
             {
-                components.Remove(component);
+                Components.Remove(component);
                 break;
             }
 
@@ -132,7 +132,7 @@ internal class Gameobject : Asset
 
     private void RemoveComponents(Component? comp)
     {
-        components.Remove(comp);
+        Components.Remove(comp);
     }
 
     internal void SetParent(int parentUID)
@@ -145,12 +145,12 @@ internal class Gameobject : Asset
         if (_parent != null)
             _parent.Childs.Remove(this);
 
-        PARENT_UID = parentUID;
+        ParentUid = parentUID;
         var parent = currentScene.FindObjectByUID(parentUID);
 
         parent.AddGameObjectChild(this);
 
-        Log.Succes(string.Format("Succesfully attached uid: {0} to uid: {1}", UID, PARENT_UID));
+        Log.Succes(string.Format("Succesfully attached uid: {0} to uid: {1}", UID, ParentUid));
     }
 
     private void AddGameObjectChild(Gameobject gameObject)
@@ -159,20 +159,6 @@ internal class Gameobject : Asset
         Childs.Add(gameObject);
     }
 
-    internal void RemoveComponent<T>() where T : Component
-    {
-        components.RemoveAll(IsRightComponent);
-    }
-
-    private bool IsRightComponent(Component obj)
-    {
-        if (obj.GetType() == typeToRemove) return true;
-
-        return false;
-    }
-
-    bool _isPopupOpen = false;
-    
     internal override void OnGui()
     {
         ImGui.InputText("##name", ref Name, 256);
@@ -222,17 +208,17 @@ internal class Gameobject : Asset
             _isPopupOpen = false;
         }
 
-        for (var i = 0; i < components.Count; i++)
+        for (var i = 0; i < Components.Count; i++)
         {
-            if (components[i] == null)
+            if (Components[i] == null)
             {
-                components.RemoveAt(i);
+                Components.RemoveAt(i);
                 continue;
             }
             
             ImGui.PushID(i);
 
-            Gui.DrawTable(components[i].GetItemType(), components[i].ImGuiFields);
+            Gui.DrawTable(Components[i].GetItemType(), Components[i].ImGuiFields);
             
             ImGui.PopID();
         }

@@ -16,7 +16,7 @@ internal class SpriteRendererGo : Gameobject
         var currentScene = Engine.Get().CurrentScene;
         var spr = new SpriteRenderer();
         spr.Parent = this;
-        components.Add(spr);
+        Components.Add(spr);
 
         if (currentScene != null) Name = "SpriteRenderer: " + currentScene.GameObjects.Count + 1;
     }

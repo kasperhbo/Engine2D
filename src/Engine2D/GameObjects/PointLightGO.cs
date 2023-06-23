@@ -14,7 +14,7 @@ internal class PointLightGO : Gameobject
         var currentScene = Engine.Get().CurrentScene;
         var pl = new PointLightComponent();
         pl.Parent = this;
-        components.Add(pl);
+        Components.Add(pl);
 
         if (currentScene != null) Name = "PointLight: " + currentScene.GameObjects.Count + 1;
         // currentScene.AddGameObjectToScene(this);

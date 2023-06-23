@@ -32,7 +32,7 @@ internal class EditorCameraGO : Gameobject
             Parent = this
         };
 
-        components.Add(camera);
+        Components.Add(camera);
         
         if (currentScene != null) Name = "Editor Camera: " + currentScene.GameObjects.Count + 1;
     }

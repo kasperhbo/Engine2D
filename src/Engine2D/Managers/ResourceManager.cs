@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Engine2D.Components.Sprites.SpriteAnimations;
 
 namespace Engine2D.Managers
 {
@@ -55,7 +56,7 @@ namespace Engine2D.Managers
             foreach (var action in AnimationsToSave)
             {   
                 refreshobjects = true;
-                SaveAnimation(action.defaultSaveName, action.animation, action.currentFolder, action.overwrite);
+                SaveAnimation(action.defaultSaveName, action.animation, action.overwrite);
             }
             
             AnimationsToSave = new();
@@ -268,7 +269,10 @@ namespace Engine2D.Managers
             var name = defaultSaveName;
 
             if (!overwrite)
-                name = SaveLoad.GetNextFreeName(defaultSaveName, currentFolder);
+            {
+                string extension = Path.GetExtension(name);
+                name = SaveLoad.GetNextFreeName(defaultSaveName);
+            }
 
             var fullSaveName = (currentFolder?.FullName ?? string.Empty) + name;
             fullSaveName = ProjectSettings.FullProjectPath + fullSaveName;
@@ -295,7 +299,10 @@ namespace Engine2D.Managers
             var name = defaultSaveName;
 
             if (!overwrite)
-                name = SaveLoad.GetNextFreeName(defaultSaveName, currentFolder);
+            {
+                string extension = Path.GetExtension(defaultSaveName);
+                name = SaveLoad.GetNextFreeName(defaultSaveName);
+            }
 
             var fullSaveName = (currentFolder?.FullName ?? string.Empty) + name;
             fullSaveName = ProjectSettings.FullProjectPath + fullSaveName;
@@ -316,17 +323,20 @@ namespace Engine2D.Managers
             }
         }
 
-        private static void SaveAnimation(string savePath, Animation animation, DirectoryInfo? currentFolder = null,
+        private static void SaveAnimation(string savePath, Animation animation,
             bool overwrite = false)
         {
             var name = savePath;
-
-            if (!overwrite)
-                name = SaveLoad.GetNextFreeName(savePath, currentFolder);
-
-            var fullSaveName = (currentFolder?.FullName ?? string.Empty) + name;
+            
+            var fullSaveName = ""+ name;
             fullSaveName = ProjectSettings.FullProjectPath + fullSaveName;
 
+
+            if (!overwrite)
+            {
+                fullSaveName = SaveLoad.GetNextFreeName(fullSaveName);
+            }
+            
             try
             {
                 var animationData = JsonConvert.SerializeObject(animation, Formatting.Indented);
@@ -387,14 +397,12 @@ internal class SaveAnimationClass
 {
     internal string? defaultSaveName;
     internal Animation animation;
-    internal DirectoryInfo? currentFolder = null;
     internal bool overwrite = false;
 
-    internal SaveAnimationClass(string? defaultSaveName, Animation animation, DirectoryInfo? currentFolder, bool overwrite)
+    internal SaveAnimationClass(string? defaultSaveName, Animation animation, bool overwrite)
     {
         this.defaultSaveName = defaultSaveName;
         this.animation = animation;
-        this.currentFolder = currentFolder;
         this.overwrite = overwrite;
     }
 }

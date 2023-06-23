@@ -2,6 +2,7 @@
 
 using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.Sprites;
+using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;

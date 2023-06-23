@@ -112,24 +112,24 @@ internal static class AssemblyUtils
             Dictionary<Component?, FieldInfo[]> toAdd = new();
 
 
-            for (var i = 0; i < go.components.Count; i++)
+            for (var i = 0; i < go.Components.Count; i++)
             {
                 // Get the type of FieldsClass.
-                var fieldsType = go.components[i].GetType();
+                var fieldsType = go.Components[i].GetType();
 
                 var fields = fieldsType.GetFields(BindingFlags.Public
                                                   | BindingFlags.Instance);
                 foreach (var fieldInfo in fields)
                 {
                     Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.WriteLine("{0}:\t'{1}'", fieldInfo.Name, fieldInfo.GetValue(go.components[i]));
+                    Console.WriteLine("{0}:\t'{1}'", fieldInfo.Name, fieldInfo.GetValue(go.Components[i]));
                 }
 
-                toAdd.Add(go.components[i], fields);
+                toAdd.Add(go.Components[i], fields);
             }
 
             //FIRST REMOVE ALL COMPONENTS
-            go.components = new List<Component>();
+            go.Components = new List<Component>();
 
             //THEN READD
             for (var i = 0; i < toAdd.Count; i++)

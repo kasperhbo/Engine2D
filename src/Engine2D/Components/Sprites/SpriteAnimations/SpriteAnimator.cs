@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 using Engine2D.Components.Sprites;
+using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Managers;

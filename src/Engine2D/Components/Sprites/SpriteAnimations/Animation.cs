@@ -1,20 +1,13 @@
-﻿using System.Globalization;
-using System.Numerics;
-using System.Runtime.CompilerServices;
+﻿using System.Numerics;
 using System.Runtime.InteropServices;
-using Engine2D.Components.Sprites;
+using Engine2D.Components.SpriteAnimations;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Managers;
-using Engine2D.UI;
 using ImGuiNET;
-using ImGuizmoNET;
-using ImTool;
 using Newtonsoft.Json;
-using OpenTK.Windowing.GraphicsLibraryFramework;
-using Vortice.Direct3D11;
 
-namespace Engine2D.Components.SpriteAnimations;
+namespace Engine2D.Components.Sprites.SpriteAnimations;
 
 internal class Keyframe
 {
@@ -39,6 +32,7 @@ internal class Animation : AssetBrowserAsset
     [JsonIgnore]  private bool _isDraggingTimeline;
     [JsonIgnore]  private bool _isDraggingKeyframe;
     [JsonIgnore]  private Keyframe? _currentDraggingKeyFrame = null;
+    [JsonIgnore]  private bool _isOpenPopup = false;
     
     [JsonIgnore]  public bool IsPlaying = false;
     [JsonIgnore]  public bool AttachedToSpriteRenderer = false;
@@ -81,7 +75,7 @@ internal class Animation : AssetBrowserAsset
             _currentTime += (float)dt;
             if (_currentTime >= _endTime)
             {
-                _currentTime = 0f;
+                _currentTime = _startTime;
             }
         }
     }
@@ -90,8 +84,15 @@ internal class Animation : AssetBrowserAsset
     {
         if(!AttachedToSpriteRenderer)Update(Engine.DeltaTime);
         
+        ImGui.Begin("Timeline", ImGuiWindowFlags.NoCollapse);
+        
         ShowTimeLine();
 
+        RenderUnderTimeLineItems();
+        RenderAnimationPreview();
+
+        ImGui.End();
+        
         if (_isDraggingKeyframe)
             HandleKeyFrameDragging();
     }
@@ -110,17 +111,15 @@ internal class Animation : AssetBrowserAsset
     {
         _keyframes.Add(keyFrame);
         SortKeyFrames();
-        Save();
+        Save(true);
     }
 
     private void ShowTimeLine()
     {
-        ImGui.Begin("Timeline", ImGuiWindowFlags.NoCollapse);
-
         ImGui.Text("Timeline");
         if (ImGui.Button("Save"))
         {
-            Save();
+            Save(true);
         }
 
         var fullSizeX = ImGui.GetContentRegionMax().X;
@@ -147,11 +146,6 @@ internal class Animation : AssetBrowserAsset
         ImGui.GetWindowDrawList().AddLine(new Vector2(currentTimePos, ImGui.GetCursorScreenPos().Y), new Vector2(currentTimePos, ImGui.GetCursorScreenPos().Y + TimeLineHeight), ImGui.GetColorU32(ImGuiCol.Text), 2);
         
         ImGui.EndChild();
-        
-        RenderUnderTimeLineItems();
-        RenderAnimationPreview();
-
-        ImGui.End();
     }
 
     private void RenderAnimationPreview()
@@ -179,11 +173,43 @@ internal class Animation : AssetBrowserAsset
 
     private void RenderUnderTimeLineItems()
     {
-        string timeText =  _endTime.ToString();
-        ImGui.InputText("End Time Input", ref timeText, 10);
-        float.TryParse(timeText, out _endTime);
-        
-        ImGui.DragFloat("End Time", ref _endTime, 0, 1000, 0.1f);
+        ImGui.Text("Start time: ");
+        ImGui.SameLine();
+        if (ImGui.Button("+", new(22)))
+        {
+            _startTime += 1;
+        }
+
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(50);
+        ImGui.DragFloat("##StartTime", ref _startTime, 0, 1000, 0.1f);
+        ImGui.SameLine();
+        if (ImGui.Button("-", new(22)))
+        {
+            _startTime -= 1;
+        }
+
+        ImGui.SameLine();
+        ImGui.Dummy(new(20, 0));
+        ImGui.SameLine();
+        ImGui.Text("End time: ");
+        ImGui.SameLine();
+        ImGui.PushID("PLUSEND");
+        if (ImGui.Button("+", new(22)))
+        {
+            Console.WriteLine("End");
+            _endTime += 1;
+        }
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(50);
+        ImGui.DragFloat("##EndTime", ref _endTime, 0, 1000, 0.1f);
+        ImGui.SameLine();
+        if (ImGui.Button("-", new(22)))
+        {
+            _endTime -= 1;
+        }
+        ImGui.PopID();
+
         if (IsPlaying)
         {
             if (ImGui.Button("Pause"))
@@ -235,7 +261,6 @@ internal class Animation : AssetBrowserAsset
 
     }
 
-    private bool _isOpenPopup = false;
 
     private void DrawKeyFrameMarkers (float timeLineWidth)
     {
@@ -341,8 +366,8 @@ internal class Animation : AssetBrowserAsset
 
             // Draw time label
             ImGui.PushStyleColor(ImGuiCol.Text, ImGui.GetColorU32(ImGuiCol.Text));
-            ImGui.SetCursorScreenPos(new Vector2(markerX - ImGui.CalcTextSize(time.ToString("0.0")).X / 2f, y));
-            ImGui.Text(time.ToString("0.0"));
+            ImGui.SetCursorScreenPos(new Vector2(markerX - ImGui.CalcTextSize(time.ToString("0.00")).X / 2f, y));
+            ImGui.Text(time.ToString("0.00"));
             ImGui.PopStyleColor();
         }
         
@@ -401,11 +426,13 @@ internal class Animation : AssetBrowserAsset
         }
     }
     
-    internal void Save()
+    internal void Save(bool overwrite = false)
     {
         AssetName = SavePath;
+        
         var animc = new SaveAnimationClass(SavePath,
-            this, null, true);
+            this, overwrite);
+        
         ResourceManager.AnimationsToSave.Add(animc);
     }
     

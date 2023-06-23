@@ -52,7 +52,7 @@ internal class Scene
 
         _physicsWorld = new World(new Vector2(0, -9.8f));
         foreach (var gameobject in GameObjects)
-        foreach (var item in gameobject.components)
+        foreach (var item in gameobject.Components)
             if (item.Type == "Rigidbody")
             {
                 throw new NotImplementedException();
