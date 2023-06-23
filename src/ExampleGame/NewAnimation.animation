@@ -1,0 +1,22 @@
+{
+  "_endTime": 0.0,
+  "_keyframes": [
+    {
+      "Time": 0.5131868,
+      "Frame": {
+        "FrameTime": 0.5131868,
+        "SpriteSheetSpriteIndex": 1,
+        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
+      }
+    },
+    {
+      "Time": 0.8186813,
+      "Frame": {
+        "FrameTime": 0.0,
+        "SpriteSheetSpriteIndex": 0,
+        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
+      }
+    }
+  ],
+  "SavePath": "\\NewAnimation.animation"
+}

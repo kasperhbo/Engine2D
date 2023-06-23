@@ -50,9 +50,29 @@ internal class SpriteAnimator : Component
     
     private void GetAnimation()
     {
-        if (_animationPath == "") return;
+        //Error check if something goes wrong just remove it from the sprite renderer
+        if (_animationPath == "")
+        {
+            _animationPath = "";
+            _spriteRenderer.SpriteSheetSpriteIndex = -1;
+            _spriteRenderer.SpriteSheetPath = "";
+            _spriteRenderer.HasSpriteSheet = false;
+            _spriteRenderer.Refresh();
+            return;
+        }
         
         var loaded = ResourceManager.GetItem<Animation>(_animationPath);
+        if (loaded == null)
+        {
+            _animationPath = "";
+            _spriteRenderer.SpriteSheetSpriteIndex = -1;
+            _spriteRenderer.SpriteSheetPath = "";
+            _spriteRenderer.HasSpriteSheet = false;
+            _spriteRenderer.Refresh();
+            return;
+        }
+        //if (loaded == null) return;
+        
         var animInstance = (Animation)Activator.CreateInstance(loaded.GetType());
         
         animInstance._endTime = loaded._endTime;

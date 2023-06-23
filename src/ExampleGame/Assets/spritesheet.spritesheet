@@ -23,11 +23,299 @@
           "Y": 1.0
         }
       ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 1,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.14285715,
+          "Y": 1.0
+        },
+        {
+          "X": 0.14285715,
+          "Y": 0.5
+        },
+        {
+          "X": 0.071428575,
+          "Y": 0.5
+        },
+        {
+          "X": 0.071428575,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 2,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.21428572,
+          "Y": 1.0
+        },
+        {
+          "X": 0.21428572,
+          "Y": 0.5
+        },
+        {
+          "X": 0.14285715,
+          "Y": 0.5
+        },
+        {
+          "X": 0.14285715,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 3,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.2857143,
+          "Y": 1.0
+        },
+        {
+          "X": 0.2857143,
+          "Y": 0.5
+        },
+        {
+          "X": 0.21428572,
+          "Y": 0.5
+        },
+        {
+          "X": 0.21428572,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 4,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.35714287,
+          "Y": 1.0
+        },
+        {
+          "X": 0.35714287,
+          "Y": 0.5
+        },
+        {
+          "X": 0.2857143,
+          "Y": 0.5
+        },
+        {
+          "X": 0.2857143,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 5,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.42857143,
+          "Y": 1.0
+        },
+        {
+          "X": 0.42857143,
+          "Y": 0.5
+        },
+        {
+          "X": 0.35714287,
+          "Y": 0.5
+        },
+        {
+          "X": 0.35714287,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 6,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.5,
+          "Y": 1.0
+        },
+        {
+          "X": 0.5,
+          "Y": 0.5
+        },
+        {
+          "X": 0.42857143,
+          "Y": 0.5
+        },
+        {
+          "X": 0.42857143,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 7,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.5714286,
+          "Y": 1.0
+        },
+        {
+          "X": 0.5714286,
+          "Y": 0.5
+        },
+        {
+          "X": 0.5,
+          "Y": 0.5
+        },
+        {
+          "X": 0.5,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 8,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.64285713,
+          "Y": 1.0
+        },
+        {
+          "X": 0.64285713,
+          "Y": 0.5
+        },
+        {
+          "X": 0.5714286,
+          "Y": 0.5
+        },
+        {
+          "X": 0.5714286,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 9,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.71428573,
+          "Y": 1.0
+        },
+        {
+          "X": 0.71428573,
+          "Y": 0.5
+        },
+        {
+          "X": 0.64285713,
+          "Y": 0.5
+        },
+        {
+          "X": 0.64285713,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 10,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.78571427,
+          "Y": 1.0
+        },
+        {
+          "X": 0.78571427,
+          "Y": 0.5
+        },
+        {
+          "X": 0.71428573,
+          "Y": 0.5
+        },
+        {
+          "X": 0.71428573,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 11,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.85714287,
+          "Y": 1.0
+        },
+        {
+          "X": 0.85714287,
+          "Y": 0.5
+        },
+        {
+          "X": 0.78571427,
+          "Y": 0.5
+        },
+        {
+          "X": 0.78571427,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 12,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.9285714,
+          "Y": 1.0
+        },
+        {
+          "X": 0.9285714,
+          "Y": 0.5
+        },
+        {
+          "X": 0.85714287,
+          "Y": 0.5
+        },
+        {
+          "X": 0.85714287,
+          "Y": 1.0
+        }
+      ]
     }
   ],
   "_texturePath": "\\Assets\\spritesheet.tex",
   "_savePath": "\\Assets\\spritesheet.spritesheet",
-  "_numSprites": 1,
+  "_numSprites": 13,
   "_spacing": 0,
   "_spriteHeight": 16,
   "_spriteWidth": 16

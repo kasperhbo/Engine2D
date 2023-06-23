@@ -63,7 +63,8 @@ internal class SpriteRenderer : Component
     [JsonProperty] internal int ZIndex = 0;
     [JsonProperty] internal Vector4 Color = new(255,255,255,255);
     [JsonProperty] internal int SpriteSheetSpriteIndex = 0;
-    
+    private int _lastSpriteSheetIndex = -1;
+
 
     internal override void Init(Gameobject parent, Renderer? renderer)
     {
@@ -107,6 +108,12 @@ internal class SpriteRenderer : Component
             Transform.Copy(_lastTransform, _parentTransform);
             IsDirty = true;
         }
+
+        if (SpriteSheetSpriteIndex != _lastSpriteSheetIndex)
+        {
+            _lastSpriteSheetIndex = SpriteSheetSpriteIndex;
+            IsDirty = true;
+        }
         
     }
 
@@ -135,6 +142,7 @@ internal class SpriteRenderer : Component
         SpriteSheetSpriteIndex = spriteSheetIndex;
 
         _renderer.AddSpriteRenderer(this);
+        IsDirty = true;
     }
     
     public void Refresh()

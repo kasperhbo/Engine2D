@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Engine2D.Components.Sprites.SpriteAnimations;
+using OpenTK.Graphics.ES20;
 
 namespace Engine2D.Managers
 {
@@ -335,6 +336,8 @@ namespace Engine2D.Managers
             if (!overwrite)
             {
                 fullSaveName = SaveLoad.GetNextFreeName(fullSaveName);
+                string animSaveName = fullSaveName.Replace(ProjectSettings.FullProjectPath, "");
+                animation.SavePath = animSaveName;
             }
             
             try

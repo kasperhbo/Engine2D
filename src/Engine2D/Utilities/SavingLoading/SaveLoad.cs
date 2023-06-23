@@ -83,6 +83,8 @@ internal static class SaveLoad
         var saveFile = saveLocation + "WindowSettings.dat";
         var ok = Utils.SaveWithSoapStaticClass(typeof(UiRenderer), saveFile);
     }
+    
+    
 
     internal static string? GetNextFreeName(string? fullPath)
     {

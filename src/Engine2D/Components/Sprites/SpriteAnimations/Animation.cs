@@ -4,6 +4,7 @@ using Engine2D.Components.SpriteAnimations;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Managers;
+using Engine2D.SavingLoading;
 using ImGuiNET;
 using Newtonsoft.Json;
 
@@ -162,13 +163,19 @@ internal class Animation : AssetBrowserAsset
         }
     }
 
-    public Sprite? GetCurrentSprite()
-    {
-        Frame currentFrame = _keyframes[GetCurrentKeyframeIndex()].Frame;
+    public Sprite? GetSpriteBasedOnTime(float time){
+        if(_keyframes.Count <= 0) return null;
+        
+        Frame currentFrame = _keyframes[GetKeyFrameBasedOnTime(time)].Frame;
         SpriteSheet spriteSheet = ResourceManager.GetItem<SpriteSheet>(currentFrame.SpriteSheetPath);
         int spriteIndex = currentFrame.SpriteSheetSpriteIndex;
 
         return spriteSheet.Sprites[spriteIndex];
+    }
+    
+    public Sprite? GetCurrentSprite()
+    {
+        return GetSpriteBasedOnTime(_currentTime);
     }
 
     private void RenderUnderTimeLineItems()
@@ -208,7 +215,10 @@ internal class Animation : AssetBrowserAsset
         {
             _endTime -= 1;
         }
+        
         ImGui.PopID();
+        
+        ImGui.Text("save path: " + SavePath);
 
         if (IsPlaying)
         {
@@ -272,12 +282,22 @@ internal class Animation : AssetBrowserAsset
                             ((keyframe.Time - _startTime) / (_endTime - _startTime)) * timeLineWidth;
 
             ImGui.PushID(i); // Push ID for ImGui widget differentiation
-
+            //
             ImGui.GetWindowDrawList().AddLine(
                 new Vector2(markerX, ImGui.GetCursorScreenPos().Y),
                 new Vector2(markerX, ImGui.GetCursorScreenPos().Y + TimeLineHeight),
                 ImGui.GetColorU32(new Vector4(1, 0, 0, 1)), KeyFrameMarkerRadius);
-
+            
+            Sprite sprite = GetSpriteBasedOnTime(keyframe.Time);
+            IntPtr texID =  sprite.Texture.TexID;
+            
+            ImGui.GetWindowDrawList().AddImage(texID,
+                new Vector2(markerX - 16, ImGui.GetCursorScreenPos().Y + (TimeLineHeight / 2 - 16)),
+                new Vector2(markerX + 16, ImGui.GetCursorScreenPos().Y + (TimeLineHeight / 2 + 16)),
+                         sprite.TextureCoords[3],
+                        sprite.TextureCoords[1]
+                    );
+            //
             // Check if mouse is hovering over the keyframe marker
             if (ImGui.IsMouseHoveringRect(
                     new Vector2(markerX - KeyFrameMarkerRadius, ImGui.GetCursorScreenPos().Y),
@@ -363,7 +383,7 @@ internal class Animation : AssetBrowserAsset
 
             // Draw time marker line
             ImGui.GetWindowDrawList().AddLine(new Vector2(markerX, ImGui.GetCursorScreenPos().Y), new Vector2(markerX, ImGui.GetCursorScreenPos().Y + TimeLineHeight), ImGui.GetColorU32(ImGuiCol.PlotLines), 1);
-
+            
             // Draw time label
             ImGui.PushStyleColor(ImGuiCol.Text, ImGui.GetColorU32(ImGuiCol.Text));
             ImGui.SetCursorScreenPos(new Vector2(markerX - ImGui.CalcTextSize(time.ToString("0.00")).X / 2f, y));
@@ -376,11 +396,16 @@ internal class Animation : AssetBrowserAsset
     
     private int GetCurrentKeyframeIndex()
     {
+        return GetKeyFrameBasedOnTime(_currentTime);
+    }
+    
+    private int GetKeyFrameBasedOnTime(float time)
+    {
         int index = 0;
 
         for (int i = 0; i < _keyframes.Count; i++)
         {
-            if (_currentTime >= _keyframes[i].Time)
+            if (time >= _keyframes[i].Time)
             {
                 index = i;
             }
@@ -428,8 +453,6 @@ internal class Animation : AssetBrowserAsset
     
     internal void Save(bool overwrite = false)
     {
-        AssetName = SavePath;
-        
         var animc = new SaveAnimationClass(SavePath,
             this, overwrite);
         
