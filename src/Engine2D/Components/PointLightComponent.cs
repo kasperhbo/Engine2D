@@ -7,6 +7,7 @@ using Engine2D.Rendering;
 using Engine2D.Utilities;
 using Newtonsoft.Json;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
 
 #endregion
 
@@ -33,17 +34,27 @@ internal class PointLightComponent : Component
     {
     }
 
-    public override void EditorUpdate(double dt)
+    public override void Update(FrameEventArgs args)
     {
         if (!LastTransform.Equals(Parent.GetComponent<Transform>()))
-            Transform.Copy(Parent.GetComponent<Transform>(), LastTransform);
+                    Transform.Copy(Parent.GetComponent<Transform>(), LastTransform);
+        
+                if (!_lastColor.Equals(Color)) _lastColor = Color;
+    }
 
-        if (!_lastColor.Equals(Color)) _lastColor = Color;
+    public override void EditorUpdate(double dt)
+    {
+        
     }
 
 
     public override void GameUpdate(double dt)
     {
+    }
+
+    public override void StartPlay()
+    {
+        
     }
 
     public override string GetItemType()

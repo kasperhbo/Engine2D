@@ -115,6 +115,8 @@ internal class LightMapRenderer
 
     private void UploadUniforms(Renderer renderer, Camera camera)
     {
+        if (camera.Parent == null) return;
+        if (camera.Parent?.GetComponent<Transform>() == null) return;
         _shader.uploadMat4f("uProjection", camera.GetProjectionMatrix());
         _shader.uploadVec2f("uCameraOffset", camera.Parent.GetComponent<Transform>().Position);
 

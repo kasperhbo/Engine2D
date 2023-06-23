@@ -2,6 +2,7 @@
 
 using Box2DSharp.Dynamics;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common;
 
 #endregion
 
@@ -26,11 +27,19 @@ internal class RigidBody : Component
     internal BodyType BodyType { get; set; }
 
 
+    public override void Update(FrameEventArgs args)
+    {
+        
+    }
+
     public override void GameUpdate(double dt)
     {
-        throw new NotImplementedException();
-        //Parent.transform.position = RuntimeBody.GetPosition();
         base.GameUpdate(dt);
+    }
+
+    public override void StartPlay()
+    {
+        
     }
 
     public override string GetItemType()

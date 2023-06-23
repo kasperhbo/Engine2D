@@ -6,4 +6,6 @@ using Engine2D.Core;
 
 #endregion
 
+Settings.s_IsEngine = false;
+
 Engine.Get().Run();

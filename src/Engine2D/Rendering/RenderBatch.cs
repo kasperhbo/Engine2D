@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Numerics;
 using Engine2D.Cameras;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
@@ -8,8 +9,8 @@ using Engine2D.Managers;
 using Engine2D.Utilities;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
 using TextureUnit = OpenTK.Graphics.OpenGL4.TextureUnit;
+using Vector4 = OpenTK.Mathematics.Vector4;
 
 #endregion
 
@@ -259,14 +260,12 @@ internal class RenderBatch : IComparable<RenderBatch>
                     }
                 }
         }
-
-        var translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
-
-        if (spriteRenderer.Sprite != null)
+        var translation = Matrix4x4.Identity;
+        
+        if(spriteRenderer.Parent.GetComponent<Transform>() != null)
         {
-            translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
+            translation= spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
         }
-
 
         {
             var currentPos =

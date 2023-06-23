@@ -13,6 +13,8 @@ internal class GameViewport : ViewportWindow
 
     internal override void BeforeImageRender()
     {
+        if(Camera != null)
+            Camera.ProjectionSize = new(1920, 1080);
     }
 
     internal override void AfterImageRender()
@@ -23,14 +25,13 @@ internal class GameViewport : ViewportWindow
     {
         var ws = ImGui.GetContentRegionAvail();
 
-        float targetAspectRatio = 16 / 9;
-        var aspectWidth = ws.X;
+        var targetAspectRatio = 16f / 9f;
 
+        var aspectWidth = ws.X;
         var aspectHeight = aspectWidth / targetAspectRatio;
 
         if (aspectHeight > ws.Y)
         {
-            // We must switch to pillarbox mode
             aspectHeight = ws.Y;
             aspectWidth = aspectHeight * targetAspectRatio;
         }

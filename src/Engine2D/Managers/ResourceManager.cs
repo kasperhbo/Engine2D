@@ -28,12 +28,32 @@ namespace Engine2D.Managers
         private static Dictionary<string, AssetBrowserAsset> _items =
             new Dictionary<string, AssetBrowserAsset>(StringComparer.OrdinalIgnoreCase);
 
-        private static readonly Dictionary<ShaderData, Shader> Shaders = new Dictionary<ShaderData, Shader>();
-        private static readonly bool _showDebug = false;
+        private static  Dictionary<ShaderData, Shader> Shaders = new Dictionary<ShaderData, Shader>();
+        private static  bool _showDebug = false;
 
         internal static List<SaveTextureClass> TexturesToSave = new();
         internal static List<SaveSpriteSheetClass> SpriteSheetsToSave = new();
         internal static List<SaveAnimationClass> AnimationsToSave = new();
+        
+        static ResourceManager()
+        {
+            Log.Message("Loading resources");
+            LoadAssets();
+        }
+
+        public static void Flush()
+        {
+            _items =
+            new Dictionary<string, AssetBrowserAsset>(StringComparer.OrdinalIgnoreCase);
+
+            Shaders = new Dictionary<ShaderData, Shader>();
+            _showDebug = false;
+    
+            TexturesToSave = new();
+            SpriteSheetsToSave = new();
+            AnimationsToSave = new();
+            LoadAssets();
+        }
         
         public static void OnGUI()
         {
@@ -84,12 +104,7 @@ namespace Engine2D.Managers
             }
         }
         
-        static ResourceManager()
-        {
-            Log.Message("Loading resources");
-            LoadAssets();
-        }
-
+        
         private static void LoadAssets()
         {
             _items.Clear();
