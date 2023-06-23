@@ -22,8 +22,8 @@
       },
       {
         "Position": {
-          "X": -7.2000217,
-          "Y": -4.5142593
+          "X": 145.79997,
+          "Y": 11.503553
         },
         "Rotation": {
           "X": 0.0,
@@ -54,7 +54,7 @@
           "Z": 255.0,
           "W": 255.0
         },
-        "SpriteSheetSpriteIndex": 2,
+        "SpriteSheetSpriteIndex": 1,
         "Type": "Engine2D.GameObjects.SpriteRenderer"
       },
       {

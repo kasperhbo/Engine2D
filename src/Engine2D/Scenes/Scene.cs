@@ -192,11 +192,13 @@ internal class Scene
         {
             if (value)
             {
+                if (IsPlaying) return;
                 SaveLoad.SaveScene(this);
                 StartPlay();
             }
             else
             {
+                if (!_isPlaying) return;
                 StopPlay();
             }
 

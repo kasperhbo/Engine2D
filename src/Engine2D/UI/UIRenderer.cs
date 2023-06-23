@@ -97,7 +97,7 @@ internal static class UiRenderer
         ImGui.End();
         
         DrawMainMenuBar();
-        DrawToolbar();
+        
         SetupDockSpace();
 
         Engine.Get().CurrentScene.Renderer.OnGui();
@@ -143,10 +143,10 @@ internal static class UiRenderer
 
         _engine.CurrentScene?.OnGui();
 
-        _editorViewport?.Begin("Launcher", _engine.CurrentScene?.EditorCamera,
+        _editorViewport?.Begin("Editor VP", _engine.CurrentScene?.EditorCamera,
             _engine.CurrentScene?.Renderer?.EditorGameBuffer);
 
-        _gameViewport?.Begin("Game", _engine.CurrentScene?.CurrentMainGameCamera,
+        _gameViewport?.Begin("Game VP", _engine.CurrentScene?.CurrentMainGameCamera,
             _engine.CurrentScene?.Renderer?.GameBuffer);
 
         foreach (var window in _windowsToRemoveEndOfFrame) _windows.Remove(window);
@@ -186,9 +186,9 @@ internal static class UiRenderer
                            ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking;
         hostWindowFlags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
 
-        ImGui.SetNextWindowPos(new Vector2(0, 55));
+        ImGui.SetNextWindowPos(new Vector2(0, 32));
         ImGui.SetNextWindowSize(
-            new Vector2(_engine.Size.X, _engine.Size.Y - 55));
+            new Vector2(_engine.Size.X, _engine.Size.Y - 32));
 
         ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
         ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
@@ -197,7 +197,6 @@ internal static class UiRenderer
         var open = false;
         ImGui.Begin("DockSpaceViewport", ref open, hostWindowFlags);
         ImGui.PopStyleVar(3);
-
         var id = ImGui.GetID("DockSpace");
         ImGui.DockSpace(id, new Vector2(0, 0));
         ImGui.End();
@@ -205,64 +204,93 @@ internal static class UiRenderer
         RenderUiWindows();
     }
 
+    private static bool _isHoveringToolbar = false;
     private static void DrawMainMenuBar()
     {
-        ImGui.SetNextWindowSize(new Vector2(_engine.Size.X, 55));
-        ImGui.SetNextWindowPos(new Vector2(0, 1));
-        ImGui.Begin("titlebar",
-            ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoMove |
-            ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDecoration |
+        _isHoveringToolbar = false;
+        ImGui.SetNextWindowSize(new Vector2(_engine.Size.X, 20));
+        ImGui.SetNextWindowPos(new Vector2(0, 0));
+        
+        ImGui.Begin("titlebar", ImGuiWindowFlags.NoBringToFrontOnFocus 
+                                | ImGuiWindowFlags.NoMove |
+            ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoCollapse 
+            | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.MenuBar |
             ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoNav);
-        ImGui.BeginMenuBar();
 
-
-        if (ImGui.BeginMenu("File"))
         {
-            Log.Error("Not Implemented");
-            ImGui.EndMenu();
-        }
-
-        if (ImGui.BeginMenu("View"))
-        {
-            if (ImGui.MenuItem("Asset Browser")) CreateAssetBrowserWindow();
-
-            if (ImGui.BeginMenu("Settings"))
+            if (ImGui.BeginMenuBar())
             {
-                if (ImGui.MenuItem("Style Settings")) CreateStyleSettingsWindow();
-
-                ImGui.EndMenu();
-            }
-
-            if (ImGui.BeginMenu("View"))
-            {
-                if (ImGui.MenuItem("Hierarchy")) CreateHierachyWindow();
-
-                if (ImGui.MenuItem("Inspector")) CreateInspectWindow();
-
-                if (ImGui.BeginMenu("Layouts"))
+                if (ImGui.BeginMenu("File"))
                 {
-                    if (ImGui.MenuItem("Default"))
-                        ImGui.LoadIniSettingsFromDisk(Utils.GetBaseEngineDir() + "\\Layouts\\Default.ini");
-                    if (ImGui.MenuItem("Layout01"))
-                        ImGui.LoadIniSettingsFromDisk(Utils.GetBaseEngineDir() + "\\Layouts\\Layout01.ini");
+                    Log.Error("Not Implemented");
                     ImGui.EndMenu();
                 }
 
-                ImGui.EndMenu();
+                if (ImGui.BeginMenu("View"))
+                {
+                    if (ImGui.MenuItem("Asset Browser")) CreateAssetBrowserWindow();
+
+                    if (ImGui.BeginMenu("Settings"))
+                    {
+                        if (ImGui.MenuItem("Style Settings")) CreateStyleSettingsWindow();
+
+                        ImGui.EndMenu();
+                    }
+
+                    if (ImGui.BeginMenu("View"))
+                    {
+                        if (ImGui.MenuItem("Hierarchy")) CreateHierachyWindow();
+
+                        if (ImGui.MenuItem("Inspector")) CreateInspectWindow();
+
+                        if (ImGui.BeginMenu("Layouts"))
+                        {
+                            if (ImGui.MenuItem("Default"))
+                                ImGui.LoadIniSettingsFromDisk(Utils.GetBaseEngineDir() + "\\Layouts\\Default.ini");
+                            if (ImGui.MenuItem("Layout01"))
+                                ImGui.LoadIniSettingsFromDisk(Utils.GetBaseEngineDir() + "\\Layouts\\Layout01.ini");
+                            ImGui.EndMenu();
+                        }
+
+                        ImGui.EndMenu();
+                    }
+
+                    ImGui.EndMenu();
+                }
+
+                if (ImGui.BeginMenu("Help"))
+                {
+                    if (ImGui.MenuItem("Website")) Log.Error("Not Implemented");
+                    if (ImGui.MenuItem("WIKI")) Log.Error("Not Implemented");
+                    ImGui.EndMenu();
+                }
+
+                ImGui.EndMenuBar();
             }
-
-            ImGui.EndMenu();
         }
 
-        if (ImGui.BeginMenu("Help"))
         {
-            if (ImGui.MenuItem("Website")) Log.Error("Not Implemented");
-            if (ImGui.MenuItem("WIKI")) Log.Error("Not Implemented");
-            ImGui.EndMenu();
+            // ImGui.SetNextWindowPos(new Vector2(ImGui.GetContentRegionMax().X - 25 * 2, 1));
+            // ImGui.BeginChild("Buttons", new(25 * 2, 26), true, ImGuiWindowFlags.NoScrollbar);
+            // ImGui.SetCursorPosX(0.5f);
+            // ImGui.SetCursorPosY(0.5f);
+            // ImGui.Button("X", new Vector2(22));
+            // ImGui.SameLine();
+            // ImGui.SetCursorPosY(0.5f);
+            // ImGui.Button("X", new Vector2(22));
+            // ImGui.EndChild();
         }
+        
+        if (ImGui.IsWindowHovered())
+        {
+            _isHoveringToolbar = true;
+        }
+        
+        ImGui.End();
 
-        ImGui.EndMenuBar();
     }
+
+    
 
     private static void CreateStyleSettingsWindow()
     {
@@ -312,19 +340,6 @@ internal static class UiRenderer
         for (var i = 0; i < assCo; i++) CreateAssetBrowserWindow();
     }
 
-    private static void DrawToolbar()
-    {
-        if (ImGui.Button("PLAY"))
-        {
-            Engine.Get().CurrentScene.IsPlaying = true;
-        }
-        ImGui.SameLine();
-        if (ImGui.Button("STOP"))
-        {
-            Engine.Get().CurrentScene.IsPlaying = false;
-        }
-        ImGui.End();
-    }
 
     internal static void ChangeFont(string path, float size)
     {

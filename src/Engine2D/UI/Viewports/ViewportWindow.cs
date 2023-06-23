@@ -3,6 +3,8 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using Engine2D.Cameras;
+using Engine2D.Core;
+using Engine2D.Managers;
 using Engine2D.Testing;
 using ImGuiNET;
 
@@ -42,7 +44,40 @@ internal abstract class ViewportWindow
     internal virtual void RenderImage()
     {
         ImGui.SetCursorPos(ImGui.GetCursorPos());
+        
+        ImGui.BeginChild("TopBar", new Vector2(ImGui.GetContentRegionAvail().X, 39), true);
+        ImGui.SetCursorPosX(ImGui.GetContentRegionAvail().X/2);
+        ImGui.BeginChild("middlebar", new Vector2(60,33), true, ImGuiWindowFlags.NoScrollbar);
+        {
+            if(Engine.Get().CurrentScene.IsPlaying)
+            {
+                if (ImGui.ImageButton(IconManager.GetIcon("pause-icon").TexID, new Vector2(20, 20)))
+                {
+                    Engine.Get().CurrentScene.IsPlaying = true;
+                }
+            }
+            else
+            {
+                if (ImGui.ImageButton(IconManager.GetIcon("play-icon").TexID, new Vector2(20, 20)))
+                {
+                    Engine.Get().CurrentScene.IsPlaying = true;
+                }
+            }
+            
+            ImGui.SameLine();
+            if (ImGui.ImageButton(IconManager.GetIcon("stop-icon").TexID, new Vector2(20, 20)))
+            {
+                Engine.Get().CurrentScene.IsPlaying = false;
+            }
+        }
 
+
+        ImGui.EndChild();
+        ImGui.SameLine();
+        ImTool.Widgets.Hyperlink(" icon by Icons8", "https://icons8.com/");
+        ImGui.EndChild();
+        
+        ImGui.BeginChild("ViewportWindow", new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - 55));
         WindowSize = new Vector2((int)GetVPSize().X, (int)GetVPSize().Y);
         WindowPos = GetCenteredPositionForViewport(WindowSize);
 
@@ -57,6 +92,7 @@ internal abstract class ViewportWindow
 
         Origin = ImGui.GetItemRectMin();
         Sz = ImGui.GetItemRectSize();
+        ImGui.EndChild();
     }
 
     private void SetCanvasData(TileExtent extent)

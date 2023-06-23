@@ -30,7 +30,7 @@ internal static class IconManager
     private static void GetFileNames(DirectoryInfo dir, bool recursive)
     {
         foreach (var fInfo in dir.GetFiles())
-            if (fInfo.Name.Contains("icon") && (fInfo.Extension == ".png" || fInfo.Extension == ".jfp"))
+            if (fInfo.Name.Contains("icon") && (fInfo.Extension == ".png" || fInfo.Extension == ".jpg"))
                 AddIcons(fInfo);
 
         if (recursive)
