@@ -193,37 +193,7 @@ internal static class OpenTkuiHelper
         PrepareProperty(name);
         return Widgets.Quaternion(ref property, name);
     }
-
-
-    internal static bool DrawProperty(string name, ref KDBColor property)
-    {
-        PrepareProperty(name);
-        ImGui.PushID(name);
-
-        var num1 = 0 | (KDBFloat(ref property.r, "R", 4278190257, 1, 0, 255) ? 1 : 0);
-        ImGui.SameLine();
-        var num2 = KDBFloat(ref property.g, "G", 4278235392U, 1, 0, 255) ? 1 : 0;
-        var num3 = num1 | num2;
-        ImGui.SameLine();
-        var num4 = KDBFloat(ref property.b, "B", 4289789952U, 1, 0, 255) ? 1 : 0;
-        var num5 = num3 | num4;
-        ImGui.SameLine();
-        var num6 = KDBFloat(ref property.a, "A", 4287299723U, 1, 0, 255) ? 1 : 0;
-        var num7 = num5 | num6;
-        ImGui.PopID();
-
-        var tempColor = new Vector4(property.RNormalized, property.GNormalized, property.BNormalized,
-            property.ANormalized);
-
-        ImGui.ColorEdit4(name, ref tempColor, ImGuiColorEditFlags.NoLabel | ImGuiColorEditFlags.NoInputs);
-
-        property.r = tempColor.X * 255;
-        property.g = tempColor.Y * 255;
-        property.b = tempColor.Z * 255;
-        property.a = tempColor.W * 255;
-
-        return num7 != 0;
-    }
+    
 
     internal static bool KDBFloat(ref float val, string name, uint color = 4278190257, float dragSpeed = -1,
         float min = -1, float max = -1, bool label = true)

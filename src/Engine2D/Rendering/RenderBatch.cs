@@ -33,9 +33,11 @@ internal class RenderBatch : IComparable<RenderBatch>
     private const int c_vertexSizeInBytes = c_vertexSize * sizeof(float);
     private readonly Shader? _shader;
 
-    private readonly SpriteRenderer[] _sprites = new SpriteRenderer[c_maxBatchSize];
+    private SpriteRenderer[] _sprites = new SpriteRenderer[c_maxBatchSize];
+    
+    private Dictionary<SpriteRenderer, Texture> _spriteTextureMap = new();
 
-    private readonly Texture?[] _textures = new Texture[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
+    public readonly Texture?[] Textures = new Texture[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
     private readonly int[] _textureUnits = new int[(int)ShaderDefaultSlots.AVAILABLETEXTUREUNITS];
     private readonly float[] _vertices = new float[c_maxBatchSize * c_vertexSize];
 
@@ -119,6 +121,40 @@ internal class RenderBatch : IComparable<RenderBatch>
         GL.EnableVertexAttribArray(3);
     }
 
+    /// <summary>
+    /// TODO: Make this more efficient
+    /// Hacky workaround for texture buffer getting overflown but its good enough for now
+    /// </summary>
+    /// <param name="spr"></param>
+    /// <returns></returns>
+    internal bool HasTexture(SpriteRenderer spr)
+    {
+        if (spr.Sprite?.Texture != null)
+        {
+            if (!Textures.Contains(spr.Sprite.Texture))
+            {
+                for (var i = 0; i < Textures.Length-1; i++)
+                {
+                    if (Textures[i] == null)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return true;
+        }
+
+        return false;
+    }
+    
+
     internal void AddSprite(SpriteRenderer spr)
     {
         var index = _spriteCount;
@@ -126,11 +162,11 @@ internal class RenderBatch : IComparable<RenderBatch>
         _spriteCount++;
 
             if (spr.Sprite?.Texture != null)
-                if (!_textures.Contains(spr.Sprite.Texture))
-                    for (var i = 0; i < _textures.Length; i++)
-                        if (_textures[i] == null)
+                if (!Textures.Contains(spr.Sprite.Texture))
+                    for (var i = 0; i < Textures.Length; i++)
+                        if (Textures[i] == null)
                         {
-                            _textures[i] = spr.Sprite.Texture;
+                            Textures[i] = spr.Sprite.Texture;
                             break;
                         }
         
@@ -138,8 +174,14 @@ internal class RenderBatch : IComparable<RenderBatch>
         LoadVertexProperties(index);
     }
 
-    internal void Render(Camera camera, int lightmapTexture)
+    internal void Render(Camera camera, int lightmapTexture, Renderer renderer)
     {
+        if(this._spriteCount <= 0)
+        {
+            renderer.RenderBatchesToRemoveEndOfFrame.Add(this);
+            return;
+        }
+        
         var projectionMatrix = camera.GetProjectionMatrix();
         var viewMatrix = camera.GetViewMatrix();
 
@@ -167,11 +209,11 @@ internal class RenderBatch : IComparable<RenderBatch>
         _shader.uploadInt("uLightmap", (int)ShaderDefaultSlots.LIGHTMAPTEXTURESLOT);
 
         //TEXTURES
-        for (var i = 0; i < _textures.Length; i++)
-            if (_textures[i] != null)
+        for (var i = 0; i < Textures.Length; i++)
+            if (Textures[i] != null)
             {
                 GL.ActiveTexture(OpenTK.Graphics.OpenGL.TextureUnit.Texture0 + i + 1);
-                _textures[i].bind();
+                Textures[i].bind();
             }
 
         _shader.UploadIntArray("uTextures", _textureUnits);
@@ -182,9 +224,9 @@ internal class RenderBatch : IComparable<RenderBatch>
 
         GL.DrawElements(PrimitiveType.Triangles, _spriteCount * 6, DrawElementsType.UnsignedInt, 0);
 
-        for (var i = 0; i < _textures.Length; i++)
-            if (_textures[i] != null)
-                _textures[i].unbind();
+        for (var i = 0; i < Textures.Length; i++)
+            if (Textures[i] != null)
+                Textures[i].unbind();
 
         GL.DisableVertexAttribArray(0);
         GL.DisableVertexAttribArray(1);
@@ -198,8 +240,8 @@ internal class RenderBatch : IComparable<RenderBatch>
         var spriteRenderer = _sprites[index];
         var offset = index * 4 * c_vertexSize;
 
-        Vector4 color = new(spriteRenderer.Color.RNormalized, spriteRenderer.Color.GNormalized,
-            spriteRenderer.Color.BNormalized, spriteRenderer.Color.ANormalized);
+        Vector4 color = new(spriteRenderer.Color.X/255, spriteRenderer.Color.Y/255,
+            spriteRenderer.Color.Z/255, spriteRenderer.Color.W/255);
 
         var texID = -1;
         var texCoords = spriteRenderer.TextureCoords;
@@ -207,10 +249,10 @@ internal class RenderBatch : IComparable<RenderBatch>
 
         if (spriteRenderer.Sprite?.Texture != null)
         {
-            for (var i = 0; i < _textures.Length; i++)
-                if (_textures[i] != null)
+            for (var i = 0; i < Textures.Length; i++)
+                if (Textures[i] != null)
                 {
-                    if (_textures[i].Equals(spriteRenderer.Sprite.Texture))
+                    if (Textures[i].Equals(spriteRenderer.Sprite.Texture))
                     {
                         texID = i + 1;
                         break;
@@ -340,6 +382,8 @@ internal class RenderBatch : IComparable<RenderBatch>
 
     internal void RemoveSprite(SpriteRenderer spr)
     {
+        if(spr.Sprite?.Texture != null)RemoveTexture(spr.Sprite.Texture);
+        
         for (var i = 0; i < _spriteCount; i++)
             if (_sprites[i] == spr)
             {
@@ -351,5 +395,14 @@ internal class RenderBatch : IComparable<RenderBatch>
 
                 _spriteCount--;
             }
+    }
+
+    internal void RemoveTexture(Texture tex)
+    {
+        for (int i = 0; i < Textures.Length; i++)
+        {
+            if (Textures[i]?.TexID == (tex.TexID))
+                Textures[i] = null;
+        }
     }
 }

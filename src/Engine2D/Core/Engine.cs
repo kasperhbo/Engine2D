@@ -1,6 +1,10 @@
 ﻿#region
 
+using Engine2D.Components.SpriteAnimations;
+using Engine2D.Components.Sprites;
+using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Logging;
+using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.UI;
@@ -23,8 +27,16 @@ namespace Engine2D.Core
 
 
         private int _frameCounter;
+        private double _previousTime;
+        
         internal Asset? CurrentSelectedAsset;
-        internal AssetBrowserAsset? CurrentSelectedAssetBrowserAsset;
+        
+        
+        internal SpriteSheet? CurrentSelectedSpriteSheetAssetBrowserAsset { get; set; }= null;
+        internal Texture? CurrentSelectedTextureAssetBrowserAsset     { get; set; } = null;
+        internal Animation? CurrentSelectedAnimationAssetBrowserAsset   { get; set; } = null;
+        
+            
 
         internal Scene? CurrentScene { get; private set; }
 
@@ -54,10 +66,18 @@ namespace Engine2D.Core
         {
         }
 
+        public static double DeltaTime = 0;
+        
         private void Render(FrameEventArgs args)
         {
-            SetTitle((float)args.Time);
-            CurrentScene?.Render(args);
+            
+            // Calculate delta time
+            double currentTime = TimeSinceStart;
+            DeltaTime = currentTime - _previousTime;
+            _previousTime = currentTime;
+            
+            SetTitle((float)DeltaTime);
+            CurrentScene?.Render((float)DeltaTime);
             SwapBuffers();
         }
 
@@ -93,6 +113,7 @@ namespace Engine2D.Core
         internal Engine(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(
             gameWindowSettings, nativeWindowSettings)
         {
+            
         }
 
         public static unsafe Engine Get()
@@ -135,6 +156,8 @@ namespace Engine2D.Core
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);
+
+            _previousTime = TimeSinceStart;
         }
 
         private void LoadProject()
@@ -164,6 +187,13 @@ namespace Engine2D.Core
             SaveLoad.SaveWindowSettings();
             SaveLoad.SaveEngineSettings();
         }
+        
+        private double TimeSinceStart
+        {
+            get { return (double)DateTime.Now.Ticks / TimeSpan.TicksPerSecond; }
+        }
+
+        
 
         #endregion
     }
@@ -179,8 +209,8 @@ internal static class WindowSettings
 {
     internal static string Title { get; } = "Kasper Engine";
     internal static Vector2i Size { get; } = new(1920, 1080);
-    internal static float UpdateFrequency { get; } = 60;
-    internal static float RenderFrequency { get; } = 60;
+    internal static float UpdateFrequency { get; } = -1;
+    internal static float RenderFrequency { get; } = -1;
     internal static WindowState FullScreen { get; } = WindowState.Maximized;
     internal static bool Decorated { get; } = true;
 }
@@ -193,6 +223,8 @@ internal static class Settings
 
 internal static class ProjectSettings
 {
+    //TODO: Make this a json file
+    //TODO: MAKE THIS ACCESSIBLE FROM A LAUNCHER
     internal static string ProjectName { get; } = "ExampleGame";
     internal static string ProjectLocation { get; } = @"D:\dev\Engine2D\src\";
     internal static string FullProjectPath { get; } = ProjectLocation + ProjectName;

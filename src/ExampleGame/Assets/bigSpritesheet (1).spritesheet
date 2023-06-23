@@ -1,7 +1,7 @@
 {
-  "Sprites": [
+  "_sprites": [
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 0,
       "Width": 16,
       "Height": 32,
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 1,
       "Width": 16,
       "Height": 32,
@@ -49,7 +49,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 2,
       "Width": 16,
       "Height": 32,
@@ -73,7 +73,7 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 3,
       "Width": 16,
       "Height": 32,
@@ -97,921 +97,345 @@
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 4,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.04761905,
+          "X": 0.23809524,
+          "Y": 1.0
+        },
+        {
+          "X": 0.23809524,
           "Y": 0.5
         },
         {
-          "X": 0.04761905,
-          "Y": 0.0
-        },
-        {
-          "X": 0.0,
-          "Y": 0.0
-        },
-        {
-          "X": 0.0,
+          "X": 0.1904762,
           "Y": 0.5
+        },
+        {
+          "X": 0.1904762,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 5,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.0952381,
+          "X": 0.2857143,
+          "Y": 1.0
+        },
+        {
+          "X": 0.2857143,
           "Y": 0.5
         },
         {
-          "X": 0.0952381,
-          "Y": 0.0
-        },
-        {
-          "X": 0.04761905,
-          "Y": 0.0
-        },
-        {
-          "X": 0.04761905,
+          "X": 0.23809524,
           "Y": 0.5
+        },
+        {
+          "X": 0.23809524,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 6,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.14285715,
+          "X": 0.33333334,
+          "Y": 1.0
+        },
+        {
+          "X": 0.33333334,
           "Y": 0.5
         },
         {
-          "X": 0.14285715,
-          "Y": 0.0
-        },
-        {
-          "X": 0.0952381,
-          "Y": 0.0
-        },
-        {
-          "X": 0.0952381,
+          "X": 0.2857143,
           "Y": 0.5
+        },
+        {
+          "X": 0.2857143,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 7,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.1904762,
+          "X": 0.3809524,
+          "Y": 1.0
+        },
+        {
+          "X": 0.3809524,
           "Y": 0.5
         },
         {
-          "X": 0.1904762,
-          "Y": 0.0
-        },
-        {
-          "X": 0.14285715,
-          "Y": 0.0
-        },
-        {
-          "X": 0.14285715,
+          "X": 0.33333334,
           "Y": 0.5
+        },
+        {
+          "X": 0.33333334,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 8,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.04761905,
-          "Y": 0.0
+          "X": 0.42857143,
+          "Y": 1.0
         },
         {
-          "X": 0.04761905,
-          "Y": -0.5
+          "X": 0.42857143,
+          "Y": 0.5
         },
         {
-          "X": 0.0,
-          "Y": -0.5
+          "X": 0.3809524,
+          "Y": 0.5
         },
         {
-          "X": 0.0,
-          "Y": 0.0
+          "X": 0.3809524,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 9,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.0952381,
-          "Y": 0.0
+          "X": 0.47619048,
+          "Y": 1.0
         },
         {
-          "X": 0.0952381,
-          "Y": -0.5
+          "X": 0.47619048,
+          "Y": 0.5
         },
         {
-          "X": 0.04761905,
-          "Y": -0.5
+          "X": 0.42857143,
+          "Y": 0.5
         },
         {
-          "X": 0.04761905,
-          "Y": 0.0
+          "X": 0.42857143,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 10,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.14285715,
-          "Y": 0.0
+          "X": 0.52380955,
+          "Y": 1.0
         },
         {
-          "X": 0.14285715,
-          "Y": -0.5
+          "X": 0.52380955,
+          "Y": 0.5
         },
         {
-          "X": 0.0952381,
-          "Y": -0.5
+          "X": 0.47619048,
+          "Y": 0.5
         },
         {
-          "X": 0.0952381,
-          "Y": 0.0
+          "X": 0.47619048,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 11,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.1904762,
-          "Y": 0.0
+          "X": 0.5714286,
+          "Y": 1.0
         },
         {
-          "X": 0.1904762,
-          "Y": -0.5
+          "X": 0.5714286,
+          "Y": 0.5
         },
         {
-          "X": 0.14285715,
-          "Y": -0.5
+          "X": 0.52380955,
+          "Y": 0.5
         },
         {
-          "X": 0.14285715,
-          "Y": 0.0
+          "X": 0.52380955,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 12,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.04761905,
-          "Y": -0.5
+          "X": 0.61904764,
+          "Y": 1.0
         },
         {
-          "X": 0.04761905,
-          "Y": -1.0
+          "X": 0.61904764,
+          "Y": 0.5
         },
         {
-          "X": 0.0,
-          "Y": -1.0
+          "X": 0.5714286,
+          "Y": 0.5
         },
         {
-          "X": 0.0,
-          "Y": -0.5
+          "X": 0.5714286,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 13,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.0952381,
-          "Y": -0.5
+          "X": 0.6666667,
+          "Y": 1.0
         },
         {
-          "X": 0.0952381,
-          "Y": -1.0
+          "X": 0.6666667,
+          "Y": 0.5
         },
         {
-          "X": 0.04761905,
-          "Y": -1.0
+          "X": 0.61904764,
+          "Y": 0.5
         },
         {
-          "X": 0.04761905,
-          "Y": -0.5
+          "X": 0.61904764,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 14,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.14285715,
-          "Y": -0.5
+          "X": 0.71428573,
+          "Y": 1.0
         },
         {
-          "X": 0.14285715,
-          "Y": -1.0
+          "X": 0.71428573,
+          "Y": 0.5
         },
         {
-          "X": 0.0952381,
-          "Y": -1.0
+          "X": 0.6666667,
+          "Y": 0.5
         },
         {
-          "X": 0.0952381,
-          "Y": -0.5
+          "X": 0.6666667,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 15,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.1904762,
-          "Y": -0.5
+          "X": 0.7619048,
+          "Y": 1.0
         },
         {
-          "X": 0.1904762,
-          "Y": -1.0
+          "X": 0.7619048,
+          "Y": 0.5
         },
         {
-          "X": 0.14285715,
-          "Y": -1.0
+          "X": 0.71428573,
+          "Y": 0.5
         },
         {
-          "X": 0.14285715,
-          "Y": -0.5
+          "X": 0.71428573,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 16,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.04761905,
-          "Y": -1.0
+          "X": 0.8095238,
+          "Y": 1.0
         },
         {
-          "X": 0.04761905,
-          "Y": -1.5
+          "X": 0.8095238,
+          "Y": 0.5
         },
         {
-          "X": 0.0,
-          "Y": -1.5
+          "X": 0.7619048,
+          "Y": 0.5
         },
         {
-          "X": 0.0,
-          "Y": -1.0
+          "X": 0.7619048,
+          "Y": 1.0
         }
       ]
     },
     {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+      "FullSavePath": "\\Assets\\bigSpritesheet (1).spritesheet",
       "Index": 17,
       "Width": 16,
       "Height": 32,
       "TextureCoords": [
         {
-          "X": 0.0952381,
-          "Y": -1.0
+          "X": 0.85714287,
+          "Y": 1.0
         },
         {
-          "X": 0.0952381,
-          "Y": -1.5
+          "X": 0.85714287,
+          "Y": 0.5
         },
         {
-          "X": 0.04761905,
-          "Y": -1.5
+          "X": 0.8095238,
+          "Y": 0.5
         },
         {
-          "X": 0.04761905,
-          "Y": -1.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 18,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.14285715,
-          "Y": -1.0
-        },
-        {
-          "X": 0.14285715,
-          "Y": -1.5
-        },
-        {
-          "X": 0.0952381,
-          "Y": -1.5
-        },
-        {
-          "X": 0.0952381,
-          "Y": -1.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 19,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.1904762,
-          "Y": -1.0
-        },
-        {
-          "X": 0.1904762,
-          "Y": -1.5
-        },
-        {
-          "X": 0.14285715,
-          "Y": -1.5
-        },
-        {
-          "X": 0.14285715,
-          "Y": -1.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 20,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.04761905,
-          "Y": -1.5
-        },
-        {
-          "X": 0.04761905,
-          "Y": -2.0
-        },
-        {
-          "X": 0.0,
-          "Y": -2.0
-        },
-        {
-          "X": 0.0,
-          "Y": -1.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 21,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.0952381,
-          "Y": -1.5
-        },
-        {
-          "X": 0.0952381,
-          "Y": -2.0
-        },
-        {
-          "X": 0.04761905,
-          "Y": -2.0
-        },
-        {
-          "X": 0.04761905,
-          "Y": -1.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 22,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.14285715,
-          "Y": -1.5
-        },
-        {
-          "X": 0.14285715,
-          "Y": -2.0
-        },
-        {
-          "X": 0.0952381,
-          "Y": -2.0
-        },
-        {
-          "X": 0.0952381,
-          "Y": -1.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 23,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.1904762,
-          "Y": -1.5
-        },
-        {
-          "X": 0.1904762,
-          "Y": -2.0
-        },
-        {
-          "X": 0.14285715,
-          "Y": -2.0
-        },
-        {
-          "X": 0.14285715,
-          "Y": -1.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 24,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.04761905,
-          "Y": -2.0
-        },
-        {
-          "X": 0.04761905,
-          "Y": -2.5
-        },
-        {
-          "X": 0.0,
-          "Y": -2.5
-        },
-        {
-          "X": 0.0,
-          "Y": -2.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 25,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.0952381,
-          "Y": -2.0
-        },
-        {
-          "X": 0.0952381,
-          "Y": -2.5
-        },
-        {
-          "X": 0.04761905,
-          "Y": -2.5
-        },
-        {
-          "X": 0.04761905,
-          "Y": -2.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 26,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.14285715,
-          "Y": -2.0
-        },
-        {
-          "X": 0.14285715,
-          "Y": -2.5
-        },
-        {
-          "X": 0.0952381,
-          "Y": -2.5
-        },
-        {
-          "X": 0.0952381,
-          "Y": -2.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 27,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.1904762,
-          "Y": -2.0
-        },
-        {
-          "X": 0.1904762,
-          "Y": -2.5
-        },
-        {
-          "X": 0.14285715,
-          "Y": -2.5
-        },
-        {
-          "X": 0.14285715,
-          "Y": -2.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 28,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.04761905,
-          "Y": -2.5
-        },
-        {
-          "X": 0.04761905,
-          "Y": -3.0
-        },
-        {
-          "X": 0.0,
-          "Y": -3.0
-        },
-        {
-          "X": 0.0,
-          "Y": -2.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 29,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.0952381,
-          "Y": -2.5
-        },
-        {
-          "X": 0.0952381,
-          "Y": -3.0
-        },
-        {
-          "X": 0.04761905,
-          "Y": -3.0
-        },
-        {
-          "X": 0.04761905,
-          "Y": -2.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 30,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.14285715,
-          "Y": -2.5
-        },
-        {
-          "X": 0.14285715,
-          "Y": -3.0
-        },
-        {
-          "X": 0.0952381,
-          "Y": -3.0
-        },
-        {
-          "X": 0.0952381,
-          "Y": -2.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 31,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.1904762,
-          "Y": -2.5
-        },
-        {
-          "X": 0.1904762,
-          "Y": -3.0
-        },
-        {
-          "X": 0.14285715,
-          "Y": -3.0
-        },
-        {
-          "X": 0.14285715,
-          "Y": -2.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 32,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.04761905,
-          "Y": -3.0
-        },
-        {
-          "X": 0.04761905,
-          "Y": -3.5
-        },
-        {
-          "X": 0.0,
-          "Y": -3.5
-        },
-        {
-          "X": 0.0,
-          "Y": -3.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 33,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.0952381,
-          "Y": -3.0
-        },
-        {
-          "X": 0.0952381,
-          "Y": -3.5
-        },
-        {
-          "X": 0.04761905,
-          "Y": -3.5
-        },
-        {
-          "X": 0.04761905,
-          "Y": -3.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 34,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.14285715,
-          "Y": -3.0
-        },
-        {
-          "X": 0.14285715,
-          "Y": -3.5
-        },
-        {
-          "X": 0.0952381,
-          "Y": -3.5
-        },
-        {
-          "X": 0.0952381,
-          "Y": -3.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 35,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.1904762,
-          "Y": -3.0
-        },
-        {
-          "X": 0.1904762,
-          "Y": -3.5
-        },
-        {
-          "X": 0.14285715,
-          "Y": -3.5
-        },
-        {
-          "X": 0.14285715,
-          "Y": -3.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 36,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.04761905,
-          "Y": -3.5
-        },
-        {
-          "X": 0.04761905,
-          "Y": -4.0
-        },
-        {
-          "X": 0.0,
-          "Y": -4.0
-        },
-        {
-          "X": 0.0,
-          "Y": -3.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 37,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.0952381,
-          "Y": -3.5
-        },
-        {
-          "X": 0.0952381,
-          "Y": -4.0
-        },
-        {
-          "X": 0.04761905,
-          "Y": -4.0
-        },
-        {
-          "X": 0.04761905,
-          "Y": -3.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 38,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.14285715,
-          "Y": -3.5
-        },
-        {
-          "X": 0.14285715,
-          "Y": -4.0
-        },
-        {
-          "X": 0.0952381,
-          "Y": -4.0
-        },
-        {
-          "X": 0.0952381,
-          "Y": -3.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 39,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.1904762,
-          "Y": -3.5
-        },
-        {
-          "X": 0.1904762,
-          "Y": -4.0
-        },
-        {
-          "X": 0.14285715,
-          "Y": -4.0
-        },
-        {
-          "X": 0.14285715,
-          "Y": -3.5
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 40,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.04761905,
-          "Y": -4.0
-        },
-        {
-          "X": 0.04761905,
-          "Y": -4.5
-        },
-        {
-          "X": 0.0,
-          "Y": -4.5
-        },
-        {
-          "X": 0.0,
-          "Y": -4.0
-        }
-      ]
-    },
-    {
-      "FullSavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-      "Index": 41,
-      "Width": 16,
-      "Height": 32,
-      "TextureCoords": [
-        {
-          "X": 0.0952381,
-          "Y": -4.0
-        },
-        {
-          "X": 0.0952381,
-          "Y": -4.5
-        },
-        {
-          "X": 0.04761905,
-          "Y": -4.5
-        },
-        {
-          "X": 0.04761905,
-          "Y": -4.0
+          "X": 0.8095238,
+          "Y": 1.0
         }
       ]
     }
   ],
-  "_texturePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).tex",
-  "SavePath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
-  "_numSprites": 42,
+  "_texturePath": "\\Assets\\bigSpritesheet (1).tex",
+  "_savePath": "\\Assets\\bigSpritesheet (1).spritesheet",
+  "_numSprites": 18,
   "_spacing": 0,
   "_spriteHeight": 32,
   "_spriteWidth": 16

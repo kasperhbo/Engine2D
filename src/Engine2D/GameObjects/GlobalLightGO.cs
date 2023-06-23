@@ -14,7 +14,7 @@ internal class GlobalLightGO : Gameobject
         var currentScene = Engine.Get().CurrentScene;
         var gl = new GlobalLight();
         gl.Parent = this;
-        components.Add(gl);
+        Components.Add(gl);
 
         if (currentScene != null) Name = "GlobalLight: " + currentScene.GameObjects.Count + 1;
         // currentScene.AddGameObjectToScene(this);

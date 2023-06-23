@@ -1,23 +1,23 @@
 [
   {
-    "components": [
+    "Components": [
       {
         "HasSpriteSheet": true,
-        "SpriteSheetPath": "D:\\dev\\Engine2D\\src\\ExampleGame\\Assets\\bigSpritesheet (1).spritesheet",
+        "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet",
         "ZIndex": 0,
         "Color": {
-          "a": 255.0,
-          "b": 255.0,
-          "g": 255.0,
-          "r": 255.0
+          "X": 255.0,
+          "Y": 255.0,
+          "Z": 255.0,
+          "W": 255.0
         },
-        "SpriteSheetSpriteIndex": 0,
+        "SpriteSheetSpriteIndex": 1,
         "Type": "Engine2D.GameObjects.SpriteRenderer"
       },
       {
         "Position": {
-          "X": -77.0,
-          "Y": -55.009598
+          "X": 0.0,
+          "Y": 0.0
         },
         "Rotation": {
           "X": 0.0,
@@ -27,14 +27,55 @@
           "IsIdentity": false
         },
         "Size": {
-          "X": 218.82,
-          "Y": 218.82
+          "X": 32.0,
+          "Y": 32.0
+        },
+        "Type": "Engine2D.Components.TransformComponents.Transform"
+      },
+      {
+        "_animationPath": "\\Assets\\NewAnimation.animation",
+        "Type": "Engine2D.Components.SpriteAnimations.SpriteAnimator"
+      }
+    ],
+    "Name": "SpriteRenderer: 11",
+    "ParentUid": -1
+  },
+  {
+    "Components": [
+      {
+        "HasSpriteSheet": false,
+        "SpriteSheetPath": "",
+        "ZIndex": 0,
+        "Color": {
+          "X": 255.0,
+          "Y": 255.0,
+          "Z": 255.0,
+          "W": 255.0
+        },
+        "SpriteSheetSpriteIndex": 0,
+        "Type": "Engine2D.GameObjects.SpriteRenderer"
+      },
+      {
+        "Position": {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        "Rotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
+          "W": 0.0,
+          "IsIdentity": false
+        },
+        "Size": {
+          "X": 1.0,
+          "Y": 1.0
         },
         "Type": "Engine2D.Components.TransformComponents.Transform"
       }
     ],
-    "Name": "Sprite 69",
-    "PARENT_UID": -1
+    "Name": "SpriteRenderer: 21",
+    "ParentUid": -1
   }
 ]
 ////GAMEOBJECTS////

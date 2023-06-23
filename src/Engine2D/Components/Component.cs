@@ -82,13 +82,7 @@ public class Component
                     ignore = true;
 
             if (!ignore)
-            {
-                if (type == typeof(KDBColor))
-                {
-                    var val = (KDBColor)value;
-                    Gui.DrawProperty(name, ref val);
-                    field.SetValue(this, val);
-                }
+            { 
                 if (type == typeof(Vector2))
                 {
                     var val = (Vector2)value;

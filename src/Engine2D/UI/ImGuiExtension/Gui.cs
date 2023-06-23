@@ -131,16 +131,6 @@ internal static class Gui
         value.W = v.W;
     }
 
-    internal static void DrawProperty(string label, ref KDBColor value)
-    {
-        Vector4 v = new Vector4(value.r, value.g, value.b, value.a);
-        DrawProperty(label, ref v);
-        value.r = v.X;
-        value.g = v.Y;
-        value.b = v.Z;
-        value.a = v.W;
-    }
-
     internal static void DrawProperty(string label, ref Vector4 value)
     {
         PushID(label);

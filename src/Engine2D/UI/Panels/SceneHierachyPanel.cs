@@ -1,5 +1,6 @@
 ﻿#region
 
+using Engine2D.Components.SpriteAnimations;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
@@ -87,7 +88,15 @@ internal class SceneHierachyPanel : UIElement
 
     private void HierachyItemClicked(Gameobject clicked)
     {
-        if (ImGui.IsItemClicked()) Engine.Get().CurrentSelectedAsset = clicked;
+        if (ImGui.IsItemClicked())
+        {
+            Engine.Get().CurrentSelectedAsset = clicked;
+            if (clicked.GetComponent<SpriteAnimator>() != null)
+            {
+                Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = clicked.GetComponent<SpriteAnimator>().Animation;
+            }
+        }
+        
     }
 
     private List<Gameobject> GetGameObjects()
@@ -97,7 +106,7 @@ internal class SceneHierachyPanel : UIElement
         {
             var go = Engine.Get().CurrentScene.GameObjects[i];
 
-            if (go.PARENT_UID == -1) _gameobjectsWithoutParents.Add(go);
+            if (go.ParentUid == -1) _gameobjectsWithoutParents.Add(go);
         }
 
         return _gameobjectsWithoutParents;

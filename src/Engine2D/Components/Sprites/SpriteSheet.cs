@@ -21,12 +21,11 @@ internal class SpriteSheet : AssetBrowserAsset
     [JsonIgnore] private GCHandle? _currentlyDraggedHandle;
     [JsonIgnore] public Texture Texture => ResourceManager.GetItem<Texture>(_texturePath);
     [JsonIgnore] private bool _unsaved;
-    
-    [JsonProperty] internal List<SpriteSheetSprite> Sprites = new();
+    [JsonProperty] private List<Sprite> _sprites = new();
 
 
     [JsonProperty] private string? _texturePath = "";
-    [JsonProperty] public string? SavePath = "";
+    [JsonProperty] private string? _savePath = "";
     [JsonProperty] private int _numSprites;
     [JsonProperty] private int _spacing;
     [JsonProperty] private int _spriteHeight;
@@ -44,17 +43,50 @@ internal class SpriteSheet : AssetBrowserAsset
         Init(texturePath, savePath, spriteWidth, spriteHeight, numSprites,
             spacing);
     }
+    
+    public Sprite GetSprite(int index)
+    {
+        int sprindex = CheckForSpriteIndex(index);
+        
+        if (_sprites.Count <= 0)
+        {
+            Log.Error("No Sprites set in spritesheet");
+            return null;
+        }
+        
+        return _sprites[sprindex];
+    }
 
+    
+    private int CheckForSpriteIndex(int checkIndex)
+    {
+        if (checkIndex >= _sprites.Count)
+        {
+            Log.Warning("Sprite index out of range, setting index --");
+            checkIndex--;
+            return CheckForSpriteIndex(checkIndex);
+        }
+
+        return checkIndex;
+    }
+
+    
     private void Init(string? texturePath, string? savePath, int spriteWidth, int spriteHeight, int numSprites,
         int spacing, bool unsaved = false)
     {
+        _sprites = new();
+        if (texturePath == null)
+        {
+            Log.Error("texture path null");
+            return;
+        }
         _unsaved = unsaved;
         
         _spacing = spacing;
-        SavePath = savePath;
+        _savePath = savePath;
         _numSprites = numSprites;
 
-        Sprites = new();
+        _sprites = new();
         _texturePath = texturePath;
 
         if (spriteHeight == -1 && spriteWidth == -1)
@@ -65,49 +97,41 @@ internal class SpriteSheet : AssetBrowserAsset
         
         this._spriteHeight = spriteHeight;
         this._spriteWidth = spriteWidth;
-        
-        if (!File.Exists(_texturePath))
-        {
-            Log.Error(_texturePath + " Texture doesnt exsist");
-            return;
-        }
-        
+    
         if (Texture == null) Log.Error("No texture");
 
 
-        var currentX = 0;
-        var currentY = Texture.Height - spriteHeight;
-
+        int currentX = 0;
+        int currentY = Texture.Height - spriteHeight;
+        
         for (var i = 0; i < numSprites; i++)
         {
-            var topY = (currentY + spriteHeight) / (float)Texture.Height;
-            var rightX = (currentX + spriteWidth) / (float)Texture.Width;
-            var leftX = currentX / (float)Texture.Width;
-            var bottomY = currentY / (float)Texture.Height;
-
+            float topY = (currentY + spriteHeight) / (float)Texture.Height;
+            float rightX = (currentX + spriteWidth) / (float)Texture.Width;
+            float leftX = currentX / (float)Texture.Width;
+            float bottomY = currentY / (float)Texture.Height;
+            
             Vector2[] texCoords =
             {
-                new(rightX, topY),
-                new(rightX, bottomY),
-
-                new(leftX, bottomY),
-                new(leftX, topY)
+                new Vector2(rightX, topY),
+                new Vector2(rightX, bottomY),
+                new Vector2(leftX, bottomY),
+                new Vector2(leftX, topY)
             };
              
-            var sprite = new SpriteSheetSprite(savePath, texCoords, spriteWidth, spriteHeight, i);
+            var sprite = new Sprite(_savePath, texCoords, spriteWidth, spriteHeight, i);
 
-            Sprites.Add(sprite);
+            _sprites.Add(sprite);
 
             currentX += spriteWidth + spacing;
-            if (currentX >= Texture.Height)
-            {
+            if (currentX >= Texture.Width) {
                 currentX = 0;
                 currentY -= spriteHeight + spacing;
             }
         }
     }
 
-    internal unsafe override void OnGui()
+    internal override unsafe void OnGui()
     {
         if (_unsaved)
             ImGui.Begin("Sprite sheet inspector", ImGuiWindowFlags.UnsavedDocument);
@@ -119,16 +143,31 @@ internal class SpriteSheet : AssetBrowserAsset
         if (ImGui.Button("Save")) Save();
 
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 10));
-        ImGui.Text(SavePath);
+        ImGui.Text(_savePath);
 
-        if (ImGui.InputInt("sprite width", ref _spriteWidth) ||
-            ImGui.InputInt("sprite height", ref _spriteHeight) ||
-            ImGui.InputInt("num of sprites", ref _numSprites) ||
-            ImGui.InputInt("padding", ref _spacing))
+        int spriteWidth = _spriteWidth;
+        int spriteHeight = _spriteHeight;
+        int numSprites = _numSprites;
+        int spacing = _spacing;
+        
+        if (ImGui.InputInt("sprite width", ref spriteWidth) ||
+            ImGui.InputInt("sprite height", ref spriteHeight) ||
+            ImGui.InputInt("num of sprites", ref numSprites) ||
+            ImGui.InputInt("padding", ref spacing))
         {
-            Init(_texturePath, SavePath, _spriteWidth, _spriteHeight, _numSprites, _spacing, true);
-
-            Engine.Get().CurrentSelectedAssetBrowserAsset = this;
+            //To make sure the values are not negative  
+            if (spriteHeight < 0) spriteHeight = 0;
+            if (spriteWidth < 0) spriteWidth = 0;
+            if (numSprites < 1) numSprites = 1;
+            if (spacing < 0) spacing = 0;
+            
+            _spriteHeight = spriteHeight;
+            _spriteWidth = spriteWidth;
+            _numSprites = numSprites;
+            _spacing = spacing;
+            
+            Init(_texturePath, _savePath, _spriteWidth, _spriteHeight, _numSprites, _spacing, true);
+            Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset = this;            
             _unsaved = true;
         }
 
@@ -145,10 +184,10 @@ internal class SpriteSheet : AssetBrowserAsset
                 }
             }
 
-            for (var i = 0; i < Sprites.Count; i++)
+            for (var i = 0; i < _sprites.Count; i++)
             {
-                _currentlyDraggedHandle ??= GCHandle.Alloc(Sprites[i]);
-                var entry = Sprites[i];
+                _currentlyDraggedHandle ??= GCHandle.Alloc(_sprites[i]);
+                var entry = _sprites[i];
                 ImGui.PushID(entry.TextureCoords.ToString());
                 
                 bool clicked;
@@ -171,9 +210,6 @@ internal class SpriteSheet : AssetBrowserAsset
 
                 if (ImGui.BeginDragDropSource())
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.WriteLine(entry.TextureCoords[0]);
-                    
                     byte[] spriteData = SpriteRenderer.SerializeSprite(entry);
                 
                     // Set payload data
@@ -199,19 +235,25 @@ internal class SpriteSheet : AssetBrowserAsset
         ImGui.End();
     }
 
+    internal override void Refresh()
+    {
+        Init(_texturePath, _savePath, _spriteWidth, _spriteHeight, _numSprites, _spacing);
+    }
+    
     internal void Save()
     {
-        if (SavePath == "")
+        if (_savePath == "")
         {
             var path = _texturePath.Remove(_texturePath.Length - 4);
             path += ".spritesheet";
-            SavePath = path;
+            _savePath = path;
         }
 
-        Init(_texturePath, SavePath, _spriteWidth, _spriteHeight, _numSprites, _spacing);
-        AssetName = SavePath;
-        ResourceManager.SaveSpriteSheet(SavePath, this, null, true);
+        Init(_texturePath, _savePath, _spriteWidth, _spriteHeight, _numSprites, _spacing);
+        AssetName = _savePath;
         
+        var sprc = new SaveSpriteSheetClass(_savePath, this, null, true);
+        ResourceManager.SpriteSheetsToSave.Add(sprc);
         _unsaved = false;
     }
 }

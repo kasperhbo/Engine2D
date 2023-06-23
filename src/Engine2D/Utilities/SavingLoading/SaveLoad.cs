@@ -83,22 +83,26 @@ internal static class SaveLoad
         var saveFile = saveLocation + "WindowSettings.dat";
         var ok = Utils.SaveWithSoapStaticClass(typeof(UiRenderer), saveFile);
     }
+    
+    
 
-    internal static string? GetNextFreeName(string? name, DirectoryInfo folder)
+    internal static string? GetNextFreeName(string? fullPath)
     {
-        var fullName = folder.FullName + "\\" + name;
+        string directory = Path.GetDirectoryName(fullPath);
+        string baseName = Path.GetFileNameWithoutExtension(fullPath);
+        string extension = Path.GetExtension(fullPath);
 
-        if (File.Exists(fullName))
+        string fileName = fullPath;
+        int counter = 1;
+
+        while (File.Exists(fileName))
         {
-            var fInfo = GetFileInfo(folder.GetFiles(), name);
-            var extensionIndex = name.IndexOf(fInfo.Extension);
-            name = name.Remove(extensionIndex);
-            name += "1";
-            name += fInfo.Extension;
-            return GetNextFreeName(name, folder);
+            string newBaseName = $"{baseName}_{counter}";
+            fileName = Path.Combine(directory, newBaseName + extension);
+            counter++;
         }
 
-        return name;
+        return fileName;
     }
 
     private static FileInfo GetFileInfo(FileInfo[] files, string? name)

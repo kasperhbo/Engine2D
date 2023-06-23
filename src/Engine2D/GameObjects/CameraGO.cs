@@ -14,7 +14,7 @@ internal class CameraGO : Gameobject
         var currentScene = Engine.Get().CurrentScene;
         var camera = new Camera();
         camera.Parent = this;
-        components.Add(camera);
+        Components.Add(camera);
 
         if (currentScene != null) Name = "Camera: " + currentScene.GameObjects.Count + 1;
         // currentScene.AddGameObjectToScene(this);

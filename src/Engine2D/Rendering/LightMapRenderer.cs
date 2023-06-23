@@ -129,7 +129,7 @@ internal class LightMapRenderer
         {
             var light = lightsToRenderer[i];
             lightPositions[i] = light.LastTransform.Position;
-            lightColors[i] = new Vector3(light.Color.RNormalized, light.Color.GNormalized, light.Color.BNormalized);
+            lightColors[i] = new Vector3(light.Color.X/255f, light.Color.Y/255f, light.Color.Z/255f);
             lightIntensities[i] = light.Intensity;
         }
 

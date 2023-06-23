@@ -5,6 +5,7 @@ using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Cameras;
 using Engine2D.Components;
+using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
@@ -51,7 +52,7 @@ internal class Scene
 
         _physicsWorld = new World(new Vector2(0, -9.8f));
         foreach (var gameobject in GameObjects)
-        foreach (var item in gameobject.components)
+        foreach (var item in gameobject.Components)
             if (item.Type == "Rigidbody")
             {
                 throw new NotImplementedException();
@@ -87,7 +88,7 @@ internal class Scene
 
         _physicsWorld.Step((float)args.Time, velocityItterations, positionItterations);
 
-        foreach (var obj in GameObjects) obj.GameUpdate(args.Time);
+        foreach (var obj in GameObjects) obj.GameUpdate((float)Engine.DeltaTime);
     }
 
     private void StopPlay()
@@ -111,6 +112,8 @@ internal class Scene
         foreach (var go in gos) AddGameObjectToScene(go);
 
         Start();
+        
+        
     }
 
     /// <summary>
@@ -128,16 +131,17 @@ internal class Scene
         
         AddGameObjectToScene(editorCameraGO);
     }
+    
 
     internal virtual void EditorUpdate(FrameEventArgs args)
     {
-        foreach (var obj in GameObjects) obj.EditorUpdate(args.Time);
+        foreach (var obj in GameObjects) obj.EditorUpdate((float)Engine.DeltaTime);
 
         if (Engine.Get().IsKeyPressed(Keys.B))
             Engine.Get().SwitchScene("new");
     }
 
-    internal virtual void Render(FrameEventArgs args)
+    internal virtual void Render(float dt)
     {
         Renderer.Render(EditorCamera, CurrentMainGameCamera);
     }

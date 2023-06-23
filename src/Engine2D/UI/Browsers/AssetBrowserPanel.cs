@@ -2,7 +2,9 @@
 
 using System.Numerics;
 using System.Runtime.InteropServices;
+using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.Sprites;
+using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
 using Engine2D.Logging;
@@ -28,7 +30,8 @@ internal enum ESupportedFileTypes
     spritesheet,
     tex,
     txt,
-    cs
+    cs,
+    animation
 }
 
 internal class AssetBrowserPanel : UIElement
@@ -67,10 +70,7 @@ internal class AssetBrowserPanel : UIElement
 
     internal static void Refresh()
     {
-        var cur = Engine.Get().CurrentSelectedAssetBrowserAsset;
-        Engine.Get().CurrentSelectedAssetBrowserAsset = null;
         foreach (var panel in AssetBrowserPanels) panel.SwitchDirectory(panel.CurrentDirectory);
-        Engine.Get().CurrentSelectedAssetBrowserAsset = cur;
     }
 
     internal override void RenderTopBar()
@@ -111,9 +111,16 @@ internal class AssetBrowserPanel : UIElement
         {
             var extensionLength = imageFiles[i].Extension.Length;
             var saveName = imageFiles[i].Name.Remove(imageFiles[i].Name.Length - extensionLength, extensionLength);
-            saveName += ".tex";
-            var texture = new Texture(imageFiles[i].FullName, CurrentDirectory.FullName + "\\" + saveName, true,
+            saveName += ".tex"; 
+            saveName = saveName.Insert(0, CurrentDirectory.FullName + "\\");
+            saveName = saveName.Replace(ProjectSettings.FullProjectPath, "");
+            
+            
+            var texture = new Texture(imageFiles[i].FullName, saveName, true,
                 TextureMinFilter.Linear, TextureMagFilter.Linear);
+
+    
+            
             texture.Save();
             Log.Succes(string.Format("Succesfully made texture from {0}, and save it to {1}",
                 imageFiles[i].FullName, CurrentDirectory + "\\" + imageFiles[i].Name));
@@ -194,9 +201,6 @@ internal class AssetBrowserPanel : UIElement
 
             ImGui.TableSetColumnIndex(1);
 
-            const float topBarHeight = 26.0f;
-            const float bottomBarHeight = 32.0f;
-
             ImGui.BeginChild("ccbrowser");
             {
                 if (ImGui.BeginPopupContextWindow("windowpoup"))
@@ -205,6 +209,19 @@ internal class AssetBrowserPanel : UIElement
 
                     ImGui.MenuItem("Item1");
                     ImGui.MenuItem("Item2");
+                    
+                    if(ImGui.MenuItem("Create animation"))
+                    {
+                        var savePath = CurrentDirectory.FullName + "\\";
+                        savePath += "NewAnimation";
+                        savePath += ".animation";
+                        
+                        savePath = savePath.Replace(ProjectSettings.FullProjectPath, "");
+                        
+                        var animation = new Animation(savePath);
+                        animation.Save();
+                    }
+                    
                     ImGui.EndPopup();
                 }
 
@@ -222,10 +239,6 @@ internal class AssetBrowserPanel : UIElement
                     {
                         var entry = _entries[i];
                         entry.Draw(i);
-                        if (ImGui.IsItemClicked())
-                        {
-                        }
-
                         ImGui.NextColumn();
                     }
                 }
@@ -415,10 +428,13 @@ internal class AssetBrowserEntry
             _assetBrowserPanel.Padding, _assetBrowserPanel.ImageAdjust,
             new Vector4(1),
             out clicked, out doubleClicked, out rightClicked, _isSelected);
-
+        
+        var relativePath = FullPath?.Replace(ProjectSettings.FullProjectPath, "");
+        
         if (ImGui.BeginDragDropSource())
         {
-            _currentlyDraggedHandle ??= GCHandle.Alloc(FullPath);
+            
+            _currentlyDraggedHandle ??= GCHandle.Alloc(relativePath);
 
             switch (_fileType)
             {
@@ -426,6 +442,12 @@ internal class AssetBrowserEntry
                     ImGui.SetDragDropPayload("sprite_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
                         (uint)sizeof(IntPtr));
                     break;
+                case ESupportedFileTypes.animation:
+                {
+                    ImGui.SetDragDropPayload("animation_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                        (uint)sizeof(IntPtr));
+                    break;
+                }
                 case ESupportedFileTypes.cs:
                     ImGui.SetDragDropPayload("script_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
                         (uint)sizeof(IntPtr));
@@ -442,13 +464,15 @@ internal class AssetBrowserEntry
 
             if (_fileType == ESupportedFileTypes.tex)
             {
+                
                 if (ImGui.MenuItem("Create Sprite)"))
                 {
                     var savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
                     savePath += Label.Remove(Label.Length - 4);
                     savePath += ".spritesheet";
+                    savePath = savePath?.Replace(ProjectSettings.FullProjectPath, "");
 
-                    var spriteSheet = new SpriteSheet(FullPath, savePath);
+                    var spriteSheet = new SpriteSheet(relativePath, savePath);
                     spriteSheet.Save();
                     AssetBrowserPanel.Refresh();
                 }
@@ -457,8 +481,9 @@ internal class AssetBrowserEntry
                     var savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
                     savePath += Label.Remove(Label.Length - 4);
                     savePath += ".spritesheet";
+                    savePath = savePath?.Replace(ProjectSettings.FullProjectPath, "");
 
-                    var spriteSheet = new SpriteSheet(FullPath, savePath, 16, 32, 42, 0);
+                    var spriteSheet = new SpriteSheet(relativePath, savePath, 16, 16, 1, 0);
                     spriteSheet.Save();
                     AssetBrowserPanel.Refresh();
                 }
@@ -475,18 +500,27 @@ internal class AssetBrowserEntry
         if (ImGui.IsItemClicked())
             _assetBrowserPanel._currentSelectedEntryIndex = index;
 
+        //Loading items on clicked to show their inspector
         if (ImGui.IsItemClicked() && ImGui.IsMouseClicked(ImGuiMouseButton.Left))
         {
-            if (_fileType == ESupportedFileTypes.tex) Engine.Get().CurrentSelectedAssetBrowserAsset = _texture;
+            if (_fileType == ESupportedFileTypes.tex)
+                Engine.Get().CurrentSelectedTextureAssetBrowserAsset = _texture;
             
             if (_fileType == ESupportedFileTypes.spritesheet)
             {
                 // SpriteSheet sprite = SaveLoad.LoadSpriteSheetFromJson(fullPath);
-                var spriteSheet = ResourceManager.GetItem<SpriteSheet>(FullPath);
-                Engine.Get().CurrentSelectedAssetBrowserAsset = spriteSheet;
+                var spriteSheet = ResourceManager.GetItem<SpriteSheet>(relativePath);
+                Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset = spriteSheet;
             }
-        }
 
+            if (_fileType == ESupportedFileTypes.animation)
+            {
+                Log.Warning("Clicked animation");
+                var animation = ResourceManager.GetItem<Animation>(relativePath);
+                Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = animation;
+            }
+            
+        }
 
         ImGui.PopID();
     }

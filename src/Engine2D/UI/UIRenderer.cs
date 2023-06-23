@@ -4,6 +4,7 @@ using System.Numerics;
 using Dear_ImGui_Sample;
 using Engine2D.Core;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.UI.Browsers;
 using Engine2D.UI.Viewports;
 using Engine2D.Utilities;
@@ -59,33 +60,46 @@ internal static class UiRenderer
 
         if (createDefaultWindows) CreateDefaultWindows();
     }
-
+    
 
     private static void Update(FrameEventArgs args)
     {
     }
-
+    
+    
     private static void Render(FrameEventArgs args)
     {
         KDBImGuiController.Update(_engine, args.Time);
 
         ImGui.Begin("Debug Helper");
-
+        ImGui.BeginChild("Renderer", new(-1, 90), true);
+        
+        ImGui.Text($"FPS: {1 / args.Time:0.00}");
+        ImGui.Text($"Frame Time: {args.Time * 1000:0.00}ms");
+        ImGui.Text("Render batches: " + Engine.Get().CurrentScene.Renderer.RenderBatches.Count);
+        
+        ImGui.EndChild();
         if (ImGui.Button("Reload Assembly")) AssemblyUtils.Reload();
 
         ImGui.End();
-
+        
         DrawMainMenuBar();
         DrawToolbar();
         SetupDockSpace();
 
-        var currentSelectedAssetBrowserAsset = Engine.Get().CurrentSelectedAssetBrowserAsset;
-        if (currentSelectedAssetBrowserAsset != null) currentSelectedAssetBrowserAsset.OnGui();
+        Engine.Get().CurrentScene.Renderer.OnGui();
+        Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset?.OnGui(); 
+        Engine.Get().CurrentSelectedTextureAssetBrowserAsset?.OnGui();     
+        Engine.Get().CurrentSelectedAnimationAssetBrowserAsset?.OnGui();   
+        
 
         ImGui.ShowDemoWindow();
 
         KDBImGuiController.Render();
+        
+        ResourceManager.OnGUI();
     }
+
 
     private static void OnMouseWheel(MouseWheelEventArgs args)
     {

@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Engine2D.Components;
 using Engine2D.Components.Sprites;
+using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.Logging;
@@ -15,7 +16,6 @@ using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using ResourceManager = Engine2D.Managers.ResourceManager;
 
 #endregion
@@ -27,7 +27,7 @@ namespace Engine2D.GameObjects;
 internal class SpriteRenderer : Component
 {
     [JsonIgnore][ShowUI (show = false)] internal bool IsDirty = true;
-    [JsonIgnore] internal SpriteSheetSprite? Sprite;    
+    [JsonIgnore] internal Sprite? Sprite;    
     [JsonIgnore] private SpriteSheet? _spriteSheet;
     
     [JsonIgnore]
@@ -45,21 +45,26 @@ internal class SpriteRenderer : Component
     
     
     [JsonIgnore] private Renderer? _renderer;
-    [JsonIgnore]
-    private Vector2[] _defaultTextureCoords =
+    [JsonIgnore] private Vector2[] _defaultTextureCoords =
     {
         new(1, 1),
         new(1, 0),
         new(0, 0),
         new(0, 1f)
     };
+    
+    [JsonIgnore] [ShowUI(show = false)]private Transform _parentTransform { get; set; } = null!;
+    [JsonIgnore] [ShowUI(show = false)]private Transform _lastTransform { get; set; } = new();
+    [JsonIgnore]  [ShowUI(show = false)] private Vector4 _lastColor { get; set; } = new();
+    
     [JsonProperty][ShowUI (show = false)] internal bool HasSpriteSheet = false;
     [JsonProperty][ShowUI (show = false)] internal string? SpriteSheetPath = "";
 
     [JsonProperty] internal int ZIndex = 0;
-    [JsonProperty] internal KDBColor Color = new();
+    [JsonProperty] internal Vector4 Color = new(255,255,255,255);
     [JsonProperty] internal int SpriteSheetSpriteIndex = 0;
-    
+    private int _lastSpriteSheetIndex = -1;
+
 
     internal override void Init(Gameobject parent, Renderer? renderer)
     {
@@ -74,76 +79,94 @@ internal class SpriteRenderer : Component
         
         Initialize();
     }
-
+    
     private void Initialize()
     {
         if (_renderer == null)
         {
             _renderer = Engine.Get().CurrentScene.Renderer;
         }
-        ResourceManager.SpriteRenderers.Add(this);
-        
+
+        _parentTransform = Parent.GetComponent<Transform>();
         Refresh();
     }
+
+    
 
     public override void EditorUpdate(double dt)
     {
         base.EditorUpdate(dt);
-        this.IsDirty = true;
+
+        if (Color != (_lastColor))
+        {
+            _lastColor = Color;
+            IsDirty = true;
+        }
+        
+        if (_parentTransform.Equals(_lastTransform))
+        {
+            Transform.Copy(_lastTransform, _parentTransform);
+            IsDirty = true;
+        }
+
+        if (SpriteSheetSpriteIndex != _lastSpriteSheetIndex)
+        {
+            _lastSpriteSheetIndex = SpriteSheetSpriteIndex;
+            IsDirty = true;
+        }
+        
     }
 
-    private void SetSprite(int spriteSheetIndex, string spriteSheet)
+    internal void SetSprite(int spriteSheetIndex, string spriteSheet)
     {
+        _renderer.RemoveSprite(this);
+        
         var sprs = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
+        
         if (sprs == null)
         {
             Log.Error("Couldn't find sprite sheet: " + spriteSheet);
             return;
         }
         
-        SetSprite(spriteSheetIndex, sprs);
-    }
-
-    private void SetSprite(int spriteSheetIndex, SpriteSheet spriteSheet)
-    {
-        _renderer.RemoveSprite(this);
         HasSpriteSheet = true;
         
-        Sprite = spriteSheet.Sprites[spriteSheetIndex];
-        SpriteSheetPath = spriteSheet.SavePath;
+        _spriteSheet = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
+
+
+        Sprite = _spriteSheet.GetSprite(spriteSheetIndex);
+        SpriteSheetPath = spriteSheet;
         SpriteSheetSpriteIndex = spriteSheetIndex;
 
-        _spriteSheet = spriteSheet;
-        
         _renderer.AddSpriteRenderer(this);
+        IsDirty = true;
     }
 
     public void Refresh()
     {
         if (SpriteSheetPath != "" && HasSpriteSheet == true)
         {
-            //Load sprite sheet
-            var spriteSheet = ResourceManager.GetItem<SpriteSheet>(SpriteSheetPath);
-            SetSprite(SpriteSheetSpriteIndex, spriteSheet);
+            SetSprite(SpriteSheetSpriteIndex, SpriteSheetPath);
         }
         else
         {
             _renderer.AddSpriteRenderer(this);
         }
+
+        IsDirty = true;
     }
 
     public override unsafe void ImGuiFields()
     {
-        Gui.DrawProperty("ZIndex", ref ZIndex);
-        Gui.DrawProperty("Color", ref Color);
+        base.ImGuiFields();
         
-        if(SpriteSheetPath != "")
-            if (Gui.DrawProperty("Sprite sheet index", ref SpriteSheetSpriteIndex, 0, 
-                    _spriteSheet.Sprites.Count - 1))
-            {
-                Refresh();
-            }
-        
+        // if(SpriteSheetPath != "")
+        //     if (Gui.DrawProperty("Sprite sheet index", ref SpriteSheetSpriteIndex, 0, 
+        //             _spriteSheet.Sprites.Count - 1))
+        //     {
+        //         Refresh();
+        //     }
+        //
         ImGui.Button("set sprite");
            
         if (ImGui.BeginDragDropTarget())
@@ -156,11 +179,12 @@ internal class SpriteRenderer : Component
                 Marshal.Copy(payload.Data, payloadData, 0, payloadData.Length);
 
                 // Deserialize the sprite from the payload data
-                SpriteSheetSprite droppedSprite = DeserializeSprite(payloadData);
+                Sprite droppedSprite = DeserializeSprite(payloadData);
 
                 // Do something with the dropped sprite...
                 // For example, display a message with the sprite name
                 SetSprite(droppedSprite.Index, droppedSprite.FullSavePath);
+                Console.WriteLine("Set Sprite");
             }
 
             ImGui.EndDragDropTarget();
@@ -174,16 +198,16 @@ internal class SpriteRenderer : Component
     /// <param name="sprite"></param>
     /// <returns>byte[] with sprite data</returns>
     // Serialize a sprite into a byte array
-    internal static byte[] SerializeSprite(SpriteSheetSprite sprite)
+    internal static byte[] SerializeSprite(Sprite sprite)
     {
         string jsonString = JsonConvert.SerializeObject(sprite);
         return Encoding.UTF8.GetBytes(jsonString);
     }
 
     // Deserialize a sprite from a byte array
-    internal static SpriteSheetSprite DeserializeSprite(byte[] data)
+    internal static Sprite DeserializeSprite(byte[] data)
     {
         string jsonString = Encoding.UTF8.GetString(data);
-        return JsonConvert.DeserializeObject<SpriteSheetSprite>(jsonString);
+        return JsonConvert.DeserializeObject<Sprite>(jsonString);
     }
 }

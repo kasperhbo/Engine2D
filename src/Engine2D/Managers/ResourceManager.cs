@@ -1,5 +1,4 @@
-﻿#region
-
+﻿using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.GameObjects;
@@ -9,191 +8,404 @@ using Engine2D.SavingLoading;
 using Engine2D.UI.Browsers;
 using KDBEngine.Shaders;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Engine2D.Components.Sprites.SpriteAnimations;
+using OpenTK.Graphics.ES20;
 
-#endregion
-
-namespace Engine2D.Managers;
-
-internal struct ShaderData
+namespace Engine2D.Managers
 {
-    internal string FragPath;
-    internal string VertexPath;
-}
-
-internal static class ResourceManager
-{
-    private static readonly Dictionary<ShaderData, Shader?> Shaders = new();
-    private static readonly Dictionary<string, AssetBrowserAsset?> _items = new();
-    internal static List<SpriteRenderer> SpriteRenderers = new();
-
-    private static readonly bool _showDebug = false;
-
-    static ResourceManager()
+    internal struct ShaderData
     {
-        Log.Message("Loading resources");
-        //Get all sprites in project
-        var baseAssetPath = ProjectSettings.FullProjectPath + "\\assets";
+        internal string FragPath;
+        internal string VertexPath;
+    }
 
-        var files = Directory.GetFiles(baseAssetPath, "*.*", SearchOption.AllDirectories)
-            .Where(s => s.EndsWith(".tex") || s.EndsWith(".sprite") || s.EndsWith(".spritesheet"));
-        ;
+    internal static class ResourceManager
+    {
+        private static Dictionary<string, AssetBrowserAsset> _items =
+            new Dictionary<string, AssetBrowserAsset>(StringComparer.OrdinalIgnoreCase);
 
-        var enumerable = files as string[] ?? files.ToArray();
+        private static readonly Dictionary<ShaderData, Shader> Shaders = new Dictionary<ShaderData, Shader>();
+        private static readonly bool _showDebug = false;
 
-        for (var i = 0; i < enumerable.Length; i++)
+        internal static List<SaveTextureClass> TexturesToSave = new();
+        internal static List<SaveSpriteSheetClass> SpriteSheetsToSave = new();
+        internal static List<SaveAnimationClass> AnimationsToSave = new();
+        
+        public static void OnGUI()
         {
-            var file = enumerable[i].ToLower();
-
-            AssetBrowserAsset? item = null;
-
-            var extension = file.Remove(0, file.LastIndexOf(".") + 1);
-
-            if (Enum.TryParse(extension, out ESupportedFileTypes ext))
+            bool refreshobjects = false;
+            foreach (var action in TexturesToSave)
             {
-                switch (ext)
+                refreshobjects = true;
+                SaveTexture(action.defaultSaveName, action.texture, action.currentFolder, action.overwrite);
+            }
+
+            TexturesToSave = new();
+            
+            foreach (var action in SpriteSheetsToSave)
+            {
+                refreshobjects = true;
+                SaveSpriteSheet(action.defaultSaveName, action.spriteSheet, action.currentFolder, action.overwrite);
+            }
+
+            SpriteSheetsToSave = new();
+            
+            foreach (var action in AnimationsToSave)
+            {   
+                refreshobjects = true;
+                SaveAnimation(action.defaultSaveName, action.animation, action.overwrite);
+            }
+            
+            AnimationsToSave = new();
+            
+            
+            //TODO:NEEDS TO BE IMPROVED
+            if(refreshobjects){
+                //Just flush the renderer for now
+                Engine.Get().CurrentScene.Renderer.Flush();
+                
+                foreach (var keyvp in _items)
                 {
-                    case ESupportedFileTypes.sprite:
-                        // item = LoadSpriteFromJson(file);
-                        break;
-                    case ESupportedFileTypes.tex:
-                        item = LoadTextureFromJson(file);
-                        break;
-                    case ESupportedFileTypes.spritesheet:
-                        item = LoadSpriteSheetFromJson(file);
-                        break;
+                    if (keyvp.Value is SpriteSheet spriteSheet)
+                        spriteSheet.Refresh();
                 }
 
+                foreach (var go in Engine.Get().CurrentScene.GameObjects)
+                {
+                    if (go.GetComponent<SpriteRenderer>() != null)
+                        go.GetComponent<SpriteRenderer>().Refresh();
+                }
+                
+                Log.Succes("Refreshed");
+            }
+        }
+        
+        static ResourceManager()
+        {
+            Log.Message("Loading resources");
+            LoadAssets();
+        }
+
+        private static void LoadAssets()
+        {
+            _items.Clear();
+            
+            var baseAssetPath = ProjectSettings.FullProjectPath + @"\" +"assets";
+            baseAssetPath.ToLower();
+            var supportedExtensions = new[] { ".tex", ".sprite", ".spritesheet", ".animation" };
+
+            var files = Directory.GetFiles(baseAssetPath, "*.*", SearchOption.AllDirectories)
+                .Where(file => supportedExtensions.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase));
+
+            foreach (var file in files)
+            {
+                var extension = Path.GetExtension(file);
+                var item = LoadAssetFromFile(file, extension);
                 if (item != null)
                     AddItemToManager(file, item);
             }
+
+            if (_showDebug)
+                Log.Succes("Succesfully loaded all assets!");
         }
 
-        if (_showDebug)
-            Log.Succes("Successfully loaded all assets!");
-    }
-
-    internal static T? GetItem<T>(string? path) where T : AssetBrowserAsset
-    {
-        path = path.ToLower();
-        for (var i = 0; i < _items.Count; i++)
+        private static AssetBrowserAsset? LoadAssetFromFile(string filePath, string extension)
         {
-            var item = _items.ElementAt(i);
-            var p = item.Key;
-            p = p.ToLower();
-            var type = item.Value;
+            try
+            {
+                switch (extension)
+                {
+                    case ".tex":
+                        return LoadTextureFromJson(filePath);
+                    case ".spritesheet":
+                        return LoadSpriteSheetFromJson(filePath);
+                    case ".animation":
+                        return LoadAnimationFromJson(filePath);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed to load asset {filePath}! {e.Message}");
+            }
 
-            if (typeof(T) == type?.GetType())
-                if (p == path)
-                    return
-                        (type as T)!;
+            return null;
         }
 
-        return null;
-    }
-
-    internal static Shader? GetShader(ShaderData shaderLocations)
-    {
-        Shader? shader;
-
-        if (!Shaders.TryGetValue(shaderLocations, out shader))
+        private static Sprite? LoadSpriteFromJson(string filePath)
         {
-            shader = new Shader(shaderLocations.VertexPath, shaderLocations.FragPath);
-            Shaders.Add(shaderLocations, shader);
+            try
+            {
+                var spriteData = File.ReadAllText(filePath);
+                return JsonConvert.DeserializeObject<Sprite>(spriteData);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed to load sprite {filePath}! {e.Message}");
+                return null;
+            }
         }
 
-        return shader;
-    }
+        internal static Texture? LoadTextureFromJson(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    var textureData = File.ReadAllText(filePath);
+                    if (_showDebug)
+                        Log.Succes("Loaded texture " + filePath);
+                    return JsonConvert.DeserializeObject<Texture>(textureData);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Failed to load texture {filePath}! {e.Message}");
+                }
+            }
 
-    internal static void AddItemToManager(string fullSaveName, AssetBrowserAsset item)
-    {
-        if (_items.TryGetValue(fullSaveName, out var itemFoundItem))
+            return null;
+        }
+
+        private static SpriteSheet? LoadSpriteSheetFromJson(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    var spriteSheetData = File.ReadAllText(filePath);
+                    if (_showDebug)
+                        Log.Succes("Loaded sprite sheet " + filePath);
+                    return JsonConvert.DeserializeObject<SpriteSheet>(spriteSheetData);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Failed to load sprite sheet {filePath}! {e.Message}");
+                }
+            }
+
+            return null;
+        }
+
+        private static Animation? LoadAnimationFromJson(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    var animationData = File.ReadAllText(filePath);
+                    if (_showDebug)
+                        Log.Succes("Loaded animation " + filePath);
+                    return JsonConvert.DeserializeObject<Animation>(animationData);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Failed to load animation {filePath}! {e.Message}");
+                }
+            }
+
+            return null;
+        }
+// ...
+
+        private static void AddItemToManager(string fullSaveName, AssetBrowserAsset item)
+        {
+            fullSaveName = fullSaveName.ToLower();
+
             _items[fullSaveName] = item;
-        else
-            _items.Add(fullSaveName, item);
-        
-        foreach (var spr in SpriteRenderers) spr.Refresh();
-    }
-
-    #region Saving and loading
-
-    //Save Textures
-    internal static void SaveTexture(string? defaultSaveName, Texture texture, DirectoryInfo? currentFolder = null,
-        bool overWrite = false)
-    {
-        var name = defaultSaveName;
-
-        if (!overWrite)
-            name = SaveLoad.GetNextFreeName(defaultSaveName, currentFolder);
-
-        var fullSaveName = name;
-
-        if (currentFolder != null)
-            fullSaveName = currentFolder.FullName + "\\" + name;
-
-        var textureData = JsonConvert.SerializeObject(texture, Formatting.Indented);
-        File.WriteAllText(fullSaveName, textureData);
-
-        //TODO: ADDTEXTURE
-        //AddItem(fullSaveName,texture);
-        AssetBrowserPanel.Refresh();
-
-
-        //TODO: MAKE THIS MORE EFFECIENT SO ONLY THE SPRITES WITH THE CHANGED SPRITE SHEET/FILE GET UPDATED
-        foreach (var spr in SpriteRenderers) spr.Refresh();
-    }
-
-    internal static Texture? LoadTextureFromJson(string? filename)
-    {
-        if (File.Exists(filename))
-        {
-            var textureData = File.ReadAllText(filename);
-            if (_showDebug)
-                Log.Succes("Loaded texture " + filename);
-            return JsonConvert.DeserializeObject<Texture>(textureData)!;
         }
 
-        foreach (var spr in SpriteRenderers) spr.Refresh();
-        return null;
-    }
-
-    //Save sprite sheets
-    internal static void SaveSpriteSheet(string? defaultSaveName, SpriteSheet spriteSheet,
-        DirectoryInfo? currentFolder = null, bool overWrite = false)
-    {
-        var name = defaultSaveName;
-
-        if (!overWrite)
-            name = SaveLoad.GetNextFreeName(defaultSaveName, currentFolder);
-
-        var fullSaveName = name;
-
-        if (currentFolder != null)
-            fullSaveName = currentFolder.FullName + "\\" + name;
-
-        var textureData = JsonConvert.SerializeObject(spriteSheet, Formatting.Indented);
-        File.WriteAllText(fullSaveName, textureData);
-
-        AddItemToManager(fullSaveName, spriteSheet);
-        AssetBrowserPanel.Refresh();
-        
-        //TODO: MAKE THIS MORE EFFECIENT SO ONLY THE SPRITES WITH THE CHANGED SPRITE SHEET/FILE GET UPDATED
-        foreach (var spr in SpriteRenderers) spr.Refresh();
-    }
-
-    internal static SpriteSheet? LoadSpriteSheetFromJson(string? filename)
-    {
-        if (File.Exists(filename))
+        public static int GetItemIndex(string? path)
         {
-            var spritesheet = File.ReadAllText(filename);
-            if (_showDebug)
-                Log.Succes("Loaded sprite sheet " + filename);
+            if (path == null) return -1;
 
-            return JsonConvert.DeserializeObject<SpriteSheet>(spritesheet)!;
+            // path = Path.Combine(ProjectSettings.FullProjectPath, path.ToLower());
+            path = ProjectSettings.FullProjectPath + path;
+            path.ToLower();
+            
+            for (var i = 0; i < _items.Count; i++)
+            {
+                var item = _items.ElementAt(i);
+                if (string.Equals(item.Key, path, StringComparison.OrdinalIgnoreCase))
+                    return i;
+            }
+
+            return -1;
         }
 
-        Log.Error("Can't load texture " + filename);
-        return null;
-    }
+        public static T? GetItem<T>(string? path) where T : AssetBrowserAsset
+        {
+            if (path == null) return null;
 
-    #endregion
+            // path = Path.Combine(ProjectSettings.FullProjectPath, path.ToLower());
+            path = ProjectSettings.FullProjectPath + path;
+            path.ToLower();
+
+            for (var i = 0; i < _items.Count; i++)
+            {
+                var item = _items.ElementAt(i);
+                if (string.Equals(item.Key, path, StringComparison.OrdinalIgnoreCase) && item.Value is T typedItem)
+                    return typedItem;
+            }
+
+            return null;
+        }
+
+        internal static Shader? GetShader(ShaderData shaderLocations)
+        {
+            if (!Shaders.TryGetValue(shaderLocations, out var shader))
+            {
+                shader = new Shader(shaderLocations.VertexPath, shaderLocations.FragPath);
+                Shaders.Add(shaderLocations, shader);
+            }
+
+            return shader;
+        }
+
+        private static void SaveTexture(string? defaultSaveName, Texture texture, DirectoryInfo? currentFolder = null,
+            bool overwrite = false)
+        {
+            var name = defaultSaveName;
+
+            if (!overwrite)
+            {
+                string extension = Path.GetExtension(name);
+                name = SaveLoad.GetNextFreeName(defaultSaveName);
+            }
+
+            var fullSaveName = (currentFolder?.FullName ?? string.Empty) + name;
+            fullSaveName = ProjectSettings.FullProjectPath + fullSaveName;
+
+            try
+            {
+                var textureData = JsonConvert.SerializeObject(texture, Formatting.Indented);
+                File.WriteAllText(fullSaveName, textureData);
+
+                AssetBrowserPanel.Refresh();
+                LoadAssets();
+
+                Log.Succes("Texture saved Succesfully: " + fullSaveName);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed to save texture: {fullSaveName}. {e.Message}");
+            }
+        }
+
+        private static void SaveSpriteSheet(string? defaultSaveName, SpriteSheet spriteSheet,
+            DirectoryInfo? currentFolder = null, bool overwrite = false)
+        {
+            var name = defaultSaveName;
+
+            if (!overwrite)
+            {
+                string extension = Path.GetExtension(defaultSaveName);
+                name = SaveLoad.GetNextFreeName(defaultSaveName);
+            }
+
+            var fullSaveName = (currentFolder?.FullName ?? string.Empty) + name;
+            fullSaveName = ProjectSettings.FullProjectPath + fullSaveName;
+
+            try
+            {
+                var spriteSheetData = JsonConvert.SerializeObject(spriteSheet, Formatting.Indented);
+                File.WriteAllText(fullSaveName, spriteSheetData);
+
+                AddItemToManager(fullSaveName, spriteSheet);
+                AssetBrowserPanel.Refresh();
+                
+                Log.Succes("Sprite sheet saved Succesfully: " + fullSaveName);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed to save sprite sheet: {fullSaveName}. {e.Message}");
+            }
+        }
+
+        private static void SaveAnimation(string savePath, Animation animation,
+            bool overwrite = false)
+        {
+            var name = savePath;
+            
+            var fullSaveName = ""+ name;
+            fullSaveName = ProjectSettings.FullProjectPath + fullSaveName;
+
+
+            if (!overwrite)
+            {
+                fullSaveName = SaveLoad.GetNextFreeName(fullSaveName);
+                string animSaveName = fullSaveName.Replace(ProjectSettings.FullProjectPath, "");
+                animation.SavePath = animSaveName;
+            }
+            
+            try
+            {
+                var animationData = JsonConvert.SerializeObject(animation, Formatting.Indented);
+                File.WriteAllText(fullSaveName, animationData);
+
+                AddItemToManager(fullSaveName, animation);
+                AssetBrowserPanel.Refresh();
+
+                foreach (var gameObject in Engine.Get().CurrentScene.GameObjects)
+                {
+                    var spriteAnimator = gameObject.GetComponent<SpriteAnimator>();
+                    spriteAnimator?.Refresh();
+                }
+
+                Log.Succes("Animation saved Succesfully: " + fullSaveName);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed to save animation: {fullSaveName}. {e.Message}");
+            }
+        }
+    }
+}
+
+internal class SaveTextureClass
+{
+    internal string? defaultSaveName;
+    internal Texture texture;
+    internal DirectoryInfo? currentFolder = null;
+    internal bool overwrite = false;
+
+    public SaveTextureClass(string? defaultSaveName, Texture texture, DirectoryInfo? currentFolder, bool overwrite)
+    {
+        this.defaultSaveName = defaultSaveName;
+        this.texture = texture;
+        this.currentFolder = currentFolder;
+        this.overwrite = overwrite;
+    }
+}
+
+internal class SaveSpriteSheetClass
+{
+    internal string? defaultSaveName;
+    internal SpriteSheet spriteSheet;
+    internal DirectoryInfo? currentFolder = null;
+    internal bool overwrite = false;
+
+    public SaveSpriteSheetClass(string? defaultSaveName, SpriteSheet spriteSheet, DirectoryInfo? currentFolder, bool overwrite)
+    {
+        this.defaultSaveName = defaultSaveName;
+        this.spriteSheet = spriteSheet;
+        this.currentFolder = currentFolder;
+        this.overwrite = overwrite;
+    }
+}
+
+internal class SaveAnimationClass
+{
+    internal string? defaultSaveName;
+    internal Animation animation;
+    internal bool overwrite = false;
+
+    internal SaveAnimationClass(string? defaultSaveName, Animation animation, bool overwrite)
+    {
+        this.defaultSaveName = defaultSaveName;
+        this.animation = animation;
+        this.overwrite = overwrite;
+    }
 }

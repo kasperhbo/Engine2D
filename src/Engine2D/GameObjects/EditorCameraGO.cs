@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Numerics;
+using System.Transactions;
 using Engine2D.Cameras;
 using Engine2D.Components.Sprites;
 using Engine2D.Components.TransformComponents;
@@ -18,8 +19,8 @@ internal class EditorCameraGO : Gameobject
     private readonly List<object> _linkedComponents = new();
     private readonly Camera camera;
 
-    private readonly float dragSensitivity = 15f;
-    private readonly float scrollSensitivity = 1f;
+    private readonly float dragSensitivity = 50f;
+    private readonly float scrollSensitivity = .1f;
     private bool reset = false;
 
     internal EditorCameraGO(string name) : base(name)
@@ -31,7 +32,7 @@ internal class EditorCameraGO : Gameobject
             Parent = this
         };
 
-        components.Add(camera);
+        Components.Add(camera);
         
         if (currentScene != null) Name = "Editor Camera: " + currentScene.GameObjects.Count + 1;
     }
@@ -53,13 +54,30 @@ internal class EditorCameraGO : Gameobject
         if (Input.MouseDown(MouseButton.Middle))
         {
             Vector2 delta = new(Input.ScreenX() - Input.ScreenLastX(), Input.ScreenY() - Input.ScreenLastY());
+            Transform transform = this.GetComponent<Transform>();
 
-
-            GetComponent<Transform>()!.Position.X
-                -= delta.X * (dt * dragSensitivity);
-
-            GetComponent<Transform>()!.Position.Y
-                -= delta.Y * (dt * dragSensitivity);
+            float speed = dragSensitivity;
+            if (Input.KeyDown(Keys.LeftShift))
+            {
+                speed *= 2;
+            }
+            
+            if (Input.KeyDown(Keys.A))
+            {
+                transform.Position -= new Vector2( speed * dt, 0);
+            }
+            else if (Input.KeyDown(Keys.D))
+            {
+                transform.Position += new Vector2(speed * dt, 0);
+            }
+            else if (Input.KeyDown(Keys.W))
+            {
+                transform.Position += new Vector2(0, speed * dt);
+            }
+            else if (Input.KeyDown(Keys.S))
+            {
+                transform.Position += new Vector2(0, -speed * dt);
+            }
         }
 
         if (Input.MouseScroll()) camera.Size += Input.MouseScrollDelta().Y * scrollSensitivity;
