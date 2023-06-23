@@ -8,6 +8,7 @@ using Engine2D.Managers;
 using Engine2D.Rendering;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common;
 using Vulkan;
 
 namespace Engine2D.Components.SpriteAnimations;
@@ -18,8 +19,16 @@ internal class SpriteAnimator : Component
     [JsonIgnore] public Animation? Animation { get; private set; } = null;
     [JsonIgnore] private SpriteRenderer _spriteRenderer = null;
     
-    [JsonProperty]private string _animationPath = ""; 
-    
+    [JsonProperty]private string _animationPath = "";
+
+    public override void StartPlay()
+    {
+        if (Animation != null)
+        {
+            Animation.IsPlaying = true;
+        }
+    }
+
     internal override void Init(Gameobject parent, Renderer? renderer)
     {
         base.Init(parent, renderer);
@@ -91,13 +100,11 @@ internal class SpriteAnimator : Component
         base.GameUpdate(dt);
     }
 
-    public override void EditorUpdate(double dt)
+    public override void Update(FrameEventArgs args)
     {
-        base.EditorUpdate(dt);
-
         if (Animation != null)
         {
-            Animation.Update(dt);
+            Animation.Update(args.Time);
             
             if (_spriteRenderer != null)
             {
@@ -109,6 +116,13 @@ internal class SpriteAnimator : Component
                 _spriteRenderer.SetSprite(currentFrame.Index, currentFrame.FullSavePath);
             }
         }
+    }
+
+    public override void EditorUpdate(double dt)
+    {
+        base.EditorUpdate(dt);
+
+        
     }
 
     public override void ImGuiFields()

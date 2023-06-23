@@ -16,6 +16,7 @@ using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common;
 using ResourceManager = Engine2D.Managers.ResourceManager;
 
 #endregion
@@ -66,6 +67,11 @@ internal class SpriteRenderer : Component
     private int _lastSpriteSheetIndex = -1;
 
 
+    public override void StartPlay()
+    {
+        
+    }
+
     internal override void Init(Gameobject parent, Renderer? renderer)
     {
         base.Init(parent, renderer);
@@ -91,12 +97,9 @@ internal class SpriteRenderer : Component
         Refresh();
     }
 
-    
 
-    public override void EditorUpdate(double dt)
+    public override void Update(FrameEventArgs args)
     {
-        base.EditorUpdate(dt);
-
         if (Color != (_lastColor))
         {
             _lastColor = Color;
@@ -114,7 +117,11 @@ internal class SpriteRenderer : Component
             _lastSpriteSheetIndex = SpriteSheetSpriteIndex;
             IsDirty = true;
         }
-        
+    }
+
+    public override void EditorUpdate(double dt)
+    {
+        base.EditorUpdate(dt);
     }
 
     internal void SetSprite(int spriteSheetIndex, string spriteSheet)

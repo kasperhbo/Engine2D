@@ -5,6 +5,7 @@ using Engine2D.GameObjects;
 using Engine2D.UI.Browsers;
 using Engine2D.Utilities;
 using ImGuiNET;
+using OpenTK.Graphics.ES30;
 using static ImGuiNET.ImGui;
 
 #endregion
@@ -69,15 +70,17 @@ internal static class Gui
         PopID();
     }
     
-    internal static void DrawProperty(string label, ref bool value)
+    internal static bool DrawProperty(string label, ref bool value)
     {
+        bool pressed = false;
         PushID(label);
         TableNextRow();
         TableSetColumnIndex(0);
         Text(label);
         TableSetColumnIndex(1);
-        KBoolInput("##"+label,ref value);
+        if (KBoolInput("##" + label, ref value)) pressed = true;
         PopID();
+        return pressed;
     }
     
 
@@ -181,9 +184,9 @@ internal static class Gui
         InputText(("##" + label), ref value, 256);
     }
     
-    internal static void KBoolInput(string label, ref bool value)
+    internal static bool KBoolInput(string label, ref bool value)
     {
-        Checkbox(("##" + label), ref value);
+        return Checkbox(("##" + label), ref value);
     }
     
     internal static void KDragInt(string label, ref int intRef, Vector4 buttonColor = new(), float dragSpeed = 0.1f)

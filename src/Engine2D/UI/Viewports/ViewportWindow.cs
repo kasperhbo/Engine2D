@@ -14,7 +14,7 @@ internal abstract class ViewportWindow
 {
     protected TestFrameBuffer? _frameBuffer;
 
-    protected Camera Camera;
+    protected Camera? Camera;
     protected Canvas mCanvas = new();
 
     protected Vector2 Origin;

@@ -6,6 +6,7 @@ using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common;
 
 #endregion
 
@@ -40,6 +41,16 @@ internal class Transform : Component
         Rotation = q;
         EulerRadians = MathUtilsNumerics.QuaternionToRadians(q);
         EulerDegrees = MathUtilsNumerics.RadiansToDegrees(EulerRadians);
+    }
+
+    public override void StartPlay()
+    {
+        
+    }
+
+    public override void Update(FrameEventArgs args)
+    {
+        
     }
 
     public override void ImGuiFields()
@@ -85,10 +96,5 @@ internal class Transform : Component
     internal override float GetFieldSize()
     {
         return 120;
-    }
-
-    public override string GetItemType()
-    {
-        return this.GetType().FullName;
     }
 }

@@ -69,6 +69,7 @@ internal static class UiRenderer
     
     private static void Render(FrameEventArgs args)
     {
+        if (!Settings.s_IsEngine) return;
         KDBImGuiController.Update(_engine, args.Time);
 
         ImGui.Begin("Debug Helper");

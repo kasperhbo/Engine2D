@@ -13,6 +13,7 @@ using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common;
 
 #endregion
 
@@ -81,6 +82,13 @@ internal class Gameobject : Asset
     internal void Start()
     {
         foreach (var component in Components) component.Start();
+    }
+    
+    
+
+    internal virtual void Update(FrameEventArgs args)
+    {
+        foreach (var component in Components) component.Update(args);
     }
 
     internal virtual void EditorUpdate(double dt)
@@ -224,5 +232,13 @@ internal class Gameobject : Asset
         }
         
 
+    }
+
+    public void StartPlay()
+    {
+        foreach (var component in Components)
+        {
+            component.StartPlay();
+        }
     }
 }

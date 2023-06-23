@@ -43,21 +43,27 @@
   {
     "Components": [
       {
-        "HasSpriteSheet": false,
-        "SpriteSheetPath": "",
-        "ZIndex": 0,
-        "Color": {
-          "X": 255.0,
-          "Y": 255.0,
-          "Z": 255.0,
+        "CameraType": 0,
+        "Far": 1000.0,
+        "Near": 0.1,
+        "ProjectionSize": {
+          "X": 1920.0,
+          "Y": 1080.0
+        },
+        "ClearColor": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 237.0,
           "W": 255.0
         },
-        "SpriteSheetSpriteIndex": 0,
-        "Type": "Engine2D.GameObjects.SpriteRenderer"
+        "Size": 0.2,
+        "_isMainCamera": true,
+        "IsMainCamera": true,
+        "Type": "Engine2D.Cameras.Camera"
       },
       {
         "Position": {
-          "X": 0.0,
+          "X": 190.00005,
           "Y": 0.0
         },
         "Rotation": {
@@ -74,7 +80,7 @@
         "Type": "Engine2D.Components.TransformComponents.Transform"
       }
     ],
-    "Name": "SpriteRenderer: 21",
+    "Name": "Camera: 21",
     "ParentUid": -1
   }
 ]

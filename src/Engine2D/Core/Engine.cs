@@ -25,7 +25,6 @@ namespace Engine2D.Core
 
         private readonly Dictionary<string, UIElement> _guiWindows = new();
 
-
         private int _frameCounter;
         private double _previousTime;
         
@@ -36,7 +35,6 @@ namespace Engine2D.Core
         internal Texture? CurrentSelectedTextureAssetBrowserAsset     { get; set; } = null;
         internal Animation? CurrentSelectedAnimationAssetBrowserAsset   { get; set; } = null;
         
-            
 
         internal Scene? CurrentScene { get; private set; }
 
@@ -47,8 +45,6 @@ namespace Engine2D.Core
                 base.TextInput -= CurrentScene.OnTextInput;
                 base.MouseWheel -= CurrentScene.OnMouseWheel;
                 Unload -= CurrentScene.Close;
-
-                foreach (var eventA in CurrentScene.GetDefaultUpdateEvents()) UpdateFrame -= eventA;
             }
 
             CurrentScene = new Scene();
@@ -57,13 +53,17 @@ namespace Engine2D.Core
             base.MouseWheel += CurrentScene.OnMouseWheel;
             Unload += CurrentScene.Close;
 
-            foreach (var eventA in CurrentScene.GetDefaultUpdateEvents()) UpdateFrame += eventA;
-
             CurrentScene.Init(newSceneName);
+            if (!Settings.s_IsEngine)
+            {
+                CurrentScene.IsPlaying = true;
+            }
+
         }
 
         private void Update(FrameEventArgs args)
         {
+            CurrentScene?.Update(args);
         }
 
         public static double DeltaTime = 0;
@@ -77,7 +77,9 @@ namespace Engine2D.Core
             _previousTime = currentTime;
             
             SetTitle((float)DeltaTime);
+            
             CurrentScene?.Render((float)DeltaTime);
+            
             SwapBuffers();
         }
 
@@ -215,10 +217,10 @@ internal static class WindowSettings
     internal static bool Decorated { get; } = true;
 }
 
-internal static class Settings
+public static class Settings
 {
-    internal static bool s_IsEngine = true;
-    internal static bool s_RenderDebugWindowSeperate = true;
+    public static bool s_IsEngine = true;
+    public static bool s_RenderDebugWindowSeperate = true;
 }
 
 internal static class ProjectSettings
