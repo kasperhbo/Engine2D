@@ -103,8 +103,8 @@ internal class Renderer
 
                     //Render the scene
                     {
-                        if (editorCamera == null) return;
-
+                        if (editorCamera == null || EditorGameBuffer == null) return;
+                
                         if (Settings.s_IsEngine)
                             EditorGameBuffer.Bind();
 

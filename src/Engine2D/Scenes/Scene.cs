@@ -13,6 +13,7 @@ using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.Utilities;
+using Newtonsoft.Json;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -22,21 +23,39 @@ namespace Engine2D.Scenes;
 
 internal class Scene
 {
-    internal Camera? CurrentMainGameCamera;
+    [JsonProperty]internal Camera? CurrentMainGameCamera;
+    [JsonIgnore]internal Camera? EditorCamera;
+    [JsonProperty]internal List<Gameobject> GameObjects = new();
+    [JsonIgnore]internal Renderer? Renderer { get; private set; }
 
-    internal Camera? EditorCamera;
-
-    internal List<Gameobject> GameObjects = new();
-    internal Renderer? Renderer { get; private set; }
-
-    internal string ScenePath { get; private set; } = "NoScene";
-    internal GlobalLight GlobalLight { get; set; } = null;
+    [JsonProperty]internal string ScenePath { get; private set; } = "NoScene";
+    [JsonProperty]internal GlobalLight GlobalLight { get; set; } = null;
+    [JsonIgnore]private List<Gameobject> _tempGOList = new();
     
+    private void StartPlay()
+    {
+        SaveLoad.SaveScene(this);
+        _tempGOList = GameObjects;
+        
+        //_physicsWorld = new World(new Vector2(0, -9.8f));
+
+        foreach (var go in GameObjects)
+        {
+            go.StartPlay();
+        }
+    }
+
     
     private void StopPlay()
     {
-        SaveLoad.LoadScene(ScenePath);
+        foreach (var go in GameObjects)
+        {
+            go.StopPlay();
+        }
     }
+    
+     
+    
 
     /// <summary>
     ///     Runs before anything
@@ -54,8 +73,6 @@ internal class Scene
         foreach (var go in gos) AddGameObjectToScene(go);
 
         Start();
-        
-        
     }
 
     /// <summary>
@@ -75,20 +92,7 @@ internal class Scene
         
     }
     
-    
-    
-    private void StartPlay()
-    {
-        SaveLoad.SaveScene(this);
-
-        _physicsWorld = new World(new Vector2(0, -9.8f));
-
-        foreach (var go in GameObjects)
-        {
-            go.StartPlay();
-        }
-    }
-
+   
     /// <summary>
     /// Runs every frame
     /// </summary>

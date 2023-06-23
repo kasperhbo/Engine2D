@@ -17,10 +17,10 @@ using Vector4 = System.Numerics.Vector4;
 namespace Engine2D.Components;
 
 [JsonConverter(typeof(ComponentSerializer))]
-public abstract class Component
+public abstract class Component : ICloneable
 {
     [JsonIgnore] private bool _initialized;
-    [JsonIgnore] internal Gameobject Parent;
+    [JsonIgnore] public Gameobject? Parent;
     
     [JsonProperty]internal string Type => GetItemType();
 
@@ -61,6 +61,11 @@ public abstract class Component
     {
     }
 
+    public virtual void StopPlay()
+    {
+        
+    }
+    
     public virtual void Destroy()
     {
     }
@@ -189,5 +194,9 @@ public abstract class Component
         return 20 * count;
     }
 
-    
+
+    public object Clone()
+    {
+        return this.MemberwiseClone();
+    }
 }

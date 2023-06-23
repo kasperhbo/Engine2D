@@ -105,7 +105,11 @@ internal class SpriteRenderer : Component
             _lastColor = Color;
             IsDirty = true;
         }
-        
+
+        if (_parentTransform == null)
+        {
+            _parentTransform = Parent.GetComponent<Transform>();
+        }
         if (_parentTransform.Equals(_lastTransform))
         {
             Transform.Copy(_lastTransform, _parentTransform);
@@ -147,6 +151,12 @@ internal class SpriteRenderer : Component
 
         _renderer.AddSpriteRenderer(this);
         IsDirty = true;
+    }
+
+    public override void Destroy()
+    {
+        _renderer.RemoveSprite(this);
+        base.Destroy();
     }
 
     public void Refresh()

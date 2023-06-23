@@ -4,6 +4,7 @@ using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.Sprites;
 using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.Scenes;
@@ -143,8 +144,11 @@ namespace Engine2D.Core
         }
 
 
-        private void LoadEngine()
+        public void LoadEngine()
         {
+            UiRenderer.Flush();
+            ResourceManager.Flush();
+            
             SaveLoad.LoadWindowSettings();
             SaveLoad.LoadEngineSettings();
 

@@ -29,6 +29,18 @@ internal static class UiRenderer
 
     private static GameViewport? _gameViewport;
 
+    public static void Flush()
+    {
+        List<UIElement> _windows = new();
+        Engine _engine = null!;
+        EditorViewport? _editorViewport;
+        List<UIElement> _windowsToRemoveEndOfFrame = new(); 
+         int _hierarchyWindowCount = 1;
+         int _inspectorWindowCount = 1;
+         int _assetBrowserWindowCount = 1;
+         int _styleSettingsWindowCount = 1; 
+        GameViewport? _gameViewport;
+    }
 
     internal static EditorViewport? CurrentEditorViewport
     {
@@ -302,9 +314,15 @@ internal static class UiRenderer
 
     private static void DrawToolbar()
     {
-        ImGui.Button("Button");
+        if (ImGui.Button("PLAY"))
+        {
+            Engine.Get().CurrentScene.IsPlaying = true;
+        }
         ImGui.SameLine();
-        ImGui.Button("Button2");
+        if (ImGui.Button("STOP"))
+        {
+            Engine.Get().CurrentScene.IsPlaying = false;
+        }
         ImGui.End();
     }
 

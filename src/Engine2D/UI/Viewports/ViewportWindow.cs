@@ -48,6 +48,8 @@ internal abstract class ViewportWindow
 
         ImGui.SetCursorPos(new Vector2(WindowPos.X, WindowPos.Y));
 
+        if (_frameBuffer == null) return;
+        
         ImGui.Image(_frameBuffer.TextureID, new Vector2(WindowSize.X, WindowSize.Y),
             UISETTINGS.ImageUV0, UISETTINGS.ImageUV1);
 

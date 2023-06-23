@@ -29,6 +29,14 @@ internal class SpriteAnimator : Component
         }
     }
 
+    public override void StopPlay()
+    {
+        if (Animation != null)
+        {
+            Animation.IsPlaying = true;
+        }
+    }
+    
     internal override void Init(Gameobject parent, Renderer? renderer)
     {
         base.Init(parent, renderer);

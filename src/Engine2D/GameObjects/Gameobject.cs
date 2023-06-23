@@ -19,16 +19,18 @@ using OpenTK.Windowing.Common;
 
 namespace Engine2D.GameObjects;
 
-internal class Gameobject : Asset
+public class Gameobject : Asset
 {
-    [JsonProperty]internal List<Component?> Components = new();
+    [JsonProperty]internal List<Component> Components = new();
     [JsonProperty]internal string Name = "";
     [JsonProperty]internal int ParentUid = -1;
     
     [JsonIgnore] private Gameobject _parent;
     [JsonIgnore] internal List<Gameobject> Childs = new();
     [JsonIgnore] internal bool Serialize = true;
-    [JsonIgnore]bool _isPopupOpen = false;
+    [JsonIgnore] bool _isPopupOpen = false;
+    
+    [JsonIgnore] private List<Component> _toReset = new();
 
     //UIDS
     internal int UID = -1;
@@ -101,6 +103,41 @@ internal class Gameobject : Asset
         foreach (var component in Components) component.GameUpdate(dt);
     }
 
+    public void StartPlay()
+    {
+        _toReset = new();
+        
+        foreach (var component in Components)
+        {
+            //Clone the components
+            //This is so that we can reset the components after play
+            Component comp = (Component)component.Clone();
+            _toReset.Add(comp);
+        }
+        
+        foreach (var component in Components)
+        {
+            component.StartPlay();
+        }
+    }
+    
+    internal void StopPlay()
+    {
+        foreach (var component in Components)
+        {
+            component.StopPlay();
+            component.Destroy();
+        }
+        
+        this.Components = new();
+        
+        foreach (var component in _toReset)
+        {
+            //Add the clones back
+            AddComponent(component);
+        }
+    }
+
     internal void Destroy()
     {
         foreach (var component in Components) component.Destroy();
@@ -120,7 +157,7 @@ internal class Gameobject : Asset
         return component;
     }
 
-    internal T? GetComponent<T>() where T : Component
+    public T? GetComponent<T>() where T : Component
     {
         foreach (var component in Components)
         {
@@ -234,11 +271,5 @@ internal class Gameobject : Asset
 
     }
 
-    public void StartPlay()
-    {
-        foreach (var component in Components)
-        {
-            component.StartPlay();
-        }
-    }
+    
 }

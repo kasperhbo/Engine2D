@@ -46,6 +46,8 @@ internal class Camera : Component
 
     internal Matrix4x4 GetViewMatrix()
     {
+        if (Parent == null) return Matrix4x4.Identity;
+        
         var transform = Parent.GetComponent<Transform>();
 
         if (transform == null)

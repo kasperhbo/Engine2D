@@ -12,13 +12,13 @@ using OpenTK.Windowing.Common;
 
 namespace Engine2D.Components.TransformComponents;
 
-internal class Transform : Component
+public class Transform : Component
 {
-    [JsonProperty]internal Vector2 Position;
-    [JsonIgnore]  internal Vector3 EulerDegrees;
-    [JsonIgnore]  internal Vector3 EulerRadians;
-    [JsonProperty]internal Quaternion Rotation;
-    [JsonProperty]internal Vector2 Size;
+    [JsonProperty]public Vector2 Position;
+    [JsonIgnore]  public Vector3 EulerDegrees;
+    [JsonIgnore]  public Vector3 EulerRadians;
+    [JsonProperty]public Quaternion Rotation;
+    [JsonProperty]public Vector2 Size;
 
 
     internal Transform()

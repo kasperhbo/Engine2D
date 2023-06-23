@@ -2,6 +2,49 @@
   {
     "Components": [
       {
+        "CameraType": 0,
+        "Far": 1000.0,
+        "Near": 0.1,
+        "ProjectionSize": {
+          "X": 1920.0,
+          "Y": 1080.0
+        },
+        "ClearColor": {
+          "X": 93.2,
+          "Y": 149.0,
+          "Z": 237.0,
+          "W": 255.0
+        },
+        "Size": 0.1,
+        "_isMainCamera": true,
+        "IsMainCamera": true,
+        "Type": "Engine2D.Cameras.Camera"
+      },
+      {
+        "Position": {
+          "X": -7.2000217,
+          "Y": -4.5142593
+        },
+        "Rotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
+          "W": 0.0,
+          "IsIdentity": false
+        },
+        "Size": {
+          "X": 1.0,
+          "Y": 1.0
+        },
+        "Type": "Engine2D.Components.TransformComponents.Transform"
+      }
+    ],
+    "Name": "Camera: 11",
+    "ParentUid": -1
+  },
+  {
+    "Components": [
+      {
         "HasSpriteSheet": true,
         "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet",
         "ZIndex": 0,
@@ -11,12 +54,12 @@
           "Z": 255.0,
           "W": 255.0
         },
-        "SpriteSheetSpriteIndex": 1,
+        "SpriteSheetSpriteIndex": 2,
         "Type": "Engine2D.GameObjects.SpriteRenderer"
       },
       {
         "Position": {
-          "X": 0.0,
+          "X": 102.85986,
           "Y": 0.0
         },
         "Rotation": {
@@ -35,52 +78,15 @@
       {
         "_animationPath": "\\Assets\\NewAnimation.animation",
         "Type": "Engine2D.Components.SpriteAnimations.SpriteAnimator"
-      }
-    ],
-    "Name": "SpriteRenderer: 11",
-    "ParentUid": -1
-  },
-  {
-    "Components": [
-      {
-        "CameraType": 0,
-        "Far": 1000.0,
-        "Near": 0.1,
-        "ProjectionSize": {
-          "X": 1920.0,
-          "Y": 1080.0
-        },
-        "ClearColor": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 237.0,
-          "W": 255.0
-        },
-        "Size": 0.2,
-        "_isMainCamera": true,
-        "IsMainCamera": true,
-        "Type": "Engine2D.Cameras.Camera"
       },
       {
-        "Position": {
-          "X": 190.00005,
-          "Y": 0.0
-        },
-        "Rotation": {
-          "X": 0.0,
-          "Y": 0.0,
-          "Z": 0.0,
-          "W": 0.0,
-          "IsIdentity": false
-        },
-        "Size": {
-          "X": 1.0,
-          "Y": 1.0
-        },
-        "Type": "Engine2D.Components.TransformComponents.Transform"
+        "twospeed": 49,
+        "speed": 20,
+        "testName": "hello name",
+        "Type": "ExampleGame.Assets.TestClass"
       }
     ],
-    "Name": "Camera: 21",
+    "Name": "SpriteRenderer: 21",
     "ParentUid": -1
   }
 ]
