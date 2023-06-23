@@ -10,18 +10,10 @@
       }
     },
     {
-      "Time": 0.18241759,
+      "Time": 0.32197803,
       "Frame": {
         "FrameTime": 0.05824176,
         "SpriteSheetSpriteIndex": 2,
-        "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
-      }
-    },
-    {
-      "Time": 0.32307693,
-      "Frame": {
-        "FrameTime": 0.2736264,
-        "SpriteSheetSpriteIndex": 3,
         "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
       }
     },
@@ -46,6 +38,14 @@
       "Frame": {
         "FrameTime": 0.8362637,
         "SpriteSheetSpriteIndex": 8,
+        "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
+      }
+    },
+    {
+      "Time": 0.95714283,
+      "Frame": {
+        "FrameTime": 0.2736264,
+        "SpriteSheetSpriteIndex": 3,
         "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
       }
     }

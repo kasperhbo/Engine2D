@@ -39,6 +39,43 @@
     ],
     "Name": "SpriteRenderer: 11",
     "ParentUid": -1
+  },
+  {
+    "Components": [
+      {
+        "HasSpriteSheet": false,
+        "SpriteSheetPath": "",
+        "ZIndex": 0,
+        "Color": {
+          "X": 255.0,
+          "Y": 255.0,
+          "Z": 255.0,
+          "W": 255.0
+        },
+        "SpriteSheetSpriteIndex": 0,
+        "Type": "Engine2D.GameObjects.SpriteRenderer"
+      },
+      {
+        "Position": {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        "Rotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
+          "W": 0.0,
+          "IsIdentity": false
+        },
+        "Size": {
+          "X": 1.0,
+          "Y": 1.0
+        },
+        "Type": "Engine2D.Components.TransformComponents.Transform"
+      }
+    ],
+    "Name": "SpriteRenderer: 21",
+    "ParentUid": -1
   }
 ]
 ////GAMEOBJECTS////

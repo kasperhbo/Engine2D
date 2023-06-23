@@ -34,6 +34,7 @@ internal class Animation : AssetBrowserAsset
     [JsonIgnore]  private bool _isDraggingKeyframe;
     [JsonIgnore]  private Keyframe? _currentDraggingKeyFrame = null;
     [JsonIgnore]  private bool _isOpenPopup = false;
+    [JsonIgnore]  private bool _unsaved = false;
     
     [JsonIgnore]  public bool IsPlaying = false;
     [JsonIgnore]  public bool AttachedToSpriteRenderer = false;
@@ -85,7 +86,10 @@ internal class Animation : AssetBrowserAsset
     {
         if(!AttachedToSpriteRenderer)Update(Engine.DeltaTime);
         
-        ImGui.Begin("Timeline", ImGuiWindowFlags.NoCollapse);
+        if(_unsaved)
+            ImGui.Begin("Timeline", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.UnsavedDocument);
+        else
+            ImGui.Begin("Timeline", ImGuiWindowFlags.NoCollapse);
         
         ShowTimeLine();
 
@@ -105,6 +109,7 @@ internal class Animation : AssetBrowserAsset
 
     private void SortKeyFrames()
     {
+        _unsaved = true;
         _keyframes.Sort((kf1, kf2) => kf1.Time.CompareTo(kf2.Time));
     }
     
@@ -252,6 +257,7 @@ internal class Animation : AssetBrowserAsset
 
     private void HandleSpriteDrop()
     {
+        
         if (ImGui.BeginDragDropTarget())
         {
             var payload = ImGui.AcceptDragDropPayload("spritesheet_drop");
@@ -266,6 +272,7 @@ internal class Animation : AssetBrowserAsset
                 Frame frame = new Frame( droppedSprite.Index, droppedSprite.FullSavePath,_mouseTime);
                 Keyframe keyFrame = new Keyframe(_mouseTime, frame);
                 AddKeyFrame(keyFrame);
+                _unsaved = true;
             }
 
             ImGui.EndDragDropTarget();
@@ -341,6 +348,7 @@ internal class Animation : AssetBrowserAsset
             {
                 if (ImGui.Selectable("Delete"))
                 {
+                    _unsaved = true;
                     _keyframes.RemoveAt(i);
                     SortKeyFrames();
                 }
@@ -367,7 +375,7 @@ internal class Animation : AssetBrowserAsset
     private void HandleKeyFrameDragging()
     {
         if (_currentDraggingKeyFrame == null) return;
-        
+        _unsaved = true;
         _currentDraggingKeyFrame.Time = _mouseTime;
         SortKeyFrames();
     }
@@ -462,6 +470,7 @@ internal class Animation : AssetBrowserAsset
     
     internal void Save(bool overwrite = false)
     {
+        _unsaved = false;
         var animc = new SaveAnimationClass(SavePath,
             this, overwrite);
         
