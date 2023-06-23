@@ -1,59 +1,19 @@
 {
-  "_endTime": 1.0,
+  "_endTime": 0.4,
   "_keyframes": [
     {
-      "Time": 0.0,
+      "Time": 0.000877193,
       "Frame": {
-        "FrameTime": 0.0,
-        "SpriteSheetSpriteIndex": 8,
+        "FrameTime": 0.000877193,
+        "SpriteSheetSpriteIndex": 20,
         "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
       }
     },
     {
-      "Time": 0.21502209,
+      "Time": 0.20087719,
       "Frame": {
-        "FrameTime": 0.21502209,
-        "SpriteSheetSpriteIndex": 13,
-        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
-      }
-    },
-    {
-      "Time": 0.21502209,
-      "Frame": {
-        "FrameTime": 0.21502209,
-        "SpriteSheetSpriteIndex": 13,
-        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
-      }
-    },
-    {
-      "Time": 0.359352,
-      "Frame": {
-        "FrameTime": 0.359352,
-        "SpriteSheetSpriteIndex": 12,
-        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
-      }
-    },
-    {
-      "Time": 0.45360824,
-      "Frame": {
-        "FrameTime": 0.45360824,
-        "SpriteSheetSpriteIndex": 11,
-        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
-      }
-    },
-    {
-      "Time": 0.53460974,
-      "Frame": {
-        "FrameTime": 0.53460974,
-        "SpriteSheetSpriteIndex": 10,
-        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
-      }
-    },
-    {
-      "Time": 0.6082474,
-      "Frame": {
-        "FrameTime": 0.6082474,
-        "SpriteSheetSpriteIndex": 9,
+        "FrameTime": 0.20087719,
+        "SpriteSheetSpriteIndex": 21,
         "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet"
       }
     }

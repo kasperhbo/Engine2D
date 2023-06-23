@@ -5,6 +5,7 @@ using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Cameras;
 using Engine2D.Components;
+using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
@@ -111,6 +112,8 @@ internal class Scene
         foreach (var go in gos) AddGameObjectToScene(go);
 
         Start();
+        
+        
     }
 
     /// <summary>
@@ -128,6 +131,7 @@ internal class Scene
         
         AddGameObjectToScene(editorCameraGO);
     }
+    
 
     internal virtual void EditorUpdate(FrameEventArgs args)
     {

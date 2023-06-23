@@ -208,8 +208,8 @@ internal static class WindowSettings
 {
     internal static string Title { get; } = "Kasper Engine";
     internal static Vector2i Size { get; } = new(1920, 1080);
-    internal static float UpdateFrequency { get; } = 60;
-    internal static float RenderFrequency { get; } = 60;
+    internal static float UpdateFrequency { get; } = -1;
+    internal static float RenderFrequency { get; } = -1;
     internal static WindowState FullScreen { get; } = WindowState.Maximized;
     internal static bool Decorated { get; } = true;
 }
@@ -222,6 +222,8 @@ internal static class Settings
 
 internal static class ProjectSettings
 {
+    //TODO: Make this a json file
+    //TODO: MAKE THIS ACCESSIBLE FROM A LAUNCHER
     internal static string ProjectName { get; } = "ExampleGame";
     internal static string ProjectLocation { get; } = @"D:\dev\Engine2D\src\";
     internal static string FullProjectPath { get; } = ProjectLocation + ProjectName;
