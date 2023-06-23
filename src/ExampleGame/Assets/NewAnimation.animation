@@ -1,0 +1,46 @@
+{
+  "_endTime": 1.0,
+  "_keyframes": [
+    {
+      "Time": 0.0010989011,
+      "Frame": {
+        "FrameTime": 0.0010989011,
+        "SpriteSheetSpriteIndex": 1,
+        "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
+      }
+    },
+    {
+      "Time": 0.15494506,
+      "Frame": {
+        "FrameTime": 0.05824176,
+        "SpriteSheetSpriteIndex": 2,
+        "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
+      }
+    },
+    {
+      "Time": 0.31648353,
+      "Frame": {
+        "FrameTime": 0.2736264,
+        "SpriteSheetSpriteIndex": 3,
+        "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
+      }
+    },
+    {
+      "Time": 0.521978,
+      "Frame": {
+        "FrameTime": 0.42747253,
+        "SpriteSheetSpriteIndex": 2,
+        "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
+      }
+    },
+    {
+      "Time": 0.66263735,
+      "Frame": {
+        "FrameTime": 0.66263735,
+        "SpriteSheetSpriteIndex": 6,
+        "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet"
+      }
+    }
+  ],
+  "SavePath": "\\Assets\\NewAnimation.animation"
+}

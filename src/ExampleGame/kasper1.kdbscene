@@ -3,7 +3,7 @@
     "Components": [
       {
         "HasSpriteSheet": true,
-        "SpriteSheetPath": "\\Assets\\spritesheet.spritesheet",
+        "SpriteSheetPath": "\\Assets\\bigSpritesheet (1).spritesheet",
         "ZIndex": 0,
         "Color": {
           "X": 255.0,
@@ -11,29 +11,29 @@
           "Z": 255.0,
           "W": 255.0
         },
-        "SpriteSheetSpriteIndex": 7,
+        "SpriteSheetSpriteIndex": 1,
         "Type": "Engine2D.GameObjects.SpriteRenderer"
       },
       {
         "Position": {
-          "X": 78.99313,
-          "Y": -12.73589
+          "X": 0.0,
+          "Y": 0.0
         },
         "Rotation": {
           "X": 0.0,
           "Y": 0.0,
-          "Z": -0.46061134,
-          "W": 0.887602,
+          "Z": 0.0,
+          "W": 0.0,
           "IsIdentity": false
         },
         "Size": {
-          "X": 107.2,
-          "Y": 107.2
+          "X": 32.0,
+          "Y": 32.0
         },
         "Type": "Engine2D.Components.TransformComponents.Transform"
       },
       {
-        "_animationPath": "\\Assets\\NewAnimation_1.animation",
+        "_animationPath": "\\Assets\\NewAnimation.animation",
         "Type": "Engine2D.Components.SpriteAnimations.SpriteAnimator"
       }
     ],

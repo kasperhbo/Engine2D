@@ -311,11 +311,227 @@
           "Y": 1.0
         }
       ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 13,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 1.0,
+          "Y": 1.0
+        },
+        {
+          "X": 1.0,
+          "Y": 0.5
+        },
+        {
+          "X": 0.9285714,
+          "Y": 0.5
+        },
+        {
+          "X": 0.9285714,
+          "Y": 1.0
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 14,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.071428575,
+          "Y": 0.5
+        },
+        {
+          "X": 0.071428575,
+          "Y": 0.0
+        },
+        {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        {
+          "X": 0.0,
+          "Y": 0.5
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 15,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.14285715,
+          "Y": 0.5
+        },
+        {
+          "X": 0.14285715,
+          "Y": 0.0
+        },
+        {
+          "X": 0.071428575,
+          "Y": 0.0
+        },
+        {
+          "X": 0.071428575,
+          "Y": 0.5
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 16,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.21428572,
+          "Y": 0.5
+        },
+        {
+          "X": 0.21428572,
+          "Y": 0.0
+        },
+        {
+          "X": 0.14285715,
+          "Y": 0.0
+        },
+        {
+          "X": 0.14285715,
+          "Y": 0.5
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 17,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.2857143,
+          "Y": 0.5
+        },
+        {
+          "X": 0.2857143,
+          "Y": 0.0
+        },
+        {
+          "X": 0.21428572,
+          "Y": 0.0
+        },
+        {
+          "X": 0.21428572,
+          "Y": 0.5
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 18,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.35714287,
+          "Y": 0.5
+        },
+        {
+          "X": 0.35714287,
+          "Y": 0.0
+        },
+        {
+          "X": 0.2857143,
+          "Y": 0.0
+        },
+        {
+          "X": 0.2857143,
+          "Y": 0.5
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 19,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.42857143,
+          "Y": 0.5
+        },
+        {
+          "X": 0.42857143,
+          "Y": 0.0
+        },
+        {
+          "X": 0.35714287,
+          "Y": 0.0
+        },
+        {
+          "X": 0.35714287,
+          "Y": 0.5
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 20,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.5,
+          "Y": 0.5
+        },
+        {
+          "X": 0.5,
+          "Y": 0.0
+        },
+        {
+          "X": 0.42857143,
+          "Y": 0.0
+        },
+        {
+          "X": 0.42857143,
+          "Y": 0.5
+        }
+      ]
+    },
+    {
+      "FullSavePath": "\\Assets\\spritesheet.spritesheet",
+      "Index": 21,
+      "Width": 16,
+      "Height": 16,
+      "TextureCoords": [
+        {
+          "X": 0.5714286,
+          "Y": 0.5
+        },
+        {
+          "X": 0.5714286,
+          "Y": 0.0
+        },
+        {
+          "X": 0.5,
+          "Y": 0.0
+        },
+        {
+          "X": 0.5,
+          "Y": 0.5
+        }
+      ]
     }
   ],
   "_texturePath": "\\Assets\\spritesheet.tex",
   "_savePath": "\\Assets\\spritesheet.spritesheet",
-  "_numSprites": 13,
+  "_numSprites": 22,
   "_spacing": 0,
   "_spriteHeight": 16,
   "_spriteWidth": 16

@@ -82,7 +82,7 @@ internal class SpriteAnimator : Component
         
         Animation = animInstance;
         
-        Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = Animation;
+        // Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = Animation;
     }
     
 

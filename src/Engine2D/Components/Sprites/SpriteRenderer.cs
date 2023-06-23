@@ -133,18 +133,15 @@ internal class SpriteRenderer : Component
         
         _spriteSheet = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
 
-        if (spriteSheetIndex >= _spriteSheet.Sprites.Count)
-        {
-            spriteSheetIndex--;
-        }
-        Sprite = _spriteSheet.Sprites[spriteSheetIndex];
+
+        Sprite = _spriteSheet.GetSprite(spriteSheetIndex);
         SpriteSheetPath = spriteSheet;
         SpriteSheetSpriteIndex = spriteSheetIndex;
 
         _renderer.AddSpriteRenderer(this);
         IsDirty = true;
     }
-    
+
     public void Refresh()
     {
         if (SpriteSheetPath != "" && HasSpriteSheet == true)

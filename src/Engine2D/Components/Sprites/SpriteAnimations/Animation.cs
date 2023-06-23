@@ -165,12 +165,14 @@ internal class Animation : AssetBrowserAsset
 
     public Sprite? GetSpriteBasedOnTime(float time){
         if(_keyframes.Count <= 0) return null;
+        int index = GetKeyFrameBasedOnTime(time);
+        if(index >= _keyframes.Count) return null;
         
-        Frame currentFrame = _keyframes[GetKeyFrameBasedOnTime(time)].Frame;
+        Frame currentFrame = _keyframes[index].Frame;
         SpriteSheet spriteSheet = ResourceManager.GetItem<SpriteSheet>(currentFrame.SpriteSheetPath);
         int spriteIndex = currentFrame.SpriteSheetSpriteIndex;
 
-        return spriteSheet.Sprites[spriteIndex];
+        return spriteSheet.GetSprite(spriteIndex);
     }
     
     public Sprite? GetCurrentSprite()
@@ -288,15 +290,21 @@ internal class Animation : AssetBrowserAsset
                 new Vector2(markerX, ImGui.GetCursorScreenPos().Y + TimeLineHeight),
                 ImGui.GetColorU32(new Vector4(1, 0, 0, 1)), KeyFrameMarkerRadius);
             
-            Sprite sprite = GetSpriteBasedOnTime(keyframe.Time);
-            IntPtr texID =  sprite.Texture.TexID;
             
-            ImGui.GetWindowDrawList().AddImage(texID,
-                new Vector2(markerX - 16, ImGui.GetCursorScreenPos().Y + (TimeLineHeight / 2 - 16)),
-                new Vector2(markerX + 16, ImGui.GetCursorScreenPos().Y + (TimeLineHeight / 2 + 16)),
-                         sprite.TextureCoords[3],
-                        sprite.TextureCoords[1]
-                    );
+            
+            Sprite sprite = GetSpriteBasedOnTime(keyframe.Time);
+
+            if (sprite != null)
+            {
+                IntPtr texID = sprite.Texture.TexID;
+
+                ImGui.GetWindowDrawList().AddImage(texID,
+                    new Vector2(markerX - 16, ImGui.GetCursorScreenPos().Y + (TimeLineHeight / 2 - 16)),
+                    new Vector2(markerX + 16, ImGui.GetCursorScreenPos().Y + (TimeLineHeight / 2 + 16)),
+                    sprite.TextureCoords[3],
+                    sprite.TextureCoords[1]
+                );
+            }
             //
             // Check if mouse is hovering over the keyframe marker
             if (ImGui.IsMouseHoveringRect(

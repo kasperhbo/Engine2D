@@ -21,7 +21,7 @@ internal class SpriteSheet : AssetBrowserAsset
     [JsonIgnore] private GCHandle? _currentlyDraggedHandle;
     [JsonIgnore] public Texture Texture => ResourceManager.GetItem<Texture>(_texturePath);
     [JsonIgnore] private bool _unsaved;
-    [JsonProperty] internal List<Sprite> Sprites = new();
+    [JsonProperty] private List<Sprite> _sprites = new();
 
 
     [JsonProperty] private string? _texturePath = "";
@@ -43,11 +43,38 @@ internal class SpriteSheet : AssetBrowserAsset
         Init(texturePath, savePath, spriteWidth, spriteHeight, numSprites,
             spacing);
     }
+    
+    public Sprite GetSprite(int index)
+    {
+        int sprindex = CheckForSpriteIndex(index);
+        
+        if (_sprites.Count <= 0)
+        {
+            Log.Error("No Sprites set in spritesheet");
+            return null;
+        }
+        
+        return _sprites[sprindex];
+    }
 
+    
+    private int CheckForSpriteIndex(int checkIndex)
+    {
+        if (checkIndex >= _sprites.Count)
+        {
+            Log.Warning("Sprite index out of range, setting index --");
+            checkIndex--;
+            return CheckForSpriteIndex(checkIndex);
+        }
+
+        return checkIndex;
+    }
+
+    
     private void Init(string? texturePath, string? savePath, int spriteWidth, int spriteHeight, int numSprites,
         int spacing, bool unsaved = false)
     {
-        Sprites = new();
+        _sprites = new();
         if (texturePath == null)
         {
             Log.Error("texture path null");
@@ -59,7 +86,7 @@ internal class SpriteSheet : AssetBrowserAsset
         _savePath = savePath;
         _numSprites = numSprites;
 
-        Sprites = new();
+        _sprites = new();
         _texturePath = texturePath;
 
         if (spriteHeight == -1 && spriteWidth == -1)
@@ -94,7 +121,7 @@ internal class SpriteSheet : AssetBrowserAsset
              
             var sprite = new Sprite(_savePath, texCoords, spriteWidth, spriteHeight, i);
 
-            Sprites.Add(sprite);
+            _sprites.Add(sprite);
 
             currentX += spriteWidth + spacing;
             if (currentX >= Texture.Width) {
@@ -118,11 +145,27 @@ internal class SpriteSheet : AssetBrowserAsset
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 10));
         ImGui.Text(_savePath);
 
-        if (ImGui.InputInt("sprite width", ref _spriteWidth) ||
-            ImGui.InputInt("sprite height", ref _spriteHeight) ||
-            ImGui.InputInt("num of sprites", ref _numSprites) ||
-            ImGui.InputInt("padding", ref _spacing))
+        int spriteWidth = _spriteWidth;
+        int spriteHeight = _spriteHeight;
+        int numSprites = _numSprites;
+        int spacing = _spacing;
+        
+        if (ImGui.InputInt("sprite width", ref spriteWidth) ||
+            ImGui.InputInt("sprite height", ref spriteHeight) ||
+            ImGui.InputInt("num of sprites", ref numSprites) ||
+            ImGui.InputInt("padding", ref spacing))
         {
+            //To make sure the values are not negative  
+            if (spriteHeight < 0) spriteHeight = 0;
+            if (spriteWidth < 0) spriteWidth = 0;
+            if (numSprites < 1) numSprites = 1;
+            if (spacing < 0) spacing = 0;
+            
+            _spriteHeight = spriteHeight;
+            _spriteWidth = spriteWidth;
+            _numSprites = numSprites;
+            _spacing = spacing;
+            
             Init(_texturePath, _savePath, _spriteWidth, _spriteHeight, _numSprites, _spacing, true);
             Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset = this;            
             _unsaved = true;
@@ -141,10 +184,10 @@ internal class SpriteSheet : AssetBrowserAsset
                 }
             }
 
-            for (var i = 0; i < Sprites.Count; i++)
+            for (var i = 0; i < _sprites.Count; i++)
             {
-                _currentlyDraggedHandle ??= GCHandle.Alloc(Sprites[i]);
-                var entry = Sprites[i];
+                _currentlyDraggedHandle ??= GCHandle.Alloc(_sprites[i]);
+                var entry = _sprites[i];
                 ImGui.PushID(entry.TextureCoords.ToString());
                 
                 bool clicked;
