@@ -4,6 +4,7 @@ using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common;
 
 #endregion
 
@@ -19,7 +20,17 @@ internal class ScriptHolderComponent : Component
     {
         base.Init(parent, renderer);
     }
-    
+
+    public override void Update(FrameEventArgs args)
+    {
+        
+    }
+
+    public override void StartPlay()
+    {
+        
+    }
+
     public override string GetItemType()
     {
         return this.GetType().FullName;

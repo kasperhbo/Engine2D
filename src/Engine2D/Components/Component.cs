@@ -7,6 +7,7 @@ using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
@@ -16,13 +17,14 @@ using Vector4 = System.Numerics.Vector4;
 namespace Engine2D.Components;
 
 [JsonConverter(typeof(ComponentSerializer))]
-public class Component
+public abstract class Component : ICloneable
 {
     [JsonIgnore] private bool _initialized;
-    [JsonIgnore] internal Gameobject Parent;
+    [JsonIgnore] public Gameobject? Parent;
     
     [JsonProperty]internal string Type => GetItemType();
 
+    public abstract void StartPlay();
 
     public virtual string GetItemType()
     {
@@ -49,6 +51,8 @@ public class Component
     {
     }
 
+    public abstract void Update(FrameEventArgs args);
+    
     public virtual void EditorUpdate(double dt)
     {
     }
@@ -57,6 +61,11 @@ public class Component
     {
     }
 
+    public virtual void StopPlay()
+    {
+        
+    }
+    
     public virtual void Destroy()
     {
     }
@@ -183,5 +192,11 @@ public class Component
         }
 
         return 20 * count;
+    }
+
+
+    public object Clone()
+    {
+        return this.MemberwiseClone();
     }
 }

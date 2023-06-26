@@ -1,6 +1,6 @@
 ﻿namespace Engine2D.Core;
 
-internal abstract class Asset
+public abstract class Asset
 {
     internal abstract void OnGui();
 }

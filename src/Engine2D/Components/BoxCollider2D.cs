@@ -2,6 +2,7 @@
 
 using System.Numerics;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common;
 
 #endregion
 
@@ -21,8 +22,18 @@ internal class BoxCollider2D : Component
     //{
     //}
 
+    public override void StartPlay()
+    {
+        
+    }
+
     public override string GetItemType()
     {
         return this.GetType().FullName;
+    }
+
+    public override void Update(FrameEventArgs args)
+    {
+        
     }
 }

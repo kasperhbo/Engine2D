@@ -1,14 +1,17 @@
 ﻿#region
 
 using System.Numerics;
+using System.Security.Claims;
 using Engine2D.Components;
 using Engine2D.Components.TransformComponents;
+using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common;
 
 #endregion
 
@@ -16,31 +19,35 @@ namespace Engine2D.Cameras;
 
 internal class Camera : Component
 {
-    internal CameraTypes CameraType = CameraTypes.ORTHO;
-    internal float Far = 1000f;
-    internal float Near = 0.1f;
+    [JsonProperty]internal CameraTypes CameraType = CameraTypes.ORTHO;
+    [JsonProperty]internal float Far = 1000f;
+    [JsonProperty]internal float Near = 0.1f;
 
     // private Vector2 _projectionSize = new(1920,1080);
-    internal Vector2 ProjectionSize = new(1920, 1080);
+    [JsonProperty]internal Vector2 ProjectionSize = new(1920, 1080);
+    [JsonProperty]internal Vector4 ClearColor = new(100, 149, 237, 255);
+    [JsonProperty]internal float Size = 1f;
+    [JsonProperty]private bool _isMainCamera;
 
-    internal float Size = 1f;
+    public bool IsMainCamera
+    {
+        get => _isMainCamera;
+        set
+        {
+            Engine.Get().CurrentScene.CurrentMainGameCamera = this;
+            _isMainCamera = value;
+        }
+    }
 
     internal Camera()
     {
     }
 
-    [JsonConstructor]
-    internal Camera(CameraTypes cameraType, float size, Vector4 clearColor)
-    {
-        CameraType = cameraType;
-        Size = size;
-        ClearColor = clearColor;
-    }
-
-    internal Vector4 ClearColor { get; set; } = new(100, 149, 237, 255);
 
     internal Matrix4x4 GetViewMatrix()
     {
+        if (Parent == null) return Matrix4x4.Identity;
+        
         var transform = Parent.GetComponent<Transform>();
 
         if (transform == null)
@@ -79,9 +86,19 @@ internal class Camera : Component
         return projectionMatrix;
     }
 
+    public override void StartPlay()
+    {
+        
+    }
+
     public override string GetItemType()
     {
         return this.GetType().FullName;
+    }
+
+    public override void Update(FrameEventArgs args)
+    {
+        
     }
 
     public override void EditorUpdate(double dt)
@@ -101,9 +118,17 @@ internal class Camera : Component
         {
         }
 
+        Gui.DrawProperty("Clear Color: ", ref ClearColor);
+        if (Gui.DrawProperty("Is Main Camera", ref _isMainCamera))
+        {
+            if (_isMainCamera) Engine.Get().CurrentScene.CurrentMainGameCamera = this;
+        }
+
+
+
         ImGui.Separator();
         ImGui.Text("Clipping Planes");
-
+        
         if (OpenTkuiHelper.DrawProperty("Near: ", ref Near, false) ||
             OpenTkuiHelper.DrawProperty("Far: ", ref Far, false))
         {

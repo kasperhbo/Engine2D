@@ -8,6 +8,7 @@ using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
 using Engine2D.UI;
+using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 #endregion
@@ -37,20 +38,19 @@ internal class EditorCameraGO : Gameobject
         if (currentScene != null) Name = "Editor Camera: " + currentScene.GameObjects.Count + 1;
     }
 
+    internal override void Update(FrameEventArgs args)
+    {
+        MouseControl((float)args.Time);
+    }
+    
     internal override void EditorUpdate(double dt)
     {
         base.EditorUpdate(dt);
-        MouseControl((float)dt);
-
-        foreach (var f in _linkedComponents)
-        {
-        }
     }
 
     private void MouseControl(float dt)
     {
-        if (UiRenderer.CurrentEditorViewport == null || !UiRenderer.CurrentEditorViewport.IsWindowHovered) return;
-
+        if ((UiRenderer.CurrentEditorViewport == null || !UiRenderer.CurrentEditorViewport.IsWindowHovered) && Settings.s_IsEngine) return;
         if (Input.MouseDown(MouseButton.Middle))
         {
             Vector2 delta = new(Input.ScreenX() - Input.ScreenLastX(), Input.ScreenY() - Input.ScreenLastY());

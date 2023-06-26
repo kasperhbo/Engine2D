@@ -6,18 +6,19 @@ using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Windowing.Common;
 
 #endregion
 
 namespace Engine2D.Components.TransformComponents;
 
-internal class Transform : Component
+public class Transform : Component
 {
-    [JsonProperty]internal Vector2 Position;
-    [JsonIgnore]  internal Vector3 EulerDegrees;
-    [JsonIgnore]  internal Vector3 EulerRadians;
-    [JsonProperty]internal Quaternion Rotation;
-    [JsonProperty]internal Vector2 Size;
+    [JsonProperty]public Vector2 Position;
+    [JsonIgnore]  public Vector3 EulerDegrees;
+    [JsonIgnore]  public Vector3 EulerRadians;
+    [JsonProperty]public Quaternion Rotation;
+    [JsonProperty]public Vector2 Size;
 
 
     internal Transform()
@@ -40,6 +41,16 @@ internal class Transform : Component
         Rotation = q;
         EulerRadians = MathUtilsNumerics.QuaternionToRadians(q);
         EulerDegrees = MathUtilsNumerics.RadiansToDegrees(EulerRadians);
+    }
+
+    public override void StartPlay()
+    {
+        
+    }
+
+    public override void Update(FrameEventArgs args)
+    {
+        
     }
 
     public override void ImGuiFields()
@@ -85,10 +96,5 @@ internal class Transform : Component
     internal override float GetFieldSize()
     {
         return 120;
-    }
-
-    public override string GetItemType()
-    {
-        return this.GetType().FullName;
     }
 }
