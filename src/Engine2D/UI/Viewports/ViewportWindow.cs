@@ -92,7 +92,7 @@ internal abstract class ViewportWindow
 
         Origin = ImGui.GetItemRectMin();
         Sz = ImGui.GetItemRectSize();
-        ImGui.EndChild();
+        
     }
 
     private void SetCanvasData(TileExtent extent)
@@ -120,6 +120,7 @@ internal abstract class ViewportWindow
 
     internal virtual void End()
     {
+        ImGui.EndChild();
         ImGui.End();
     }
 
