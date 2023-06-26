@@ -3,6 +3,7 @@
 using System.Numerics;
 using Dear_ImGui_Sample;
 using Engine2D.Core;
+using Engine2D.Core.Inputs;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.UI.Browsers;
@@ -111,6 +112,8 @@ internal static class UiRenderer
         KDBImGuiController.Render();
         
         ResourceManager.OnGUI();
+        
+        
     }
 
 
@@ -324,8 +327,8 @@ internal static class UiRenderer
 
     private static void CreateDefaultWindows()
     {
-        _editorViewport = new EditorViewport();
-        _gameViewport = new GameViewport();
+        _editorViewport = new EditorViewport("editor viewport");
+        _gameViewport = new GameViewport("game viewport");
 
         var hierCo = _hierarchyWindowCount;
         var inspCo = _inspectorWindowCount;

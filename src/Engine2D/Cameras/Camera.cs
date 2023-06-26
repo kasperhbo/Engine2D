@@ -11,7 +11,11 @@ using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
+using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
+using Vector4 = System.Numerics.Vector4;
 
 #endregion
 
@@ -19,15 +23,15 @@ namespace Engine2D.Cameras;
 
 internal class Camera : Component
 {
-    [JsonProperty]internal CameraTypes CameraType = CameraTypes.ORTHO;
-    [JsonProperty]internal float Far = 1000f;
-    [JsonProperty]internal float Near = 0.1f;
+    [JsonProperty] internal CameraTypes CameraType = CameraTypes.ORTHO;
+    [JsonProperty] internal float Far = 1000f;
+    [JsonProperty] internal float Near = 0.1f;
 
     // private Vector2 _projectionSize = new(1920,1080);
-    [JsonProperty]internal Vector2 ProjectionSize = new(1920, 1080);
-    [JsonProperty]internal Vector4 ClearColor = new(100, 149, 237, 255);
-    [JsonProperty]internal float Size = 1f;
-    [JsonProperty]private bool _isMainCamera;
+    [JsonProperty] internal Vector2 ProjectionSize = new(1920, 1080);
+    [JsonProperty] internal Vector4 ClearColor = new(100, 149, 237, 255);
+    [JsonProperty] internal float Size = 1f;
+    [JsonProperty] private bool _isMainCamera;
 
     public bool IsMainCamera
     {
@@ -46,8 +50,6 @@ internal class Camera : Component
 
     internal Matrix4x4 GetViewMatrix()
     {
-        if (Parent == null) return Matrix4x4.Identity;
-        
         var transform = Parent.GetComponent<Transform>();
 
         if (transform == null)
@@ -56,17 +58,16 @@ internal class Camera : Component
             return Matrix4x4.Identity;
         }
 
-        var pos = transform.Position;
+        var position = transform.Position;
 
-        var frontTemp = MathUtilsNumerics.GetFrontAxis(transform.Rotation);
-        var upTemp = MathUtilsNumerics.GetUpAxis(transform.Rotation);
+        var cameraFront = new Vector3(0.0f, 0.0f, -1.0f);
+        var cameraUp = new Vector3(0.0f, 1.0f, 0.0f);
+        var viewMatrix = Matrix4x4.Identity;
+        viewMatrix = Matrix4x4.CreateLookAt(new Vector3(position.X, position.Y, 20.0f),
+            cameraFront + new Vector3(position.X, position.Y, 0.0f),
+            cameraUp);
 
-        return Matrix4x4.CreateLookAt(new Vector3(
-                pos.X, pos.Y, 20.0f),
-            frontTemp + new Vector3(
-                pos.X, pos.Y, 0.0f),
-            upTemp
-        );
+        return viewMatrix;
     }
 
     internal Matrix4x4 GetProjectionMatrix()
@@ -79,16 +80,14 @@ internal class Camera : Component
                 -(ProjectionSize.X * Size / 2), ProjectionSize.X * Size / 2,
                 -(ProjectionSize.Y * Size / 2), ProjectionSize.Y * Size / 2, 0.0f, 100.0f
             );
-
         if (CameraType == CameraTypes.PERSPECTIVE) throw new NotImplementedException();
-
 
         return projectionMatrix;
     }
 
     public override void StartPlay()
     {
-        
+
     }
 
     public override string GetItemType()
@@ -98,7 +97,7 @@ internal class Camera : Component
 
     public override void Update(FrameEventArgs args)
     {
-        
+
     }
 
     public override void EditorUpdate(double dt)
@@ -114,6 +113,8 @@ internal class Camera : Component
 
     public override void ImGuiFields()
     {
+        Gui.DrawProperty("Projection Size", ref ProjectionSize);
+
         if (OpenTkuiHelper.DrawProperty("Size: ", ref Size, false))
         {
         }
@@ -128,25 +129,14 @@ internal class Camera : Component
 
         ImGui.Separator();
         ImGui.Text("Clipping Planes");
-        
+
         if (OpenTkuiHelper.DrawProperty("Near: ", ref Near, false) ||
             OpenTkuiHelper.DrawProperty("Far: ", ref Far, false))
         {
         }
     }
-
-    internal Matrix4x4 getInverseView()
-    {
-        Matrix4x4.Invert(GetViewMatrix(), out var matrix4X4);
-        return matrix4X4;
-    }
-
-    internal Matrix4x4 getInverseProjection()
-    {
-        Matrix4x4.Invert(GetProjectionMatrix(), out var matrix4X4);
-        return matrix4X4;
-    }
 }
+
 
 internal enum CameraTypes
 {

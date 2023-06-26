@@ -26,8 +26,6 @@ internal class EditorCameraGO : Gameobject
 
     internal EditorCameraGO(string name) : base(name)
     {
-        var currentScene = Engine.Get().CurrentScene;
-
         camera = new Camera
         {
             Parent = this
@@ -35,7 +33,7 @@ internal class EditorCameraGO : Gameobject
 
         Components.Add(camera);
         
-        if (currentScene != null) Name = "Editor Camera: " + currentScene.GameObjects.Count + 1;
+        Name = "EDITORCAMERA";
     }
 
     internal override void Update(FrameEventArgs args)
@@ -50,7 +48,8 @@ internal class EditorCameraGO : Gameobject
 
     private void MouseControl(float dt)
     {
-        if ((UiRenderer.CurrentEditorViewport == null || !UiRenderer.CurrentEditorViewport.IsWindowHovered) && Settings.s_IsEngine) return;
+        if ((UiRenderer.CurrentEditorViewport == null || !UiRenderer.CurrentEditorViewport.GetWantCaptureMouse()) && Settings.s_IsEngine) return;
+        
         if (Input.MouseDown(MouseButton.Middle))
         {
             Vector2 delta = new(Input.ScreenX() - Input.ScreenLastX(), Input.ScreenY() - Input.ScreenLastY());

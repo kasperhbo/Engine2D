@@ -103,6 +103,8 @@ namespace Engine2D.Core
 
             CurrentScene?.OnResized(e);
         }
+        
+        
 
         private void TextInput(TextInputEventArgs e)
         {
@@ -211,10 +213,14 @@ namespace Engine2D.Core
         {
             get { return (double)DateTime.Now.Ticks / TimeSpan.TicksPerSecond; }
         }
-
-        
+       
 
         #endregion
+
+        public float GetTargetAspectRatio()
+        {
+            return 16.0f / 9.0f;
+        }
     }
 }
 

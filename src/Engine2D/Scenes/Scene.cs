@@ -12,6 +12,7 @@ using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
+using Engine2D.UI;
 using Engine2D.Utilities;
 using Newtonsoft.Json;
 using OpenTK.Windowing.Common;
@@ -24,9 +25,9 @@ namespace Engine2D.Scenes;
 public class Scene
 {
     [JsonProperty]internal Camera? CurrentMainGameCamera;
-    [JsonIgnore]internal Camera? EditorCamera;
     [JsonProperty]internal List<Gameobject> GameObjects = new();
     [JsonIgnore]internal Renderer? Renderer { get; private set; }
+    [JsonIgnore]internal Camera? EditorCamera;
 
     [JsonProperty]internal string ScenePath { get; private set; } = "NoScene";
     [JsonProperty]internal GlobalLight GlobalLight { get; set; } = null;
@@ -132,6 +133,14 @@ public class Scene
                     EditorCamera.Parent.GetComponent<Transform>().Position = go.GetComponent<Transform>().Position;
             }
         }
+
+        //Console.WriteLine(MouseListener.GetWorld());
+        var pos =  Input.MouseEditorPos;
+        Console.WriteLine(pos);
+
+        GameObjects[4].GetComponent<Transform>().Position = new(pos.X, pos.Y);
+
+
     }
     
     /// <summary>
