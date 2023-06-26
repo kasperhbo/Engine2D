@@ -54,13 +54,13 @@
           "Z": 255.0,
           "W": 255.0
         },
-        "SpriteSheetSpriteIndex": 3,
+        "SpriteSheetSpriteIndex": 2,
         "Type": "Engine2D.GameObjects.SpriteRenderer"
       },
       {
         "Position": {
-          "X": 219.85991,
-          "Y": 46.071327
+          "X": -17.140127,
+          "Y": -61.09457
         },
         "Rotation": {
           "X": 0.0,
@@ -70,8 +70,8 @@
           "IsIdentity": false
         },
         "Size": {
-          "X": 32.0,
-          "Y": 32.0
+          "X": 119.68,
+          "Y": 119.68
         },
         "Type": "Engine2D.Components.TransformComponents.Transform"
       },

@@ -130,7 +130,7 @@ internal class SpriteRenderer : Component
 
     internal void SetSprite(int spriteSheetIndex, string spriteSheet)
     {
-        _renderer.RemoveSprite(this);
+        _renderer.RemoveSprite(this.Parent);
         
         var sprs = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
         
@@ -143,19 +143,18 @@ internal class SpriteRenderer : Component
         HasSpriteSheet = true;
         
         _spriteSheet = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
-
-
+        
+        
         Sprite = _spriteSheet.GetSprite(spriteSheetIndex);
         SpriteSheetPath = spriteSheet;
         SpriteSheetSpriteIndex = spriteSheetIndex;
-
+        
         _renderer.AddSpriteRenderer(this);
         IsDirty = true;
     }
 
     public override void Destroy()
     {
-        _renderer.RemoveSprite(this);
         base.Destroy();
     }
 

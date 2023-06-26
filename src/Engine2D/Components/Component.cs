@@ -68,6 +68,7 @@ public abstract class Component : ICloneable
     
     public virtual void Destroy()
     {
+        
     }
 
     public virtual void ImGuiFields()

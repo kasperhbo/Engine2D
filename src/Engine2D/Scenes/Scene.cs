@@ -30,12 +30,12 @@ internal class Scene
 
     [JsonProperty]internal string ScenePath { get; private set; } = "NoScene";
     [JsonProperty]internal GlobalLight GlobalLight { get; set; } = null;
-    [JsonIgnore]private List<Gameobject> _tempGOList = new();
+    
     
     private void StartPlay()
     {
         SaveLoad.SaveScene(this);
-        _tempGOList = GameObjects;
+        
         
         //_physicsWorld = new World(new Vector2(0, -9.8f));
 
@@ -100,7 +100,18 @@ internal class Scene
     {
         if (Settings.s_IsEngine) EditorUpdate(args);
         if (IsPlaying) GameUpdate(args);
-        foreach (var obj in GameObjects) obj.Update(args);
+        for (int i=0; i < GameObjects.Count; i++) {
+            {
+                var obj = GameObjects[i];
+                obj.Update(args);
+                if (obj.IsDead)
+                {
+                    GameObjects.Remove(obj);
+                    RemoveGameObject(obj);
+                    i--;
+                }
+            }
+        }
     }
     
     /// <summary>
@@ -227,4 +238,10 @@ internal class Scene
     }
 
     #endregion
+
+    public void RemoveGameObject(Gameobject go)
+    {
+        Renderer.RemoveSprite(go);
+        Engine.Get().CurrentSelectedAsset = null;
+    }
 }

@@ -3,6 +3,8 @@
 using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.Sprites;
 using Engine2D.Components.Sprites.SpriteAnimations;
+using Engine2D.Core.Inputs;
+using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
@@ -65,6 +67,16 @@ namespace Engine2D.Core
         private void Update(FrameEventArgs args)
         {
             CurrentScene?.Update(args);
+            
+            if(Input.KeyPressed(Keys.Delete))
+            {
+                Console.WriteLine("Try to delete asset");
+                if (CurrentSelectedAsset != null)
+                {
+                    CurrentSelectedAsset.IsDead = true;
+                }
+            }
+                
         }
 
         public static double DeltaTime = 0;
@@ -233,7 +245,7 @@ internal static class ProjectSettings
 {
     //TODO: Make this a json file
     //TODO: MAKE THIS ACCESSIBLE FROM A LAUNCHER
-    internal static string ProjectName { get; } = "ExampleGame";
-    internal static string ProjectLocation { get; } = @"D:\dev\Engine2D\src\";
+    internal static string ProjectName { get; } = "MarioLVL01";
+    internal static string ProjectLocation { get; } = @"D:\dev\MarioLVL1TestGame\MarioLVL01\";
     internal static string FullProjectPath { get; } = ProjectLocation + ProjectName;
 }

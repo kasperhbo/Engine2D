@@ -4,6 +4,7 @@ using Engine2D.Cameras;
 using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.GameObjects;
+using Engine2D.Logging;
 using Engine2D.Testing;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
@@ -164,7 +165,10 @@ internal class Renderer
         RenderBatch addedToBatch = null;
         
         if(_spriteBatchDict.ContainsKey(spr.Parent.UID))
-            RemoveSprite(spr);
+            if (spr.Parent != null)
+            {
+                RemoveSprite(spr.Parent);
+            }
 
         foreach (var batch in RenderBatches)
         {
@@ -185,20 +189,20 @@ internal class Renderer
             RenderBatches.Add(batch);
             RenderBatches.Sort();
         }
-       
-        _spriteBatchDict.Add(spr.Parent.UID, addedToBatch);
-    }
 
-    internal void RemoveSprite(SpriteRenderer spr)
-    {
-        if (!_spriteBatchDict.ContainsKey(spr.Parent.UID))
-        {
-            Console.WriteLine("Does not contain sprite");
-            return;
+        if(!_spriteBatchDict.ContainsKey(spr.Parent.UID))
+            _spriteBatchDict.Add(spr.Parent.UID, addedToBatch);
+    }
+    
+    public void RemoveSprite(Gameobject go) {
+        if (go.GetComponent<SpriteRenderer>() == null) return;
+        foreach (RenderBatch batch in RenderBatches) {
+            if (batch.DestroyIfExists(go))
+            {
+                _spriteBatchDict.Remove(go.UID);
+                return;
+            }
         }
-            
-        _spriteBatchDict[spr.Parent.UID].RemoveSprite(spr);
-        _spriteBatchDict.Remove(spr.Parent.UID);
     }
 
     internal List<PointLightComponent> GetPointLightsToRender()

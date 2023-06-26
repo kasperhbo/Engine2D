@@ -404,4 +404,23 @@ internal class RenderBatch : IComparable<RenderBatch>
                 Textures[i] = null;
         }
     }
+
+    public bool DestroyIfExists(Gameobject go)
+    {
+        var spr = go.GetComponent<SpriteRenderer>();
+
+        for (int i = 0; i < _spriteCount; i++)
+        {
+            if (_sprites[i] == spr)
+            {
+                for (int j=i; j < _spriteCount - 1; j++) {
+                    _sprites[j] = _sprites[j + 1];
+                    _sprites[j].IsDirty = true;
+                }
+                _spriteCount--;
+                return true;
+            }
+        }
+        return false;
+    }
 }
