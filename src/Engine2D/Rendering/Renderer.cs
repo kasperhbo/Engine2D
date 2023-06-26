@@ -163,6 +163,7 @@ internal class Renderer
     {
         var added = false;
         RenderBatch addedToBatch = null;
+        if(spr.Parent == null) return;
         
         if(_spriteBatchDict.ContainsKey(spr.Parent.UID))
             if (spr.Parent != null)
@@ -194,7 +195,9 @@ internal class Renderer
             _spriteBatchDict.Add(spr.Parent.UID, addedToBatch);
     }
     
-    public void RemoveSprite(Gameobject go) {
+    public void RemoveSprite(Gameobject go)
+    {
+        if (go == null) return;
         if (go.GetComponent<SpriteRenderer>() == null) return;
         foreach (RenderBatch batch in RenderBatches) {
             if (batch.DestroyIfExists(go))

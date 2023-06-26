@@ -194,7 +194,7 @@ public static class Utils
         }
     }
 
-    internal static unsafe bool IsValidPayload(this ImGuiPayloadPtr payload)
+    public static unsafe bool IsValidPayload(this ImGuiPayloadPtr payload)
     {
         return payload.NativePtr != null;
     }

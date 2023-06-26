@@ -143,13 +143,7 @@ public class Gameobject : Asset
         foreach (var component in Components) component.Destroy();
     }
 
-    internal void AddComponent(Component? component, Renderer? renderer)
-    {
-        component.Init(this, renderer);
-        Components.Add(component);
-    }
-
-    internal Component? AddComponent(Component? component)
+    public Component? AddComponent(Component? component)
     {
         if (component == null) return null;
         component.Init(this);

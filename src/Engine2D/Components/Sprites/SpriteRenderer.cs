@@ -25,7 +25,7 @@ namespace Engine2D.GameObjects;
 
 
 [JsonConverter(typeof(ComponentSerializer))]
-internal class SpriteRenderer : Component
+public class SpriteRenderer : Component
 {
     [JsonIgnore][ShowUI (show = false)] internal bool IsDirty = true;
     [JsonIgnore] internal Sprite? Sprite;    
@@ -128,8 +128,12 @@ internal class SpriteRenderer : Component
         base.EditorUpdate(dt);
     }
 
-    internal void SetSprite(int spriteSheetIndex, string spriteSheet)
+    public void SetSprite(int spriteSheetIndex, string spriteSheet)
     {
+        if (_renderer == null)
+        {
+            _renderer = Engine.Get().CurrentScene.Renderer;
+        }
         _renderer.RemoveSprite(this.Parent);
         
         var sprs = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
@@ -200,7 +204,6 @@ internal class SpriteRenderer : Component
                 // Do something with the dropped sprite...
                 // For example, display a message with the sprite name
                 SetSprite(droppedSprite.Index, droppedSprite.FullSavePath);
-                Console.WriteLine("Set Sprite");
             }
 
             ImGui.EndDragDropTarget();
@@ -221,9 +224,9 @@ internal class SpriteRenderer : Component
     }
 
     // Deserialize a sprite from a byte array
-    internal static Sprite DeserializeSprite(byte[] data)
+    public static Sprite DeserializeSprite(byte[] data)
     {
         string jsonString = Encoding.UTF8.GetString(data);
         return JsonConvert.DeserializeObject<Sprite>(jsonString);
-    }
+    }   
 }

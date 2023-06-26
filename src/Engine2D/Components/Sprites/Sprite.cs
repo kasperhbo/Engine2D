@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Engine2D.Components.Sprites;
 
-internal class Sprite
+public class Sprite
 {
     public Sprite(string fullSavePath, Vector2[] texCoords, int spriteWidth, int spriteHeight, int index)
     {
@@ -20,8 +20,8 @@ internal class Sprite
         Index = index;
     }
 
-    [JsonProperty]internal string FullSavePath { get; set; }
-    [JsonProperty]internal int Index { get; set; }
+    [JsonProperty]public string FullSavePath { get; set; }
+    [JsonProperty]public int Index { get; set; }
     
     [JsonProperty]internal int Width { get; set; }
     [JsonProperty]internal int Height { get; set; }

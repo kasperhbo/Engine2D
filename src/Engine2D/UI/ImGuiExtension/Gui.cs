@@ -181,6 +181,7 @@ internal static class Gui
     
     internal static void KStringInput(string label, ref string value)
     {
+        if (value == null) return;
         InputText(("##" + label), ref value, 256);
     }
     

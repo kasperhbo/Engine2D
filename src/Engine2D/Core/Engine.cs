@@ -180,8 +180,9 @@ namespace Engine2D.Core
 
         private void LoadProject()
         {
-            AssemblyUtils.LoadAssembly(@"D:\dev\Engine2D\src\ExampleGame\bin\Debug\net7.0\ExampleGame.dll");
-            AssemblyUtils.GetComponent("ExampleGame.Assets.TestClass");
+            string path = "D:\\dev\\MarioLVL1TestGame\\MarioLVL01\\MarioLVL01\\bin\\Debug\\net7.0\\MarioLVL01.dll";
+            //"D:\dev\Engine2D\src\ExampleGame\bin\Debug\net7.0\ExampleGame.dll"
+            AssemblyUtils.LoadAssembly(path);
         }
 
         private void AssignDefaultEvents()
