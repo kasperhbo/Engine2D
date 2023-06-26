@@ -90,7 +90,9 @@ internal class Scene
 
         foreach (var obj in GameObjects) obj.GameUpdate((float)Engine.DeltaTime);
     }
-
+    
+    
+    //If game stops playing
     private void StopPlay()
     {
         SaveLoad.LoadScene(ScenePath);

@@ -215,12 +215,14 @@ internal static class WindowSettings
     internal static bool Decorated { get; } = true;
 }
 
+//Engine settings
 internal static class Settings
 {
     internal static bool s_IsEngine = true;
     internal static bool s_RenderDebugWindowSeperate = true;
 }
 
+//Project settings
 internal static class ProjectSettings
 {
     //TODO: Make this a json file
