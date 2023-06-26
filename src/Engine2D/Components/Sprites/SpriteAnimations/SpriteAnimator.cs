@@ -89,17 +89,7 @@ internal class SpriteAnimator : Component
             return;
         }
         //if (loaded == null) return;
-        
-        var animInstance = (Animation)Activator.CreateInstance(loaded.GetType());
-        
-        animInstance._endTime = loaded._endTime;
-        animInstance._keyframes = loaded._keyframes;
-        animInstance.SavePath = loaded.SavePath;
-        animInstance.AttachedToSpriteRenderer = true;
-        
-        Animation = animInstance;
-        
-        // Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = Animation;
+        Animation = new Animation(loaded);
     }
     
 

@@ -40,10 +40,22 @@ internal class Animation : AssetBrowserAsset
     [JsonIgnore]  public bool AttachedToSpriteRenderer = false;
     
     [JsonProperty]public float _endTime = 0;
+    [JsonProperty]public float _playbackSpeed;
     [JsonProperty]public List<Keyframe> _keyframes = new List<Keyframe>();
     [JsonProperty]public string SavePath = "";
-    
 
+
+    public Animation(Animation other)
+    {
+        this._keyframes = other._keyframes;
+        this.SavePath = other.SavePath;
+        this._currentTime = other._currentTime;
+        this._endTime = other._endTime;
+        this._playbackSpeed = other._playbackSpeed;
+        this._startTime = other._startTime;
+        this._unsaved = other._unsaved;
+        this.AttachedToSpriteRenderer = true;
+    }
     
     public Animation()
     {
@@ -74,11 +86,23 @@ internal class Animation : AssetBrowserAsset
     {
         if (IsPlaying)
         {
-            _currentTime += (float)dt;
-            if (_currentTime >= _endTime)
+            _currentTime += (float)dt * _playbackSpeed;
+
+            if (_playbackSpeed > 0)
             {
-                _currentTime = _startTime;
+                if (_currentTime >= _endTime)
+                {
+                    _currentTime = _startTime;
+                }
             }
+            else
+            {
+                if (_currentTime <= _startTime)
+                {
+                    _currentTime = _endTime;
+                }
+            }
+           
         }
     }
 
@@ -209,7 +233,6 @@ internal class Animation : AssetBrowserAsset
         ImGui.SameLine();
         ImGui.Dummy(new(20, 0));
         ImGui.SameLine();
-
         {
             ImGui.PushID("PLUSEND");
             ImGui.Text("End time: ");
@@ -229,6 +252,29 @@ internal class Animation : AssetBrowserAsset
             }
             ImGui.PopID();
         }
+        
+        ImGui.SameLine();
+        ImGui.Dummy(new(20, 0));
+        ImGui.SameLine();
+        {
+            ImGui.PushID("PlaybackSpeed");
+            ImGui.Text("Playback speed: ");
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(50);
+            ImGui.DragFloat("##playback", ref _playbackSpeed, 0.01f, 0, 1000);
+            ImGui.SameLine();
+            if (ImGui.Button("-", new Vector2(22)))
+            {
+                _playbackSpeed -= .1f;
+            }
+            ImGui.SameLine();
+            if (ImGui.Button("+", new Vector2(22)))
+            {
+                _playbackSpeed += .1f;
+            }
+            ImGui.PopID();
+        }
+
         
         
         ImGui.Text("save path: " + SavePath);
