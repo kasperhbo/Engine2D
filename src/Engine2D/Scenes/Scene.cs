@@ -21,7 +21,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Engine2D.Scenes;
 
-internal class Scene
+public class Scene
 {
     [JsonProperty]internal Camera? CurrentMainGameCamera;
     [JsonIgnore]internal Camera? EditorCamera;
@@ -153,7 +153,7 @@ internal class Scene
         }
     }
 
-    internal void AddGameObjectToScene(Gameobject go)
+    public void AddGameObjectToScene(Gameobject go)
     {
         if (go.GetComponent<Camera>() != null && (CurrentMainGameCamera == null && go.Name != "EDITORCAMERA"))
         {

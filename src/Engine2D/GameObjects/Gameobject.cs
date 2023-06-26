@@ -35,14 +35,14 @@ public class Gameobject : Asset
     //UIDS
     internal int UID = -1;
 
-    internal Gameobject(string name)
+    public Gameobject(string name)
     {
         Name = name;
         Components = new List<Component?>();
         GetUID();
     }
 
-    internal Gameobject(string name, List<Component?> components)
+    public Gameobject(string name, List<Component?> components)
     {
         Name = name;
         this.Components = components;
