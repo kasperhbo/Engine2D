@@ -44,8 +44,7 @@ internal class Scene
             go.StartPlay();
         }
     }
-
-    
+  
     private void StopPlay()
     {
         foreach (var go in GameObjects)

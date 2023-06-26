@@ -67,16 +67,17 @@ internal class EditorViewport : ViewportWindow
                 ImGuizmo.SetDrawlist();
 
                 var pos = ImGui.GetCursorStartPos();
-
+                
+                //Set rect for imgui
                 ImGuizmo.SetRect(Origin.X, Origin.Y, Sz.X, Sz.Y);
 
                 var view = Camera.GetViewMatrix();
                 var projection = Camera.GetProjectionMatrix();
                 var translation = selectedGo.GetComponent<Transform>().GetTranslation();
-
+                
                 ImGuizmo.Manipulate(ref view.M11, ref projection.M11,
                     _currentOperation, _currentMode, ref translation.M11);
-
+            
 
                 if (ImGuizmo.IsUsing())
                 {
