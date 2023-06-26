@@ -264,7 +264,16 @@ internal class RenderBatch : IComparable<RenderBatch>
         
         if(spriteRenderer.Parent.GetComponent<Transform>() != null)
         {
-            translation= spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
+            if (spriteRenderer.Sprite != null)
+            {
+                float w = spriteRenderer.Sprite.Width;
+                float h = spriteRenderer.Sprite.Height;
+                translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation(w,h);
+            }
+            else
+            {
+                translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
+            }
         }
 
         {

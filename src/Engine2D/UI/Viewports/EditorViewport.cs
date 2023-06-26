@@ -73,7 +73,20 @@ internal class EditorViewport : ViewportWindow
 
                 var view = Camera.GetViewMatrix();
                 var projection = Camera.GetProjectionMatrix();
-                var translation = selectedGo.GetComponent<Transform>().GetTranslation();
+                var translation = Matrix4x4.Identity;
+                
+                if(selectedGo.GetComponent<SpriteRenderer>() == null)
+                    translation = selectedGo.GetComponent<Transform>().GetTranslation();
+                else if (selectedGo.GetComponent<SpriteRenderer>().Sprite != null)
+                {
+                    SpriteRenderer spr = selectedGo.GetComponent<SpriteRenderer>();
+                    translation = selectedGo.GetComponent<Transform>()
+                        .GetTranslation(spr.Sprite.Width, spr.Sprite.Height);
+                }
+                else
+                {
+                    translation = selectedGo.GetComponent<Transform>().GetTranslation();
+                }
                 
                 ImGuizmo.Manipulate(ref view.M11, ref projection.M11,
                     _currentOperation, _currentMode, ref translation.M11);
