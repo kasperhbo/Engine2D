@@ -60,7 +60,7 @@ internal class EditorViewport : ViewportWindow
 
 
                 ImGuizmo.Enable(true);
-
+                
                 if (Camera.CameraType == CameraTypes.ORTHO)
                     ImGuizmo.SetOrthographic(true);
 
@@ -97,6 +97,7 @@ internal class EditorViewport : ViewportWindow
         }
         catch
         {
+            Console.WriteLine("Something went wrong");
         }
     }
 

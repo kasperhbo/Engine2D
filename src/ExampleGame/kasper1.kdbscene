@@ -54,7 +54,7 @@
           "Z": 255.0,
           "W": 255.0
         },
-        "SpriteSheetSpriteIndex": 1,
+        "SpriteSheetSpriteIndex": 2,
         "Type": "Engine2D.GameObjects.SpriteRenderer"
       },
       {

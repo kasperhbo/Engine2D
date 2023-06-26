@@ -13,8 +13,8 @@ internal class GameViewport : ViewportWindow
 
     internal override void BeforeImageRender()
     {
-        if(Camera != null)
-            Camera.ProjectionSize = new(1920, 1080);
+        // if(Camera != null)
+        //     Camera.ProjectionSize = new(1920, 1080);
     }
 
     internal override void AfterImageRender()
