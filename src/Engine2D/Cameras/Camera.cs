@@ -43,6 +43,8 @@ internal class Camera : Component
         }
     }
 
+    public float FadeRange = 1;
+
     internal Camera()
     {
     }
@@ -114,7 +116,7 @@ internal class Camera : Component
     public override void ImGuiFields()
     {
         Gui.DrawProperty("Projection Size", ref ProjectionSize);
-
+        Gui.DrawProperty("Fade range", ref FadeRange);
         if (OpenTkuiHelper.DrawProperty("Size: ", ref Size, false))
         {
         }

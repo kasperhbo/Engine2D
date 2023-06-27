@@ -21,7 +21,6 @@ public class Line2D
         this.To = to;
         this.Color = color;
         this._lifeTime = lifetime;
-        Color = new Vector4(1, 0, 0, 1);
     }
     
     
