@@ -1,11 +1,8 @@
 ﻿#region
 
 using System.Numerics;
-using Engine2D.GameObjects;
 using Engine2D.UI.Browsers;
-using Engine2D.Utilities;
 using ImGuiNET;
-using OpenTK.Graphics.ES30;
 using static ImGuiNET.ImGui;
 
 #endregion

@@ -1,17 +1,13 @@
 ﻿#region
 
 using System.Numerics;
-using System.Security.Claims;
 using Engine2D.Components;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
-using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.UI.ImGuiExtension;
-using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
-using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;

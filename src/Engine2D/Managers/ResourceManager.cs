@@ -8,12 +8,7 @@ using Engine2D.SavingLoading;
 using Engine2D.UI.Browsers;
 using KDBEngine.Shaders;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Engine2D.Components.Sprites.SpriteAnimations;
-using OpenTK.Graphics.ES20;
 
 namespace Engine2D.Managers
 {

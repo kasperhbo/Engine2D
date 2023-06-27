@@ -3,7 +3,6 @@
 using System.Reflection;
 using Engine2D.Components;
 using Engine2D.Core;
-using Engine2D.GameObjects;
 using Engine2D.Logging;
 
 #endregion

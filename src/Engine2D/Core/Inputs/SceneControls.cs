@@ -7,7 +7,6 @@ using ImGuiNET;
 using ImGuizmoNET;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using SixLabors.ImageSharp.Formats.Gif;
 
 namespace Engine2D.Core.Inputs;
 

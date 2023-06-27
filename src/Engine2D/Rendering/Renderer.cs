@@ -1,16 +1,12 @@
 ﻿#region
 
-using System.Diagnostics;
 using Engine2D.Cameras;
 using Engine2D.Components;
-using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.GameObjects;
-using Engine2D.Logging;
 using Engine2D.Testing;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 
 #endregion

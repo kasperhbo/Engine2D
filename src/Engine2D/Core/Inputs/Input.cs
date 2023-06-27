@@ -2,9 +2,7 @@
 
 using System.Numerics;
 using Engine2D.Cameras;
-using Engine2D.UI;
 using Engine2D.UI.Viewports;
-using Engine2D.Utilities;
 using ImGuiNET;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using Vector2 = System.Numerics.Vector2;

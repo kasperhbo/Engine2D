@@ -3,8 +3,6 @@
 using System.Numerics;
 using Engine2D.Cameras;
 using Engine2D.Core;
-using Engine2D.Core.Inputs;
-using Engine2D.Managers;
 using Engine2D.Testing;
 using ImGuiNET;
 

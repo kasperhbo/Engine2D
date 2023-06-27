@@ -1,14 +1,6 @@
 #region
 
-using System.Numerics;
-using Engine2D.Cameras;
-using Engine2D.Components.TransformComponents;
-using Engine2D.Core;
 using Engine2D.Core.Inputs;
-using Engine2D.GameObjects;
-using ImGuiNET;
-using ImGuizmoNET;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 #endregion
 

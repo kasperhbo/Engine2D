@@ -1,7 +1,6 @@
 ﻿#region
 
 using System.Numerics;
-using System.Resources;
 using System.Runtime.InteropServices;
 using System.Text;
 using Engine2D.Components;
@@ -11,9 +10,6 @@ using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.Logging;
 using Engine2D.Rendering;
-using Engine2D.SavingLoading;
-using Engine2D.UI.ImGuiExtension;
-using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
 using OpenTK.Windowing.Common;

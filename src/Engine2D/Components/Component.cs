@@ -6,7 +6,6 @@ using Engine2D.Flags;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
-using Engine2D.Utilities;
 using Newtonsoft.Json;
 using OpenTK.Windowing.Common;
 using Vector2 = System.Numerics.Vector2;

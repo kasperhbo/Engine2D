@@ -1,9 +1,4 @@
-﻿using System.Numerics;
-using Engine2D.Components.Sprites;
-using Engine2D.Core;
-using Engine2D.Managers;
-using ImGuiNET;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Engine2D.Components.SpriteAnimations;
 

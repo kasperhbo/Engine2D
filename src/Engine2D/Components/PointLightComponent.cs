@@ -4,7 +4,6 @@ using Engine2D.Components.TransformComponents;
 using Engine2D.Flags;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
-using Engine2D.Utilities;
 using Newtonsoft.Json;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;

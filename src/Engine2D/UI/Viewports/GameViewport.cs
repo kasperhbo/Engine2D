@@ -1,8 +1,6 @@
 ﻿#region
 
-using System.Numerics;
 using Engine2D.Core.Inputs;
-using ImGuiNET;
 
 #endregion
 

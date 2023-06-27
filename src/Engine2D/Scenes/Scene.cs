@@ -1,22 +1,15 @@
 ﻿#region
 
-using System.Numerics;
-using Box2DSharp.Collision.Shapes;
 using Box2DSharp.Dynamics;
 using Engine2D.Cameras;
 using Engine2D.Components;
-using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
-using Engine2D.Core.Inputs;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
-using Engine2D.UI;
-using Engine2D.Utilities;
 using Newtonsoft.Json;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 #endregion
 

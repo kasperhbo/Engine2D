@@ -1,10 +1,7 @@
 ﻿#region
 
-using Engine2D.Cameras;
-using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
-using Engine2D.Rendering;
 using Engine2D.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

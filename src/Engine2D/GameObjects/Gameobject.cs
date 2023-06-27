@@ -1,7 +1,6 @@
 ﻿#region
 
 using System.Numerics;
-using System.Runtime.InteropServices;
 using Engine2D.Components;
 using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.TransformComponents;
@@ -13,7 +12,6 @@ using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
-using OpenTK.Compute.OpenCL;
 using OpenTK.Windowing.Common;
 
 #endregion

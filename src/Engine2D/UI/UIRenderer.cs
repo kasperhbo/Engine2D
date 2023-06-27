@@ -3,7 +3,6 @@
 using System.Numerics;
 using Dear_ImGui_Sample;
 using Engine2D.Core;
-using Engine2D.Core.Inputs;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.UI.Browsers;

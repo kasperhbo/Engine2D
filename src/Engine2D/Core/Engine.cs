@@ -1,10 +1,8 @@
 ﻿#region
 
-using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.Sprites;
 using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Core.Inputs;
-using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;

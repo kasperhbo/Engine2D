@@ -1,11 +1,8 @@
 ﻿#region
 
 using System.Numerics;
-using System.Transactions;
 using Engine2D.Cameras;
-using Engine2D.Components.Sprites;
 using Engine2D.Components.TransformComponents;
-using Engine2D.Core;
 using Engine2D.Core.Inputs;
 using Engine2D.UI;
 using OpenTK.Windowing.Common;

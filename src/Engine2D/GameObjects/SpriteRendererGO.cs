@@ -1,9 +1,6 @@
 ﻿#region
 
-using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
-using Engine2D.UI.ImGuiExtension;
-using ImGuiNET;
 
 #endregion
 
