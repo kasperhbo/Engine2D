@@ -62,13 +62,11 @@ public static class SceneControls
 
     private static void MouseControls()
     {
-        if (Input.MousePressed(MouseButton.Left))
+        if (Input.MousePressed(MouseButton.Left) && !ImGui.IsMouseDragging(ImGuiMouseButton.Left))
         {
             if(UiRenderer.CurrentEditorViewport.GetWantCaptureMouse())
-            {
-                Console.WriteLine("want captuse mouse");
+            {                
                 var mouseScreenPos = Input.MouseEditorPos;
-                Console.WriteLine("mouseScreenPos: " + mouseScreenPos);
                 for (int i = 0; i < Engine.Get().CurrentScene.GameObjects.Count; i++)
                 {
                     var go = Engine.Get().CurrentScene.GameObjects[i];
@@ -93,7 +91,7 @@ public static class SceneControls
         {
             var selectedGo = (Gameobject)Engine.Get().CurrentSelectedAsset;
         
-        
+            
             if (selectedGo != null)
             {
                 if (Input.KeyPressed(Keys.Q))
