@@ -1,13 +1,16 @@
 ﻿#region
 
+using System.Diagnostics;
 using Engine2D.Cameras;
 using Engine2D.Components;
+using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Testing;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 
 #endregion
@@ -118,9 +121,10 @@ internal class Renderer
                         GL.Disable(EnableCap.Blend);
                         GL.Enable(EnableCap.Blend);
                         GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
-
+                        AddGridLines(editorCamera);
                         foreach (var batch in RenderBatches) batch.Render(editorCamera, LightmapTexture, this);
 
+                        DebugDraw.Render(editorCamera);
                         if (Settings.s_IsEngine)
                             EditorGameBuffer.UnBind();
                     }
@@ -240,5 +244,58 @@ internal class Renderer
         // ImGui.Text("Sprites: " + batch.SpriteCount);
         // ImGui.Text("Free texture room" + batch.GetTextureRoom());
         ImGui.End();
+    }
+    
+    private void AddGridLines(Camera camera)
+    {
+        System.Numerics.Vector2 cameraPos = camera.Parent.GetComponent<Transform>().Position;
+        System.Numerics.Vector2 projectionSize = camera.ProjectionSize;
+
+        float originalWidth = Settings.GRID_WIDTH;
+        float originalHeight = Settings.GRID_HEIGHT;
+
+        float newWidth = originalWidth   * (float)Math.Floor(camera.Size);
+        float newHeight = originalHeight * (float)Math.Floor(camera.Size);
+
+        Console.WriteLine((float)Math.Floor(camera.Size));
+        
+        if (newWidth < originalWidth)
+        {
+            newWidth = originalWidth;
+        }
+
+        if (newHeight < originalHeight)
+            newHeight = originalHeight;
+            
+
+        float firstX = ((int)Math.Floor(cameraPos.X / newWidth)) * newWidth;
+        float firstY = ((int)Math.Floor(cameraPos.Y / newHeight)) * newHeight;
+
+        firstX -= newWidth/2;
+        firstY -=newHeight/2;
+        
+        
+        
+        
+        int numVtLines = (int)(projectionSize.X * camera.Size / newWidth) + 2;
+        int numHzLines = (int)(projectionSize.Y * camera.Size / newHeight) + 2;
+
+        float width = (int)(projectionSize.X * camera.Size) + (5 * newWidth);
+        float height = (int)(projectionSize.Y * camera.Size) + (5 * newHeight);
+
+        int maxLines = Math.Max(numVtLines, numHzLines);
+        OpenTK.Mathematics.Vector4 color = new OpenTK.Mathematics.Vector4(0.2f, 0.2f, 0.2f,1f);
+        for (int i=0; i < maxLines; i++) {
+            float x = firstX + (newWidth * i);
+            float y = firstY + (newHeight * i);
+
+            if (i < numVtLines) {
+                DebugDraw.AddLine2D(new OpenTK.Mathematics.Vector2(x, firstY), new OpenTK.Mathematics.Vector2(x, firstY + height), color, camera);
+            }
+
+            if (i < numHzLines) {
+                DebugDraw.AddLine2D(new OpenTK.Mathematics.Vector2(firstX, y), new OpenTK.Mathematics.Vector2(firstX + width, y), color, camera);
+            }
+        }
     }
 }

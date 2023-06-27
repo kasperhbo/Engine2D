@@ -245,6 +245,8 @@ internal static class Settings
 {
     public static bool s_IsEngine = true;
     public static bool s_RenderDebugWindowSeperate = true;
+    public static float GRID_WIDTH = 16;
+    public static float GRID_HEIGHT = 16;
 }
 
 //Project settings

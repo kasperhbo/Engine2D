@@ -133,13 +133,9 @@ public class Scene
                     EditorCamera.Parent.GetComponent<Transform>().Position = go.GetComponent<Transform>().Position;
             }
         }
-
-        //Console.WriteLine(MouseListener.GetWorld());
+        
         var pos =  Input.MouseEditorPos;
-        Console.WriteLine(pos);
-
         GameObjects[4].GetComponent<Transform>().Position = new(pos.X, pos.Y);
-
 
     }
     
