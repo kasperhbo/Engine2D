@@ -70,10 +70,12 @@ internal abstract class ViewportWindow
 
         ImGui.Image(_frameBuffer.TextureID, new Vector2(WindowSize.X, WindowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
         
+        _isHovering = ImGui.IsItemHovered();
+        
         Origin = ImGui.GetItemRectMin();
         Size = ImGui.GetItemRectSize();
         
-        _isHovering = ImGui.IsItemHovered();
+        
     }
 
 

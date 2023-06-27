@@ -97,4 +97,11 @@ public class Transform : Component
     {
         return 120;
     }
+
+    public override Transform Clone()
+    {
+        Transform transform = new Transform();
+        Copy(transform, this);
+        return transform;
+    }
 }

@@ -36,4 +36,10 @@ internal class BoxCollider2D : Component
     {
         
     }
+
+    public override object Clone()
+    {
+        throw new NotImplementedException();
+        return base.Clone();
+    }
 }

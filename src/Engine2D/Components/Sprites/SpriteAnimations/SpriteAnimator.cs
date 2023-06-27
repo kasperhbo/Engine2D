@@ -151,4 +151,11 @@ internal class SpriteAnimator : Component
             ImGui.EndDragDropTarget();
         }
     }
+
+    public override SpriteAnimator Clone()
+    {
+        SpriteAnimator clone = new SpriteAnimator();
+        clone._animationPath = _animationPath;
+        return clone;
+    }
 }

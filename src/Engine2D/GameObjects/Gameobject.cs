@@ -13,17 +13,19 @@ using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Compute.OpenCL;
 using OpenTK.Windowing.Common;
 
 #endregion
 
 namespace Engine2D.GameObjects;
 
-public class Gameobject : Asset
+public class Gameobject : Asset, ICloneable
 {
-    [JsonProperty]internal List<Component> Components = new();
-    [JsonProperty]internal string Name = "";
-    [JsonProperty]internal int ParentUid = -1;
+    [JsonProperty] internal List<Component> Components = new();
+    [JsonProperty] internal string Name = "";
+    [JsonProperty] internal int ParentUid = -1;
+    [JsonProperty] private bool _canBeSelected = true;
     
     [JsonIgnore] private Gameobject _parent;
     [JsonIgnore] internal List<Gameobject> Childs = new();
@@ -31,7 +33,8 @@ public class Gameobject : Asset
     [JsonIgnore] bool _isPopupOpen = false;
     
     [JsonIgnore] private List<Component> _toReset = new();
-
+    [JsonIgnore] public Transform? Transform => GetComponent<Transform>();
+    
     //UIDS
     internal int UID = -1;
 
@@ -56,7 +59,6 @@ public class Gameobject : Asset
         this.Components = components;
         UID = uid;
         ParentUid = parentUid;
-        GetUID();
     }
 
     private void GetUID()
@@ -68,6 +70,7 @@ public class Gameobject : Asset
 
     internal void Init(Renderer? renderer)
     {
+        GetUID();
         if (GetComponent<Transform>() == null)
         {
             Log.Warning(Name + " Has no Transform Component, Adding one");
@@ -133,7 +136,6 @@ public class Gameobject : Asset
         
         foreach (var component in _toReset)
         {
-            //Add the clones back
             AddComponent(component);
         }
     }
@@ -204,6 +206,10 @@ public class Gameobject : Asset
         ImGui.SameLine();
         ImGui.Text(" UID: " + UID);
         ImGui.Separator();
+
+        ImGui.Text("Can be selected: ");
+        ImGui.SameLine();
+        ImGui.Checkbox("##CanBeSelected", ref _canBeSelected);
         
         if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X - 30, 30)))
         {
@@ -264,5 +270,47 @@ public class Gameobject : Asset
 
     }
 
+
+    public bool AABB(float pX, float pY)
+    {
+        if (!_canBeSelected) return false;
+        //Check if the point is inside the gameobject
+        var transform = GetComponent<Transform>();
+        if (transform == null) return false;
+        var pos = transform.Position;
+        var size = transform.Size;
+        var spr = GetComponent<SpriteRenderer>();
+        if (spr != null)
+        {
+            if (spr.Sprite != null)
+            {
+                size += new Vector2(spr.Sprite.Width, spr.Sprite.Height);
+            }
+        }
+        
+        var halfSize = size / 2;
+        var x1 = pos.X - halfSize.X;
+        var x2 = pos.X + halfSize.X;
+        var y1 = pos.Y - halfSize.Y;
+        var y2 = pos.Y + halfSize.Y;
+        
+        bool inBox1 = pX >= x1;
+        bool inBox2 = pX <= x2;
+        bool inBox3 = pY >= y1;
+        bool inBox4 = pY <= y2;
+        
+        return inBox1 && inBox2 && inBox3 && inBox4;
+    }
     
+    public object Clone()
+    {
+        Gameobject clone = (Gameobject)this.MemberwiseClone();
+        clone.Components = new();
+        foreach (var component in Components)
+        {
+            clone.AddComponent((Component)component.Clone());
+        }
+        
+        return clone;
+    }
 }

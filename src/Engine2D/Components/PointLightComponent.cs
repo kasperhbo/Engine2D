@@ -61,4 +61,10 @@ internal class PointLightComponent : Component
     {
         return this.GetType().FullName;
     }
+
+    public override object Clone()
+    {
+        throw new NotImplementedException();
+        return base.Clone();
+    }
 }

@@ -57,14 +57,15 @@ public class SpriteRenderer : Component
     [JsonIgnore] [ShowUI(show = false)]private Transform _parentTransform { get; set; } = null!;
     [JsonIgnore] [ShowUI(show = false)]private Transform _lastTransform { get; set; } = new();
     [JsonIgnore]  [ShowUI(show = false)] private Vector4 _lastColor { get; set; } = new();
+    [JsonIgnore]private int _lastSpriteSheetIndex = -1;
     
-    [JsonProperty][ShowUI (show = false)] internal bool HasSpriteSheet = false;
-    [JsonProperty][ShowUI (show = false)] internal string? SpriteSheetPath = "";
+    [JsonProperty][ShowUI (show = false)] internal bool    HasSpriteSheet         = false;
+    [JsonProperty][ShowUI (show = false)] internal string? SpriteSheetPath        = "";
 
-    [JsonProperty] internal int ZIndex = 0;
-    [JsonProperty] internal Vector4 Color = new(255,255,255,255);
-    [JsonProperty] internal int SpriteSheetSpriteIndex = 0;
-    private int _lastSpriteSheetIndex = -1;
+    [JsonProperty] internal                       int      ZIndex                 = 0;
+    [JsonProperty] internal                       Vector4  Color                  = new(255,255,255,255);
+    [JsonProperty] internal                       int      SpriteSheetSpriteIndex = 0;
+
 
 
     public override void StartPlay()
@@ -159,6 +160,11 @@ public class SpriteRenderer : Component
 
     public override void Destroy()
     {
+        if (_renderer == null)
+            _renderer = Engine.Get().CurrentScene.Renderer;
+        if (_renderer == null) return;
+        
+        _renderer.RemoveSprite(this.Parent);
         base.Destroy();
     }
 
@@ -209,8 +215,23 @@ public class SpriteRenderer : Component
             ImGui.EndDragDropTarget();
         }
     }
-    
-    
+
+    public override SpriteRenderer Clone()
+    {
+        SpriteRenderer clone = new SpriteRenderer();
+
+        clone.HasSpriteSheet = this.HasSpriteSheet;
+        clone.SpriteSheetPath = this.SpriteSheetPath;
+        clone.ZIndex = this.ZIndex;
+        clone.Color = this.Color;
+        clone.SpriteSheetSpriteIndex = this.SpriteSheetSpriteIndex;
+
+        clone.SetSprite(clone.SpriteSheetSpriteIndex, clone.SpriteSheetPath);
+        
+        return clone;
+    }
+
+
     /// <summary>
     /// For loading the sprites from the sprite sheet for drag and drop
     /// </summary>

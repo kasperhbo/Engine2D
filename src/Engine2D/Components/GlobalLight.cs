@@ -38,4 +38,10 @@ internal class GlobalLight : Component
     {
         return this.GetType().FullName;
     }
+
+    public override object Clone()
+    {
+        throw new NotImplementedException();
+        return base.Clone();
+    }
 }

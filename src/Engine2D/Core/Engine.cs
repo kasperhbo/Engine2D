@@ -67,16 +67,6 @@ namespace Engine2D.Core
         private void Update(FrameEventArgs args)
         {
             CurrentScene?.Update(args);
-            
-            if(Input.KeyPressed(Keys.Delete))
-            {
-                Console.WriteLine("Try to delete asset");
-                if (CurrentSelectedAsset != null)
-                {
-                    CurrentSelectedAsset.IsDead = true;
-                }
-            }
-                
         }
 
         public static double DeltaTime = 0;
@@ -192,6 +182,8 @@ namespace Engine2D.Core
             //Updates
             UpdateFrame += Update;
             RenderFrame += Render;
+            
+            UpdateFrame += SceneControls.Update;
 
             //Keyboards
             base.MouseWheel += MouseWheel;

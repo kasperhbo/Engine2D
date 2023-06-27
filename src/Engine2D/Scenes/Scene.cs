@@ -122,25 +122,14 @@ public class Scene
     private void EditorUpdate(FrameEventArgs args)
     {
         foreach (var obj in GameObjects) obj.EditorUpdate((float)Engine.DeltaTime);
-
-        if (Engine.Get().CurrentSelectedAsset != null)
-        {
-            if (Input.KeyPressed(Keys.F))
-            {
-                Gameobject? go = (Gameobject)Engine.Get().CurrentSelectedAsset;
-
-                if (go != null)
-                    EditorCamera.Parent.GetComponent<Transform>().Position = go.GetComponent<Transform>().Position;
-            }
-        }
-        
-        var pos =  Input.MouseEditorPos;
-        GameObjects[4].GetComponent<Transform>().Position = new(pos.X, pos.Y);
+        // var pos =  Input.MouseEditorPos;
+        // GameObjects[4].GetComponent<Transform>().Position = new(pos.X, pos.Y);
 
     }
     
     /// <summary>
     /// Runs every frame that the game is running
+    /// </summary>
     /// </summary>
     /// <param name="args"></param>
     private void GameUpdate(FrameEventArgs args)
