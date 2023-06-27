@@ -37,7 +37,7 @@ namespace Engine2D.Core
         internal Animation? CurrentSelectedAnimationAssetBrowserAsset   { get; set; } = null;
         
 
-        public Scene? CurrentScene { get; private set; }
+        public Scene CurrentScene { get; private set; }
 
         internal void SwitchScene(string newSceneName)
         {

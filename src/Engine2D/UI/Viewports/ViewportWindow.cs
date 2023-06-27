@@ -12,11 +12,11 @@ namespace Engine2D.UI.Viewports;
 
 internal abstract class ViewportWindow
 {
-    protected Camera? Camera;
+    protected Camera Camera;
     protected Vector2 Origin;
     protected Vector2 Size;
     
-    private TestFrameBuffer? _frameBuffer;
+    private TestFrameBuffer _frameBuffer;
     
     private bool _isHovering;
     private string _title;
@@ -29,7 +29,7 @@ internal abstract class ViewportWindow
     public Vector2 WindowSize { get; set; }
     public Vector2 WindowPos { get; set; }
 
-    internal void Begin(string title, Camera? cameraToRender, TestFrameBuffer? buffer)
+    internal void Begin(string title, Camera cameraToRender, TestFrameBuffer buffer)
     {
         Camera = cameraToRender;
         _frameBuffer = buffer;
@@ -41,9 +41,9 @@ internal abstract class ViewportWindow
         End();
     }
     
-    internal abstract void BeforeImageRender();
+    protected abstract void BeforeImageRender();
 
-    internal virtual void RenderImage()
+    protected virtual void RenderImage()
     {
         ImGui.Begin(_title,
             ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar);
@@ -76,23 +76,19 @@ internal abstract class ViewportWindow
         
     }
 
-
-
+    protected abstract void AfterImageRender();
 
     public bool GetWantCaptureMouse()
     {
         return _isHovering;
     }
-    
-    internal abstract void AfterImageRender();
 
-    internal virtual void End()
+    private void End()
     {
         ImGui.End();
     }
 
-
-    internal virtual Vector2 GetLargestSizeForViewport()
+    private Vector2 GetLargestSizeForViewport()
     {
         var windowSize = ImGui.GetContentRegionAvail();
 
@@ -107,7 +103,7 @@ internal abstract class ViewportWindow
         return new(aspectWidth, aspectHeight);
     }
 
-    internal Vector2 GetCenteredPositionForViewport(Vector2 aspectSize)
+    private Vector2 GetCenteredPositionForViewport(Vector2 aspectSize)
     {
         var windowSize = ImGui.GetContentRegionAvail();
 

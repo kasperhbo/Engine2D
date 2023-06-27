@@ -9,12 +9,11 @@ namespace Engine2D.UI.Viewports;
 internal class EditorViewport : ViewportWindow
 {
    
-    internal override void BeforeImageRender()
+    protected override void BeforeImageRender()
     {
-        // Camera.ProjectionSize = new Vector2(1920, 1080);
     }
 
-    internal override void AfterImageRender()
+    protected override void AfterImageRender()
     {
         Input.CalculateMouseEditor(this, Camera);
         SceneControls.GuizmoControls(Origin, Size, Camera);

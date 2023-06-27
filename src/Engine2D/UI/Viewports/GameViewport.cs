@@ -8,11 +8,11 @@ namespace Engine2D.UI.Viewports;
 
 internal class GameViewport : ViewportWindow
 {
-    internal override void BeforeImageRender()
+    protected override void BeforeImageRender()
     {
     }
 
-    internal override void AfterImageRender()
+    protected override void AfterImageRender()
     {
         Input.CalculateMouseGame(this, Camera);
     }
