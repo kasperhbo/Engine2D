@@ -17,10 +17,11 @@ public class Transform : Component
     [JsonProperty]public Vector2 Position;
     [JsonIgnore]  public Vector3 EulerDegrees;
     [JsonIgnore]  public Vector3 EulerRadians;
+    [JsonIgnore] public Vector2 DraggingPos = new();
     [JsonProperty]public Quaternion Rotation;
+    
     [JsonProperty]public Vector2 Size;
-
-
+    
     internal Transform()
     {
         Position = new Vector2();
