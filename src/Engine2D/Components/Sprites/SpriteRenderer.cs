@@ -157,17 +157,7 @@ public class SpriteRenderer : Component
         _renderer.AddSpriteRenderer(this);
         IsDirty = true;
     }
-
-    public override void Destroy()
-    {
-        if (_renderer == null)
-            _renderer = Engine.Get().CurrentScene.Renderer;
-        if (_renderer == null) return;
-        
-        _renderer.RemoveSprite(this.Parent);
-        base.Destroy();
-    }
-
+    
     public void Refresh()
     {
         if (SpriteSheetPath != "" && HasSpriteSheet == true)

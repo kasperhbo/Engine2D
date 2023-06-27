@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Reflection;
+using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
@@ -68,7 +69,8 @@ public abstract class Component : ICloneable
     
     public virtual void Destroy()
     {
-        
+        if(this.Parent != null)
+            Engine.Get().CurrentScene?.Renderer?.RemoveSprite(this.Parent);
     }
 
     public virtual void ImGuiFields()
