@@ -239,7 +239,7 @@ public class Scene
 
     public void RemoveGameObject(Gameobject go)
     {
-        Renderer.RemoveSprite(go);
+        go.Destroy();
         Engine.Get().CurrentSelectedAsset = null;
     }
 }

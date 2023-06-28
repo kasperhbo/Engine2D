@@ -40,6 +40,8 @@ public class Transform : Component
             _size = value;
         }
     }
+    
+    [JsonIgnore]public Vector2 SmallSize => new(_size.X, _size.Y);
 
     internal Transform()
     {

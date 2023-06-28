@@ -27,7 +27,7 @@ public class Gameobject : Asset, ICloneable
     [JsonProperty] private bool _canBeSelected = true;
     [JsonProperty] internal List<Component> Components = new();
     
-    [JsonIgnore] private Gameobject _parent;
+    [JsonIgnore] private Gameobject? _parent;
     [JsonIgnore] internal List<Gameobject> Childs = new();
     [JsonIgnore] internal bool Serialize = true;
     [JsonIgnore] bool _isPopupOpen = false;
@@ -98,8 +98,9 @@ public class Gameobject : Asset, ICloneable
         foreach (var component in Components) component.Update(args);
         if (ParentUid != -1)
         {
+            if (_parent == null) return;
             this.Transform.Position = _parent.Transform.Position ;
-            this.Transform.Size =     _parent.Transform.Size     ;
+            this.Transform.Size =     _parent.Transform.SmallSize;
             this.Transform.Rotation = _parent.Transform.Rotation ;
         }
     }
@@ -156,7 +157,21 @@ public class Gameobject : Asset, ICloneable
 
     internal void Destroy()
     {
+        if (_parent != null)
+            _parent.RemoveChild(this);
+
+        for (int i = 0; i < Childs.Count; i++)
+        {
+            var child = Childs[i];
+            child.Destroy();
+            i--;
+        }
         foreach (var component in Components) component.Destroy();
+    }
+
+    private void RemoveChild(Gameobject gameobject)
+    {
+        Childs.Remove(gameobject);
     }
 
     public Component? AddComponent(Component? component)

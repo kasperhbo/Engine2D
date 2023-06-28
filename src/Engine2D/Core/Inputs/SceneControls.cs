@@ -25,8 +25,6 @@ public static class SceneControls
         {
             if (Input.KeyPressed(Keys.Delete))
             {
-                Console.WriteLine("Try to delete asset");
-
                 Engine.Get().CurrentSelectedAsset.IsDead = true;
             }
             
