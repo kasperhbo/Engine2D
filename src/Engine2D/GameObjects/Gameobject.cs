@@ -7,6 +7,7 @@ using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
+using Engine2D.Physics;
 using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
 using Engine2D.Utilities;
@@ -104,7 +105,7 @@ public class Gameobject : Asset, ICloneable
         foreach (var component in Components) component.GameUpdate(dt);
     }
 
-    public void StartPlay()
+    internal void StartPlay(Physics2DWorld physics2DWorld)
     {
         _toReset = new();
         
@@ -119,6 +120,11 @@ public class Gameobject : Asset, ICloneable
         foreach (var component in Components)
         {
             component.StartPlay();
+            
+            if (component is RigidBody)
+            {
+                physics2DWorld.AddRigidbody(component as RigidBody);
+            }
         }
     }
     
@@ -230,6 +236,13 @@ public class Gameobject : Asset, ICloneable
                     _isPopupOpen = false;
                 }
             }
+            if(ImGui.MenuItem("Rigidbody"))
+            {
+                AddComponent(new RigidBody());
+                AddComponent(new BoxCollider2D());
+                _isPopupOpen = false;
+            }
+            
             if(ImGui.MenuItem("Sprite renderer"))
             {
                 AddComponent(new SpriteRenderer());

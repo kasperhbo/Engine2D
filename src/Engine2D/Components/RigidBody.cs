@@ -1,6 +1,8 @@
 ﻿#region
 
 using Box2DSharp.Dynamics;
+using Engine2D.UI.ImGuiExtension;
+using ImGuiNET;
 using Newtonsoft.Json;
 using OpenTK.Windowing.Common;
 
@@ -12,20 +14,14 @@ namespace Engine2D.Components;
 internal class RigidBody : Component
 {
     [JsonProperty]internal bool FixedRotation = false;
+    [JsonProperty] internal BodyType BodyType;
+    
 
-    [JsonIgnore] internal Body RuntimeBody = null;
+    [JsonIgnore] internal Body? RuntimeBody = null;
 
-    internal RigidBody()
+    internal RigidBody() : base()
     {
     }
-
-    internal RigidBody(BodyType bodyType)
-    {
-        BodyType = bodyType;
-    }
-
-    internal BodyType BodyType { get; set; }
-
 
     public override void Update(FrameEventArgs args)
     {
@@ -35,6 +31,10 @@ internal class RigidBody : Component
     public override void GameUpdate(double dt)
     {
         base.GameUpdate(dt);
+        if (RuntimeBody != null)
+        {
+            Parent.Transform.Position = RuntimeBody.GetPosition();
+        }
     }
 
     public override void StartPlay()
@@ -42,14 +42,21 @@ internal class RigidBody : Component
         
     }
 
+    public override void ImGuiFields()
+    {
+        Gui.DrawProperty("Bodytype: ", ref BodyType);
+    }
+
     public override string GetItemType()
     {
         return this.GetType().FullName;
     }
 
-    public override object Clone()
+    public override RigidBody Clone()
     {
-        throw new NotImplementedException();
-        return base.Clone();
+        RigidBody rb = new RigidBody();
+        rb.FixedRotation = FixedRotation;
+        rb.BodyType = BodyType;
+        return rb;
     }
 }

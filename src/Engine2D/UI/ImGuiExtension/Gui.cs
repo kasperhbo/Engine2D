@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Numerics;
+using Box2DSharp.Dynamics;
 using Engine2D.UI.Browsers;
 using ImGuiNET;
 using static ImGuiNET.ImGui;
@@ -140,6 +141,38 @@ internal static class Gui
         TableSetColumnIndex(1);
         Vector4Prop(ref value);
         PopID();
+    }
+    
+    
+    internal static void DrawProperty(string label, ref BodyType currentBodyType)
+    {
+        PushID(label);
+        TableNextRow();
+        TableSetColumnIndex(0);
+        Text(label);
+        TableSetColumnIndex(1);
+        Combo(ref currentBodyType);
+        PopID();
+    }
+    
+    private static void Combo(ref BodyType currentBodyType)
+    {
+        if (BeginCombo("##bodytype", currentBodyType.ToString()))
+        {
+            if (Selectable("Static", currentBodyType == BodyType.StaticBody))
+            {
+                currentBodyType = BodyType.StaticBody;
+            }
+            if (Selectable("Kinematic", currentBodyType == BodyType.KinematicBody))
+            {
+                currentBodyType = BodyType.KinematicBody;
+            }
+            if (Selectable("Dynamic", currentBodyType == BodyType.DynamicBody))
+            {
+                currentBodyType = BodyType.DynamicBody;
+            }
+            EndCombo();
+        }
     }
     
     internal static void Vector2Prop(ref Vector2 value)
@@ -378,6 +411,7 @@ internal static class Gui
     }
 
     #endregion
+
 }
 
 internal class TopBarButton

@@ -6,6 +6,7 @@ using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
+using Engine2D.Physics;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Newtonsoft.Json;
@@ -24,18 +25,18 @@ public class Scene
 
     [JsonProperty]internal string ScenePath { get; private set; } = "NoScene";
     [JsonProperty]internal GlobalLight GlobalLight { get; set; } = null;
-    
+
+    [JsonIgnore] private Physics2DWorld? _physics2DWorld;
     
     private void StartPlay()
     {
         SaveLoad.SaveScene(this);
-        
-        
-        //_physicsWorld = new World(new Vector2(0, -9.8f));
 
+        _physics2DWorld = new();
+        
         foreach (var go in GameObjects)
         {
-            go.StartPlay();
+            go.StartPlay(_physics2DWorld);
         }
     }
   
@@ -45,6 +46,8 @@ public class Scene
         {
             go.StopPlay();
         }
+
+        _physics2DWorld = null;
     }
     
      
@@ -115,9 +118,6 @@ public class Scene
     private void EditorUpdate(FrameEventArgs args)
     {
         foreach (var obj in GameObjects) obj.EditorUpdate((float)Engine.DeltaTime);
-        // var pos =  Input.MouseEditorPos;
-        // GameObjects[4].GetComponent<Transform>().Position = new(pos.X, pos.Y);
-
     }
     
     /// <summary>
@@ -128,6 +128,7 @@ public class Scene
     private void GameUpdate(FrameEventArgs args)
     {
         foreach (var obj in GameObjects) obj.GameUpdate((float)Engine.DeltaTime);
+        _physics2DWorld?.GameUpdate((float)args.Time);
     }
     
     internal virtual void Render(float dt)
@@ -202,8 +203,6 @@ public class Scene
             _isPlaying = value;
         }
     }
-
-    private World? _physicsWorld;
 
     #endregion
 
