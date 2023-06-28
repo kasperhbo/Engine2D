@@ -23,11 +23,11 @@ internal class SceneHierachyPanel : UIElement
 
     private void CreateHierachy()
     {
-        var _gameobjectsWithoutParents = GetGameObjects();
+        var gameobjectsWithoutParents = GetGameObjects();
 
-        for (var i = 0; i < _gameobjectsWithoutParents.Count; i++)
+        for (var i = 0; i < gameobjectsWithoutParents.Count; i++)
         {
-            var go = _gameobjectsWithoutParents[i];
+            var go = gameobjectsWithoutParents[i];
 
             DrawGameobjectNode(go);
         }
@@ -40,6 +40,9 @@ internal class SceneHierachyPanel : UIElement
         var flags = ImGuiTreeNodeFlags.FramePadding
                     | ImGuiTreeNodeFlags.DefaultOpen
                     | (selected ? ImGuiTreeNodeFlags.Selected : 0)
+                    | (go.Childs.Count == 0
+                        ? ImGuiTreeNodeFlags.Leaf
+                        : 0)
                     | ImGuiTreeNodeFlags.SpanAvailWidth
                     | ImGuiTreeNodeFlags.OpenOnArrow;
 
@@ -50,7 +53,6 @@ internal class SceneHierachyPanel : UIElement
 
         //Handle Item Clicked
         HierachyItemClicked(go);
-
 
         if (open)
         {
@@ -67,7 +69,7 @@ internal class SceneHierachyPanel : UIElement
     {
         if (ImGui.BeginDragDropTarget())
         {
-            var payload = ImGui.AcceptDragDropPayload("GAMEOBJECT_DROP");
+            var payload = ImGui.AcceptDragDropPayload("GAMEOBJECT_DROP_Hierachy");
             if (payload.IsValidPayload())
             {
                 Log.Message(string.Format("Dropping: {0}, onto: {1}", _currentlyDraggingOBJ.UID, draggingObject.UID));
@@ -80,7 +82,7 @@ internal class SceneHierachyPanel : UIElement
         if (ImGui.BeginDragDropSource())
         {
             _currentlyDragging = true;
-            ImGui.SetDragDropPayload("GAMEOBJECT_DROP", IntPtr.Zero, 0);
+            ImGui.SetDragDropPayload("GAMEOBJECT_DROP_Hierachy", IntPtr.Zero, 0);
             _currentlyDraggingOBJ = draggingObject;
             ImGui.EndDragDropSource();
         }
@@ -101,15 +103,15 @@ internal class SceneHierachyPanel : UIElement
 
     private List<Gameobject> GetGameObjects()
     {
-        var _gameobjectsWithoutParents = new List<Gameobject>();
+        var gameobjectsWithoutParents = new List<Gameobject>();
         for (var i = 0; i < Engine.Get().CurrentScene.GameObjects.Count; i++)
         {
             var go = Engine.Get().CurrentScene.GameObjects[i];
 
-            if (go.ParentUid == -1) _gameobjectsWithoutParents.Add(go);
+            if (go.ParentUid == -1) gameobjectsWithoutParents.Add(go);
         }
 
-        return _gameobjectsWithoutParents;
+        return gameobjectsWithoutParents;
     }
 
     internal override void Render()
@@ -120,6 +122,8 @@ internal class SceneHierachyPanel : UIElement
             {
                 if (ImGui.BeginPopupContextWindow("p"))
                 {
+                    if (ImGui.MenuItem("New Empty"))
+                        Engine.Get().CurrentScene.AddGameObjectToScene(new Gameobject("Empty"));
                     if (ImGui.MenuItem("New SpriteRenderer"))
                         Engine.Get().CurrentScene.AddGameObjectToScene(new SpriteRendererGo("SpriteRenderer"));
 

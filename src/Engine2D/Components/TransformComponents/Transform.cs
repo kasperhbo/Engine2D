@@ -13,6 +13,7 @@ namespace Engine2D.Components.TransformComponents;
 public class Transform : Component
 {
     [JsonProperty]public Vector2 Position;
+    [JsonProperty]public Vector2 LocalPosition;
     [JsonIgnore]  public Vector3 EulerDegrees;
     [JsonIgnore]  public Vector3 EulerRadians;
     [JsonIgnore]  public Vector2 DraggingPos = new();
@@ -99,11 +100,7 @@ public class Transform : Component
 
     internal Matrix4x4 GetTranslation()
     {
-        var result = Matrix4x4.Identity;
-        result *= Matrix4x4.CreateScale(new Vector3(_size.X, _size.Y, 1));
-        result *= Matrix4x4.CreateFromQuaternion(Rotation);
-        result *= Matrix4x4.CreateTranslation(Position.X, Position.Y, 0);
-        return result;
+        return GetTranslation(0, 0);
     }
 
     internal Matrix4x4 GetTranslation(float width, float height)
@@ -111,7 +108,11 @@ public class Transform : Component
         var result = Matrix4x4.Identity;
         result *= Matrix4x4.CreateScale(new Vector3(_size.X * width, _size.Y * height, 1));
         result *= Matrix4x4.CreateFromQuaternion(Rotation);
-        result *= Matrix4x4.CreateTranslation(Position.X, Position.Y, 0);
+        if(Parent?.ParentUid != -1)
+            result *= Matrix4x4.CreateTranslation(Position.X + LocalPosition.X, Position.Y + LocalPosition.Y, 0);
+        else
+            result *= Matrix4x4.CreateTranslation(Position.X , Position.Y , 0);
+        
         return result;
     }
 

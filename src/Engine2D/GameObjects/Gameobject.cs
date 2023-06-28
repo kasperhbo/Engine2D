@@ -204,6 +204,12 @@ public class Gameobject : Asset, ICloneable
         Components.Remove(comp);
     }
 
+    public void SetParent(Gameobject? parent)
+    {
+        if (parent == null) return;
+        SetParent(parent.UID);
+    }
+    
     internal void SetParent(int parentUID)
     {
         //TODO: DETACH THIS FROM PREV PARENT AND MAKE THIS SELF OWNED OBJ

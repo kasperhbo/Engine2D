@@ -50,8 +50,8 @@ public class SpriteRenderer : Component
         new(0, 1f)
     };
     
-    [JsonIgnore] [ShowUI(show = false)]private Transform _parentTransform { get; set; } = null!;
-    [JsonIgnore] [ShowUI(show = false)]private Transform _lastTransform { get; set; } = new();
+    [JsonIgnore] [ShowUI(show = false)]private Matrix4x4 _lastTranslation { get; set; } = new();
+    [JsonIgnore] [ShowUI(show = false)]private Matrix4x4 _currentTranslation { get; set; } = new();
     [JsonIgnore]  [ShowUI(show = false)] private Vector4 _lastColor { get; set; } = new();
     [JsonIgnore]private int _lastSpriteSheetIndex = -1;
     
@@ -90,7 +90,7 @@ public class SpriteRenderer : Component
             _renderer = Engine.Get().CurrentScene.Renderer;
         }
 
-        _parentTransform = Parent.GetComponent<Transform>();
+        _currentTranslation = Parent.GetComponent<Transform>().GetTranslation();
         Refresh();
     }
 
@@ -103,13 +103,10 @@ public class SpriteRenderer : Component
             IsDirty = true;
         }
 
-        if (_parentTransform == null)
+        _currentTranslation = Parent.GetComponent<Transform>().GetTranslation();
+        if (_currentTranslation != _lastTranslation)
         {
-            _parentTransform = Parent.GetComponent<Transform>();
-        }
-        if (_parentTransform.Equals(_lastTransform))
-        {
-            Transform.Copy(_lastTransform, _parentTransform);
+            _lastTranslation = _currentTranslation;
             IsDirty = true;
         }
 
