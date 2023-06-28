@@ -66,7 +66,11 @@ public class Scene
 
         //Try to load scene if non existent this returns a new list 
         var gos = SaveLoad.LoadScene(ScenePath);
-        foreach (var go in gos) AddGameObjectToScene(go);
+        foreach (var go in gos)
+        {
+            GameObjects.Add(go);
+            go.Init(Renderer);
+        }
 
         Start();
     }
@@ -76,7 +80,16 @@ public class Scene
     /// </summary>
     internal virtual void Start()
     {
-        foreach (var go in GameObjects) go.Start();
+        foreach (var go in GameObjects)
+        {
+            go.Start();
+            if (go.GetComponent<Camera>() != null)
+            {
+                var cam = go.GetComponent<Camera>();
+                if(cam.IsMainCamera) CurrentMainGameCamera = cam;
+                
+            }
+        }
 
         if(Settings.s_IsEngine || CurrentMainGameCamera == null)
         {
@@ -143,9 +156,8 @@ public class Scene
 
     public void AddGameObjectToScene(Gameobject go)
     {
-        if (go.GetComponent<Camera>() != null && (CurrentMainGameCamera == null && go.Name != "EDITORCAMERA"))
+        if (go.GetComponent<Camera>() != null)
         {
-            Log.Succes(go.Name + " Is the new Main Camera");
             if(go.GetComponent<Camera>().IsMainCamera)
             {
                 CurrentMainGameCamera = go.GetComponent<Camera>();
@@ -159,7 +171,7 @@ public class Scene
 
         Engine.Get().CurrentSelectedAsset = go;
     }
-
+    
     internal virtual void Close()
     {
         if (EngineSettings.SaveOnClose)
@@ -170,13 +182,13 @@ public class Scene
     {
     }
 
-    internal Gameobject FindObjectByUID(int uid)
+    internal Gameobject? FindObjectByUID(int uid)
     {
         foreach (var go in GameObjects)
             if (go.UID == uid)
                 return go;
 
-        throw new Exception(string.Format("Gameobject with {0} not found", uid));
+        return null;
     }
 
     #region onplay

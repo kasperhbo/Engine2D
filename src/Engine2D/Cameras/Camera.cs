@@ -27,7 +27,7 @@ internal class Camera : Component
     [JsonProperty] internal Vector2 ProjectionSize = new(1920, 1080);
     [JsonProperty] internal Vector4 ClearColor = new(100, 149, 237, 255);
     [JsonProperty] internal float Size = 1f;
-    [JsonProperty] private bool _isMainCamera;
+    [JsonProperty] private bool _isMainCamera = true;
 
     public bool IsMainCamera
     {

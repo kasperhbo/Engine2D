@@ -21,10 +21,11 @@ namespace Engine2D.GameObjects;
 
 public class Gameobject : Asset, ICloneable
 {
-    [JsonProperty] internal List<Component> Components = new();
     [JsonProperty] internal string Name = "";
     [JsonProperty] internal int ParentUid = -1;
+    [JsonProperty] internal int UID = -1;
     [JsonProperty] private bool _canBeSelected = true;
+    [JsonProperty] internal List<Component> Components = new();
     
     [JsonIgnore] private Gameobject _parent;
     [JsonIgnore] internal List<Gameobject> Childs = new();
@@ -34,9 +35,6 @@ public class Gameobject : Asset, ICloneable
     [JsonIgnore] private List<Component> _toReset = new();
     [JsonIgnore] public Transform? Transform => GetComponent<Transform>();
     
-    //UIDS
-    internal int UID = -1;
-
     public Gameobject(string name)
     {
         Name = name;
@@ -86,6 +84,11 @@ public class Gameobject : Asset, ICloneable
     internal void Start()
     {
         foreach (var component in Components) component.Start();
+        
+        if (ParentUid != -1)
+        {
+            SetParent(ParentUid);
+        }
     }
     
     
@@ -93,6 +96,12 @@ public class Gameobject : Asset, ICloneable
     internal virtual void Update(FrameEventArgs args)
     {
         foreach (var component in Components) component.Update(args);
+        if (ParentUid != -1)
+        {
+            this.Transform.Position = _parent.Transform.Position ;
+            this.Transform.Size =     _parent.Transform.Size     ;
+            this.Transform.Rotation = _parent.Transform.Rotation ;
+        }
     }
 
     internal virtual void EditorUpdate(double dt)
@@ -104,7 +113,8 @@ public class Gameobject : Asset, ICloneable
     {
         foreach (var component in Components) component.GameUpdate(dt);
     }
-
+    
+    
     internal void StartPlay(Physics2DWorld physics2DWorld)
     {
         _toReset = new();
@@ -191,7 +201,13 @@ public class Gameobject : Asset, ICloneable
 
         ParentUid = parentUID;
         var parent = currentScene.FindObjectByUID(parentUID);
-
+        
+        if(parent == null)
+        {
+            Log.Error($"Couldn't find to uid: {ParentUid}, to attach {UID} to");
+            return;
+        }
+        
         parent.AddGameObjectChild(this);
 
         Log.Succes(string.Format("Succesfully attached uid: {0} to uid: {1}", UID, ParentUid));

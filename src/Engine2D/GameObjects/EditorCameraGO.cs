@@ -25,7 +25,8 @@ internal class EditorCameraGO : Gameobject
     {
         camera = new Camera
         {
-            Parent = this
+            Parent = this,
+            IsMainCamera = false
         };
 
         Components.Add(camera);
