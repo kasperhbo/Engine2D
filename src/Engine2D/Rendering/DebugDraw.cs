@@ -54,7 +54,7 @@ internal static class DebugDraw
 
     internal static void Render(Camera cam)
     {
-        AddGridLines(cam);
+        //AddGridLines(cam);
         
         if (_lines.Count <= 0) return;
         
@@ -156,25 +156,54 @@ internal static class DebugDraw
 
             if (i < numVtLines)
             {
-                AddLine2D(new Vector2(x, firstY), new Vector2(x, firstY + height), color, camera);
+                AddLine2D(new Vector2(x, firstY), new Vector2(x, firstY + height), color);
             }
 
             if (i < numHzLines)
             {
-                AddLine2D(new Vector2(firstX, y), new Vector2(firstX + width, y), color, camera);
+                AddLine2D(new Vector2(firstX, y), new Vector2(firstX + width, y), color);
             }
         }
     }
 
 
-    internal static void AddLine2D(Vector2 from, Vector2 to, Vector4 color, Camera camera) {
-        AddLine2D(from, to, color, 1, camera);
+    internal static void AddLine2D(Vector2 from, Vector2 to, Vector4 color) {
+        AddLine2D(from, to, color, 3);
     }
 
-    internal static void AddLine2D(Vector2 from, Vector2 to, Vector4 color, int lifetime, Camera camera)
+    internal static void AddLine2D(Vector2 from, Vector2 to, Vector4 color, int lifetime)
     {
         if (_lines.Count > MAX_LINES) return;
-        DebugDraw._lines.Add(new Line2D(new(from.X, from.Y), new(to.X, to.Y), color, 3));
+        _lines.Add(new Line2D(new(from.X, from.Y), new(to.X, to.Y), color, lifetime));
+    }
+
+    
+    // ==================================================
+    // Add Box2D methods
+    // ==================================================
+    internal static void AddBox2D(Vector2 center, Vector2 dimensions, float rotation) {
+        // TODO: ADD CONSTANTS FOR COMMON COLORS
+        AddBox2D(center, dimensions, rotation, new Vector4(0, 1, 0,1), 3);
+    }
+
+    internal static void AddBox2D(Vector2 center, Vector2 dimensions, float rotation, Vector4 color) {
+        AddBox2D(center, dimensions, rotation, color, 3);
+    }
+
+    internal static void AddBox2D(Vector2 center, Vector2 dimensions, float rotation,
+        Vector4 color, int lifetime) {
+        Vector2 min = center - (dimensions * (0.5f));
+        Vector2 max = center + (dimensions * (0.5f));
+
+        Vector2[] vertices = {
+            new Vector2(min.X, min.Y), new Vector2(min.X, max.Y),
+            new Vector2(max.X, max.Y), new Vector2(max.X, min.Y)
+        };
+        
+        AddLine2D(vertices[0], vertices[1], color, lifetime);
+        AddLine2D(vertices[0], vertices[3], color, lifetime);
+        AddLine2D(vertices[1], vertices[2], color, lifetime);
+        AddLine2D(vertices[2], vertices[3], color, lifetime);
     }
 
 }

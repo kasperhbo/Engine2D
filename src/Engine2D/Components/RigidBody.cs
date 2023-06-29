@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Numerics;
 using Box2DSharp.Dynamics;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
@@ -11,21 +12,30 @@ using OpenTK.Windowing.Common;
 namespace Engine2D.Components;
 
 [JsonConverter(typeof(ComponentSerializer))]
-internal class RigidBody : Component
+public class RigidBody : Component
 {
-    [JsonProperty]internal bool FixedRotation = false;
-    [JsonProperty] internal BodyType BodyType;
-    
+    [JsonProperty]public bool     FixedRotation  = false;
+    [JsonProperty]public BodyType BodyType          ;      
+    [JsonProperty]public float    GravityScale   = 1;   
+    [JsonProperty]public float    AngleVelocity  = 0;  
+    [JsonProperty]public Vector2  Velocity       = new(0,0);     
+    [JsonProperty]public float    LinearDamping  = 0;  
+    [JsonProperty]public float    AngularDamping = 0; 
 
-    [JsonIgnore] internal Body? RuntimeBody = null;
+    [JsonIgnore] public Body? RuntimeBody = null;
 
-    internal RigidBody() : base()
+    public RigidBody() : base()
     {
     }
 
     public override void Update(FrameEventArgs args)
     {
         
+    }
+
+    public void SetVelocity(Vector2 vel)
+    {
+        RuntimeBody?.ApplyForceToCenter(vel, true);
     }
 
     public override void GameUpdate(double dt)
@@ -54,9 +64,14 @@ internal class RigidBody : Component
 
     public override RigidBody Clone()
     {
-        RigidBody rb = new RigidBody();
-        rb.FixedRotation = FixedRotation;
-        rb.BodyType = BodyType;
-        return rb;
+        RigidBody clone = new RigidBody();
+        clone.FixedRotation = FixedRotation ; 
+        clone.BodyType      = BodyType      ; 
+        clone.GravityScale  = GravityScale  ; 
+        clone.AngleVelocity = AngleVelocity ; 
+        clone.Velocity      = Velocity      ; 
+        clone.LinearDamping = LinearDamping ; 
+        clone.AngularDamping= AngularDamping; 
+        return clone;            
     }
 }

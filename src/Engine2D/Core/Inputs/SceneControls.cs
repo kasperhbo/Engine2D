@@ -121,7 +121,7 @@ public static class SceneControls
                 var projection = vpCam.GetProjectionMatrix();
                 var translation = Matrix4x4.Identity;
                 
-                translation = selectedGo.GetComponent<Transform>().GetTranslation();
+                translation = selectedGo.GetComponent<Transform>().GetTranslation(includeSprite:false);
 
                 
                 ImGuizmo.Manipulate(ref view.M11, ref projection.M11,
@@ -145,9 +145,9 @@ public static class SceneControls
         
                     if (_currentOperation == OPERATION.ROTATE)
                         selectedGo.GetComponent<Transform>().SetRotation(q);
-        
-                    if (_currentOperation == OPERATION.SCALE)
-                        selectedGo.GetComponent<Transform>().Size = new Vector2(outScale.X, outScale.Y);
+                    //
+                    // if (_currentOperation == OPERATION.SCALE)
+                    //     selectedGo.GetComponent<Transform>().Size = new Vector2(outScale.X, outScale.Y);
                 }
             }
         }

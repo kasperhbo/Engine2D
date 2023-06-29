@@ -97,18 +97,19 @@ public class Transform : Component
                _size != other._size ||
                Rotation != other.Rotation;
     }
-
-    internal Matrix4x4 GetTranslation()
+    
+    
+    internal Matrix4x4 GetTranslation(bool includeSprite = true)
     {
-        return GetTranslation(0, 0);
+        return GetTranslation(0, 0, includeSprite);
     }
 
-    internal Matrix4x4 GetTranslation(float width, float height)
+    internal Matrix4x4 GetTranslation(float width, float height, bool includeSprite = true)
     {
         var result = Matrix4x4.Identity;
         result *= Matrix4x4.CreateScale(new Vector3(_size.X * width, _size.Y * height, 1));
         result *= Matrix4x4.CreateFromQuaternion(Rotation);
-        if(Parent?.ParentUid != -1)
+        if(Parent?.ParentUid != -1 && includeSprite)
             result *= Matrix4x4.CreateTranslation(Position.X + LocalPosition.X, Position.Y + LocalPosition.Y, 0);
         else
             result *= Matrix4x4.CreateTranslation(Position.X , Position.Y , 0);

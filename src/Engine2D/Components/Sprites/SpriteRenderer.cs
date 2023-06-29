@@ -89,8 +89,10 @@ public class SpriteRenderer : Component
         {
             _renderer = Engine.Get().CurrentScene.Renderer;
         }
-
-        _currentTranslation = Parent.GetComponent<Transform>().GetTranslation();
+        
+        if(Parent.GetComponent<Transform>()!=null)
+            _currentTranslation = Parent.GetComponent<Transform>().GetTranslation(includeSprite:true);
+        
         Refresh();
     }
 
@@ -103,7 +105,7 @@ public class SpriteRenderer : Component
             IsDirty = true;
         }
 
-        _currentTranslation = Parent.GetComponent<Transform>().GetTranslation();
+        _currentTranslation = Parent.GetComponent<Transform>().GetTranslation(includeSprite:true);
         if (_currentTranslation != _lastTranslation)
         {
             _lastTranslation = _currentTranslation;

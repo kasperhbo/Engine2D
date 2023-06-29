@@ -26,7 +26,7 @@ public class Scene
     [JsonProperty]internal string ScenePath { get; private set; } = "NoScene";
     [JsonProperty]internal GlobalLight GlobalLight { get; set; } = null;
 
-    [JsonIgnore] private Physics2DWorld? _physics2DWorld;
+    [JsonIgnore] public Physics2DWorld? _physics2DWorld;
     
     private void StartPlay()
     {

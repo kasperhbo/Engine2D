@@ -321,6 +321,7 @@ public class Gameobject : Asset, ICloneable
 
     public bool AABB(float pX, float pY)
     {
+        
         if (!_canBeSelected) return false;
         //Check if the point is inside the gameobject
         var transform = GetComponent<Transform>();
@@ -334,6 +335,12 @@ public class Gameobject : Asset, ICloneable
             {
                 size += new Vector2(spr.Sprite.Width, spr.Sprite.Height);
             }
+        }
+        
+        if(ParentUid != -1)
+        {
+            pos.X += transform.LocalPosition.X;
+            pos.Y += transform.LocalPosition.Y;
         }
         
         var halfSize = size / 2;

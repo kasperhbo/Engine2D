@@ -11,62 +11,62 @@ using Vector2 = System.Numerics.Vector2;
 
 namespace Engine2D.Core.Inputs;
 
-internal static class Input
+public static class Input
 {
     #region mouse
 
-    internal static bool MousePressed(MouseButton button)
+    public static bool MousePressed(MouseButton button)
     {
         return Engine.Get().IsMouseButtonPressed(button);
     }
 
-    internal static bool MouseReleased(MouseButton button)
+    public static bool MouseReleased(MouseButton button)
     {
         return Engine.Get().IsMouseButtonReleased(button);
     }
 
-    internal static bool MouseDown(MouseButton button)
+    public static bool MouseDown(MouseButton button)
     {
         return Engine.Get().IsMouseButtonDown(button);
     }
 
-    internal static bool IsAnyMouseButtonDown()
+    public static bool IsAnyMouseButtonDown()
     {
         return Engine.Get().IsAnyMouseButtonDown;
     }
 
-    internal static Vector2 MouseScreenPos()
+    public static Vector2 MouseScreenPos()
     {
         return new Vector2(ScreenX(), ScreenY());
     }
 
-    internal static Vector2 MousePrevPos()
+    public static Vector2 MousePrevPos()
     {
         return new Vector2(ScreenLastX(), ScreenLastY());
     }
 
-    internal static float ScreenX()
+    public static float ScreenX()
     {
         return Engine.Get().MouseState.Position.X;
     }
 
-    internal static float ScreenY()
+    public static float ScreenY()
     {
         return Engine.Get().MouseState.Position.Y;
     }
 
-    internal static float ScreenLastX()
+    public static float ScreenLastX()
     {
         return Engine.Get().MouseState.PreviousX;
     }
 
-    internal static float ScreenLastY()
+    public static float ScreenLastY()
     {
         return Engine.Get().MouseState.PreviousY;
     }
 
 
-    internal static Vector2 MouseDelta()
+    public static Vector2 MouseDelta()
     {
         var delta = new Vector2(Engine.Get().MouseState.Delta.X,
             Engine.Get().MouseState.Delta.X);
@@ -75,12 +75,12 @@ internal static class Input
     }
 
 
-    internal static bool MouseScroll()
+    public static bool MouseScroll()
     {
         return Engine.Get().MouseState.ScrollDelta != OpenTK.Mathematics.Vector2.Zero;
     }
 
-    internal static Vector2 MouseScrollDelta()
+    public static Vector2 MouseScrollDelta()
     {
         return new Vector2(Engine.Get().MouseState.ScrollDelta.X, Engine.Get().MouseState.ScrollDelta.Y);
     }
@@ -89,22 +89,22 @@ internal static class Input
     
     #region keyboard
 
-    internal static bool KeyDown(Keys key)
+    public static bool KeyDown(Keys key)
     {
         return Engine.Get().IsKeyDown(key);
     }
 
-    internal static bool KeyPressed(Keys key)
+    public static bool KeyPressed(Keys key)
     {
         return Engine.Get().IsKeyPressed(key);
     }
 
-    internal static bool KeyReleased(Keys key)
+    public static bool KeyReleased(Keys key)
     {
         return Engine.Get().IsKeyReleased(key);
     }
 
-    internal static bool AnyKeyDown()
+    public static bool AnyKeyDown()
     {
         return Engine.Get().IsAnyKeyDown;
     }
