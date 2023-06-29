@@ -207,6 +207,17 @@ internal class Renderer
             }
         }
     }
+    
+    public void RemoveSprite(SpriteRenderer go)
+    {
+        if (go == null) return;
+        foreach (RenderBatch batch in RenderBatches) {
+            if (batch.DestroyIfExists(go))
+            {
+                return;
+            }
+        }
+    }
 
     internal List<PointLightComponent> GetPointLightsToRender()
     {

@@ -167,6 +167,12 @@ public class SpriteRenderer : Component
         IsDirty = true;
     }
 
+    public override void Destroy()
+    {
+        Engine.Get().CurrentScene.Renderer.RemoveSprite(this);
+        base.Destroy();
+    }
+
     public override unsafe void ImGuiFields()
     {
         base.ImGuiFields();

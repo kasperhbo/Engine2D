@@ -14,34 +14,13 @@ public class Transform : Component
 {
     [JsonProperty]public Vector2 Position;
     [JsonProperty]public Vector2 LocalPosition;
+    [JsonProperty]public Quaternion Rotation;
+    [JsonProperty]private Vector2 _size;
+    
     [JsonIgnore]  public Vector3 EulerDegrees;
     [JsonIgnore]  public Vector3 EulerRadians;
     [JsonIgnore]  public Vector2 DraggingPos = new();
-    [JsonProperty]public Quaternion Rotation;
-    
-    [JsonProperty]private Vector2 _size;
 
-    [JsonIgnore]
-    public Vector2 Size
-    {
-        get
-        {
-            if (Parent == null) return _size;
-            var spr = Parent.GetComponent<SpriteRenderer>();
-            if (spr == null) return _size;
-            if (spr.Sprite == null) return _size;
-            else
-            {
-                Vector2 size = new(_size.X * spr.Sprite.Height, _size.Y * spr.Sprite.Height);
-                return size;
-            }
-        }
-        set
-        {
-            _size = value;
-        }
-    }
-    
     [JsonIgnore]public Vector2 SmallSize => new(_size.X, _size.Y);
 
     internal Transform()
@@ -97,25 +76,37 @@ public class Transform : Component
                _size != other._size ||
                Rotation != other.Rotation;
     }
-    
-    
+
     internal Matrix4x4 GetTranslation(bool includeSprite = true)
     {
-        return GetTranslation(0, 0, includeSprite);
-    }
-
-    internal Matrix4x4 GetTranslation(float width, float height, bool includeSprite = true)
-    {
         var result = Matrix4x4.Identity;
-        result *= Matrix4x4.CreateScale(new Vector3(_size.X * width, _size.Y * height, 1));
+        result *= Matrix4x4.CreateScale(new Vector3(GetFullSize(includeSprite).X, GetFullSize(includeSprite).Y, 1));
         result *= Matrix4x4.CreateFromQuaternion(Rotation);
-        if(Parent?.ParentUid != -1 && includeSprite)
+        
+        if(Parent?.ParentUid != -1)
             result *= Matrix4x4.CreateTranslation(Position.X + LocalPosition.X, Position.Y + LocalPosition.Y, 0);
         else
             result *= Matrix4x4.CreateTranslation(Position.X , Position.Y , 0);
         
         return result;
     }
+
+    internal Vector2 GetFullSize(bool includeSprite = true)
+    {
+        if (Parent == null) return new Vector2(0, 0);
+        
+        var spr = Parent.GetComponent<SpriteRenderer>();
+        if (spr != null && includeSprite)
+        {
+            if (spr.Sprite != null)
+            {
+                return new Vector2(_size.X * spr.Sprite.Width, _size.Y * spr.Sprite.Height);
+            }
+        }
+
+        return new Vector2(_size.X, _size.Y);
+    }
+    
 
     internal override float GetFieldSize()
     {

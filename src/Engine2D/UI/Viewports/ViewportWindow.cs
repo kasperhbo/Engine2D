@@ -16,7 +16,7 @@ internal abstract class ViewportWindow
     protected Vector2 Origin;
     protected Vector2 Size;
     
-    private TestFrameBuffer _frameBuffer;
+    private TestFrameBuffer? _frameBuffer = null;
     
     private bool _isHovering;
     private string _title;
@@ -65,8 +65,9 @@ internal abstract class ViewportWindow
         WindowSize = GetLargestSizeForViewport();
         WindowPos = GetCenteredPositionForViewport(WindowSize);
         ImGui.SetCursorPos(new Vector2(WindowPos.X, WindowPos.Y));
-
-        ImGui.Image(_frameBuffer.TextureID, new Vector2(WindowSize.X, WindowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+        
+        if(_frameBuffer != null)
+            ImGui.Image(_frameBuffer.TextureID, new Vector2(WindowSize.X, WindowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
         
         _isHovering = ImGui.IsItemHovered();
         

@@ -45,7 +45,7 @@ public class Gameobject : Asset, ICloneable
     public Gameobject(string name, List<Component?> components)
     {
         Name = name;
-        this.Components = components;
+        Components = components;
         GetUID();
     }
 
@@ -53,7 +53,7 @@ public class Gameobject : Asset, ICloneable
     internal Gameobject(string name, List<Component?> components, int uid, int parentUid)
     {
         Name = name;
-        this.Components = components;
+        Components = components;
         UID = uid;
         ParentUid = parentUid;
     }
@@ -99,9 +99,13 @@ public class Gameobject : Asset, ICloneable
         if (ParentUid != -1)
         {
             if (_parent == null) return;
-            this.Transform.Position = _parent.Transform.Position ;
-            this.Transform.Size =     _parent.Transform.SmallSize;
-            this.Transform.Rotation = _parent.Transform.Rotation ;
+            Transform.Position = _parent.Transform.Position ;
+            
+            var thisSize   = Transform.GetFullSize(false);
+            var parentSize = _parent.Transform.GetFullSize(false);
+            thisSize = parentSize;
+            
+            Transform.Rotation = _parent.Transform.Rotation ;
         }
     }
 
@@ -141,18 +145,7 @@ public class Gameobject : Asset, ICloneable
     
     internal void StopPlay()
     {
-        foreach (var component in Components)
-        {
-            component.StopPlay();
-            component.Destroy();
-        }
-        
-        this.Components = new();
-        
-        foreach (var component in _toReset)
-        {
-            AddComponent(component);
-        }
+        Destroy();
     }
 
     internal void Destroy()
@@ -327,7 +320,7 @@ public class Gameobject : Asset, ICloneable
         var transform = GetComponent<Transform>();
         if (transform == null) return false;
         var pos = transform.Position;
-        var size = transform.Size;
+        var size = transform.GetFullSize(true);
         var spr = GetComponent<SpriteRenderer>();
         if (spr != null)
         {
@@ -363,7 +356,7 @@ public class Gameobject : Asset, ICloneable
         clone.Components = new();
         foreach (var component in Components)
         {
-            clone.AddComponent((Component)component.Clone());
+            clone.Components.Add((Component)component.Clone());
         }
         
         return clone;

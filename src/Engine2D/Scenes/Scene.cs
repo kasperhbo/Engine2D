@@ -27,11 +27,19 @@ public class Scene
     [JsonProperty]internal GlobalLight GlobalLight { get; set; } = null;
 
     [JsonIgnore] public Physics2DWorld? _physics2DWorld;
-    
+    [JsonIgnore] private List<Gameobject> _clonesOnStart = new();
+        
+        
     private void StartPlay()
     {
         SaveLoad.SaveScene(this);
 
+        _clonesOnStart = new();
+        foreach (var go in GameObjects)
+        {
+            _clonesOnStart.Add((Gameobject)go.Clone());
+        }
+        
         _physics2DWorld = new();
         
         foreach (var go in GameObjects)
@@ -46,8 +54,14 @@ public class Scene
         {
             go.StopPlay();
         }
-
-        _physics2DWorld = null;
+        
+        GameObjects = new();
+        foreach (var go in _clonesOnStart)
+        {
+            go.Init(Renderer);
+            this.AddGameObjectToScene(go);
+            
+        }
     }
     
      

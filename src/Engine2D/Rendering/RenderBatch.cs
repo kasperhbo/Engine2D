@@ -261,21 +261,10 @@ internal class RenderBatch : IComparable<RenderBatch>
                 }
         }
         var translation = Matrix4x4.Identity;
+        var transform = spriteRenderer.Parent.GetComponent<Transform>();
+        if(transform != null)
+            translation = transform.GetTranslation(true);
         
-        if(spriteRenderer.Parent.GetComponent<Transform>() != null)
-        {
-            if (spriteRenderer.Sprite != null)
-            {
-                float w = spriteRenderer.Sprite.Width;
-                float h = spriteRenderer.Sprite.Height;
-                translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation(w,h);
-            }
-            else
-            {
-                translation = spriteRenderer.Parent.GetComponent<Transform>().GetTranslation();
-            }
-        }
-
         {
             var currentPos =
                 MathUtils.Multiply(translation, quadVertexPositions[0]); //quadVertexPositions[0] * translation;
@@ -418,6 +407,23 @@ internal class RenderBatch : IComparable<RenderBatch>
     {
         var spr = go.GetComponent<SpriteRenderer>();
 
+        for (int i = 0; i < _spriteCount; i++)
+        {
+            if (_sprites[i] == spr)
+            {
+                for (int j=i; j < _spriteCount - 1; j++) {
+                    _sprites[j] = _sprites[j + 1];
+                    _sprites[j].IsDirty = true;
+                }
+                _spriteCount--;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public bool DestroyIfExists(SpriteRenderer spr)
+    {
         for (int i = 0; i < _spriteCount; i++)
         {
             if (_sprites[i] == spr)

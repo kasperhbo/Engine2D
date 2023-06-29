@@ -42,7 +42,7 @@ internal class BoxCollider2D : Component
     {
         base.EditorUpdate(dt);
         DebugDraw.AddBox2D(new(Parent.Transform.Position.X, Parent.Transform.Position.Y), 
-            new OpenTK.Mathematics.Vector2(Parent.Transform.Size.X, Parent.Transform.Size.Y), 0);
+            new OpenTK.Mathematics.Vector2(Parent.Transform.GetFullSize(true).X, Parent.Transform.GetFullSize(true).Y), 0);
     }
 
     public override BoxCollider2D Clone()
