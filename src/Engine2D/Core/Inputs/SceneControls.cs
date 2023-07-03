@@ -70,7 +70,6 @@ public static class SceneControls
                     var go = Engine.Get().CurrentScene.GameObjects[i];
                     if (go.AABB(mouseScreenPos.X, mouseScreenPos.Y))
                     {
-                        Console.WriteLine(go.Name);
                         Engine.Get().CurrentSelectedAsset = go;
                         break;
                     }

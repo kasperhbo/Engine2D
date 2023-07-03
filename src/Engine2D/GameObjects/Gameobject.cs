@@ -133,18 +133,16 @@ public class Gameobject : Asset, ICloneable
     
     internal void StopPlay()
     {
-        Destroy();
+        foreach (var component in Components)
+        {
+            component.StopPlay();
+        }
     }
 
     internal void Destroy()
     {
         foreach (var child in Childs) child.Destroy();
         foreach (var component in Components)   component.Destroy();
-    }
-
-    private void RemoveChild(Gameobject gameobject)
-    {
-        Childs.Remove(gameobject);
     }
 
     public Component? AddComponent(Component? component)

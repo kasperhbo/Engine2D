@@ -56,15 +56,7 @@ public class Scene
         {
             go.StopPlay();
         }
-        GameObjects = new();
-        foreach (var go in _clonesOnStart)
-        {
-            go.Init(Renderer);
-            this.AddGameObjectToScene(go);
-        }
-        
-        if(Settings.s_IsEngine)
-            CreateEditorCamera();
+        ReloadScene(_clonesOnStart);
     }
 
     internal Camera? GetMainCamera()
@@ -97,8 +89,6 @@ public class Scene
 
     internal void ReloadScene()
     {
-        Vector2 editorCameraPos = new();
-        
         var clones = new List<Gameobject>();
         foreach (var go in GameObjects)
         {
@@ -107,7 +97,12 @@ public class Scene
                 clones.Add((Gameobject)go.Clone());
             }
         }
+        ReloadScene(clones);
+    }
 
+    private void ReloadScene(List<Gameobject> clones)
+    {
+        var prevEditorCamera = GetEditorCamera();
         foreach (var go in GameObjects)
         {
             go.Destroy();
@@ -120,7 +115,7 @@ public class Scene
         }
         
         if(Settings.s_IsEngine)
-            CreateEditorCamera();
+            CreateEditorCamera(prevEditorCamera);
     }
 
 
@@ -193,16 +188,6 @@ public class Scene
         Renderer.Render();
     }
 
-    public void AddGameObjectToScene(Gameobject go)
-    {
-        GameObjects.Add(go);
-
-        go.Init(Renderer);
-        go.Start();
-        
-        Engine.Get().CurrentSelectedAsset = go;
-    }
-    
     internal virtual void Close()
     {
         if (EngineSettings.SaveOnClose)
@@ -271,7 +256,7 @@ public class Scene
         Engine.Get().CurrentSelectedAsset = null;
     }
 
-    private void CreateEditorCamera(Vector2 pos = new())
+    private void CreateEditorCamera(Camera? prevEditorCamera = null)
     {
         Gameobject editorCameraGo = new Gameobject("EDITORCAMERA");
         
@@ -279,12 +264,33 @@ public class Scene
         editorCameraGo.CanBeSelected = false;
         
         Camera cam = (Camera)editorCameraGo.AddComponent(new Camera());
+      
         
         editorCameraGo.Serialize = false;
         cam._isEditorCamera = true;
-        
-        
+
         AddGameObjectToScene(editorCameraGo);
-        editorCameraGo.Transform.Position = pos;
+        
+        if (prevEditorCamera != null)
+        {
+            cam.CameraType = prevEditorCamera.CameraType;
+            cam.Far = prevEditorCamera.Far;
+            cam.Near = prevEditorCamera.Near;
+            cam.ClearColor = prevEditorCamera.ClearColor;
+            cam.Size = prevEditorCamera.Size;
+
+            editorCameraGo.Transform.Position = prevEditorCamera.Parent.Transform.Position;
+        }
+    }
+    
+    public void AddGameObjectToScene(Gameobject go)
+    {
+        GameObjects.Add(go);
+
+        go.Init(Renderer);
+        go.Start();
+        
+        if(go.Serialize)
+            Engine.Get().CurrentSelectedAsset = go;
     }
 }
