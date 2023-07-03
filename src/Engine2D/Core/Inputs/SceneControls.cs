@@ -19,7 +19,7 @@ public static class SceneControls
     }
     
     private static void KeyControls(){
-        Camera editorCamera = Engine.Get().CurrentScene.EditorCamera; 
+        Camera editorCamera = Engine.Get().CurrentScene.GetEditorCamera(); 
         
         if (Engine.Get().CurrentSelectedAsset != null)
         {

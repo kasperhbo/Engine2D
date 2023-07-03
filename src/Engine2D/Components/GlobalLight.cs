@@ -1,5 +1,6 @@
 ﻿#region
 
+using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Newtonsoft.Json;
@@ -14,10 +15,10 @@ internal class GlobalLight : Component
 {
     [JsonProperty]internal float Intensity = 1;
 
-    internal override void Init(Gameobject parent, Renderer? renderer)
+    public override void Init()
     {
-        base.Init(parent, renderer);
-        renderer.GlobalLight = this;
+        var currentSceneRenderer = Engine.Get().CurrentScene.Renderer;
+        if (currentSceneRenderer != null) currentSceneRenderer.GlobalLight = this;
     }
 
     public override void Start()

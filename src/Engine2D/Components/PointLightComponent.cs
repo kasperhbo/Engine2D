@@ -1,6 +1,7 @@
 ﻿#region
 
 using Engine2D.Components.TransformComponents;
+using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.GameObjects;
 using Engine2D.Rendering;
@@ -21,12 +22,10 @@ internal class PointLightComponent : Component
     [ShowUI(show = false)] private Vector4 _lastColor = new();
     [JsonIgnore] internal Transform? LastTransform;
 
-    internal override void Init(Gameobject parent, Renderer? renderer)
+    public override void Init()
     {
         LastTransform = new Transform();
-        base.Init(parent, renderer);
-        renderer.AddPointLight(this);
-        LastTransform = parent.GetComponent<Transform>();
+        Engine.Get().CurrentScene.Renderer?.AddPointLight(this);
     }
 
     public override void Start()

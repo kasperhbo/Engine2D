@@ -57,8 +57,11 @@ internal class Renderer
         GameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
-    internal void Render(Camera editorCamera, Camera gameCamera)
+    internal void Render()
     {
+        Camera editorCamera = Engine.Get().CurrentScene.GetEditorCamera();
+        Camera gameCamera = Engine.Get().CurrentScene.GetMainCamera();
+        
         RenderBatchesToRemoveEndOfFrame = new();
         
         _drawCalls = 0;

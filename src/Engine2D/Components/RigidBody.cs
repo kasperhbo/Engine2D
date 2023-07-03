@@ -28,6 +28,11 @@ public class RigidBody : Component
     {
     }
 
+    public override void Init()
+    {
+        
+    }
+
     public override void Update(FrameEventArgs args)
     {
         

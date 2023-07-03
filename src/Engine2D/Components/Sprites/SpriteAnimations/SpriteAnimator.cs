@@ -33,20 +33,8 @@ internal class SpriteAnimator : Component
             Animation.IsPlaying = true;
         }
     }
-    
-    internal override void Init(Gameobject parent, Renderer? renderer)
-    {
-        base.Init(parent, renderer);
-        Initialize();
-    }
 
-    internal override void Init(Gameobject parent)
-    {
-        base.Init(parent);
-        Initialize();
-    }
-
-    private void Initialize()
+    public override void Init()
     {
         GetSpriteRenderer();
         GetAnimation();
@@ -54,7 +42,7 @@ internal class SpriteAnimator : Component
 
     public void Refresh()
     {
-        Initialize();
+        Init();
     }
     
     private void GetSpriteRenderer()
@@ -143,7 +131,7 @@ internal class SpriteAnimator : Component
             {
                 var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
                 _animationPath = filename;
-                Initialize();
+                Init();
             }
             ImGui.EndDragDropTarget();
         }

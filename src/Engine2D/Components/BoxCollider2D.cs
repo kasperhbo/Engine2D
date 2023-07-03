@@ -33,6 +33,11 @@ internal class BoxCollider2D : Component
         return this.GetType().FullName;
     }
 
+    public override void Init()
+    {
+        
+    }
+
     public override void Update(FrameEventArgs args)
     {
         

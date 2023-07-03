@@ -24,16 +24,14 @@ public class Gameobject : Asset, ICloneable
     [JsonProperty] internal string Name = "";
     [JsonProperty] internal int ParentUid = -1;
     [JsonProperty] internal int UID = -1;
-    [JsonProperty] private bool _canBeSelected = true;
+    [JsonProperty] public bool CanBeSelected = true;
     [JsonProperty] internal List<Component> Components = new();
-    
-    [JsonIgnore] private Gameobject? _parent;
-    [JsonIgnore] internal List<Gameobject> Childs = new();
-    [JsonIgnore] internal bool Serialize = true;
-    [JsonIgnore] bool _isPopupOpen = false;
-    
-    [JsonIgnore] private List<Component> _toReset = new();
-    [JsonIgnore] public Transform? Transform => GetComponent<Transform>();
+    [JsonIgnore]   private Gameobject? _parent;
+    [JsonIgnore]   internal List<Gameobject> Childs = new();
+    [JsonIgnore]   internal bool Serialize = true;
+    [JsonIgnore]   bool _isPopupOpen = false;
+    [JsonIgnore]   private List<Component> _toReset = new();
+    [JsonIgnore]   public Transform? Transform => GetComponent<Transform>();
     
     public Gameobject(string name)
     {
@@ -77,8 +75,8 @@ public class Gameobject : Asset, ICloneable
             t.Position = new Vector2(0, 0);
             AddComponent(t);
         }
-
-        foreach (var component in Components) component.Init(this, renderer);
+        
+        foreach (var component in Components) component.Init(this);
     }
 
     internal void Start()
@@ -122,16 +120,6 @@ public class Gameobject : Asset, ICloneable
     
     internal void StartPlay(Physics2DWorld physics2DWorld)
     {
-        _toReset = new();
-        
-        foreach (var component in Components)
-        {
-            //Clone the components
-            //This is so that we can reset the components after play
-            Component comp = (Component)component.Clone();
-            _toReset.Add(comp);
-        }
-        
         foreach (var component in Components)
         {
             component.StartPlay();
@@ -150,16 +138,8 @@ public class Gameobject : Asset, ICloneable
 
     internal void Destroy()
     {
-        if (_parent != null)
-            _parent.RemoveChild(this);
-
-        for (int i = 0; i < Childs.Count; i++)
-        {
-            var child = Childs[i];
-            child.Destroy();
-            i--;
-        }
-        foreach (var component in Components) component.Destroy();
+        foreach (var child in Childs) child.Destroy();
+        foreach (var component in Components)   component.Destroy();
     }
 
     private void RemoveChild(Gameobject gameobject)
@@ -243,7 +223,7 @@ public class Gameobject : Asset, ICloneable
 
         ImGui.Text("Can be selected: ");
         ImGui.SameLine();
-        ImGui.Checkbox("##CanBeSelected", ref _canBeSelected);
+        ImGui.Checkbox("##CanBeSelected", ref CanBeSelected);
         
         if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X - 30, 30)))
         {
@@ -315,7 +295,7 @@ public class Gameobject : Asset, ICloneable
     public bool AABB(float pX, float pY)
     {
         
-        if (!_canBeSelected) return false;
+        if (!CanBeSelected) return false;
         //Check if the point is inside the gameobject
         var transform = GetComponent<Transform>();
         if (transform == null) return false;
@@ -349,16 +329,33 @@ public class Gameobject : Asset, ICloneable
         
         return inBox1 && inBox2 && inBox3 && inBox4;
     }
-    
+
     public object Clone()
     {
-        Gameobject clone = (Gameobject)this.MemberwiseClone();
+        Gameobject clone = (Gameobject)new Gameobject(this.Name);
+
+        clone.Name           = this.Name          ;
+        clone.ParentUid      = this.ParentUid     ;
+        clone.UID            = this.UID           ;
+        clone.CanBeSelected = this.CanBeSelected;
+        clone.Serialize      = this.Serialize     ;
+        clone._isPopupOpen   = this._isPopupOpen  ;
+        
         clone.Components = new();
+        clone.Childs = new();
+        clone._toReset = new();
+
+        foreach (var child in Childs)
+        {
+            clone.Childs.Add((Gameobject)child.Clone());
+        }
+
         foreach (var component in Components)
         {
             clone.Components.Add((Component)component.Clone());
         }
-        
+
         return clone;
+
     }
 }

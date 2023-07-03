@@ -105,58 +105,7 @@ internal static class AssemblyUtils
     internal static void Reload()
     {
         LoadAssembly(_loadedAssemblyOrigin);
-
-        foreach (var go in Engine.Get().CurrentScene.GameObjects)
-        {
-            Dictionary<Component?, FieldInfo[]> toAdd = new();
-
-
-            for (var i = 0; i < go.Components.Count; i++)
-            {
-                // Get the type of FieldsClass.
-                var fieldsType = go.Components[i].GetType();
-
-                var fields = fieldsType.GetFields(BindingFlags.Public
-                                                  | BindingFlags.Instance);
-                foreach (var fieldInfo in fields)
-                {
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.WriteLine("{0}:\t'{1}'", fieldInfo.Name, fieldInfo.GetValue(go.Components[i]));
-                }
-
-                toAdd.Add(go.Components[i], fields);
-            }
-
-            //FIRST REMOVE ALL COMPONENTS
-            go.Components = new List<Component>();
-
-            //THEN READD
-            for (var i = 0; i < toAdd.Count; i++)
-            {
-                Component? comp = null;
-
-                if (GetComponent(toAdd.ElementAt(i).Key.GetType().ToString()) != null)
-                    comp = go.AddComponent(GetComponent(toAdd.ElementAt(i).Key.GetType().ToString()));
-                else
-                    comp = go.AddComponent(toAdd.ElementAt(i).Key);
-
-
-                //NOW GO OVER ALL FIELDS AND RESET TO THE VALUE IT WAS BEFORE
-                for (var j = 0; j < toAdd.ElementAt(i).Value.Length; j++)
-                {
-                    var element = toAdd.ElementAt(i).Value.ElementAt(j);
-
-                    var fieldsType = comp.GetType();
-                    var fields = fieldsType.GetFields(BindingFlags.Public
-                                                      | BindingFlags.Instance);
-
-                    //reset all fields from the GetFields function to the saved fields in toAdd dictionary
-                    for (var k = 0; k < fields.Length; k++)
-                        if (fields[k].Name == element.Name)
-                            fields[k].SetValue(comp, element.GetValue(toAdd.ElementAt(i).Key));
-                }
-            }
-        }
+        Engine.Get().CurrentScene?.ReloadScene();
     }
 
     internal static List<Type> GetComponents()

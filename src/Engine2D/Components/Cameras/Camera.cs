@@ -4,7 +4,9 @@ using System.Numerics;
 using Engine2D.Components;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
+using Engine2D.GameObjects;
 using Engine2D.Logging;
+using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using Newtonsoft.Json;
@@ -27,21 +29,17 @@ internal class Camera : Component
     [JsonProperty] internal Vector2 ProjectionSize = new(1920, 1080);
     [JsonProperty] internal Vector4 ClearColor = new(100, 149, 237, 255);
     [JsonProperty] internal float Size = 1f;
-    [JsonProperty] private bool _isMainCamera = true;
-
-    public bool IsMainCamera
-    {
-        get => _isMainCamera;
-        set
-        {
-            Engine.Get().CurrentScene.CurrentMainGameCamera = this;
-            _isMainCamera = value;
-        }
-    }
+    [JsonProperty] internal bool _isMainCamera = false;
+    [JsonProperty] internal bool _isEditorCamera = false;
 
     public float FadeRange = 1;
-
+    
     internal Camera()
+    {
+    }
+    
+
+    public override void Init()
     {
     }
 
@@ -98,6 +96,11 @@ internal class Camera : Component
 
     }
 
+    public override void Destroy()
+    {
+        base.Destroy();
+    }
+
     public override void EditorUpdate(double dt)
     {
         base.EditorUpdate(dt);
@@ -120,9 +123,13 @@ internal class Camera : Component
         Gui.DrawProperty("Clear Color: ", ref ClearColor);
         if (Gui.DrawProperty("Is Main Camera", ref _isMainCamera))
         {
-            if (_isMainCamera) Engine.Get().CurrentScene.CurrentMainGameCamera = this;
+            
         }
 
+        if (Gui.DrawProperty("Is Editor Camera", ref _isEditorCamera))
+        {
+            
+        }
 
 
         ImGui.Separator();
@@ -132,6 +139,23 @@ internal class Camera : Component
             OpenTkuiHelper.DrawProperty("Far: ", ref Far, false))
         {
         }
+    }
+
+    public override Camera Clone()
+    {
+        var camera = new Camera();
+        
+        camera.ProjectionSize = ProjectionSize;
+        camera.FadeRange = FadeRange;
+        camera.Size = Size;
+        camera.ClearColor = ClearColor;
+        camera.Near = Near;
+        camera.Far = Far;
+        camera.CameraType = CameraType;
+        camera._isMainCamera = _isMainCamera;
+        camera._isEditorCamera = _isEditorCamera;
+        
+        return camera;
     }
 }
 

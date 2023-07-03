@@ -45,11 +45,16 @@ public class Transform : Component
         EulerDegrees = MathUtilsNumerics.RadiansToDegrees(EulerRadians);
     }
 
+    public override void Init()
+    {
+        
+    }
+    
     public override void StartPlay()
     {
         
     }
-
+    
     public override void Update(FrameEventArgs args)
     {
         

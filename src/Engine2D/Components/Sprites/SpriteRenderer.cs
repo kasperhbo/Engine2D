@@ -39,9 +39,7 @@ public class SpriteRenderer : Component
         }
     }
 
-    
-    
-    [JsonIgnore] private Renderer? _renderer;
+       
     [JsonIgnore] private Vector2[] _defaultTextureCoords =
     {
         new(1, 1),
@@ -54,6 +52,7 @@ public class SpriteRenderer : Component
     [JsonIgnore] [ShowUI(show = false)]private Matrix4x4 _currentTranslation { get; set; } = new();
     [JsonIgnore]  [ShowUI(show = false)] private Vector4 _lastColor { get; set; } = new();
     [JsonIgnore]private int _lastSpriteSheetIndex = -1;
+    [JsonIgnore] private Renderer? _renderer = null;
     
     [JsonProperty][ShowUI (show = false)] internal bool    HasSpriteSheet         = false;
     [JsonProperty][ShowUI (show = false)] internal string? SpriteSheetPath        = "";
@@ -61,39 +60,28 @@ public class SpriteRenderer : Component
     [JsonProperty] internal                       int      ZIndex                 = 0;
     [JsonProperty] internal                       Vector4  Color                  = new(255,255,255,255);
     [JsonProperty] internal                       int      SpriteSheetSpriteIndex = 0;
-
-
-
-    public override void StartPlay()
-    {
         
-    }
 
-    internal override void Init(Gameobject parent, Renderer? renderer)
-    {
-        base.Init(parent, renderer);
-        _renderer = renderer;
-        Initialize();
-    }
-
-    internal override void Init(Gameobject parent)
-    {
-        base.Init(parent);
-        
-        Initialize();
-    }
-    
-    private void Initialize()
+    public override void Init()
     {
         if (_renderer == null)
         {
             _renderer = Engine.Get().CurrentScene.Renderer;
         }
         
-        if(Parent.GetComponent<Transform>()!=null)
+        _renderer.AddSpriteRenderer(this);
+        Console.WriteLine("added sprite renderer");
+        
+        if(Parent?.GetComponent<Transform>()!=null)
             _currentTranslation = Parent.GetComponent<Transform>().GetTranslation(includeSprite:true);
         
         Refresh();
+    }
+    
+
+    public override void StartPlay()
+    {
+        
     }
 
 

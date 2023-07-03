@@ -107,8 +107,8 @@ internal class SceneHierachyPanel : UIElement
         for (var i = 0; i < Engine.Get().CurrentScene.GameObjects.Count; i++)
         {
             var go = Engine.Get().CurrentScene.GameObjects[i];
-
-            if (go.ParentUid == -1) gameobjectsWithoutParents.Add(go);
+            
+            if (go.ParentUid == -1 && go.Serialize) gameobjectsWithoutParents.Add(go);
         }
 
         return gameobjectsWithoutParents;

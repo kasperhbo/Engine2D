@@ -1,6 +1,8 @@
 ﻿#region
 
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using Engine2D.Core;
 using Engine2D.Flags;
 using Engine2D.GameObjects;
@@ -31,20 +33,16 @@ public abstract class Component : ICloneable
         return this.GetType().FullName;
     }
 
-
-    internal virtual void Init(Gameobject parent, Renderer? renderer)
+    internal void Init(Gameobject parent)
     {
         if (_initialized) return;
         _initialized = true;
         Parent = parent;
+        Init();
     }
 
-    internal virtual void Init(Gameobject parent)
-    {
-        if (_initialized) return;
-        _initialized = true;
-        Parent = parent;
-    }
+    public abstract void Init();
+    
 
 
     public virtual void Start()
@@ -196,7 +194,7 @@ public abstract class Component : ICloneable
         return 20 * count;
     }
     
-    public void CopyAll<T>(T source, T target) 
+    public void CopyAll<T>(T source, T target) where T : class
     {
         var type = typeof(T);
         foreach (var sourceProperty in type.GetProperties())
@@ -213,6 +211,7 @@ public abstract class Component : ICloneable
 
     public virtual object Clone()
     {
-        return this.MemberwiseClone();
+        var clone = this.MemberwiseClone();
+        return clone;
     }
 }
