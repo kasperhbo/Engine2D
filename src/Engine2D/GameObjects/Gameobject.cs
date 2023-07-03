@@ -31,7 +31,7 @@ public class Gameobject : Asset, ICloneable
     [JsonIgnore]   internal bool Serialize = true;
     [JsonIgnore]   bool _isPopupOpen = false;
     [JsonIgnore]   private List<Component> _toReset = new();
-    [JsonIgnore]   public Transform? Transform => GetComponent<Transform>();
+    [JsonIgnore]   public Transform Transform => GetComponent<Transform>();
     
     public Gameobject(string name)
     {

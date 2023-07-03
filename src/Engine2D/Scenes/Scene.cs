@@ -279,7 +279,9 @@ public class Scene
             cam.ClearColor = prevEditorCamera.ClearColor;
             cam.Size = prevEditorCamera.Size;
 
+#pragma warning disable CS8602
             editorCameraGo.Transform.Position = prevEditorCamera.Parent.Transform.Position;
+#pragma warning restore CS8602
         }
     }
     
