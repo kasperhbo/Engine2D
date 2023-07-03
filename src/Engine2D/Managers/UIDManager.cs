@@ -13,11 +13,15 @@ internal static class UIDManager
     internal static int GetUID()
     {
         var uid = s_uidcounter;
+        
         s_uidcounter++;
-
         //Recursive call
         if (TakenUIDS.Contains(uid))
+        {
+            
             return GetUID();
+        }
+ 
 
         TakenUIDS.Add(uid);
         return uid;

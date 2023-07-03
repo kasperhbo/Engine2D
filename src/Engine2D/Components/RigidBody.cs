@@ -3,7 +3,6 @@
 using System.Numerics;
 using Box2DSharp.Dynamics;
 using Engine2D.UI.ImGuiExtension;
-using ImGuiNET;
 using Newtonsoft.Json;
 using OpenTK.Windowing.Common;
 
@@ -60,6 +59,7 @@ public class RigidBody : Component
     public override void ImGuiFields()
     {
         Gui.DrawProperty("Bodytype: ", ref BodyType);
+        base.ImGuiFields();
     }
 
     public override string GetItemType()

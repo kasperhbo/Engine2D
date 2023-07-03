@@ -2,6 +2,7 @@
 using Engine2D.Cameras;
 using Engine2D.Components.TransformComponents;
 using Engine2D.GameObjects;
+using Engine2D.Managers;
 using Engine2D.UI;
 using ImGuiNET;
 using ImGuizmoNET;
@@ -47,8 +48,8 @@ public static class SceneControls
                 {
                     if (Input.KeyPressed(Keys.C))
                     {
-                        Gameobject go2 = (Gameobject)go.Clone();
-                        go2.Name = go.Name + " Clone";
+                        Gameobject? go2 = (Gameobject)go.Clone(UIDManager.GetUID());
+                        go2.Name = go.Name + go.UID;
                         Engine.Get().CurrentScene.AddGameObjectToScene(go2);
                     }
                 }

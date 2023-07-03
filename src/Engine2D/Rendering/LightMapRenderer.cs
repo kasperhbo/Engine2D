@@ -113,9 +113,11 @@ internal class LightMapRenderer
         _lightMap = new TestFrameBuffer(Engine.Get().Size.X, Engine.Get().Size.Y);
     }
 
-    private void UploadUniforms(Renderer renderer, Camera camera)
+    private void UploadUniforms(Renderer renderer, Camera? camera)
     {
+        if (camera == null) return;
         if (camera.Parent == null) return;
+        
         if (camera.Parent?.GetComponent<Transform>() == null) return;
         _shader.uploadMat4f("uProjection", camera.GetProjectionMatrix());
         _shader.uploadVec2f("uCameraOffset", camera.Parent.GetComponent<Transform>().Position);

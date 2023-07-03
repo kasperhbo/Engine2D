@@ -131,7 +131,7 @@ internal static class SaveLoad
         Log.Message("Saving: " + scene.ScenePath);
 
         //TODO: Remove this and make just an seperate array/list in the scene
-        var tempList = new List<Gameobject>();
+        var tempList = new List<Gameobject?>();
 
         foreach (var go in scene.GameObjects)
             if (go.Serialize)
@@ -161,7 +161,7 @@ internal static class SaveLoad
         Log.Succes("Succesfully saved: " + scene.ScenePath);
     }
 
-    internal static List<Gameobject> LoadScene(string sceneToLoad)
+    internal static List<Gameobject?> LoadScene(string sceneToLoad)
     {
         var objs = new List<Gameobject?>();
         if (File.Exists(sceneToLoad))

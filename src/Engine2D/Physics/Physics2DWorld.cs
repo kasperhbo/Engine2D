@@ -91,7 +91,7 @@ public class Physics2DWorld
         shape.SetAsBox(halfSize.X, halfSize.Y, new Vector2(0,0), 0);
         FixtureDef fdef = new FixtureDef();
         fdef.Shape = shape;
-        fdef.Density = 1.0f;
+        fdef.Density = boxCollider2D.Density;
         fdef.Restitution = boxCollider2D.Restitution;
         fdef.Friction = boxCollider2D.Friction;
         fdef.UserData = boxCollider2D.Parent;

@@ -19,7 +19,7 @@ using Vector4 = System.Numerics.Vector4;
 
 namespace Engine2D.Cameras;
 
-internal class Camera : Component
+public class Camera : Component
 {
     [JsonProperty] internal CameraTypes CameraType = CameraTypes.ORTHO;
     [JsonProperty] internal float Far = 1000f;

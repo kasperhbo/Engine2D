@@ -175,8 +175,9 @@ internal class RenderBatch : IComparable<RenderBatch>
         LoadVertexProperties(index);
     }
 
-    internal void Render(Camera camera, int lightmapTexture, Renderer renderer)
+    internal void Render(Camera? camera, int lightmapTexture, Renderer renderer)
     {
+        if (camera == null) return;
         if(this._spriteCount <= 0)
         {
             renderer.RenderBatchesToRemoveEndOfFrame.Add(this);

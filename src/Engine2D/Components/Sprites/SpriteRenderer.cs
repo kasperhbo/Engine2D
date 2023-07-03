@@ -70,7 +70,6 @@ public class SpriteRenderer : Component
         }
         
         _renderer.AddSpriteRenderer(this);
-        Console.WriteLine("added sprite renderer");
         
         if(Parent?.GetComponent<Transform>()!=null)
             _currentTranslation = Parent.GetComponent<Transform>().GetTranslation(includeSprite:true);

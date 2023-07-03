@@ -26,11 +26,10 @@ public class Gameobject : Asset, ICloneable
     [JsonProperty] internal int UID = -1;
     [JsonProperty] public bool CanBeSelected = true;
     [JsonProperty] internal List<Component> Components = new();
+    
     [JsonIgnore]   private Gameobject? _parent;
-    [JsonIgnore]   internal List<Gameobject> Childs = new();
     [JsonIgnore]   internal bool Serialize = true;
     [JsonIgnore]   bool _isPopupOpen = false;
-    [JsonIgnore]   private List<Component> _toReset = new();
     [JsonIgnore]   public Transform Transform => GetComponent<Transform>();
     
     public Gameobject(string name)
@@ -82,11 +81,6 @@ public class Gameobject : Asset, ICloneable
     internal void Start()
     {
         foreach (var component in Components) component.Start();
-        
-        if (ParentUid != -1)
-        {
-            SetParent(ParentUid);
-        }
     }
     
     
@@ -141,7 +135,8 @@ public class Gameobject : Asset, ICloneable
 
     internal void Destroy()
     {
-        foreach (var child in Childs) child.Destroy();
+        // foreach (var child in Childs) Engine.Get().CurrentScene.FindObjectByUID(child)?.Destroy();
+        
         foreach (var component in Components)   component.Destroy();
     }
 
@@ -173,42 +168,6 @@ public class Gameobject : Asset, ICloneable
     private void RemoveComponents(Component? comp)
     {
         Components.Remove(comp);
-    }
-
-    public void SetParent(Gameobject? parent)
-    {
-        if (parent == null) return;
-        SetParent(parent.UID);
-    }
-    
-    internal void SetParent(int parentUID)
-    {
-        //TODO: DETACH THIS FROM PREV PARENT AND MAKE THIS SELF OWNED OBJ
-        if (parentUID == -1) return;
-
-        var currentScene = Engine.Get().CurrentScene;
-
-        if (_parent != null)
-            _parent.Childs.Remove(this);
-
-        ParentUid = parentUID;
-        var parent = currentScene.FindObjectByUID(parentUID);
-        
-        if(parent == null)
-        {
-            Log.Error($"Couldn't find to uid: {ParentUid}, to attach {UID} to");
-            return;
-        }
-        
-        parent.AddGameObjectChild(this);
-
-        Log.Succes(string.Format("Succesfully attached uid: {0} to uid: {1}", UID, ParentUid));
-    }
-
-    private void AddGameObjectChild(Gameobject gameObject)
-    {
-        gameObject._parent = this;
-        Childs.Add(gameObject);
     }
 
     internal override void OnGui()
@@ -328,6 +287,29 @@ public class Gameobject : Asset, ICloneable
         return inBox1 && inBox2 && inBox3 && inBox4;
     }
 
+    public object Clone(int uid)
+    {
+        Gameobject clone = (Gameobject)new Gameobject(this.Name);
+
+        clone.Name           = this.Name          ;
+        clone.ParentUid      = this.ParentUid     ;
+        clone.UID            = uid                ;
+        clone.CanBeSelected = this.CanBeSelected  ;
+        clone.Serialize      = this.Serialize     ;
+        clone._isPopupOpen   = this._isPopupOpen  ;
+        
+        clone.Components = new();
+        // clone.Childs = new();
+        // clone._toReset = new();
+        //
+        foreach (var component in Components)
+        {
+            clone.Components.Add((Component)component.Clone());
+        }
+
+        return clone;
+    }
+    
     public object Clone()
     {
         Gameobject clone = (Gameobject)new Gameobject(this.Name);
@@ -340,14 +322,9 @@ public class Gameobject : Asset, ICloneable
         clone._isPopupOpen   = this._isPopupOpen  ;
         
         clone.Components = new();
-        clone.Childs = new();
-        clone._toReset = new();
-
-        foreach (var child in Childs)
-        {
-            clone.Childs.Add((Gameobject)child.Clone());
-        }
-
+        // clone.Childs = new();
+        // clone._toReset = new();
+        //
         foreach (var component in Components)
         {
             clone.Components.Add((Component)component.Clone());

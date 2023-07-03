@@ -21,16 +21,15 @@ namespace Engine2D.Scenes;
 
 public class Scene
 {
-    [JsonProperty]internal List<Gameobject> GameObjects = new();
+    [JsonProperty]internal List<Gameobject?> GameObjects = new();
     [JsonIgnore]internal Renderer? Renderer { get; private set; }
     
     [JsonProperty]internal string ScenePath { get; private set; } = "NoScene";
     [JsonProperty]internal GlobalLight GlobalLight { get; set; } = null;
 
     [JsonIgnore] public Physics2DWorld? _physics2DWorld;
-    [JsonIgnore] private List<Gameobject> _clonesOnStart = new();
-        
-        
+    [JsonIgnore] private List<Gameobject?> _clonesOnStart = new();
+
     private void StartPlay()
     {
         SaveLoad.SaveScene(this);
@@ -59,7 +58,7 @@ public class Scene
         ReloadScene(_clonesOnStart);
     }
 
-    internal Camera? GetMainCamera()
+    public Camera? GetMainCamera()
     {
         foreach (var go in GameObjects)
         {
@@ -67,6 +66,19 @@ public class Scene
             if (cam != null)
             {
                 if (cam._isMainCamera) return cam;
+            }
+        }
+
+        return null;
+    }
+    public Gameobject? GetMainCameraGO()
+    {
+        foreach (var go in GameObjects)
+        {
+            var cam = go.GetComponent<Camera>();
+            if (cam != null)
+            {
+                if (cam._isMainCamera) return cam.Parent;
             }
         }
 
@@ -89,7 +101,7 @@ public class Scene
 
     internal void ReloadScene()
     {
-        var clones = new List<Gameobject>();
+        var clones = new List<Gameobject?>();
         foreach (var go in GameObjects)
         {
             if(go.Serialize)
@@ -100,7 +112,7 @@ public class Scene
         ReloadScene(clones);
     }
 
-    private void ReloadScene(List<Gameobject> clones)
+    private void ReloadScene(List<Gameobject?> clones)
     {
         var prevEditorCamera = GetEditorCamera();
         foreach (var go in GameObjects)
@@ -250,7 +262,7 @@ public class Scene
     {
     }
     
-    public void RemoveGameObject(Gameobject go)
+    public void RemoveGameObject(Gameobject? go)
     {
         go.Destroy();
         Engine.Get().CurrentSelectedAsset = null;
@@ -258,14 +270,13 @@ public class Scene
 
     private void CreateEditorCamera(Camera? prevEditorCamera = null)
     {
-        Gameobject editorCameraGo = new Gameobject("EDITORCAMERA");
+        Gameobject? editorCameraGo = new Gameobject("EDITORCAMERA");
         
         editorCameraGo.AddComponent(new CameraControls());
         editorCameraGo.CanBeSelected = false;
         
         Camera cam = (Camera)editorCameraGo.AddComponent(new Camera());
-      
-        
+
         editorCameraGo.Serialize = false;
         cam._isEditorCamera = true;
 
@@ -279,13 +290,12 @@ public class Scene
             cam.ClearColor = prevEditorCamera.ClearColor;
             cam.Size = prevEditorCamera.Size;
 
-#pragma warning disable CS8602
             editorCameraGo.Transform.Position = prevEditorCamera.Parent.Transform.Position;
-#pragma warning restore CS8602
+
         }
     }
     
-    public void AddGameObjectToScene(Gameobject go)
+    public void AddGameObjectToScene(Gameobject? go)
     {
         GameObjects.Add(go);
 
