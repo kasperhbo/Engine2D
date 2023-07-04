@@ -127,18 +127,29 @@ public class Gameobject : Asset, ICloneable
 
     internal void Destroy()
     {
-        for (int i = 0; i < Children.Count; i++)
+        var childCount = Children.Count;
+        for (var i = 0; i < childCount; i++)
         {
-            var child = Children[i];
-            Engine.Get().CurrentScene.FindObjectByUID(child)?.Destroy();
-            i--;
+            var go = Engine.Get().CurrentScene.FindObjectByUID(Children[i]);
+            go.Destroy();
+            for (var j = i; j < childCount - 1; j++)
+            {
+                Children[j] = Children[j + 1];
+            }
+
+            childCount--;
         }
 
-        for (int i = 0; i < Components.Count; i++)
+        var componentCount = Components.Count;
+        for (var i = 0; i < componentCount; i++)
         {
-            var comp = Components[i];
-            comp?.Destroy();
-            i--;
+            Components[i].Destroy();
+            for (var j = i; j < componentCount - 1; j++)
+            {
+                Components[j] = Components[j + 1];
+            }
+
+            componentCount--;
         }
 
         Engine.Get().CurrentScene.RemoveGameObject(this);
@@ -292,7 +303,7 @@ public class Gameobject : Asset, ICloneable
         parent.Children.Add(UID);
     }
 
-    public object Clone(bool getNewUID = false)
+    public Gameobject Clone(bool getNewUID = false)
     {
         Gameobject clone = (Gameobject)new Gameobject(this.Name);
 
@@ -303,15 +314,22 @@ public class Gameobject : Asset, ICloneable
         clone.UID            = this.UID           ;
         clone.CanBeSelected = this.CanBeSelected;
         clone.Serialize      = this.Serialize     ;
-        clone._isPopupOpen   = this._isPopupOpen  ;
+        clone._isPopupOpen   = this._isPopupOpen  ; 
         
         clone.Components = new();
-        // clone.Childs = new();
+        clone.Children = new();
         // clone._toReset = new();
         //
         foreach (var component in Components)
         {
             clone.Components.Add((Component)component.Clone());
+        }
+        
+        foreach (var child in Children)
+        {
+            var go = Engine.Get().CurrentScene.FindObjectByUID(child);
+            var cloneChild = go.Clone(true);
+            clone.Children.Add(cloneChild.UID);
         }
 
         return clone;

@@ -167,8 +167,7 @@ public class Scene
                 obj.Update(args);
                 if (obj.IsDead)
                 {
-                    GameObjects.Remove(obj);
-                    RemoveGameObject(obj);
+                    obj.Destroy();
                     i--;
                 }
             }
@@ -264,8 +263,7 @@ public class Scene
     
     public void RemoveGameObject(Gameobject? go)
     {
-        go.Destroy();
-        Engine.Get().CurrentSelectedAsset = null;
+        GameObjects.Remove(go);   
     }
 
     private void CreateEditorCamera(Camera? prevEditorCamera = null)
