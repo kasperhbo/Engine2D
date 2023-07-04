@@ -2,28 +2,19 @@
 
 internal static class UIDManager
 {
-    private static int s_uidcounter;
-    internal static List<int> TakenUIDS = new();
-
-    internal static void AddUID(int uid)
-    {
-        TakenUIDS.Add(uid);
-    }
+    private static int _sUidcounter;
+    public static readonly List<int> TakenUids = new();
 
     internal static int GetUID()
     {
-        var uid = s_uidcounter;
-        
-        s_uidcounter++;
+        _sUidcounter++;
         //Recursive call
-        if (TakenUIDS.Contains(uid))
+        if (TakenUids.Contains(_sUidcounter))
         {
-            
             return GetUID();
         }
  
-
-        TakenUIDS.Add(uid);
-        return uid;
+        TakenUids.Add(_sUidcounter);
+        return _sUidcounter;
     }
 }

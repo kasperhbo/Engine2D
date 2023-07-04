@@ -29,9 +29,9 @@ public class Gameobject : Asset, ICloneable
     [JsonProperty] public bool CanBeSelected = true;
     [JsonProperty] internal List<Component> Components = new();
     
-    [JsonIgnore]   private Gameobject? _parent;
-    [JsonIgnore]   internal bool Serialize = true;
-    [JsonIgnore]   bool _isPopupOpen = false;
+    [JsonIgnore] internal List<int> Children = new();
+    [JsonIgnore] internal bool Serialize = true;
+    [JsonIgnore] bool _isPopupOpen = false;
     [JsonIgnore]   public Transform Transform => GetComponent<Transform>();
     
     public Gameobject(string name)
@@ -59,8 +59,14 @@ public class Gameobject : Asset, ICloneable
 
     private void GetUID()
     {
-        if (UID == -1) UID = UIDManager.GetUID();
-        else UIDManager.TakenUIDS.Add(UID);
+        if (UID == -1)
+        {
+            UID = UIDManager.GetUID();
+        }
+        else
+        {
+            UIDManager.TakenUids.Add(UID);
+        }
     }
 
 
@@ -69,8 +75,6 @@ public class Gameobject : Asset, ICloneable
         GetUID();
         if (GetComponent<Transform>() == null)
         {
-            Log.Warning(Name + " Has no Transform Component, Adding one");
-
             var t = new Transform();
 
             t.Position = new Vector2(0, 0);
@@ -82,25 +86,13 @@ public class Gameobject : Asset, ICloneable
 
     internal void Start()
     {
+        if(ParentUid != -1)SetParent(ParentUid);
         foreach (var component in Components) component.Start();
     }
     
-    
-
     internal virtual void Update(FrameEventArgs args)
     {
         foreach (var component in Components) component.Update(args);
-        if (ParentUid != -1)
-        {
-            if (_parent == null) return;
-            Transform.Position = _parent.Transform.Position ;
-            
-            var thisSize   = Transform.GetFullSize(false);
-            var parentSize = _parent.Transform.GetFullSize(false);
-            thisSize = parentSize;
-            
-            Transform.Rotation = _parent.Transform.Rotation ;
-        }
     }
 
     internal virtual void EditorUpdate(double dt)
@@ -137,9 +129,38 @@ public class Gameobject : Asset, ICloneable
 
     internal void Destroy()
     {
-        // foreach (var child in Childs) Engine.Get().CurrentScene.FindObjectByUID(child)?.Destroy();
+       
+        var childCount = Children.Count;
+        for (var i = 0; i < childCount; i++)
+        {
+            var go = Engine.Get().CurrentScene.FindObjectByUID(Children[i]);
+            go.Destroy();
+            for (var j = i; j < childCount - 1; j++)
+            {
+                Children[j] = Children[j + 1];
+            }
+
+            childCount--;
+        }
+
+        var componentCount = Components.Count;
+        for (var i = 0; i < componentCount; i++)
+        {
+            Components[i].Destroy();
+            for (var j = i; j < componentCount - 1; j++)
+            {
+                Components[j] = Components[j + 1];
+            }
+
+            componentCount--;
+        }
         
-        foreach (var component in Components)   component.Destroy();
+        if (ParentUid != -1)
+        {
+            Engine.Get().CurrentScene.FindObjectByUID(ParentUid).Children.Remove(UID);
+        }
+
+        Engine.Get().CurrentScene.RemoveGameObject(this);
     }
 
     public Component? AddComponent(Component? component)
@@ -154,12 +175,6 @@ public class Gameobject : Asset, ICloneable
     {
         foreach (var component in Components)
         {
-            if (component == null)
-            {
-                Components.Remove(component);
-                break;
-            }
-
             if (typeof(T) == component.GetType())
                 return
                     (component as T)!;
@@ -269,12 +284,6 @@ public class Gameobject : Asset, ICloneable
             }
         }
         
-        if(ParentUid != -1)
-        {
-            pos.X += transform.LocalPosition.X;
-            pos.Y += transform.LocalPosition.Y;
-        }
-        
         var halfSize = size / 2;
         var x1 = pos.X - halfSize.X;
         var x2 = pos.X + halfSize.X;
@@ -311,28 +320,54 @@ public class Gameobject : Asset, ICloneable
 
         return clone;
     }
-    
-    public object Clone()
+	
+    public void SetParent(int draggingObjectUid)
+    {
+        if (UID == draggingObjectUid) return;
+        var parent = Engine.Get().CurrentScene.FindObjectByUID(draggingObjectUid);
+        
+        if (parent == null) return;
+        if (parent.Children.Contains(draggingObjectUid)) return;
+        
+        ParentUid = parent.UID;
+        
+        parent.Children.Add(UID);
+    }
+
+    public Gameobject Clone(bool getNewUID = false)
     {
         Gameobject clone = (Gameobject)new Gameobject(this.Name);
 
         clone.Name           = this.Name          ;
-        clone.ParentUid      = this.ParentUid     ;
-        clone.UID            = this.UID           ;
+        
+        clone.UID = getNewUID ? UIDManager.GetUID() : this.UID;
+
         clone.CanBeSelected = this.CanBeSelected;
         clone.Serialize      = this.Serialize     ;
-        clone._isPopupOpen   = this._isPopupOpen  ;
+        clone._isPopupOpen   = this._isPopupOpen  ; 
         
         clone.Components = new();
-        // clone.Childs = new();
-        // clone._toReset = new();
-        //
+        clone.Children = new();
+        
+        Engine.Get().CurrentScene.AddGameObjectToScene(clone);
+        
         foreach (var component in Components)
         {
-            clone.Components.Add((Component)component.Clone());
+            clone.AddComponent((Component)component.Clone());
+        }
+        
+        foreach (var child in Children)
+        {
+            var go = Engine.Get().CurrentScene.FindObjectByUID(child);
+            var cloneChild = go.Clone(true);
+            cloneChild.SetParent(clone.UID);
         }
 
         return clone;
     }
 
+    public object Clone()
+    {
+        return Clone(false);
+    }
 }

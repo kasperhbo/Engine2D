@@ -39,13 +39,15 @@ internal class SceneHierachyPanel : UIElement
     {
         var selected = go == Engine.Get().CurrentSelectedAsset;
 
+        if (go == null) return;
+        
         var flags = ImGuiTreeNodeFlags.FramePadding
                     | ImGuiTreeNodeFlags.DefaultOpen
                     | (selected ? ImGuiTreeNodeFlags.Selected : 0)
                     | ImGuiTreeNodeFlags.Leaf
                     | ImGuiTreeNodeFlags.SpanAvailWidth
                     | ImGuiTreeNodeFlags.OpenOnArrow;
-
+        
         var open = ImGui.TreeNodeEx(go.UID.ToString(), flags, go.Name);
 
         //Handle Drag Drop
@@ -56,10 +58,13 @@ internal class SceneHierachyPanel : UIElement
 
         if (open)
         {
-            // for (var i = 0;
-            //      i < go.Childs.Count;
-            //      i++)
-            //     DrawGameobjectNode(Engine.Get().CurrentScene.FindObjectByUID(go.Childs[i]));
+            for (var i = 0;
+                 i < go.Children.Count;
+                 i++)
+            {
+                var item = Engine.Get().CurrentScene.FindObjectByUID(go.Children[i]);
+                DrawGameobjectNode(item);
+            }
 
             ImGui.TreePop();
         }
@@ -67,26 +72,17 @@ internal class SceneHierachyPanel : UIElement
     private GCHandle? _currentlyDraggedHandle;
     private unsafe void HierachyItemDragDropped(Gameobject? draggingObject)
     {
-        // if (ImGui.BeginDragDropTarget())
-        // {
-        //     var payload = ImGui.AcceptDragDropPayload("GAMEOBJECT_DROP_Hierachy");
-        //     if (payload.IsValidPayload())
-        //     {
-        //         Log.Message(string.Format("Dropping: {0}, onto: {1}", _currentlyDraggingOBJ.UID, draggingObject.UID));
-        //         // _currentlyDraggingOBJ.SetParent(draggingObject.UID);
-        //     }
-        //
-        //     ImGui.EndDragDropTarget();
-        // }
-        //
-        // if (ImGui.BeginDragDropSource())
-        // {
-        //     _currentlyDragging = true;
-        //     ImGui.SetDragDropPayload("GAMEOBJECT_DROP_Hierachy", IntPtr.Zero, 0);
-        //     _currentlyDraggingOBJ = draggingObject;
-        //     ImGui.EndDragDropSource();
-        // }
+        if (ImGui.BeginDragDropTarget())
+        {
+            var payload = ImGui.AcceptDragDropPayload("GAMEOBJECT_DROP_Hierachy");
+            if (payload.IsValidPayload())
+            {
+                _currentlyDraggingOBJ.SetParent(draggingObject.UID);
+            }
 
+            ImGui.EndDragDropTarget();
+        }
+        
         if (ImGui.BeginDragDropSource())
         {
             _currentlyDraggedHandle ??= GCHandle.Alloc(draggingObject);
