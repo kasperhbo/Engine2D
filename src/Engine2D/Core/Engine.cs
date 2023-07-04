@@ -160,7 +160,7 @@ namespace Engine2D.Core
 
             AssignDefaultEvents();
 
-            SwitchScene(ProjectSettings.FullProjectPath + "\\kasper1.kdbscene");
+            SwitchScene(ProjectSettings.FullProjectPath + "\\parentingtest.kdbscene");
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);

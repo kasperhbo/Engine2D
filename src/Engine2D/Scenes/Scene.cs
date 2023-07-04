@@ -37,7 +37,7 @@ public class Scene
         _clonesOnStart = new();
         foreach (var go in GameObjects)
         {
-            if(go is { ParentUid: -1, Serialize: true }) 
+            if(go is { Serialize: true }) 
                 _clonesOnStart.Add((Gameobject)go.Clone());
         }
         

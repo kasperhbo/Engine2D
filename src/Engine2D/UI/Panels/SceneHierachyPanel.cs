@@ -54,10 +54,13 @@ internal class SceneHierachyPanel : UIElement
 
         if (open)
         {
-            // for (var i = 0;
-            //      i < go.Childs.Count;
-            //      i++)
-            //     DrawGameobjectNode(Engine.Get().CurrentScene.FindObjectByUID(go.Childs[i]));
+            for (var i = 0;
+                 i < go.Children.Count;
+                 i++)
+            {
+                var item = Engine.Get().CurrentScene.FindObjectByUID(go.Children[i]);
+                DrawGameobjectNode(item);
+            }
 
             ImGui.TreePop();
         }
@@ -70,8 +73,7 @@ internal class SceneHierachyPanel : UIElement
             var payload = ImGui.AcceptDragDropPayload("GAMEOBJECT_DROP_Hierachy");
             if (payload.IsValidPayload())
             {
-                Log.Message(string.Format("Dropping: {0}, onto: {1}", _currentlyDraggingOBJ.UID, draggingObject.UID));
-                // _currentlyDraggingOBJ.SetParent(draggingObject.UID);
+                _currentlyDraggingOBJ.SetParent(draggingObject.UID);
             }
 
             ImGui.EndDragDropTarget();
