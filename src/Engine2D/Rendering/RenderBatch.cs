@@ -18,7 +18,7 @@ namespace Engine2D.Rendering;
 
 internal class RenderBatch : IComparable<RenderBatch>
 {
-    private const int c_maxBatchSize = 20000;
+    private const int c_maxBatchSize = 5000;
 
     private const int c_posSize = 2;
     private const int c_colorSize = 4;
@@ -183,6 +183,9 @@ internal class RenderBatch : IComparable<RenderBatch>
             renderer.RenderBatchesToRemoveEndOfFrame.Add(this);
             return;
         }
+
+        Renderer.DrawCalls++;
+        Renderer.RenderedObjects += _spriteCount;
         
         var projectionMatrix = camera.GetProjectionMatrix();
         var viewMatrix = camera.GetViewMatrix();

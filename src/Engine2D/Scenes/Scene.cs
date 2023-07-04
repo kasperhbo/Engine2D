@@ -173,6 +173,18 @@ public class Scene
                 }
             }
         }
+
+        AfterUpdate();
+    }
+
+    private void AfterUpdate()
+    {
+        for (int i = 0; i < toBeAddIndex; i++)
+        {
+            AddGameObjectToScene(toBeAdd[i], true);
+        }
+
+        toBeAddIndex = 0;
     }
     
     /// <summary>
@@ -270,7 +282,7 @@ public class Scene
 
     private void CreateEditorCamera(Camera? prevEditorCamera = null)
     {
-        Gameobject? editorCameraGo = new Gameobject("EDITORCAMERA");
+        Gameobject editorCameraGo = new Gameobject("EDITORCAMERA");
         
         editorCameraGo.AddComponent(new CameraControls());
         editorCameraGo.CanBeSelected = false;
@@ -289,20 +301,28 @@ public class Scene
             cam.Near = prevEditorCamera.Near;
             cam.ClearColor = prevEditorCamera.ClearColor;
             cam.Size = prevEditorCamera.Size;
-
-            editorCameraGo.Transform.Position = prevEditorCamera.Parent.Transform.Position;
-
         }
     }
-    
-    public void AddGameObjectToScene(Gameobject? go)
-    {
-        GameObjects.Add(go);
 
-        go.Init(Renderer);
-        go.Start();
-        
-        if(go.Serialize)
-            Engine.Get().CurrentSelectedAsset = go;
+    private Gameobject[] toBeAdd = new Gameobject[1000];
+    private int toBeAddIndex = 0;
+    
+    public void AddGameObjectToScene(Gameobject? go, bool directlyAdd = false)
+    {
+        if(!_isPlaying  || directlyAdd)
+        {
+            GameObjects.Add(go);
+
+            go.Init(Renderer);
+            go.Start();
+
+            if (go.Serialize)
+                Engine.Get().CurrentSelectedAsset = go;
+        }
+        else
+        {
+            toBeAdd[toBeAddIndex] = go;
+            toBeAddIndex++;
+        }
     }
 }

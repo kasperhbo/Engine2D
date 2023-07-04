@@ -2,6 +2,7 @@
 
 using System.Numerics;
 using Box2DSharp.Dynamics;
+using Engine2D.Core;
 using Engine2D.UI.ImGuiExtension;
 using Newtonsoft.Json;
 using OpenTK.Windowing.Common;
@@ -49,6 +50,13 @@ public class RigidBody : Component
         {
             Parent.Transform.Position = RuntimeBody.GetPosition();
         }
+    }
+
+    public override void Destroy()
+    {
+        Engine.Get().CurrentScene._physics2DWorld?.RemoveRigidBody(this);
+
+        base.Destroy();
     }
 
     public override void StartPlay()

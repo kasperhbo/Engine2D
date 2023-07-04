@@ -6,9 +6,11 @@ using Engine2D.Components.Sprites;
 using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
+using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
+using Engine2D.SavingLoading;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
@@ -30,6 +32,7 @@ internal enum ESupportedFileTypes
     tex,
     txt,
     cs,
+    prefab,
     animation
 }
 
@@ -248,6 +251,24 @@ internal class AssetBrowserPanel : UIElement
             ImGui.PopStyleColor(2);
             ImGui.EndTable();
         }
+        if (ImGui.BeginDragDropTarget())
+        {
+            var payload = ImGui.AcceptDragDropPayload("gameobject_drop_hierachy");
+            if (payload.IsValidPayload())
+            {
+                Console.WriteLine("drop");
+                var handle = GCHandle.FromIntPtr(new IntPtr(payload.Data));
+                var draggedObject = (Gameobject?)handle.Target;
+                
+                if (draggedObject != null)
+                {
+                    var savePath = CurrentDirectory.FullName + "\\";
+                    
+                    SaveLoad.SaveGameobject(savePath, draggedObject);
+                }
+            }
+            ImGui.EndDragDropTarget();
+        }
 
         ImGui.PopID();
 
@@ -451,6 +472,12 @@ internal class AssetBrowserEntry
                     ImGui.SetDragDropPayload("script_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
                         (uint)sizeof(IntPtr));
                     break;
+                case ESupportedFileTypes.prefab:
+                {
+                    ImGui.SetDragDropPayload("prefab_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                        (uint)sizeof(IntPtr));
+                    break;
+                }
             }
 
 

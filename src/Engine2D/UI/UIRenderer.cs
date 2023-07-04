@@ -5,6 +5,7 @@ using Dear_ImGui_Sample;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
+using Engine2D.Rendering;
 using Engine2D.UI.Browsers;
 using Engine2D.UI.Viewports;
 using Engine2D.Utilities;
@@ -90,6 +91,10 @@ internal static class UiRenderer
         ImGui.Text($"FPS: {1 / args.Time:0.00}");
         ImGui.Text($"Frame Time: {args.Time * 1000:0.00}ms");
         ImGui.Text("Render batches: " + Engine.Get().CurrentScene.Renderer.RenderBatches.Count);
+        ImGui.Checkbox("Render lines", ref Renderer.DebugRender);
+        ImGui.Text("Rendered objects: " + Renderer.RenderedObjects);
+        ImGui.Text("Draw calls: "       + Renderer.DrawCalls);
+        
         
         ImGui.EndChild();
         if (ImGui.Button("Reload Assembly")) AssemblyUtils.Reload();

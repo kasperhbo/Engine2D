@@ -1,8 +1,10 @@
 ﻿#region
 
 using System.Numerics;
+using System.Text;
 using Engine2D.Components;
 using Engine2D.Components.SpriteAnimations;
+using Engine2D.Components.Sprites;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Logging;
@@ -21,7 +23,7 @@ namespace Engine2D.GameObjects;
 
 public class Gameobject : Asset, ICloneable
 {
-    [JsonProperty] internal string Name = "";
+    [JsonProperty] public string Name = "";
     [JsonProperty] internal int ParentUid = -1;
     [JsonProperty] internal int UID = -1;
     [JsonProperty] public bool CanBeSelected = true;
@@ -287,7 +289,7 @@ public class Gameobject : Asset, ICloneable
         return inBox1 && inBox2 && inBox3 && inBox4;
     }
 
-    public object Clone(int uid)
+    public Gameobject Clone(int uid)
     {
         Gameobject clone = (Gameobject)new Gameobject(this.Name);
 
@@ -331,6 +333,6 @@ public class Gameobject : Asset, ICloneable
         }
 
         return clone;
-
     }
+
 }

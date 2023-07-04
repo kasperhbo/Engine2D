@@ -66,6 +66,12 @@ public class Physics2DWorld
         }
     }
 
+    internal void RemoveRigidBody(RigidBody rb)
+    {
+        if(rb.RuntimeBody != null)
+            _world.DestroyBody(rb.RuntimeBody);
+    }
+
     internal void GameUpdate(float dt)
     {
         _physicsTime += dt;
@@ -99,22 +105,24 @@ public class Physics2DWorld
     }
     
     // Create a raycaster
-    public bool Raycast(Vector2 startPoint, Vector2 endPoint)
+    public GroundedRaycastCallback Raycast(Vector2 startPoint, Vector2 endPoint)
     {
         GroundedRaycastCallback callback = new GroundedRaycastCallback();
         // Perform the raycast
         _world.RayCast(callback, startPoint, endPoint);
-        return callback.IsGrounded;
+        return callback;
     }
 }
 
-class GroundedRaycastCallback : IRayCastCallback
+public class GroundedRaycastCallback : IRayCastCallback
 {
     public bool IsGrounded { get; private set; }
+    public Fixture Fixture { get; private set; }
 
     public GroundedRaycastCallback()
     {
         IsGrounded = false;
+        Fixture = new();
     }
 
     public float RayCastCallback(Fixture fixture, in Vector2 point, in Vector2 normal, float fraction)
@@ -124,7 +132,7 @@ class GroundedRaycastCallback : IRayCastCallback
         {
             // Set the grounded flag to true
             IsGrounded = true;
-
+            Fixture.UserData = fixture.UserData;
             // Stop the raycast since we found a ground or platform
             return 0;
         }

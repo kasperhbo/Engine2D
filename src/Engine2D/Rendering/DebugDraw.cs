@@ -22,7 +22,7 @@ internal static class DebugDraw
 
     private static float _gridSize;
 
-    
+
     static DebugDraw()
     {
         var dat = new ShaderData();
@@ -54,8 +54,6 @@ internal static class DebugDraw
 
     internal static void Render(Camera cam)
     {
-        //AddGridLines(cam);
-        
         if (_lines.Count <= 0) return;
         
         RemoveDeadLines();

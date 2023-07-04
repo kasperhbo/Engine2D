@@ -47,7 +47,7 @@ public class CameraControls : Component
             return;
         }
         
-        if ((UiRenderer.CurrentEditorViewport == null || !UiRenderer.CurrentEditorViewport.GetWantCaptureMouse()) && Settings.s_IsEngine) return;
+        if ((UiRenderer.CurrentEditorViewport == null || !UiRenderer.CurrentEditorViewport.IsFocused()) && Settings.s_IsEngine) return;
         
         if (Input.MouseDown(MouseButton.Middle))
         {

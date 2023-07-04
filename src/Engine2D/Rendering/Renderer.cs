@@ -5,6 +5,7 @@ using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Testing;
+using Engine2D.UI;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
@@ -15,18 +16,18 @@ namespace Engine2D.Rendering;
 
 internal class Renderer
 {
+    public static int RenderedObjects = 0;
+    public static int DrawCalls = 0;
+    public static bool DebugRender = true;
+    
     internal List<RenderBatch> RenderBatches { get; private set; } = new();
     internal List<RenderBatch> RenderBatchesToRemoveEndOfFrame { get; set; } = new();
     
     private static readonly Dictionary<int, RenderBatch> _spriteBatchDict = new();
     private readonly int _maxLights = 250;
-
-    #region Debugging
-
-    private int _drawCalls;
-
-    #endregion
-
+    
+   
+    
     private LightMapRenderer _lightMapRenderer = new();
 
     private List<PointLightComponent> _pointLights = new();
@@ -59,12 +60,13 @@ internal class Renderer
 
     internal void Render()
     {
+        RenderedObjects = 0;
         Camera editorCamera = Engine.Get().CurrentScene.GetEditorCamera();
         Camera gameCamera = Engine.Get().CurrentScene.GetMainCamera();
         
         RenderBatchesToRemoveEndOfFrame = new();
         
-        _drawCalls = 0;
+        DrawCalls = 0;
 
         {
             //Render Lights
@@ -75,7 +77,7 @@ internal class Renderer
             
             if(Settings.s_IsEngine)
                 GameBuffer.Bind();
-
+        
             if (gameCamera != null)
                 GL.ClearColor(gameCamera.ClearColor.X / 255, gameCamera.ClearColor.Y / 255,
                     gameCamera.ClearColor.Z / 255,
@@ -85,52 +87,53 @@ internal class Renderer
             GL.Disable(EnableCap.Blend);
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
-
-            foreach (var batch in RenderBatches) batch.Render(gameCamera, LightmapTexture, this);
+        
+            foreach (var batch in RenderBatches)
+            {
+                batch.Render(gameCamera, LightmapTexture, this);
+            }
             
             if(Settings.s_IsEngine)
                 GameBuffer.UnBind();
         }
         
-        if(Settings.s_IsEngine)
+        if(Settings.s_IsEngine && UiRenderer.CurrentEditorViewport.IsFocused())
         {
-            if (Settings.s_RenderDebugWindowSeperate)
             {
+                if (editorCamera == null) return;
+                //Render Lights
                 {
-                    if (editorCamera == null) return;
-                    //Render Lights
+                    GL.ClearColor(0, 0, 0, 0);
+                    LightmapTexture = _lightMapRenderer.Render(this, editorCamera);
+                }
+
+                //Render the scene
+                {
+                    if (editorCamera == null || EditorGameBuffer == null) return;
+
+                    if (Settings.s_IsEngine)
+                        EditorGameBuffer.Bind();
+
+                    if (gameCamera != null)
+                        GL.ClearColor(gameCamera.ClearColor.X / 255, gameCamera.ClearColor.Y / 255,
+                            gameCamera.ClearColor.Z / 255,
+                            gameCamera.ClearColor.W / 255);
+
+
+                    GL.Clear(ClearBufferMask.ColorBufferBit);
+                    GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
+
+                    foreach (var batch in RenderBatches)
                     {
-                        GL.ClearColor(0, 0, 0, 0);
-                        LightmapTexture = _lightMapRenderer.Render(this, editorCamera);
+                        batch.Render(editorCamera, LightmapTexture, this);
                     }
 
-                    //Render the scene
-                    {
-                        if (editorCamera == null || EditorGameBuffer == null) return;
-                
-                        if (Settings.s_IsEngine)
-                            EditorGameBuffer.Bind();
-
-                        if (gameCamera != null)
-                            GL.ClearColor(editorCamera.ClearColor.X / 255, editorCamera.ClearColor.Y / 255,
-                                editorCamera.ClearColor.Z / 255,
-                                editorCamera.ClearColor.W / 255);
-
-                        GL.Clear(ClearBufferMask.ColorBufferBit);
-                        GL.Disable(EnableCap.Blend);
-                        GL.Enable(EnableCap.Blend);
-                        GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
-                        
-                        foreach (var batch in RenderBatches) batch.Render(editorCamera, LightmapTexture, this);
-
-                        DebugDraw.Render(editorCamera);
-                        if (Settings.s_IsEngine)
-                            EditorGameBuffer.UnBind();
-                    }
+                    if (Settings.s_IsEngine)
+                        EditorGameBuffer.UnBind();
                 }
             }
         }
-        RemoveOldBatches();
+        //RemoveOldBatches();
     }
 
     private void RemoveOldBatches()

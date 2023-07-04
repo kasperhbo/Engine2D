@@ -23,12 +23,7 @@ public static class SceneControls
         Camera editorCamera = Engine.Get().CurrentScene.GetEditorCamera(); 
         
         if (Engine.Get().CurrentSelectedAsset != null)
-        {
-            if (Input.KeyPressed(Keys.Delete))
-            {
-                Engine.Get().CurrentSelectedAsset.IsDead = true;
-            }
-            
+        { 
             if(editorCamera != null)
             {
                 var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
@@ -61,22 +56,22 @@ public static class SceneControls
 
     private static void MouseControls()
     {
-        if (Input.MousePressed(MouseButton.Left) && !ImGui.IsMouseDragging(ImGuiMouseButton.Left))
-        {
-            if(UiRenderer.CurrentEditorViewport.GetWantCaptureMouse())
-            {                
-                var mouseScreenPos = Input.MouseEditorPos;
-                for (int i = 0; i < Engine.Get().CurrentScene.GameObjects.Count; i++)
-                {
-                    var go = Engine.Get().CurrentScene.GameObjects[i];
-                    if (go.AABB(mouseScreenPos.X, mouseScreenPos.Y))
-                    {
-                        Engine.Get().CurrentSelectedAsset = go;
-                        break;
-                    }
-                }
-            }
-        }
+        // if (Input.MousePressed(MouseButton.Left) && !ImGui.IsMouseDragging(ImGuiMouseButton.Left))
+        // {
+        //     if(UiRenderer.CurrentEditorViewport.IsFocused())
+        //     {                
+        //         var mouseScreenPos = Input.MouseEditorPos;
+        //         for (int i = 0; i < Engine.Get().CurrentScene.GameObjects.Count; i++)
+        //         {
+        //             var go = Engine.Get().CurrentScene.GameObjects[i];
+        //             if (go.AABB(mouseScreenPos.X, mouseScreenPos.Y))
+        //             {
+        //                 Engine.Get().CurrentSelectedAsset = go;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // }
     }
 
 

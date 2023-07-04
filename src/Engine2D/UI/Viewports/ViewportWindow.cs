@@ -5,12 +5,14 @@ using Engine2D.Cameras;
 using Engine2D.Core;
 using Engine2D.Testing;
 using ImGuiNET;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 #endregion
 
 namespace Engine2D.UI.Viewports;
 
-internal abstract class ViewportWindow
+internal abstract class ViewportWindow : IFocussable
 {
     protected Camera Camera;
     protected Vector2 Origin;
@@ -18,7 +20,9 @@ internal abstract class ViewportWindow
     
     private TestFrameBuffer? _frameBuffer = null;
     
-    private bool _isHovering;
+    private bool _isHovering  = false;
+    private bool _isFocussed  = false;
+    
     private string _title;
 
     protected ViewportWindow(string title)
@@ -47,7 +51,9 @@ internal abstract class ViewportWindow
     {
         ImGui.Begin(_title,
             ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar);
-
+        
+        _isFocussed = GetIsFocused();
+        
         ImGui.BeginMenuBar();
         if (ImGui.MenuItem("Play", "", Engine.Get().CurrentScene.IsPlaying, !Engine.Get().CurrentScene.IsPlaying))
         {
@@ -79,14 +85,14 @@ internal abstract class ViewportWindow
 
     protected abstract void AfterImageRender();
 
-    public bool GetWantCaptureMouse()
-    {
-        return _isHovering;
-    }
-
     private void End()
     {
         ImGui.End();
+    }
+
+    private bool GetIsFocused()
+    {
+        return !ImGui.GetCurrentWindow().Hidden;
     }
 
     private Vector2 GetLargestSizeForViewport()
@@ -112,5 +118,45 @@ internal abstract class ViewportWindow
         float viewportY = (windowSize.Y / 2.0f) - (aspectSize.Y / 2.0f);
 
         return new(viewportX + ImGui.GetCursorPosX(), viewportY + ImGui.GetCursorPosY());
+    }
+
+
+    public bool IsFocused()
+    {
+        return _isFocussed;
+    }
+
+    public void OnFocus()
+    {
+    }
+
+    public void OnUnfocus()
+    {
+    }
+
+    public void OnHover()
+    {
+    }
+
+    public void OnUnHover()
+    {
+    }
+
+    public void OnTextInput(TextInputEventArgs args)
+    {
+        
+    }
+    
+    public void OnKeyDown(KeyboardKeyEventArgs args)
+    {
+        if (args.Key == Keys.Delete)
+        {
+            Engine.Get().CurrentSelectedAsset.IsDead = true;
+        }
+    }
+
+    public void OnKeyUp(KeyboardKeyEventArgs args)
+    {
+        
     }
 }

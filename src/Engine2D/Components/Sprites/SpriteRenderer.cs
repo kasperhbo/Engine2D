@@ -32,8 +32,21 @@ public class SpriteRenderer : Component
     {
         get
         {
+            
             if (Sprite != null)
+            {
+                if (FlipX)
+                {
+                    return new Vector2[]
+                    {
+                        Sprite.TextureCoords[3],
+                        Sprite.TextureCoords[2],
+                        Sprite.TextureCoords[1],
+                        Sprite.TextureCoords[0]
+                    };
+                }
                 return Sprite.TextureCoords;
+            }
             else
                 return _defaultTextureCoords;
         }
@@ -60,7 +73,7 @@ public class SpriteRenderer : Component
     [JsonProperty] internal                       int      ZIndex                 = 0;
     [JsonProperty] internal                       Vector4  Color                  = new(255,255,255,255);
     [JsonProperty] internal                       int      SpriteSheetSpriteIndex = 0;
-        
+    [JsonProperty] internal bool FlipX = false;
 
     public override void Init()
     {
@@ -75,6 +88,7 @@ public class SpriteRenderer : Component
             _currentTranslation = Parent.GetComponent<Transform>().GetTranslation(includeSprite:true);
         
         Refresh();
+        
     }
     
 

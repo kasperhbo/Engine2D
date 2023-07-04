@@ -22,6 +22,8 @@ namespace Engine2D.Core
 {
     public class Engine : GameWindow
     {
+        private IFocussable? _currentFocussed = null;
+
         private static Engine? s_instance;
 
         private readonly Dictionary<string, UIElement> _guiWindows = new();
@@ -160,7 +162,7 @@ namespace Engine2D.Core
 
             AssignDefaultEvents();
 
-            SwitchScene(ProjectSettings.FullProjectPath + "\\kasper1.kdbscene");
+            SwitchScene(ProjectSettings.FullProjectPath + "\\Kasper1.kdbscene");
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);

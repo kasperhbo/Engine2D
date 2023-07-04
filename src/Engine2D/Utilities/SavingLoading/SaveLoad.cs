@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Formatters.Soap;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.Scenes;
 using Engine2D.UI;
 using Newtonsoft.Json;
@@ -13,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace Engine2D.SavingLoading;
 
-internal static class SaveLoad
+public static class SaveLoad
 {
     internal static bool SaveStatic(Type static_class, string filename)
     {
@@ -123,7 +124,30 @@ internal static class SaveLoad
     {
     }
 
+    public static Gameobject? LoadGameobject(string relativePath)
+    {
+        string path = ProjectSettings.FullProjectPath + "\\" + relativePath;
+        if (File.Exists(path))
+        {
+            var lines = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<Gameobject>(lines).Clone(UIDManager.GetUID());
+        }
 
+        return null;
+    }
+    public static void SaveGameobject(string path, Gameobject gameobject)
+    {
+        var fileName = String.Format(path + "gameobject" + ".prefab");
+        var lines = JsonConvert.SerializeObject(gameobject, Formatting.Indented);
+        using (var fs = File.Create(fileName))
+        {
+            fs.Close();
+        }
+        File.WriteAllText(fileName, lines);
+    }
+    
+    
+    
     #region scenes
 
     internal static void SaveScene(Scene scene)

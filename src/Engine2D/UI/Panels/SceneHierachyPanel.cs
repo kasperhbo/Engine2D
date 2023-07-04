@@ -1,9 +1,11 @@
 ﻿#region
 
+using System.Runtime.InteropServices;
 using Engine2D.Components.SpriteAnimations;
 using Engine2D.Core;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
+using Engine2D.SavingLoading;
 using ImGuiNET;
 
 #endregion
@@ -62,28 +64,53 @@ internal class SceneHierachyPanel : UIElement
             ImGui.TreePop();
         }
     }
-
-    private void HierachyItemDragDropped(Gameobject? draggingObject)
+    private GCHandle? _currentlyDraggedHandle;
+    private unsafe void HierachyItemDragDropped(Gameobject? draggingObject)
     {
-        if (ImGui.BeginDragDropTarget())
-        {
-            var payload = ImGui.AcceptDragDropPayload("GAMEOBJECT_DROP_Hierachy");
-            if (payload.IsValidPayload())
-            {
-                Log.Message(string.Format("Dropping: {0}, onto: {1}", _currentlyDraggingOBJ.UID, draggingObject.UID));
-                // _currentlyDraggingOBJ.SetParent(draggingObject.UID);
-            }
-
-            ImGui.EndDragDropTarget();
-        }
+        // if (ImGui.BeginDragDropTarget())
+        // {
+        //     var payload = ImGui.AcceptDragDropPayload("GAMEOBJECT_DROP_Hierachy");
+        //     if (payload.IsValidPayload())
+        //     {
+        //         Log.Message(string.Format("Dropping: {0}, onto: {1}", _currentlyDraggingOBJ.UID, draggingObject.UID));
+        //         // _currentlyDraggingOBJ.SetParent(draggingObject.UID);
+        //     }
+        //
+        //     ImGui.EndDragDropTarget();
+        // }
+        //
+        // if (ImGui.BeginDragDropSource())
+        // {
+        //     _currentlyDragging = true;
+        //     ImGui.SetDragDropPayload("GAMEOBJECT_DROP_Hierachy", IntPtr.Zero, 0);
+        //     _currentlyDraggingOBJ = draggingObject;
+        //     ImGui.EndDragDropSource();
+        // }
 
         if (ImGui.BeginDragDropSource())
         {
-            _currentlyDragging = true;
-            ImGui.SetDragDropPayload("GAMEOBJECT_DROP_Hierachy", IntPtr.Zero, 0);
-            _currentlyDraggingOBJ = draggingObject;
+            _currentlyDraggedHandle ??= GCHandle.Alloc(draggingObject);
+
+            ImGui.SetDragDropPayload("gameobject_drop_hierachy", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                (uint)sizeof(IntPtr));
             ImGui.EndDragDropSource();
         }
+        
+        // if (ImGui.BeginDragDropTarget())
+        // {
+        //     var payload = ImGui.AcceptDragDropPayload("gameobject_drop_hierachy");
+        //     if (payload.IsValidPayload())
+        //     {
+        //         var handle = GCHandle.FromIntPtr(new IntPtr(payload.Data));
+        //         var draggedObject = (Gameobject?)handle.Target;
+        //         
+        //         if (draggedObject != null)
+        //         {
+        //             draggedObject.SetParent(draggingObject.UID);
+        //         }
+        //     }
+        //     ImGui.EndDragDropTarget();
+        // }
     }
 
     private void HierachyItemClicked(Gameobject? clicked)
@@ -141,6 +168,17 @@ internal class SceneHierachyPanel : UIElement
                 }
             }
             ImGui.EndChild();
+            if (ImGui.BeginDragDropTarget())
+            {
+                var payload = ImGui.AcceptDragDropPayload("prefab_drop");
+                if (payload.IsValidPayload())
+                {
+                    var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
+                    var prefab = SaveLoad.LoadGameobject(filename);
+                    Engine.Get().CurrentScene.AddGameObjectToScene(prefab);
+                }
+                ImGui.EndDragDropTarget();
+            }
         }
         ;
     }
