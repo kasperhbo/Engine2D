@@ -37,13 +37,15 @@ internal class SceneHierachyPanel : UIElement
     {
         var selected = go == Engine.Get().CurrentSelectedAsset;
 
+        if (go == null) return;
+        
         var flags = ImGuiTreeNodeFlags.FramePadding
                     | ImGuiTreeNodeFlags.DefaultOpen
                     | (selected ? ImGuiTreeNodeFlags.Selected : 0)
                     | ImGuiTreeNodeFlags.Leaf
                     | ImGuiTreeNodeFlags.SpanAvailWidth
                     | ImGuiTreeNodeFlags.OpenOnArrow;
-
+        
         var open = ImGui.TreeNodeEx(go.UID.ToString(), flags, go.Name);
 
         //Handle Drag Drop

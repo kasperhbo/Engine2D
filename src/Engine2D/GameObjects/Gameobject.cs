@@ -127,6 +127,7 @@ public class Gameobject : Asset, ICloneable
 
     internal void Destroy()
     {
+       
         var childCount = Children.Count;
         for (var i = 0; i < childCount; i++)
         {
@@ -150,6 +151,11 @@ public class Gameobject : Asset, ICloneable
             }
 
             componentCount--;
+        }
+        
+        if (ParentUid != -1)
+        {
+            Engine.Get().CurrentScene.FindObjectByUID(ParentUid).Children.Remove(UID);
         }
 
         Engine.Get().CurrentScene.RemoveGameObject(this);
@@ -310,30 +316,29 @@ public class Gameobject : Asset, ICloneable
         clone.Name           = this.Name          ;
         
         clone.UID = getNewUID ? UIDManager.GetUID() : this.UID;
-        
-        clone.UID            = this.UID           ;
+
         clone.CanBeSelected = this.CanBeSelected;
         clone.Serialize      = this.Serialize     ;
         clone._isPopupOpen   = this._isPopupOpen  ; 
         
         clone.Components = new();
         clone.Children = new();
-        // clone._toReset = new();
-        //
+        
+        Engine.Get().CurrentScene.AddGameObjectToScene(clone);
+        
         foreach (var component in Components)
         {
-            clone.Components.Add((Component)component.Clone());
+            clone.AddComponent((Component)component.Clone());
         }
         
         foreach (var child in Children)
         {
             var go = Engine.Get().CurrentScene.FindObjectByUID(child);
             var cloneChild = go.Clone(true);
-            clone.Children.Add(cloneChild.UID);
+            cloneChild.SetParent(clone.UID);
         }
 
         return clone;
-
     }
 
     public object Clone()

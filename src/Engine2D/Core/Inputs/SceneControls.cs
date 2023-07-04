@@ -50,7 +50,6 @@ public static class SceneControls
                     {
                         Gameobject? go2 = (Gameobject)go.Clone(getNewUID:true);
                         go2.Name = go.Name + go.UID;
-                        Engine.Get().CurrentScene.AddGameObjectToScene(go2);
                     }
                 }
             }
