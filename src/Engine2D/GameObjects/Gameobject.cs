@@ -27,7 +27,7 @@ public class Gameobject : Asset, ICloneable
     [JsonProperty] internal int ParentUid = -1;
     [JsonProperty] internal int UID = -1;
     [JsonProperty] public bool CanBeSelected = true;
-    [JsonProperty] internal List<Component> Components = new();
+    [JsonProperty] public List<Component> Components = new();
     
     [JsonIgnore] internal List<int> Children = new();
     [JsonIgnore] internal bool Serialize = true;
@@ -128,8 +128,7 @@ public class Gameobject : Asset, ICloneable
     }
 
     internal void Destroy()
-    {
-       
+    {  
         var childCount = Children.Count;
         for (var i = 0; i < childCount; i++)
         {
@@ -159,8 +158,6 @@ public class Gameobject : Asset, ICloneable
         {
             Engine.Get().CurrentScene.FindObjectByUID(ParentUid).Children.Remove(UID);
         }
-
-        Engine.Get().CurrentScene.RemoveGameObject(this);
     }
 
     public Component? AddComponent(Component? component)
@@ -298,6 +295,11 @@ public class Gameobject : Asset, ICloneable
         return inBox1 && inBox2 && inBox3 && inBox4;
     }
 
+    public object Clone()
+    {
+        return Clone(this.UID);
+    }
+
     public Gameobject Clone(int uid)
     {
         Gameobject clone = (Gameobject)new Gameobject(this.Name);
@@ -310,17 +312,15 @@ public class Gameobject : Asset, ICloneable
         clone._isPopupOpen   = this._isPopupOpen  ;
         
         clone.Components = new();
-        // clone.Childs = new();
-        // clone._toReset = new();
-        //
+        
         foreach (var component in Components)
         {
             clone.Components.Add((Component)component.Clone());
         }
-
+        
         return clone;
     }
-	
+    
     public void SetParent(int draggingObjectUid)
     {
         if (UID == draggingObjectUid) return;
@@ -334,40 +334,11 @@ public class Gameobject : Asset, ICloneable
         parent.Children.Add(UID);
     }
 
-    public Gameobject Clone(bool getNewUID = false)
+    public virtual void FixedGameUpdate()
     {
-        Gameobject clone = (Gameobject)new Gameobject(this.Name);
-
-        clone.Name           = this.Name          ;
-        
-        clone.UID = getNewUID ? UIDManager.GetUID() : this.UID;
-
-        clone.CanBeSelected = this.CanBeSelected;
-        clone.Serialize      = this.Serialize     ;
-        clone._isPopupOpen   = this._isPopupOpen  ; 
-        
-        clone.Components = new();
-        clone.Children = new();
-        
-        Engine.Get().CurrentScene.AddGameObjectToScene(clone);
-        
         foreach (var component in Components)
         {
-            clone.AddComponent((Component)component.Clone());
+            component.FixedGameUpdate();
         }
-        
-        foreach (var child in Children)
-        {
-            var go = Engine.Get().CurrentScene.FindObjectByUID(child);
-            var cloneChild = go.Clone(true);
-            cloneChild.SetParent(clone.UID);
-        }
-
-        return clone;
-    }
-
-    public object Clone()
-    {
-        return Clone(false);
     }
 }

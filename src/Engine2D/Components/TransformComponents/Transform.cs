@@ -21,8 +21,6 @@ public class Transform : Component
     [JsonIgnore]  public Vector3 EulerRadians;
     [JsonIgnore]  public Vector2 DraggingPos = new();
 
-    [JsonIgnore]public Vector2 SmallSize => new(_size.X, _size.Y);
-
     internal Transform()
     {
         Position = new Vector2();
@@ -101,15 +99,16 @@ public class Transform : Component
         if (Parent == null) return new Vector2(0, 0);
         
         var spr = Parent.GetComponent<SpriteRenderer>();
+        var dividedSize = _size;
         if (spr != null && includeSprite)
         {
             if (spr.Sprite != null)
             {
-                return new Vector2(_size.X * spr.Sprite.Width, _size.Y * spr.Sprite.Height);
+                return new Vector2(dividedSize.X * spr.Sprite.Width, dividedSize.Y * spr.Sprite.Height);
             }
         }
 
-        return new Vector2(_size.X, _size.Y);
+        return new Vector2(dividedSize.X, dividedSize.Y);
     }
     
 

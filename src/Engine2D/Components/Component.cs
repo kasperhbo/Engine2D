@@ -9,6 +9,7 @@ using Engine2D.GameObjects;
 using Engine2D.Rendering;
 using Engine2D.UI.ImGuiExtension;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using OpenTK.Windowing.Common;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
@@ -81,15 +82,25 @@ public abstract class Component : ICloneable
             var type = field.FieldType;
             var value = field.GetValue(this);
             var name = field.Name;
-
-            var attrs = (ShowUIAttribute[])field.GetCustomAttributes
-                (typeof(ShowUIAttribute), false);
-            
             var ignore = false;
-            foreach (var attr in attrs)
-                if (!attr.show)
-                    ignore = true;
 
+            // var attrs = (ShowUIAttribute[])field.GetCustomAttributes
+            //     (typeof(ShowUIAttribute), false);
+            
+            // var jsonAttrs = (Attribute[])field.GetCustomAttributes
+            //     (typeof(Attribute), false);
+
+            
+            // foreach (var attr in attrs)
+            //     if (!attr.show)
+            //         ignore = true;
+
+            // foreach (var jsonPropertyAttribute in jsonAttrs)
+            //     if (jsonPropertyAttribute is JsonIgnoreAttribute)
+            //         ignore = true;
+            
+            
+     
             if (!ignore)
             { 
                 if (type == typeof(Vector2))
@@ -177,13 +188,25 @@ public abstract class Component : ICloneable
             var value = field.GetValue(this);
             var name = field.Name;
 
+            var ignore = false;
+            
             var attrs = (ShowUIAttribute[])field.GetCustomAttributes
                 (typeof(ShowUIAttribute), false);
+            
+            var jsonAttrs = (Attribute[])field.GetCustomAttributes
+                (typeof(Attribute), false);
 
-            var ignore = false;
+            
             foreach (var attr in attrs)
                 if (!attr.show)
                     ignore = true;
+
+            foreach (var jsonPropertyAttribute in jsonAttrs)
+            {
+                Console.WriteLine();
+                if (jsonPropertyAttribute is JsonIgnoreAttribute)
+                    ignore = true;
+            }
 
             if (!ignore)
             {
@@ -213,5 +236,9 @@ public abstract class Component : ICloneable
     {
         var clone = this.MemberwiseClone();
         return clone;
+    }
+
+    public virtual void FixedGameUpdate()
+    {
     }
 }

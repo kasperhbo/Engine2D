@@ -43,8 +43,9 @@ public static class SceneControls
                 {
                     if (Input.KeyPressed(Keys.C))
                     {
-                        Gameobject? go2 = (Gameobject)go.Clone(getNewUID:true);
+                        Gameobject? go2 = (Gameobject)go.Clone(-1);
                         go2.Name = go.Name + go.UID;
+                        Engine.Get().CurrentScene.AddGameObjectToScene(go2);
                     }
                 }
             }

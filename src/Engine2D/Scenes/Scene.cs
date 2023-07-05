@@ -1,18 +1,14 @@
 ﻿#region
 
-using System.Numerics;
-using Box2DSharp.Dynamics;
 using Engine2D.Cameras;
 using Engine2D.Components;
 using Engine2D.Components.Cameras;
 using Engine2D.Core;
 using Engine2D.GameObjects;
-using Engine2D.Logging;
 using Engine2D.Physics;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Newtonsoft.Json;
-using OpenTK.Graphics.ES30;
 using OpenTK.Windowing.Common;
 
 #endregion
@@ -38,7 +34,7 @@ public class Scene
         foreach (var go in GameObjects)
         {
             if(go is { Serialize: true }) 
-                _clonesOnStart.Add((Gameobject)go.Clone());
+                _clonesOnStart.Add((Gameobject)go.Clone(go.UID));
         }
         
         _physics2DWorld = new();
@@ -106,7 +102,7 @@ public class Scene
         {
             if(go.Serialize)
             {
-                clones.Add((Gameobject)go.Clone());
+                clones.Add((Gameobject)go.Clone(go.UID));
             }
         }
         ReloadScene(clones);
@@ -160,7 +156,11 @@ public class Scene
     internal void Update(FrameEventArgs args)
     {
         if (Settings.s_IsEngine) EditorUpdate(args);
-        if (IsPlaying) GameUpdate(args);
+        if (IsPlaying)
+        {
+            GameUpdate(args);
+            GameFixedUpdate();
+        }
         for (int i=0; i < GameObjects.Count; i++) {
             {
                 var obj = GameObjects[i];
@@ -204,6 +204,19 @@ public class Scene
     {
         foreach (var obj in GameObjects) obj.GameUpdate((float)Engine.DeltaTime);
         _physics2DWorld?.GameUpdate((float)args.Time);
+    }
+
+    private float _physicsTime = 0.0f;
+    private float _physicsTimeStep = 1.0f / 60.0f;
+    
+    private void GameFixedUpdate()
+    {
+        _physicsTime += (float)Engine.DeltaTime;
+        if (_physicsTime >= 0.0f) {
+            _physicsTime -= _physicsTimeStep;
+            _physics2DWorld?.FixedGameUpdate(_physicsTimeStep);
+            foreach (var obj in GameObjects) obj.FixedGameUpdate();
+        }
     }
     
     internal virtual void Render(float dt)
@@ -305,7 +318,7 @@ public class Scene
     private Gameobject[] toBeAdd = new Gameobject[1000];
     private int toBeAddIndex = 0;
     
-    public void AddGameObjectToScene(Gameobject? go, bool directlyAdd = false)
+    public void AddGameObjectToScene(Gameobject? go, bool directlyAdd = true)
     {
         if(!_isPlaying  || directlyAdd)
         {

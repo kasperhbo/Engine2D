@@ -1,7 +1,7 @@
 ﻿#region
 
 using System.Numerics;
-using Box2DSharp.Dynamics;
+using Box2D.NetStandard.Dynamics.Bodies;
 using Engine2D.UI.Browsers;
 using ImGuiNET;
 using static ImGuiNET.ImGui;
@@ -159,17 +159,17 @@ internal static class Gui
     {
         if (BeginCombo("##bodytype", currentBodyType.ToString()))
         {
-            if (Selectable("Static", currentBodyType == BodyType.StaticBody))
+            if (Selectable("Static", currentBodyType == BodyType.Static))
             {
-                currentBodyType = BodyType.StaticBody;
+                currentBodyType = BodyType.Static;
             }
-            if (Selectable("Kinematic", currentBodyType == BodyType.KinematicBody))
+            if (Selectable("Kinematic", currentBodyType == BodyType.Kinematic))
             {
-                currentBodyType = BodyType.KinematicBody;
+                currentBodyType = BodyType.Kinematic;
             }
-            if (Selectable("Dynamic", currentBodyType == BodyType.DynamicBody))
+            if (Selectable("Dynamic", currentBodyType == BodyType.Dynamic))
             {
-                currentBodyType = BodyType.DynamicBody;
+                currentBodyType = BodyType.Dynamic;
             }
             EndCombo();
         }

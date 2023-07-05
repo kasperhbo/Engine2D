@@ -1,7 +1,7 @@
 ﻿#region
 
 using System.Numerics;
-using Box2DSharp.Dynamics;
+using Box2D.NetStandard.Dynamics.Bodies;
 using Engine2D.Core;
 using Engine2D.UI.ImGuiExtension;
 using Newtonsoft.Json;
@@ -14,18 +14,22 @@ namespace Engine2D.Components;
 [JsonConverter(typeof(ComponentSerializer))]
 public class RigidBody : Component
 {
-    [JsonProperty]public bool     FixedRotation  = false;
     [JsonProperty]public BodyType BodyType          ;      
     [JsonProperty]public float    GravityScale   = 1;   
-    [JsonProperty]public float    AngleVelocity  = 0;  
-    [JsonProperty]public Vector2  Velocity       = new(0,0);     
+    
     [JsonProperty]public float    LinearDamping  = 0;  
     [JsonProperty]public float    AngularDamping = 0; 
+    [JsonProperty]public float    Mass           = 1;
+    
+    [JsonProperty]public bool     FixedRotation  = false;
+    [JsonProperty]public bool     Continous      = false;
+    
 
     [JsonIgnore] public Body? RuntimeBody = null;
 
     public RigidBody() : base()
     {
+        
     }
 
     public override void Init()
@@ -48,6 +52,10 @@ public class RigidBody : Component
         base.GameUpdate(dt);
         if (RuntimeBody != null)
         {
+            if(Parent.Name == "Player")
+            {
+                // Console.WriteLine(RuntimeBody.get());
+            }
             Parent.Transform.Position = RuntimeBody.GetPosition();
         }
     }
@@ -78,13 +86,17 @@ public class RigidBody : Component
     public override RigidBody Clone()
     {
         RigidBody clone = new RigidBody();
-        clone.FixedRotation = FixedRotation ; 
+        
         clone.BodyType      = BodyType      ; 
+        clone.FixedRotation = FixedRotation ; 
         clone.GravityScale  = GravityScale  ; 
-        clone.AngleVelocity = AngleVelocity ; 
-        clone.Velocity      = Velocity      ; 
+        
+        clone.Mass          = Mass          ;
+        
         clone.LinearDamping = LinearDamping ; 
         clone.AngularDamping= AngularDamping; 
+        clone.Continous     = Continous     ;
+        
         return clone;            
     }
 }

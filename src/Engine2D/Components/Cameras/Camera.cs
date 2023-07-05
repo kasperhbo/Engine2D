@@ -73,8 +73,8 @@ public class Camera : Component
         var zoom = 1;
         if (CameraType == CameraTypes.ORTHO)
             projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(
-                -(ProjectionSize.X) * Size / 2, (ProjectionSize.X * Size / 2),
-                -(ProjectionSize.Y) * Size / 2, (ProjectionSize.Y * Size / 2), 0.0f, 100.0f
+                -(ProjectionSize.X) * (Size) / 2, (ProjectionSize.X * (Size) / 2),
+                -(ProjectionSize.Y) * (Size) / 2, (ProjectionSize.Y * (Size) / 2), 0.0f, 100.0f
             );
         if (CameraType == CameraTypes.PERSPECTIVE) throw new NotImplementedException();
 

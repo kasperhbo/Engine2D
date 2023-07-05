@@ -8,8 +8,10 @@ using Vector3 = System.Numerics.Vector3;
 
 namespace Engine2D.Utilities;
 
-internal static class MathUtilsNumerics
+public static class MathUtilsNumerics
 {
+    public const float Infinity = float.PositiveInfinity;
+    
     #region Rotation
 
     internal static Vector3 QuaternionToRadians(Quaternion quaternion)
