@@ -135,9 +135,8 @@ public static class SaveLoad
 
         return null;
     }
-    public static void SaveGameobject(string path, Gameobject gameobject)
+    public static void SaveGameobject(string fileName, Gameobject gameobject)
     {
-        var fileName = String.Format(path + "gameobject" + ".prefab");
         var lines = JsonConvert.SerializeObject(gameobject, Formatting.Indented);
         using (var fs = File.Create(fileName))
         {

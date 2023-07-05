@@ -263,9 +263,9 @@ internal class AssetBrowserPanel : UIElement
                 
                 if (draggedObject != null)
                 {
-                    var savePath = CurrentDirectory.FullName + "\\";
+                    var fileName = CurrentDirectory.FullName + "\\" + draggedObject.Name;
                     
-                    SaveLoad.SaveGameobject(savePath, draggedObject);
+                    SaveLoad.SaveGameobject(fileName, draggedObject);
                 }
             }
             ImGui.EndDragDropTarget();
@@ -546,7 +546,6 @@ internal class AssetBrowserEntry
 
             if (_fileType == ESupportedFileTypes.animation)
             {
-                Log.Warning("Clicked animation");
                 var animation = ResourceManager.GetItem<Animation>(relativePath);
                 Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = animation;
             }
