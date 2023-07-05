@@ -15,7 +15,7 @@ public class Transform : Component
     [JsonProperty]public Vector2 Position;
     [JsonProperty]public Vector2 LocalPosition;
     [JsonProperty]public Quaternion Rotation;
-    [JsonProperty]private Vector2 _size;
+    [JsonProperty]public Vector2 Size;
     
     [JsonIgnore]  public Vector3 EulerDegrees;
     [JsonIgnore]  public Vector3 EulerRadians;
@@ -24,7 +24,7 @@ public class Transform : Component
     internal Transform()
     {
         Position = new Vector2();
-        _size = new Vector2(1, 1);
+        Size = new Vector2(1, 1);
         Rotation = new Quaternion();
     }
 
@@ -32,7 +32,7 @@ public class Transform : Component
     internal Transform(Vector2 position, Vector2 size, Quaternion rotation)
     {
         Position = position;
-        _size = size;
+        Size = size;
         SetRotation(rotation);
     }
 
@@ -69,14 +69,14 @@ public class Transform : Component
     internal static void Copy(Transform to, Transform from)
     {
         to.Position = from.Position;
-        to._size = from._size;
+        to.Size = from.Size;
         to.SetRotation(from.Rotation);
     }
 
     internal bool Equals(Transform other)
     {
         return Position != other.Position ||
-               _size != other._size ||
+               Size != other.Size ||
                Rotation != other.Rotation;
     }
 
@@ -99,7 +99,7 @@ public class Transform : Component
         if (Parent == null) return new Vector2(0, 0);
         
         var spr = Parent.GetComponent<SpriteRenderer>();
-        var dividedSize = _size;
+        var dividedSize = Size;
         if (spr != null && includeSprite)
         {
             if (spr.Sprite != null)

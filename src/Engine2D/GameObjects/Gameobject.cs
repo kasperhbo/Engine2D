@@ -5,6 +5,7 @@ using System.Text;
 using Engine2D.Components;
 using Engine2D.Components.SpriteAnimations;
 using Engine2D.Components.Sprites;
+using Engine2D.Components.Tiled;
 using Engine2D.Components.TransformComponents;
 using Engine2D.Core;
 using Engine2D.Logging;
@@ -233,6 +234,12 @@ public class Gameobject : Asset, ICloneable
             if(ImGui.MenuItem("Sprite Animator"))
             {
                 AddComponent(new SpriteAnimator());
+                _isPopupOpen = false;
+            }
+            
+            if(ImGui.MenuItem("TileMap"))
+            {
+                AddComponent(new TileMapLoadComponent());
                 _isPopupOpen = false;
             }
             

@@ -162,7 +162,7 @@ namespace Engine2D.Core
 
             AssignDefaultEvents();
 
-            SwitchScene(ProjectSettings.FullProjectPath + "\\Kasper1.kdbscene");
+            SwitchScene(ProjectSettings.FullProjectPath + "\\tmxloadertest.kdbscene");
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);

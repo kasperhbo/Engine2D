@@ -33,7 +33,8 @@ internal enum ESupportedFileTypes
     txt,
     cs,
     prefab,
-    animation
+    animation,
+    tmx
 }
 
 internal class AssetBrowserPanel : UIElement
@@ -470,6 +471,10 @@ internal class AssetBrowserEntry
                 }
                 case ESupportedFileTypes.cs:
                     ImGui.SetDragDropPayload("script_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                        (uint)sizeof(IntPtr));
+                    break;
+                case ESupportedFileTypes.tmx:
+                    ImGui.SetDragDropPayload("tilemap_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
                         (uint)sizeof(IntPtr));
                     break;
                 case ESupportedFileTypes.prefab:

@@ -18,6 +18,7 @@
         <PackageReference Include="SoapFormatter" Version="1.1.9" />
         <PackageReference Include="StbImageSharp" Version="2.27.13" />
         <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+        <PackageReference Include="TiledSharp" Version="1.0.1" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Lib\ImGui.Net\src\ImGui.NET\**\*.cs">
