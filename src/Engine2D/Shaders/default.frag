@@ -6,7 +6,7 @@ in vec2 fTexCoords;
 in float fTexId;
 
 uniform sampler2D uTextures[8];
-uniform sampler2D uLightmap;
+//uniform sampler2D uLightmap;
 
 out vec4 color;
 
@@ -43,8 +43,8 @@ void main () {
         texColor = fColor;
         break;
     }
-    vec4 tempColor = vec4(0,0,0,texColor.a);
+    //vec4 tempColor = vec4(0,0,0,texColor.a);
     // Sample from lightmap and multiply with current fragment color
-    texColor *= texture(uLightmap, (fPos + 1)/2);
-    color = vec4(texColor.rgb, tempColor.a);
+   // texColor *= texture(uLightmap, (fPos + 1)/2);
+    color = texColor;//vec4(texColor.rgba);
 }

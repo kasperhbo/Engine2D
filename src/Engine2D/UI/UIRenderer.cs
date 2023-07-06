@@ -7,6 +7,7 @@ using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.UI.Browsers;
+using Engine2D.UI.Debug;
 using Engine2D.UI.Viewports;
 using Engine2D.Utilities;
 using ImGuiNET;
@@ -18,7 +19,7 @@ namespace Engine2D.UI;
 
 internal static class UiRenderer
 {
-    private static List<UIElement> _windows = new();
+    internal static List<UIElement> _windows = new();
     private static Engine _engine = null!;
     private static EditorViewport? _editorViewport;
     private static List<UIElement> _windowsToRemoveEndOfFrame = new();
@@ -85,16 +86,10 @@ internal static class UiRenderer
         if (!Settings.s_IsEngine) return;
         KDBImGuiController.Update(_engine, args.Time);
 
-        ImGui.Begin("Debug Helper");
-        ImGui.BeginChild("Renderer", new(-1, 90), true);
+        DebugStats.DrawCalls = Renderer.DrawCalls;
+        DebugStats.SpritesDrawn = Renderer.RenderedObjects;
         
-        ImGui.Text($"FPS: {1 / args.Time:0.00}");
-        ImGui.Text($"Frame Time: {args.Time * 1000:0.00}ms");
-        ImGui.Text("Render batches: " + Engine.Get().CurrentScene.Renderer.RenderBatches.Count);
-        ImGui.Checkbox("Render lines", ref Renderer.DebugRender);
-        ImGui.Text("Rendered objects: " + Renderer.RenderedObjects);
-        ImGui.Text("Draw calls: "       + Renderer.DrawCalls);
-        
+        UIDebugStats.OnGui(args);
         
         ImGui.EndChild();
         if (ImGui.Button("Reload Assembly")) AssemblyUtils.Reload();
@@ -116,7 +111,6 @@ internal static class UiRenderer
         KDBImGuiController.Render();
         
         ResourceManager.OnGUI();
-        
         
     }
 

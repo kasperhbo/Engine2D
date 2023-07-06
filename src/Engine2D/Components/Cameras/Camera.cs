@@ -32,6 +32,11 @@ public class Camera : Component
     [JsonProperty] internal bool _isMainCamera = false;
     [JsonProperty] internal bool _isEditorCamera = false;
 
+    [JsonIgnore] private Matrix4x4 _projectionMatrix = Matrix4x4.Identity;
+    [JsonIgnore] private Matrix4x4 _viewMatrix = Matrix4x4.Identity;
+    [JsonIgnore] private Matrix4x4 _viewProjectionMatrix = Matrix4x4.Identity;
+    
+    
     public float FadeRange = 1;
     
     internal Camera()
@@ -46,6 +51,8 @@ public class Camera : Component
 
     internal Matrix4x4 GetViewMatrix()
     {
+        //return _viewMatrix;
+        
         var transform = Parent.GetComponent<Transform>();
 
         if (transform == null)
@@ -68,6 +75,8 @@ public class Camera : Component
 
     internal Matrix4x4 GetProjectionMatrix()
     {
+        //return _projectionMatrix;
+        
         var projectionMatrix = Matrix4x4.Identity;
 
         var zoom = 1;

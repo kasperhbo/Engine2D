@@ -15,12 +15,37 @@ public static class SceneControls
 {
     public static void Update(FrameEventArgs args)
     {
-       KeyControls();
+       KeyControls(args);
        MouseControls();
     }
     
-    private static void KeyControls(){
-        Camera editorCamera = Engine.Get().CurrentScene.GetEditorCamera(); 
+    private static void KeyControls(FrameEventArgs args){
+        Camera editorCamera = Engine.Get().CurrentScene.GetEditorCamera();
+
+        if (editorCamera != null)
+        {
+            var multiplier = 1;
+            if (Input.KeyDown(Keys.LeftShift))
+            {
+                multiplier = 4;
+            }
+            if (Input.KeyDown(Keys.Left))
+            {
+                editorCamera.Parent.Transform.Position.X -= (100*multiplier)*(float)args.Time;
+            }
+            if (Input.KeyDown(Keys.Right))
+            {
+                editorCamera.Parent.Transform.Position.X += (100*multiplier)*(float)args.Time;
+            }
+            if (Input.KeyDown(Keys.Up))
+            {
+                editorCamera.Parent.Transform.Position.Y += (100*multiplier)*(float)args.Time;
+            }
+            if (Input.KeyDown(Keys.Down))
+            {
+                editorCamera.Parent.Transform.Position.Y -= (100*multiplier)*(float)args.Time;
+            }
+        }
         
         if (Engine.Get().CurrentSelectedAsset != null)
         { 
@@ -116,7 +141,7 @@ public static class SceneControls
                 var projection = vpCam.GetProjectionMatrix();
                 var translation = Matrix4x4.Identity;
                 
-                translation = selectedGo.GetComponent<Transform>().GetTranslation(includeSprite:false);
+                translation = selectedGo.GetComponent<Transform>().GetTranslation();
 
                 
                 ImGuizmo.Manipulate(ref view.M11, ref projection.M11,

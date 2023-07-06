@@ -83,24 +83,24 @@ public abstract class Component : ICloneable
             var value = field.GetValue(this);
             var name = field.Name;
             var ignore = false;
-
+        
             // var attrs = (ShowUIAttribute[])field.GetCustomAttributes
             //     (typeof(ShowUIAttribute), false);
             
             // var jsonAttrs = (Attribute[])field.GetCustomAttributes
             //     (typeof(Attribute), false);
-
+        
             
             // foreach (var attr in attrs)
             //     if (!attr.show)
             //         ignore = true;
-
+        
             // foreach (var jsonPropertyAttribute in jsonAttrs)
             //     if (jsonPropertyAttribute is JsonIgnoreAttribute)
             //         ignore = true;
             
             
-     
+        
             if (!ignore)
             { 
                 if (type == typeof(Vector2))
@@ -122,14 +122,14 @@ public abstract class Component : ICloneable
                     Gui.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
-
+        
                 if (type == typeof(OpenTK.Mathematics.Vector3))
                 {
                     var val = (OpenTK.Mathematics.Vector3)value;
                     Gui.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
-
+        
                 if (type == typeof(Vector4))
                 {
                     var val = (Vector4)value;
@@ -142,28 +142,28 @@ public abstract class Component : ICloneable
                     Gui.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
-
+        
                 if (type == typeof(float))
                 {
                     var val = (float)value;
                     Gui.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
-
+        
                 if (type == typeof(int))
                 {
                     var val = (int)value;
                     Gui.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
-
+        
                 if (type == typeof(bool))
                 {
                     var val = (bool)value;
                     Gui.DrawProperty(name, ref val);
                     field.SetValue(this, val);
                 }
-
+        
                 if (type == typeof(string))
                 {
                     var val = (string)value;

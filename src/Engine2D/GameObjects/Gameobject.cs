@@ -28,13 +28,14 @@ public class Gameobject : Asset, ICloneable
     [JsonProperty] internal int ParentUid = -1;
     [JsonProperty] internal int UID = -1;
     [JsonProperty] public bool CanBeSelected = true;
+    [JsonProperty] public bool IsStatic = true;
     [JsonProperty] public List<Component> Components = new();
     
     [JsonIgnore] internal List<int> Children = new();
     [JsonIgnore] internal bool Serialize = true;
     [JsonIgnore] bool _isPopupOpen = false;
     [JsonIgnore]   public Transform Transform => GetComponent<Transform>();
-    
+
     public Gameobject(string name)
     {
         Name = name;
@@ -196,6 +197,9 @@ public class Gameobject : Asset, ICloneable
         ImGui.Text("Can be selected: ");
         ImGui.SameLine();
         ImGui.Checkbox("##CanBeSelected", ref CanBeSelected);
+        ImGui.Text("Is static: ");
+        ImGui.SameLine();
+        ImGui.Checkbox("##IsStatic", ref IsStatic);
         
         if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X - 30, 30)))
         {

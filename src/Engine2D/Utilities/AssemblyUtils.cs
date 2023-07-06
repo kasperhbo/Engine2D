@@ -4,6 +4,7 @@ using System.Reflection;
 using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.Logging;
+using Engine2D.UI.Debug;
 
 #endregion
 
@@ -24,6 +25,7 @@ internal static class AssemblyUtils
     /// <param name="assemblyPath"></param>
     internal static void LoadAssembly(string assemblyPath)
     {
+        DebugStats.AssemblyReloaded++;
         _loadedAssemblyOrigin = assemblyPath;
 
         CopyAssembly();

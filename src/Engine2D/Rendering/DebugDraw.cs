@@ -58,7 +58,6 @@ internal static class DebugDraw
         
         RemoveDeadLines();
 
-        
         int index = 0;
         foreach (Line2D line in _lines) {
             for (int i=0; i < 2; i++) {
@@ -66,7 +65,7 @@ internal static class DebugDraw
                 Vector2 position = i == 0 ? new(line.From.X, line.From.Y) : new(line.To.X, line.To.Y);
                 
                 Vector4 color = line.Color;
-                
+                if (index >= MAX_LINES) return;
                 // Load position
                 VertexArray[index] = position.X;
                 VertexArray[index + 1] = position.Y;
@@ -189,7 +188,8 @@ internal static class DebugDraw
     }
 
     internal static void AddBox2D(Vector2 center, Vector2 dimensions, float rotation,
-        Vector4 color, int lifetime) {
+        Vector4 color, int lifetime)
+    {
         Vector2 min = center - (dimensions * (0.5f));
         Vector2 max = center + (dimensions * (0.5f));
 

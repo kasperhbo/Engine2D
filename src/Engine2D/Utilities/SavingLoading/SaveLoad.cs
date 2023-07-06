@@ -137,6 +137,7 @@ public static class SaveLoad
     }
     public static void SaveGameobject(string fileName, Gameobject gameobject)
     {
+        fileName += ".prefab";
         var lines = JsonConvert.SerializeObject(gameobject, Formatting.Indented);
         using (var fs = File.Create(fileName))
         {
@@ -189,30 +190,30 @@ public static class SaveLoad
         var objs = new List<Gameobject?>();
         if (File.Exists(sceneToLoad))
         {
-            var lines = File.ReadAllLines(sceneToLoad);
+            var lines = File.ReadAllText(sceneToLoad);
 
-            var gos = "";
-            var lightSettingsStr = "";
-
-            var lastIndex = 0;
-            for (var i = 0; i < lines.Length; i++)
-            {
-                lastIndex = i;
-                //if comment then we now we are at and of GO array and we break
-                if (lines[i].Contains("////GAMEOBJECTS////")) break;
-                gos += lines[i];
-            }
-
-            lastIndex += 1;
-            for (var i = lastIndex; i < lines.Length; i++)
-            {
-                lastIndex++;
-                if (lines[i].Contains("////LightSettings////")) break;
-                lightSettingsStr += lines[i];
-            }
+            // var gos = "";
+            // var lightSettingsStr = "";
+            //
+            // var lastIndex = 0;
+            // for (var i = 0; i < lines.Length; i++)
+            // {
+            //     lastIndex = i;
+            //     //if comment then we now we are at and of GO array and we break
+            //     if (lines[i].Contains("////GAMEOBJECTS////")) break;
+            //     gos += lines[i];
+            // }
+            //
+            // lastIndex += 1;
+            // for (var i = lastIndex; i < lines.Length; i++)
+            // {
+            //     lastIndex++;
+            //     if (lines[i].Contains("////LightSettings////")) break;
+            //     lightSettingsStr += lines[i];
+            // }
 
             //Load gameobjects
-            objs = JsonConvert.DeserializeObject<List<Gameobject>>(gos)!;
+            objs = JsonConvert.DeserializeObject<List<Gameobject>>(lines)!;
         }
 
         Log.Succes("qloaded: " + sceneToLoad);

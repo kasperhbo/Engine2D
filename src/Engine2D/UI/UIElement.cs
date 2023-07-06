@@ -23,7 +23,7 @@ internal abstract class UIElement
 
     protected bool IsFocussed;
     protected bool IsHovering;
-    protected string Title = "";
+    protected internal string Title = "";
 
 
     internal UIElement(string title)
@@ -31,10 +31,11 @@ internal abstract class UIElement
         Title = title;
     }
 
-    protected internal bool IsVisible { get; set; } = true;
+    protected internal bool IsVisible = true;
 
     internal virtual void BeginRender()
     {
+        if(!IsVisible) return;
         ImGui.PushID(Title);
         ImGui.Begin(Title, Flags);
 

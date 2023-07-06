@@ -463,6 +463,10 @@ internal class AssetBrowserEntry
                     ImGui.SetDragDropPayload("sprite_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
                         (uint)sizeof(IntPtr));
                     break;
+                case ESupportedFileTypes.spritesheet:
+                    ImGui.SetDragDropPayload("spritesheet_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                        (uint)sizeof(IntPtr));
+                    break;
                 case ESupportedFileTypes.animation:
                 {
                     ImGui.SetDragDropPayload("animation_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),

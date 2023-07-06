@@ -49,9 +49,10 @@ namespace Engine2D.Core
                 base.MouseWheel -= CurrentScene.OnMouseWheel;
                 Unload -= CurrentScene.Close;
             }
-
+            
             CurrentScene = new Scene();
-
+            
+            
             base.TextInput += CurrentScene.OnTextInput;
             base.MouseWheel += CurrentScene.OnMouseWheel;
             Unload += CurrentScene.Close;
@@ -73,14 +74,8 @@ namespace Engine2D.Core
         
         private void Render(FrameEventArgs args)
         {
-            
-            // Calculate delta time
-            double currentTime = TimeSinceStart;
-            DeltaTime = currentTime - _previousTime;
-            _previousTime = currentTime;
-            
-            SetTitle((float)DeltaTime);
-            
+            SetTitle(args);
+            DeltaTime = args.Time;
             CurrentScene?.Render((float)DeltaTime);
             
             SwapBuffers();
@@ -104,15 +99,16 @@ namespace Engine2D.Core
         {
         }
 
-        private void SetTitle(float time)
+        private void SetTitle(FrameEventArgs args)
         {
-            var fps = 1.0f / time;
-            _frameCounter++;
-            if (_frameCounter == 30)
-            {
-                Title = string.Format("KDB ENGIN V{0} | Scene : {1} | FPS : {2}", 0.1, CurrentScene.ScenePath, fps);
-                _frameCounter = 0;
-            }
+            Title = string.Format($"Frame Time: {args.Time * 1000:0.00}ms" + "  |  " + $"FPS: {1 / args.Time:0.00}");
+            // var fps = 1.0f / time;
+             // if (_frameCounter == 30)
+             //            {
+             //                //Title = string.Format("KDB ENGIN V{0} | Scene : {1} | FPS : {2}", 0.1, CurrentScene.ScenePath, fps);
+             //                _frameCounter = 0;
+             //            }_frameCounter++;
+           
         }
 
         #region setup
@@ -166,8 +162,6 @@ namespace Engine2D.Core
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);
-
-            _previousTime = TimeSinceStart;
         }
 
         private void LoadProject()
@@ -196,16 +190,12 @@ namespace Engine2D.Core
 
         private void OnClose()
         {
+            
             Log.Message("Closing engine");
             SaveLoad.SaveWindowSettings();
             SaveLoad.SaveEngineSettings();
         }
         
-        private double TimeSinceStart
-        {
-            get { return (double)DateTime.Now.Ticks / TimeSpan.TicksPerSecond; }
-        }
-       
 
         #endregion
 
@@ -233,7 +223,7 @@ internal static class WindowSettings
 }
 
 //Engine settings
-internal static class Settings
+public static class Settings
 {
     public static bool s_IsEngine = true;
     public static bool s_RenderDebugWindowSeperate = true;

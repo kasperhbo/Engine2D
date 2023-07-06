@@ -87,8 +87,8 @@ public class Physics2DWorld
         
         Vector2 offset = boxCollider2D.Offset;
 
-        float x = (boxCollider2D.Parent.Transform.GetFullSize(true).X/2);
-        float y = (boxCollider2D.Parent.Transform.GetFullSize(true).Y/2);
+        float x = (boxCollider2D.Parent.Transform.GetFullSize().X/2);
+        float y = (boxCollider2D.Parent.Transform.GetFullSize().Y/2);
         
         Vector2 halfSize = new(x, y);
         

@@ -155,21 +155,32 @@ public class Scene
     /// <param name="args"></param>
     internal void Update(FrameEventArgs args)
     {
-        if (Settings.s_IsEngine) EditorUpdate(args);
+        if (Settings.s_IsEngine) 
+            EditorUpdate(args);
         if (IsPlaying)
         {
             GameUpdate(args);
             GameFixedUpdate();
         }
+        
+        //TODO: MAKE THIS FASTER
         for (int i=0; i < GameObjects.Count; i++) {
             {
                 var obj = GameObjects[i];
-                obj.Update(args);
+                //obj.Update(args);
                 if (obj.IsDead)
                 {
                     obj.Destroy();
                     i--;
                 }
+            }
+        }
+        foreach (var obj in GameObjects)
+        {
+            obj.Update(args);
+            if (obj.IsDead)
+            {
+                obj.Destroy();
             }
         }
 
@@ -192,7 +203,8 @@ public class Scene
     /// <param name="args"></param>
     private void EditorUpdate(FrameEventArgs args)
     {
-        foreach (var obj in GameObjects) obj.EditorUpdate((float)Engine.DeltaTime);
+        foreach (var obj in GameObjects) 
+            obj.EditorUpdate((float)Engine.DeltaTime);
     }
     
     /// <summary>
@@ -226,7 +238,7 @@ public class Scene
 
     internal virtual void Close()
     {
-        if (EngineSettings.SaveOnClose)
+        if (EngineSettings.SaveOnClose && !IsPlaying && Settings.s_IsEngine)
             SaveLoad.SaveScene(this);
     }
 

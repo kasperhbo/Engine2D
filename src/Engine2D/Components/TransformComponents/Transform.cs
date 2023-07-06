@@ -17,9 +17,6 @@ public class Transform : Component
     [JsonProperty]public Quaternion Rotation;
     [JsonProperty]public Vector2 Size;
     
-    [JsonIgnore]  public Vector3 EulerDegrees;
-    [JsonIgnore]  public Vector3 EulerRadians;
-    [JsonIgnore]  public Vector2 DraggingPos = new();
 
     internal Transform()
     {
@@ -39,8 +36,6 @@ public class Transform : Component
     internal void SetRotation(Quaternion q)
     {
         Rotation = q;
-        EulerRadians = MathUtilsNumerics.QuaternionToRadians(q);
-        EulerDegrees = MathUtilsNumerics.RadiansToDegrees(EulerRadians);
     }
 
     public override void Init()
@@ -80,8 +75,19 @@ public class Transform : Component
                Rotation != other.Rotation;
     }
 
-    internal Matrix4x4 GetTranslation(bool includeSprite = true)
+    private Matrix4x4 _translationMatrix = Matrix4x4.Identity;
+    
+    internal Matrix4x4 GetTranslation()
     {
+        //TODO: OPTIIZE THIS SO IT DOESNT KEEPS RECALCULATING
+        //return Matrix4x4.Identity;
+        RecalculateTranslation();
+        return _translationMatrix;
+    }
+
+    private void RecalculateTranslation(bool includeSprite = true)
+    {
+            
         var result = Matrix4x4.Identity;
         result *= Matrix4x4.CreateScale(new Vector3(GetFullSize(includeSprite).X, GetFullSize(includeSprite).Y, 1));
         result *= Matrix4x4.CreateFromQuaternion(Rotation);
@@ -91,7 +97,7 @@ public class Transform : Component
         else
             result *= Matrix4x4.CreateTranslation(Position.X , Position.Y , 0);
         
-        return result;
+        _translationMatrix = result;
     }
 
     internal Vector2 GetFullSize(bool includeSprite = true)

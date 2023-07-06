@@ -5,6 +5,7 @@ using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.UI;
+using Engine2D.UI.Debug;
 using ImGuiNET;
 using Newtonsoft.Json;
 using OpenTK.Graphics.OpenGL4;
@@ -74,6 +75,8 @@ internal class Texture : AssetBrowserAsset
 
     private void Gen()
     {
+        DebugStats.TexturesCreated++;
+        
         TexID = GL.GenTexture();
         // Bind the handle
         GL.ActiveTexture(TextureUnit.Texture0);
@@ -242,6 +245,8 @@ internal class Texture : AssetBrowserAsset
 
     internal override void Refresh()
     {
+        DebugStats.TexturesReloaded++;
+        
         GL.DeleteTexture(TexID);
         Gen();
         CreateOpenGL();

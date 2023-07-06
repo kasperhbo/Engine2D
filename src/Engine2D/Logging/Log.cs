@@ -10,8 +10,10 @@ namespace Engine2D.Logging;
 
 public static class Log
 {
+    private static bool debugging = true;
     public static void Message([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0)
     {
+        if (!debugging) return;
         Message(string.Format(format, arg0));
     }
 
@@ -19,6 +21,7 @@ public static class Log
         [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = true,
         bool showLine = true, bool showFunction = true)
     {
+        if (!debugging) return;
         Console.ForegroundColor = ConsoleColor.White;
         Console.WriteLine(GetString(showFile, showLine, showFunction, message, memberName, sourceFilePath,
             sourceLineNumber));
@@ -27,6 +30,7 @@ public static class Log
 
     public static void Succes([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0)
     {
+        if (!debugging) return;
         Succes(string.Format(format, arg0));
     }
 
@@ -34,6 +38,7 @@ public static class Log
         [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = true,
         bool showLine = true, bool showFunction = true)
     {
+        if (!debugging) return;
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine(GetString(showFile, showLine, showFunction, message, memberName, sourceFilePath,
             sourceLineNumber));
@@ -42,13 +47,15 @@ public static class Log
 
     public static void Warning([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0)
     {
+        if (!debugging) return;
         Warning(string.Format(format, arg0));
     }
 
     public static void Warning(string? message, [CallerMemberName] string memberName = "",
-        [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = false,
-        bool showLine = false, bool showFunction = false)
+        [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = true,
+        bool showLine = true, bool showFunction = true)
     {
+        if (!debugging) return;
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine(GetString(showFile, showLine, showFunction, message, memberName, sourceFilePath,
             sourceLineNumber));
@@ -57,6 +64,7 @@ public static class Log
 
     public static void Error([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, object? arg0)
     {
+        if (!debugging) return;
         Error(string.Format(format, arg0));
     }
 
@@ -64,6 +72,7 @@ public static class Log
         [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, bool showFile = true,
         bool showLine = true, bool showFunction = true)
     {
+        if (!debugging) return;
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine(GetString(showFile, showLine, showFunction, message, memberName, sourceFilePath,
             sourceLineNumber));
@@ -74,6 +83,7 @@ public static class Log
     private static string GetString(bool showFile, bool showLine, bool showFunction, string? message, string memberName,
         string sourceFilePath, int sourceLineNumber)
     {
+        
         var sb = new StringBuilder();
         sb.Append("[" + "time: " + DateTime.Now.ToString("yyyy-MM-dd hh:mm") + "]");
 

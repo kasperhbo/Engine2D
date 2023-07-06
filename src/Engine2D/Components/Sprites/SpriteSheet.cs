@@ -62,7 +62,7 @@ internal class SpriteSheet : AssetBrowserAsset
     {
         if (checkIndex >= _sprites.Count)
         {
-            Log.Warning("Sprite index out of range, setting index --");
+            Log.Warning(String.Format("Sprite index {0} out of range, setting index --", checkIndex));
             checkIndex--;
             return CheckForSpriteIndex(checkIndex);
         }
@@ -139,12 +139,12 @@ internal class SpriteSheet : AssetBrowserAsset
             ImGui.Begin("Sprite sheet inspector");
 
         var columnCount = (int)(ImGui.GetContentRegionAvail().X / (90 + 15));
-
+        
         if (ImGui.Button("Save")) Save();
-
+        
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 10));
         ImGui.Text(_savePath);
-
+        
         int spriteWidth = _spriteWidth;
         int spriteHeight = _spriteHeight;
         int numSprites = _numSprites;
@@ -170,9 +170,9 @@ internal class SpriteSheet : AssetBrowserAsset
             Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset = this;            
             _unsaved = true;
         }
-
+        
         ;
-
+        
         ImGui.Columns(columnCount < 1 ? 1 : columnCount, "", false);
         {
             if (Texture == null)
@@ -183,7 +183,7 @@ internal class SpriteSheet : AssetBrowserAsset
                     return;
                 }
             }
-
+        
             for (var i = 0; i < _sprites.Count; i++)
             {
                 _currentlyDraggedHandle ??= GCHandle.Alloc(_sprites[i]);
@@ -194,7 +194,7 @@ internal class SpriteSheet : AssetBrowserAsset
                 bool doubleClicked;
                 bool rightClicked;
                 var coord = entry.TextureCoords;
-
+        
                 var _isSelected = false;
                 
                 
@@ -207,7 +207,7 @@ internal class SpriteSheet : AssetBrowserAsset
                     new Vector2(-1, -2), new Vector2(0, 11),
                     new Vector4(1),
                     out clicked, out doubleClicked, out rightClicked, _isSelected, false);
-
+        
                 if (ImGui.BeginDragDropSource())
                 {
                     byte[] spriteData = SpriteRenderer.SerializeSprite(entry);
@@ -221,10 +221,10 @@ internal class SpriteSheet : AssetBrowserAsset
                 
                     spriteHandle.Free();
                 }
-
+        
                 ImGui.PopID();
                 
-
+        
                 ImGui.NextColumn();
             }
         }

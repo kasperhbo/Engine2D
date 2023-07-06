@@ -18,7 +18,7 @@ namespace Engine2D.Rendering;
 
 internal class RenderBatch : IComparable<RenderBatch>
 {
-    private const int c_maxBatchSize = 5000;
+    private const int c_maxBatchSize = 10000;
 
     private const int c_posSize = 2;
     private const int c_colorSize = 4;
@@ -175,7 +175,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         LoadVertexProperties(index);
     }
 
-    internal void Render(Camera? camera, int lightmapTexture, Renderer renderer)
+    internal void Render(Camera? camera, Renderer renderer)
     {
         if (camera == null) return;
         if(this._spriteCount <= 0)
@@ -210,8 +210,8 @@ internal class RenderBatch : IComparable<RenderBatch>
         _shader.use();
         _shader.uploadMat4f("uProjection", projectionMatrix);
         _shader.uploadMat4f("uView", viewMatrix);
-        Texture.Use(TextureUnit.Texture0 + (int)ShaderDefaultSlots.LIGHTMAPTEXTURESLOT, lightmapTexture);
-        _shader.uploadInt("uLightmap", (int)ShaderDefaultSlots.LIGHTMAPTEXTURESLOT);
+        // Texture.Use(TextureUnit.Texture0 + (int)ShaderDefaultSlots.LIGHTMAPTEXTURESLOT, lightmapTexture);
+        // _shader.uploadInt("uLightmap", (int)ShaderDefaultSlots.LIGHTMAPTEXTURESLOT);
 
         //TEXTURES
         for (var i = 0; i < Textures.Length; i++)
@@ -267,7 +267,7 @@ internal class RenderBatch : IComparable<RenderBatch>
         var translation = Matrix4x4.Identity;
         var transform = spriteRenderer.Parent.GetComponent<Transform>();
         if(transform != null)
-            translation = transform.GetTranslation(true);
+            translation = transform.GetTranslation();
         
         {
             var currentPos =

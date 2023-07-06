@@ -60,9 +60,12 @@ public class SpriteRenderer : Component
         new(0, 0),
         new(0, 1f)
     };
+
+    [JsonIgnore] private Vector2 _lastPosition = new Vector2();
+    [JsonIgnore] private Vector2 _currentPosition = new Vector2();
     
-    [JsonIgnore] [ShowUI(show = false)]private Matrix4x4 _lastTranslation { get; set; } = new();
-    [JsonIgnore] [ShowUI(show = false)]private Matrix4x4 _currentTranslation { get; set; } = new();
+    // [JsonIgnore] [ShowUI(show = false)]private Matrix4x4 _lastTranslation { get; set; } = new();
+    // [JsonIgnore] [ShowUI(show = false)]private Matrix4x4 _currentTranslation { get; set; } = new();
     [JsonIgnore]  [ShowUI(show = false)] private Vector4 _lastColor { get; set; } = new();
     [JsonIgnore]private int _lastSpriteSheetIndex = -1;
     [JsonIgnore] private Renderer? _renderer = null;
@@ -75,6 +78,8 @@ public class SpriteRenderer : Component
     [JsonProperty] internal                       int      SpriteSheetSpriteIndex = 0;
     [JsonProperty] internal bool FlipX = false;
 
+    private Transform? _transform = null;
+    
     public override void Init()
     {
         if (_renderer == null)
@@ -84,11 +89,11 @@ public class SpriteRenderer : Component
         
         _renderer.AddSpriteRenderer(this);
         
-        if(Parent?.GetComponent<Transform>()!=null)
-            _currentTranslation = Parent.GetComponent<Transform>().GetTranslation(includeSprite:true);
+        // if(Parent?.GetComponent<Transform>()!=null)
+        //     _currentTranslation = Parent.GetComponent<Transform>().GetTranslation();
         
         Refresh();
-        
+        _transform = Parent.GetComponent<Transform>();
     }
     
 
@@ -100,18 +105,26 @@ public class SpriteRenderer : Component
 
     public override void Update(FrameEventArgs args)
     {
+        if (Parent.IsStatic) return;
         if (Color != (_lastColor))
         {
             _lastColor = Color;
             IsDirty = true;
         }
-
-        _currentTranslation = Parent.GetComponent<Transform>().GetTranslation(includeSprite:true);
-        if (_currentTranslation != _lastTranslation)
+        
+        //
+        var pos = _transform.Position;
+        if (pos != _lastPosition)
         {
-            _lastTranslation = _currentTranslation;
+            Log.Message("is dirty" + Parent.Name);
+            _lastPosition = pos;
             IsDirty = true;
         }
+        // if (_currentTranslation != _lastTranslation)
+        // {
+        //     _lastTranslation = _currentTranslation;
+        //     IsDirty = true;
+        // }
 
         if (SpriteSheetSpriteIndex != _lastSpriteSheetIndex)
         {

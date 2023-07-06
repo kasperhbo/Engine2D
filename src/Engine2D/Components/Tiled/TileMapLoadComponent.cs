@@ -17,6 +17,7 @@ namespace Engine2D.Components.Tiled;
 public class TileMapLoadComponent : Component
 {
     [JsonProperty] private string _tileMapPath = "";
+    [JsonProperty] private string _tileMapImage = "";
     [JsonProperty] private List<ObjectGroup> _objectGroups = new();
 
     [JsonIgnore] TmxMap? _map = null;
@@ -44,14 +45,95 @@ public class TileMapLoadComponent : Component
             _map = new TmxMap(ProjectSettings.FullProjectPath + _tileMapPath);
             _version = _map.Version;
             Log.Succes("Succesfully loaded map: " + _tileMapPath + " version: " + _version);
-            
         }
+    }
+
+    private void LoadLayers()
+    {
+        int counter = 0;
+        // Load graphic layer
+        if (_map.Layers != null)
+        {
+            foreach (var layer in _map.Layers)
+            {
+                if (layer is TmxLayer tileLayer)
+                {
+                    int layerWidth  = _map.Width;
+                    int layerHeight = _map.Height;
+                    
+                    for (int y = 0; y < layerHeight; y++)
+                    {
+                        for (int x = 0; x < layerWidth; x++)
+                        {
+                            int tileIndex = x + y * layerWidth;
+                            var tileGid = tileLayer.Tiles[tileIndex];
+
+                            // Skip empty tiles (GID = 0)
+                            if (tileGid.Gid == 0)
+                                continue;
+                            
+                            // Retrieve tile information
+                            TmxTileset tileset = GetTilesetByGid(tileGid.Gid);
+                            var tileWidth = tileset.TileWidth;
+                            var tileHeight = tileset.TileHeight;
+                            
+                            int localTileId = tileGid.Gid - tileset.FirstGid;
+
+                            // Create a game object for the tile
+                            Gameobject tileObject = new Gameobject("Tile_" + counter);
+                            var spriteRenderer = new SpriteRenderer();
+                            
+                            Engine.Get().CurrentScene.AddGameObjectToScene(tileObject);
+                            
+                            // Set the sprite image based on the tileset
+                            spriteRenderer.SetSprite(localTileId, _tileMapImage);
+                                
+                            tileObject.AddComponent(spriteRenderer); // Add a sprite component to render the tile
+                            
+                            // Set the position of the tile object
+                            tileObject.Transform.Position = new Vector2((x * tileWidth)+ (tileWidth / 2), ((y * tileHeight) +
+                                (tileHeight / 2))*-1);
+
+                            counter++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private TmxTileset GetTilesetByGid(int gid)
+    {
+        foreach (var tileset in _map.Tilesets)
+        {
+            if (gid >= tileset.FirstGid && gid < tileset.FirstGid + tileset.TileCount)
+                return tileset;
+        }
+
+        return null;
     }
 
     public override unsafe void ImGuiFields()
     {
         base.ImGuiFields();
 
+        if(_map!=null)
+        {
+            for (int i = 0; i < _map.Layers.Count; i++)
+            {
+                var layer = _map.Layers[i];
+                ImGui.PushID(layer.Name);
+
+                ImGui.Text("Layer: " + layer.Name);
+                ImGui.SameLine();
+                if (ImGui.Button("Spawn layer"))
+                {
+
+                }
+
+                ImGui.PopID();
+            }
+        }
         ImGui.Button("Tilemap");
         if (ImGui.BeginDragDropTarget())
         {
@@ -66,6 +148,24 @@ public class TileMapLoadComponent : Component
             ImGui.EndDragDropTarget();
         }
 
+        ImGui.Button("TilemapImage");
+        if (ImGui.BeginDragDropTarget())
+        {
+            var payload = ImGui.AcceptDragDropPayload("spritesheet_drop");
+            if (payload.IsValidPayload())
+            {
+                var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
+                _tileMapImage = filename;
+            }
+
+            ImGui.EndDragDropTarget();
+        }
+
+        if (ImGui.Button("Spawn all layers"))
+        {
+            LoadLayers();
+        }
+        
         ImGui.Text("Objects");
         ImGui.SameLine();
         if (ImGui.Button("Fill object list"))
