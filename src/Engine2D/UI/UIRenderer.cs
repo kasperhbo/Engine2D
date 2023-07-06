@@ -72,7 +72,10 @@ internal static class UiRenderer
 
         KDBImGuiController.Init(Engine.Get().Size.X, Engine.Get().Size.Y);
 
-        if (createDefaultWindows) CreateDefaultWindows();
+        if (createDefaultWindows)
+        {
+            CreateDefaultWindows();
+        }
     }
     
 

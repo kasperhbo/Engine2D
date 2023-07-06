@@ -47,6 +47,7 @@ namespace Engine2D.Managers
             TexturesToSave = new();
             SpriteSheetsToSave = new();
             AnimationsToSave = new();
+            
             LoadAssets();
         }
         
@@ -119,8 +120,8 @@ namespace Engine2D.Managers
                     AddItemToManager(file, item);
             }
 
-            if (_showDebug)
-                Log.Succes("Succesfully loaded all assets!");
+            
+            Log.Succes("Succesfully loaded all assets!");
         }
 
         private static AssetBrowserAsset? LoadAssetFromFile(string filePath, string extension)
@@ -251,8 +252,7 @@ namespace Engine2D.Managers
 
             // path = Path.Combine(ProjectSettings.FullProjectPath, path.ToLower());
             path = ProjectSettings.FullProjectPath + path;
-            path.ToLower();
-
+            
             for (var i = 0; i < _items.Count; i++)
             {
                 var item = _items.ElementAt(i);

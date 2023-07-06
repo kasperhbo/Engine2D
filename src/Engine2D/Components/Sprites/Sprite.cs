@@ -19,6 +19,14 @@ public class Sprite
         Height = spriteHeight;
         Index = index;
     }
+    //
+    // public Sprite(Vector4 color, Vector2[] textureCoords)
+    // {
+    //     this.Color = color;
+    //     this.TextureCoords = textureCoords;
+    // }
+
+    [JsonProperty] public Vector4 Color { get; set; } = new Vector4(1, 1, 1, 1);
 
     [JsonProperty]public string FullSavePath { get; set; }
     [JsonProperty]public int Index { get; set; }

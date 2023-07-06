@@ -112,7 +112,6 @@ public class SpriteRenderer : Component
             IsDirty = true;
         }
         
-        //
         var pos = _transform.Position;
         if (pos != _lastPosition)
         {
@@ -120,12 +119,7 @@ public class SpriteRenderer : Component
             _lastPosition = pos;
             IsDirty = true;
         }
-        // if (_currentTranslation != _lastTranslation)
-        // {
-        //     _lastTranslation = _currentTranslation;
-        //     IsDirty = true;
-        // }
-
+        
         if (SpriteSheetSpriteIndex != _lastSpriteSheetIndex)
         {
             _lastSpriteSheetIndex = SpriteSheetSpriteIndex;
@@ -137,7 +131,7 @@ public class SpriteRenderer : Component
     {
         base.EditorUpdate(dt);
     }
-
+    
     public void SetSprite(int spriteSheetIndex, string spriteSheet)
     {
         if (_renderer == null)

@@ -36,6 +36,12 @@ public class Gameobject : Asset, ICloneable
     [JsonIgnore] bool _isPopupOpen = false;
     [JsonIgnore]   public Transform Transform => GetComponent<Transform>();
 
+    [JsonConstructor]
+    public Gameobject()
+    {
+        GetUID();
+    }
+    
     public Gameobject(string name)
     {
         Name = name;
@@ -50,14 +56,14 @@ public class Gameobject : Asset, ICloneable
         GetUID();
     }
 
-    [JsonConstructor]
-    internal Gameobject(string name, List<Component?> components, int uid, int parentUid)
-    {
-        Name = name;
-        Components = components;
-        UID = uid;
-        ParentUid = parentUid;
-    }
+    // [JsonConstructor]
+    // internal Gameobject(string name, List<Component?> components, int uid, int parentUid)
+    // {
+    //     Name = name;
+    //     Components = components;
+    //     UID = uid;
+    //     ParentUid = parentUid;
+    // }
 
     private void GetUID()
     {
@@ -74,7 +80,6 @@ public class Gameobject : Asset, ICloneable
 
     internal void Init(Renderer? renderer)
     {
-        GetUID();
         if (GetComponent<Transform>() == null)
         {
             var t = new Transform();

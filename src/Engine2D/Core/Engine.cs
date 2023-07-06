@@ -74,7 +74,6 @@ namespace Engine2D.Core
         
         private void Render(FrameEventArgs args)
         {
-            SetTitle(args);
             DeltaTime = args.Time;
             CurrentScene?.Render((float)DeltaTime);
             
@@ -97,18 +96,6 @@ namespace Engine2D.Core
 
         private void MouseWheel(MouseWheelEventArgs e)
         {
-        }
-
-        private void SetTitle(FrameEventArgs args)
-        {
-            Title = string.Format($"Frame Time: {args.Time * 1000:0.00}ms" + "  |  " + $"FPS: {1 / args.Time:0.00}");
-            // var fps = 1.0f / time;
-             // if (_frameCounter == 30)
-             //            {
-             //                //Title = string.Format("KDB ENGIN V{0} | Scene : {1} | FPS : {2}", 0.1, CurrentScene.ScenePath, fps);
-             //                _frameCounter = 0;
-             //            }_frameCounter++;
-           
         }
 
         #region setup
@@ -158,7 +145,7 @@ namespace Engine2D.Core
 
             AssignDefaultEvents();
 
-            SwitchScene(ProjectSettings.FullProjectPath + "\\tmxloadertest.kdbscene");
+            SwitchScene(ProjectSettings.FullProjectPath + "\\strestest.kdbscene");
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);
@@ -225,7 +212,7 @@ internal static class WindowSettings
 //Engine settings
 public static class Settings
 {
-    public static bool s_IsEngine = true;
+    public static bool s_IsEngine = false;
     public static bool s_RenderDebugWindowSeperate = true;
     public static float GRID_WIDTH = 16;
     public static float GRID_HEIGHT = 16;

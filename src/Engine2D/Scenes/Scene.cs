@@ -1,13 +1,17 @@
 ﻿#region
 
+using System.Numerics;
 using Engine2D.Cameras;
 using Engine2D.Components;
 using Engine2D.Components.Cameras;
+using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.GameObjects;
+using Engine2D.Logging;
 using Engine2D.Physics;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
+using Engine2D.UI.Debug;
 using Newtonsoft.Json;
 using OpenTK.Windowing.Common;
 
@@ -43,6 +47,8 @@ public class Scene
         {
             go.StartPlay(_physics2DWorld);
         }
+        
+        
     }
   
     private void StopPlay()
@@ -110,6 +116,7 @@ public class Scene
 
     private void ReloadScene(List<Gameobject?> clones)
     {
+        Log.Message("Reloading scene");
         var prevEditorCamera = GetEditorCamera();
         foreach (var go in GameObjects)
         {
@@ -124,6 +131,7 @@ public class Scene
         
         if(Settings.s_IsEngine)
             CreateEditorCamera(prevEditorCamera);
+        Log.Succes("Scene reloaded succesfully" + ScenePath);
     }
 
 
@@ -146,19 +154,31 @@ public class Scene
         foreach (var go in gos)
         {
             AddGameObjectToScene(go);
+            // go.Transform.Position.X +=
         }
     }
 
+    [JsonIgnore]private int _totalTimesTimeCounted = 0;
+    [JsonIgnore]private double _totalTime = 0;
+    
+    public static bool DoUpdate = true;
+    
     /// <summary>
     /// Runs every frame
     /// </summary>
     /// <param name="args"></param>
     internal void Update(FrameEventArgs args)
     {
-        if (Settings.s_IsEngine) 
-            EditorUpdate(args);
-        if (IsPlaying)
+        Engine.Get().Title = string.Format($"Frame Time: {args.Time * 1000:0.00}ms" + "  |  " + $"FPS: {1 / args.Time:0.00}");
+        
+        _totalTime += args.Time;
+        _totalTimesTimeCounted++;
+        
+
+        if (IsPlaying&&DoUpdate)
         {
+            if (Settings.s_IsEngine) 
+                EditorUpdate(args);
             GameUpdate(args);
             GameFixedUpdate();
         }
@@ -167,7 +187,8 @@ public class Scene
         for (int i=0; i < GameObjects.Count; i++) {
             {
                 var obj = GameObjects[i];
-                //obj.Update(args);
+                if(DoUpdate)
+                    obj.Update(args);
                 if (obj.IsDead)
                 {
                     obj.Destroy();
@@ -175,15 +196,7 @@ public class Scene
                 }
             }
         }
-        foreach (var obj in GameObjects)
-        {
-            obj.Update(args);
-            if (obj.IsDead)
-            {
-                obj.Destroy();
-            }
-        }
-
+      
         AfterUpdate();
     }
 
@@ -203,8 +216,10 @@ public class Scene
     /// <param name="args"></param>
     private void EditorUpdate(FrameEventArgs args)
     {
-        foreach (var obj in GameObjects) 
+        foreach (var obj in GameObjects)
+        {
             obj.EditorUpdate((float)Engine.DeltaTime);
+        }
     }
     
     /// <summary>
@@ -215,6 +230,7 @@ public class Scene
     private void GameUpdate(FrameEventArgs args)
     {
         foreach (var obj in GameObjects) obj.GameUpdate((float)Engine.DeltaTime);
+        
         _physics2DWorld?.GameUpdate((float)args.Time);
     }
 
@@ -238,7 +254,28 @@ public class Scene
 
     internal virtual void Close()
     {
-        if (EngineSettings.SaveOnClose && !IsPlaying && Settings.s_IsEngine)
+        var scenename = "stresstest";
+        var Time = (_totalTime / _totalTimesTimeCounted);
+
+        var currentTime = System.DateTime.Now;
+        string data = debug_data.GetDebugData(Time);
+        
+        Log.Succes("LOG: \n" + data);
+        var path = "Logs";
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        var fileName = scenename + "--" +currentTime.Second + "-" + currentTime.Minute + "-" + currentTime.Hour + "-" + currentTime.Day + ".txt";
+        var fullPath = Path.Combine(path, fileName);
+        using (var fs = File.Create(fullPath))
+        {
+            fs.Close();
+        }
+
+        File.WriteAllText(fullPath, data);
+        
+        if (EngineSettings.SaveOnClose && !IsPlaying)
             SaveLoad.SaveScene(this);
     }
 
