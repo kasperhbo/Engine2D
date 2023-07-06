@@ -261,7 +261,7 @@ public class Scene
         string data = debug_data.GetDebugData(Time);
         
         Log.Succes("LOG: \n" + data);
-        var path = "Logs";
+        var path = "..\\..\\..\\Logs";
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
