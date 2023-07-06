@@ -142,7 +142,7 @@ public class Scene
     internal virtual void Init(string scenePath)
     {
         Renderer = new Renderer();
-        Renderer.Init();
+        //Renderer.Init();
 
         ScenePath = scenePath;
         
@@ -249,7 +249,7 @@ public class Scene
     
     internal virtual void Render(float dt)
     {
-        Renderer.Render();
+       // Renderer.Render();
     }
 
     internal virtual void Close()
@@ -322,7 +322,7 @@ public class Scene
 
     internal virtual void OnResized(ResizeEventArgs newSize)
     {
-        Renderer.OnResize(newSize);
+        //Renderer.OnResize(newSize);
     }
 
     internal virtual void OnMouseWheel(MouseWheelEventArgs mouseWheelEventArgs)

@@ -33,7 +33,7 @@ internal abstract class ViewportWindow : IFocussable
     public Vector2 WindowSize { get; set; }
     public Vector2 WindowPos { get; set; }
 
-    internal void Begin(string title, Camera cameraToRender, TestFrameBuffer buffer)
+    internal void Begin(string title, Camera cameraToRender, TestFrameBuffer? buffer)
     {
         Camera = cameraToRender;
         _frameBuffer = buffer;
@@ -74,6 +74,8 @@ internal abstract class ViewportWindow : IFocussable
         
         if(_frameBuffer != null)
             ImGui.Image(_frameBuffer.TextureID, new Vector2(WindowSize.X, WindowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+        else
+            ImGui.Image(IntPtr.Zero, new Vector2(WindowSize.X, WindowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
         
         _isHovering = ImGui.IsItemHovered();
         

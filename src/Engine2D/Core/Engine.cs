@@ -145,7 +145,7 @@ namespace Engine2D.Core
 
             AssignDefaultEvents();
 
-            SwitchScene(ProjectSettings.FullProjectPath + "\\strestest.kdbscene");
+            SwitchScene(ProjectSettings.FullProjectPath + "\\newrenderertest.kdbscene");
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);
@@ -212,7 +212,7 @@ internal static class WindowSettings
 //Engine settings
 public static class Settings
 {
-    public static bool s_IsEngine = false;
+    public static bool s_IsEngine = true;
     public static bool s_RenderDebugWindowSeperate = true;
     public static float GRID_WIDTH = 16;
     public static float GRID_HEIGHT = 16;

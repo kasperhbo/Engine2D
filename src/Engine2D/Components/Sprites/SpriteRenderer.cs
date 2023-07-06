@@ -87,7 +87,7 @@ public class SpriteRenderer : Component
             _renderer = Engine.Get().CurrentScene.Renderer;
         }
         
-        _renderer.AddSpriteRenderer(this);
+        // _renderer.AddSpriteRenderer(this);
         
         // if(Parent?.GetComponent<Transform>()!=null)
         //     _currentTranslation = Parent.GetComponent<Transform>().GetTranslation();
@@ -138,7 +138,7 @@ public class SpriteRenderer : Component
         {
             _renderer = Engine.Get().CurrentScene.Renderer;
         }
-        _renderer.RemoveSprite(this.Parent);
+        //_renderer.RemoveSprite(this.Parent);
         
         var sprs = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
         
@@ -157,7 +157,7 @@ public class SpriteRenderer : Component
         SpriteSheetPath = spriteSheet;
         SpriteSheetSpriteIndex = spriteSheetIndex;
         
-        _renderer.AddSpriteRenderer(this);
+        //_renderer.AddSpriteRenderer(this);
         IsDirty = true;
     }
     
@@ -169,7 +169,7 @@ public class SpriteRenderer : Component
         }
         else
         {
-            _renderer.AddSpriteRenderer(this);
+           // _renderer.AddSpriteRenderer(this);
         }
 
         IsDirty = true;
@@ -177,7 +177,7 @@ public class SpriteRenderer : Component
 
     public override void Destroy()
     {
-        Engine.Get().CurrentScene.Renderer.RemoveSprite(this);
+        //Engine.Get().CurrentScene.Renderer.RemoveSprite(this);
         base.Destroy();
     }
 

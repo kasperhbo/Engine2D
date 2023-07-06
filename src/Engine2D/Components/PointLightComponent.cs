@@ -24,8 +24,9 @@ internal class PointLightComponent : Component
 
     public override void Init()
     {
-        LastTransform = new Transform();
-        Engine.Get().CurrentScene.Renderer?.AddPointLight(this);
+        //     LastTransform = new Transform();
+        //     Engine.Get().CurrentScene.Renderer?.AddPointLight(this);
+        // }
     }
 
     public override void Start()
@@ -36,8 +37,8 @@ internal class PointLightComponent : Component
     {
         if (!LastTransform.Equals(Parent.GetComponent<Transform>()))
                     Transform.Copy(Parent.GetComponent<Transform>(), LastTransform);
-        
-                if (!_lastColor.Equals(Color)) _lastColor = Color;
+
+        if (!_lastColor.Equals(Color)) _lastColor = Color;
     }
 
     public override void EditorUpdate(double dt)
