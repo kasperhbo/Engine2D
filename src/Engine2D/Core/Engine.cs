@@ -6,6 +6,7 @@ using Engine2D.Core.Inputs;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
+using Engine2D.Rendering.NewRenderer;
 using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.UI;
@@ -84,7 +85,9 @@ namespace Engine2D.Core
         private new void OnResize(ResizeEventArgs e)
         {
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
-
+            
+            Renderer.Resize();
+            
             CurrentScene?.OnResized(e);
         }
         

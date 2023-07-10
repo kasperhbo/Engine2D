@@ -29,12 +29,37 @@ public class Scene
     
     [JsonProperty]internal string ScenePath { get; private set; } = "NoScene";
     [JsonProperty]internal GlobalLight GlobalLight { get; set; } = null;
+    [JsonProperty]public static bool DoUpdate = true;
 
     [JsonIgnore] public Physics2DWorld? _physics2DWorld;
     [JsonIgnore] private List<Gameobject?> _clonesOnStart = new();
 
-    [JsonIgnore] private OpenGLVertexArray m_SquareVA;
+    [JsonIgnore]private int _totalTimesTimeCounted = 0;
+    [JsonIgnore]private double _totalTime = 0;
     
+    [JsonIgnore]private bool _isPlaying;
+
+    internal bool IsPlaying
+    {
+        get => _isPlaying;
+        set
+        {
+            if (value)
+            {
+                if (IsPlaying) return;
+                SaveLoad.SaveScene(this);
+                StartPlay();
+            }
+            else
+            {
+                if (!_isPlaying) return;
+                StopPlay();
+            }
+
+            _isPlaying = value;
+        }
+    }
+
     private void StartPlay()
     {
         SaveLoad.SaveScene(this);
@@ -52,8 +77,6 @@ public class Scene
         {
             go.StartPlay(_physics2DWorld);
         }
-        
-        
     }
   
     private void StopPlay()
@@ -75,23 +98,9 @@ public class Scene
                 if (cam._isMainCamera) return cam;
             }
         }
-
         return null;
     }
-    public Gameobject? GetMainCameraGO()
-    {
-        foreach (var go in GameObjects)
-        {
-            var cam = go.GetComponent<Camera>();
-            if (cam != null)
-            {
-                if (cam._isMainCamera) return cam.Parent;
-            }
-        }
-
-        return null;
-    }
-
+    
     internal Camera? GetEditorCamera()
     {
         foreach (var go in GameObjects)
@@ -139,48 +148,12 @@ public class Scene
         Log.Succes("Scene reloaded succesfully" + ScenePath);
     }
 
-
     /// <summary>
     ///     Runs before anything
     /// </summary>
     /// <param name="scenePath"></param>
     internal virtual void Init(string scenePath)
     {
-        var vertexSource = "Shaders\\BlueShader.vert";
-        var fragmentSource = "Shaders\\BlueShader.frag";
-        
-        shader = new Shader(vertexSource, fragmentSource);
-        shader.use();
-
-        m_SquareVA = OpenGLVertexArray.Create();
-        float[] squareVertices =
-        {
-            -0.75f, -0.75f, 0.0f,
-            0.75f, -0.75f, 0.0f,
-            0.75f, 0.75f, 0.0f,
-            -0.75f, 0.75f, 0.0f
-        };
-        OpenGLVertexBuffer squareVB = 
-            OpenGLVertexBuffer.Create(squareVertices, 3*4*sizeof(float));
-        
-        squareVB.SetLayout(new BufferLayout(new List<BufferElement>()
-        {
-            new BufferElement(ShaderDataType.Float3, "a_Position")
-        }));
-        
-        m_SquareVA.AddVertexBuffer(squareVB);
-        int[] squareIndices = { 0, 1, 2, 2, 3, 0 };
-        OpenGLIndexBuffer squareIB =
-            new OpenGLIndexBuffer(squareIndices,
-                squareIndices.Length);
-        
-        m_SquareVA.SetIndexBuffer(squareIB);
-        squareIB.Bind();
-        m_SquareVA.Bind();
-        
-        // Renderer = new Renderer();
-        //Renderer.Init();
-
         ScenePath = scenePath;
         
         if(Settings.s_IsEngine)
@@ -193,12 +166,9 @@ public class Scene
             AddGameObjectToScene(go);
             // go.Transform.Position.X +=
         }
+        
+        Renderer.Init();
     }
-
-    [JsonIgnore]private int _totalTimesTimeCounted = 0;
-    [JsonIgnore]private double _totalTime = 0;
-    
-    public static bool DoUpdate = true;
     
     /// <summary>
     /// Runs every frame
@@ -237,16 +207,6 @@ public class Scene
         AfterUpdate();
     }
 
-    private void AfterUpdate()
-    {
-        for (int i = 0; i < toBeAddIndex; i++)
-        {
-            AddGameObjectToScene(toBeAdd[i], true);
-        }
-
-        toBeAddIndex = 0;
-    }
-    
     /// <summary>
     /// Runs every frame on editor update, so only if game is in the editor
     /// </summary>
@@ -283,19 +243,24 @@ public class Scene
             foreach (var obj in GameObjects) obj.FixedGameUpdate();
         }
     }
-
-    private Shader shader;
     
+      
+    /// <summary>
+    /// After update is ran after all the updates are done
+    /// </summary>
+    private void AfterUpdate()
+    {
+        
+    }
+    
+    /// <summary>
+    /// Render the scene
+    /// </summary>
+    /// <param name="dt">deltatime</param>
     internal virtual void Render(float dt)
     {
-       // Renderer.Render();
-       OpenGLRenderApi.SetClearColor(new(0.1f, 0.1f, 0.1f, 1));
-       OpenGLRenderApi.Clear();
-       
        Renderer.BeginScene();
-       shader.use();
-       Renderer.Submit(m_SquareVA);
-       
+       Renderer.Render();       
        Renderer.EndScene();
     }
 
@@ -338,34 +303,6 @@ public class Scene
 
         return null;
     }
-
-    #region onplay
-
-    private bool _isPlaying;
-
-    internal bool IsPlaying
-    {
-        get => _isPlaying;
-        set
-        {
-            if (value)
-            {
-                if (IsPlaying) return;
-                SaveLoad.SaveScene(this);
-                StartPlay();
-            }
-            else
-            {
-                if (!_isPlaying) return;
-                StopPlay();
-            }
-
-            _isPlaying = value;
-        }
-    }
-
-    #endregion
-    
 
     internal virtual void OnResized(ResizeEventArgs newSize)
     {
@@ -411,25 +348,19 @@ public class Scene
         }
     }
 
-    private Gameobject[] toBeAdd = new Gameobject[1000];
-    private int toBeAddIndex = 0;
-    
     public void AddGameObjectToScene(Gameobject? go, bool directlyAdd = true)
     {
+        GameObjects.Add(go);
+        go.Init();
+        // go.Init(Renderer);
+        go.Start();
+
+        if (go.Serialize)
+            Engine.Get().CurrentSelectedAsset = go;
+        
         if(!_isPlaying  || directlyAdd)
         {
-            GameObjects.Add(go);
-            go.Init();
-            // go.Init(Renderer);
-            go.Start();
-
-            if (go.Serialize)
-                Engine.Get().CurrentSelectedAsset = go;
-        }
-        else
-        {
-            toBeAdd[toBeAddIndex] = go;
-            toBeAddIndex++;
+         
         }
     }
 }

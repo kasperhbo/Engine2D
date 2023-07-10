@@ -149,14 +149,12 @@ internal static class UiRenderer
 
         if(_engine.CurrentScene?.GetEditorCamera() != null)
         {
-            _editorViewport?.Begin("Editor VP", _engine.CurrentScene?.GetEditorCamera(),
-               null);
+            _editorViewport?.Begin("Editor VP", _engine.CurrentScene?.GetEditorCamera());
         }
 
         if(_engine.CurrentScene?.GetMainCamera() != null)
         {
-            _gameViewport?.Begin("Game VP", _engine.CurrentScene?.GetMainCamera(),
-              null);
+            _gameViewport?.Begin("Game VP", _engine.CurrentScene?.GetMainCamera());
         }
         foreach (var window in _windowsToRemoveEndOfFrame) _windows.Remove(window);
 
