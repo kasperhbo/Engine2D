@@ -10,9 +10,12 @@ using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Physics;
 using Engine2D.Rendering;
+using Engine2D.Rendering.NewRenderer;
 using Engine2D.SavingLoading;
 using Engine2D.UI.Debug;
+using KDBEngine.Shaders;
 using Newtonsoft.Json;
+using OpenTK.Graphics.Egl;
 using OpenTK.Windowing.Common;
 
 #endregion
@@ -22,7 +25,7 @@ namespace Engine2D.Scenes;
 public class Scene
 {
     [JsonProperty]internal List<Gameobject?> GameObjects = new();
-    [JsonIgnore]internal Renderer? Renderer { get; private set; }
+   // [JsonIgnore]internal Renderer? Renderer { get; private set; }
     
     [JsonProperty]internal string ScenePath { get; private set; } = "NoScene";
     [JsonProperty]internal GlobalLight GlobalLight { get; set; } = null;
@@ -30,6 +33,8 @@ public class Scene
     [JsonIgnore] public Physics2DWorld? _physics2DWorld;
     [JsonIgnore] private List<Gameobject?> _clonesOnStart = new();
 
+    [JsonIgnore] private OpenGLVertexArray m_SquareVA;
+    
     private void StartPlay()
     {
         SaveLoad.SaveScene(this);
@@ -141,7 +146,39 @@ public class Scene
     /// <param name="scenePath"></param>
     internal virtual void Init(string scenePath)
     {
-        Renderer = new Renderer();
+        var vertexSource = "Shaders\\BlueShader.vert";
+        var fragmentSource = "Shaders\\BlueShader.frag";
+        
+        shader = new Shader(vertexSource, fragmentSource);
+        shader.use();
+
+        m_SquareVA = OpenGLVertexArray.Create();
+        float[] squareVertices =
+        {
+            -0.75f, -0.75f, 0.0f,
+            0.75f, -0.75f, 0.0f,
+            0.75f, 0.75f, 0.0f,
+            -0.75f, 0.75f, 0.0f
+        };
+        OpenGLVertexBuffer squareVB = 
+            OpenGLVertexBuffer.Create(squareVertices, 3*4*sizeof(float));
+        
+        squareVB.SetLayout(new BufferLayout(new List<BufferElement>()
+        {
+            new BufferElement(ShaderDataType.Float3, "a_Position")
+        }));
+        
+        m_SquareVA.AddVertexBuffer(squareVB);
+        int[] squareIndices = { 0, 1, 2, 2, 3, 0 };
+        OpenGLIndexBuffer squareIB =
+            new OpenGLIndexBuffer(squareIndices,
+                squareIndices.Length);
+        
+        m_SquareVA.SetIndexBuffer(squareIB);
+        squareIB.Bind();
+        m_SquareVA.Bind();
+        
+        // Renderer = new Renderer();
         //Renderer.Init();
 
         ScenePath = scenePath;
@@ -246,10 +283,20 @@ public class Scene
             foreach (var obj in GameObjects) obj.FixedGameUpdate();
         }
     }
+
+    private Shader shader;
     
     internal virtual void Render(float dt)
     {
        // Renderer.Render();
+       OpenGLRenderApi.SetClearColor(new(0.1f, 0.1f, 0.1f, 1));
+       OpenGLRenderApi.Clear();
+       
+       Renderer.BeginScene();
+       shader.use();
+       Renderer.Submit(m_SquareVA);
+       
+       Renderer.EndScene();
     }
 
     internal virtual void Close()
@@ -372,8 +419,8 @@ public class Scene
         if(!_isPlaying  || directlyAdd)
         {
             GameObjects.Add(go);
-
-            go.Init(Renderer);
+            go.Init();
+            // go.Init(Renderer);
             go.Start();
 
             if (go.Serialize)

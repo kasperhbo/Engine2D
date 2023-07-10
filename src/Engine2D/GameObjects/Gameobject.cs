@@ -78,7 +78,7 @@ public class Gameobject : Asset, ICloneable
     }
 
 
-    internal void Init(Renderer? renderer)
+    internal void Init()
     {
         if (GetComponent<Transform>() == null)
         {

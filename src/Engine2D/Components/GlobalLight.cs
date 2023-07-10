@@ -17,8 +17,7 @@ internal class GlobalLight : Component
 
     public override void Init()
     {
-        var currentSceneRenderer = Engine.Get().CurrentScene.Renderer;
-       // if (currentSceneRenderer != null) currentSceneRenderer.GlobalLight = this;
+        // if (currentSceneRenderer != null) currentSceneRenderer.GlobalLight = this;
     }
 
     public override void Start()

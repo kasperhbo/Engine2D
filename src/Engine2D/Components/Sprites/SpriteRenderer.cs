@@ -68,7 +68,7 @@ public class SpriteRenderer : Component
     // [JsonIgnore] [ShowUI(show = false)]private Matrix4x4 _currentTranslation { get; set; } = new();
     [JsonIgnore]  [ShowUI(show = false)] private Vector4 _lastColor { get; set; } = new();
     [JsonIgnore]private int _lastSpriteSheetIndex = -1;
-    [JsonIgnore] private Renderer? _renderer = null;
+    //[JsonIgnore] private Renderer? _renderer = null;
     
     [JsonProperty][ShowUI (show = false)] internal bool    HasSpriteSheet         = false;
     [JsonProperty][ShowUI (show = false)] internal string? SpriteSheetPath        = "";
@@ -82,10 +82,10 @@ public class SpriteRenderer : Component
     
     public override void Init()
     {
-        if (_renderer == null)
-        {
-            _renderer = Engine.Get().CurrentScene.Renderer;
-        }
+    //     if (_renderer == null)
+    //     {
+    //         _renderer = Engine.Get().CurrentScene.Renderer;
+    //     }
         
         // _renderer.AddSpriteRenderer(this);
         
@@ -134,31 +134,31 @@ public class SpriteRenderer : Component
     
     public void SetSprite(int spriteSheetIndex, string spriteSheet)
     {
-        if (_renderer == null)
-        {
-            _renderer = Engine.Get().CurrentScene.Renderer;
-        }
-        //_renderer.RemoveSprite(this.Parent);
-        
-        var sprs = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
-        
-        if (sprs == null)
-        {
-            Log.Error("Couldn't find sprite sheet: " + spriteSheet);
-            return;
-        }
-        
-        HasSpriteSheet = true;
-        
-        _spriteSheet = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
-        
-        
-        Sprite = _spriteSheet.GetSprite(spriteSheetIndex);
-        SpriteSheetPath = spriteSheet;
-        SpriteSheetSpriteIndex = spriteSheetIndex;
-        
-        //_renderer.AddSpriteRenderer(this);
-        IsDirty = true;
+        // if (_renderer == null)
+        // {
+        //     _renderer = Engine.Get().CurrentScene.Renderer;
+        // }
+        // //_renderer.RemoveSprite(this.Parent);
+        //
+        // var sprs = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
+        //
+        // if (sprs == null)
+        // {
+        //     Log.Error("Couldn't find sprite sheet: " + spriteSheet);
+        //     return;
+        // }
+        //
+        // HasSpriteSheet = true;
+        //
+        // _spriteSheet = ResourceManager.GetItem<SpriteSheet>(spriteSheet);
+        //
+        //
+        // Sprite = _spriteSheet.GetSprite(spriteSheetIndex);
+        // SpriteSheetPath = spriteSheet;
+        // SpriteSheetSpriteIndex = spriteSheetIndex;
+        //
+        // //_renderer.AddSpriteRenderer(this);
+        // IsDirty = true;
     }
     
     public void Refresh()
