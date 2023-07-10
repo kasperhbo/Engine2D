@@ -67,8 +67,8 @@ public abstract class Component : ICloneable
     
     public virtual void Destroy()
     {
-        if(this.Parent != null)
-            Engine.Get().CurrentScene?.Renderer?.RemoveSprite(this.Parent);
+        // if(this.Parent != null)
+            // Engine.Get().CurrentScene?.Renderer?.RemoveSprite(this.Parent);
     }
 
     public virtual void ImGuiFields()

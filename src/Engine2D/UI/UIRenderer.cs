@@ -88,9 +88,9 @@ internal static class UiRenderer
     {
         if (!Settings.s_IsEngine) return;
         KDBImGuiController.Update(_engine, args.Time);
-
-        DebugStats.DrawCalls = Renderer.DrawCalls;
-        DebugStats.SpritesDrawn = Renderer.RenderedObjects;
+        //
+        // DebugStats.DrawCalls = Renderer.DrawCalls;
+        // DebugStats.SpritesDrawn = Renderer.RenderedObjects;
         
         UIDebugStats.OnGui(args);
         
@@ -103,7 +103,7 @@ internal static class UiRenderer
         
         SetupDockSpace();
 
-        Engine.Get().CurrentScene.Renderer.OnGui();
+        //Engine.Get().CurrentScene.Renderer.OnGui();
         Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset?.OnGui(); 
         Engine.Get().CurrentSelectedTextureAssetBrowserAsset?.OnGui();     
         Engine.Get().CurrentSelectedAnimationAssetBrowserAsset?.OnGui();   
@@ -149,14 +149,12 @@ internal static class UiRenderer
 
         if(_engine.CurrentScene?.GetEditorCamera() != null)
         {
-            _editorViewport?.Begin("Editor VP", _engine.CurrentScene?.GetEditorCamera(),
-                _engine.CurrentScene?.Renderer?.EditorGameBuffer);
+            _editorViewport?.Begin("Editor VP", _engine.CurrentScene?.GetEditorCamera());
         }
 
         if(_engine.CurrentScene?.GetMainCamera() != null)
         {
-            _gameViewport?.Begin("Game VP", _engine.CurrentScene?.GetMainCamera(),
-                _engine.CurrentScene?.Renderer?.GameBuffer);
+            _gameViewport?.Begin("Game VP", _engine.CurrentScene?.GetMainCamera());
         }
         foreach (var window in _windowsToRemoveEndOfFrame) _windows.Remove(window);
 

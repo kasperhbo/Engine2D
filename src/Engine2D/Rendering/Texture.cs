@@ -201,6 +201,9 @@ internal class Texture : AssetBrowserAsset
     internal override void OnGui()
     {
         ImGui.Begin("Texture inspect");
+        ImGui.Text("Texture: " + Filepath);
+        ImGui.Text("TextureID: " + TexID);
+        
         ImGui.Text("Image Preview");
         ImGui.SameLine();
         var w = Width;

@@ -82,7 +82,7 @@ namespace Engine2D.Managers
             //TODO:NEEDS TO BE IMPROVED
             if(refreshobjects){
                 //Just flush the renderer for now
-                Engine.Get().CurrentScene.Renderer.Flush();
+                //Engine.Get().CurrentScene.Renderer.Flush();
                 
                 foreach (var keyvp in _items)
                 {

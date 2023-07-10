@@ -1,5 +1,6 @@
 #region
 
+using System.Net.Quic;
 using System.Numerics;
 using Engine2D.Cameras;
 using Engine2D.Core;
@@ -18,8 +19,6 @@ internal abstract class ViewportWindow : IFocussable
     protected Vector2 Origin;
     protected Vector2 Size;
     
-    private TestFrameBuffer? _frameBuffer = null;
-    
     private bool _isHovering  = false;
     private bool _isFocussed  = false;
     
@@ -33,21 +32,20 @@ internal abstract class ViewportWindow : IFocussable
     public Vector2 WindowSize { get; set; }
     public Vector2 WindowPos { get; set; }
 
-    internal void Begin(string title, Camera cameraToRender, TestFrameBuffer buffer)
+    internal void Begin(string title, Camera cameraToRender)
     {
         Camera = cameraToRender;
-        _frameBuffer = buffer;
         _title = title;
 
         BeforeImageRender();
-        RenderImage();
+        Render();
         AfterImageRender();
         End();
     }
     
     protected abstract void BeforeImageRender();
 
-    protected virtual void RenderImage()
+    private void Render()
     {
         ImGui.Begin(_title,
             ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar);
@@ -71,17 +69,17 @@ internal abstract class ViewportWindow : IFocussable
         WindowSize = GetLargestSizeForViewport();
         WindowPos = GetCenteredPositionForViewport(WindowSize);
         ImGui.SetCursorPos(new Vector2(WindowPos.X, WindowPos.Y));
-        
-        if(_frameBuffer != null)
-            ImGui.Image(_frameBuffer.TextureID, new Vector2(WindowSize.X, WindowSize.Y), new Vector2(0, 1), new Vector2(1, 0));
+
+        RenderImage();
+       
         
         _isHovering = ImGui.IsItemHovered();
         
         Origin = ImGui.GetItemRectMin();
         Size = ImGui.GetItemRectSize();
-        
-        
     }
+
+    protected abstract void RenderImage();
 
     protected abstract void AfterImageRender();
 

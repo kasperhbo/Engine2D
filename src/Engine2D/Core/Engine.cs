@@ -6,6 +6,7 @@ using Engine2D.Core.Inputs;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
+using Engine2D.Rendering.NewRenderer;
 using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.UI;
@@ -84,7 +85,9 @@ namespace Engine2D.Core
         private new void OnResize(ResizeEventArgs e)
         {
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
-
+            
+            Renderer.Resize();
+            
             CurrentScene?.OnResized(e);
         }
         
@@ -145,7 +148,7 @@ namespace Engine2D.Core
 
             AssignDefaultEvents();
 
-            SwitchScene(ProjectSettings.FullProjectPath + "\\strestest.kdbscene");
+            SwitchScene(ProjectSettings.FullProjectPath + "\\newrenderertest.kdbscene");
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);
@@ -212,7 +215,7 @@ internal static class WindowSettings
 //Engine settings
 public static class Settings
 {
-    public static bool s_IsEngine = false;
+    public static bool s_IsEngine = true;
     public static bool s_RenderDebugWindowSeperate = true;
     public static float GRID_WIDTH = 16;
     public static float GRID_HEIGHT = 16;

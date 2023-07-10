@@ -26,7 +26,7 @@ public class Camera : Component
     [JsonProperty] internal float Near = 0.1f;
 
     // private Vector2 _projectionSize = new(1920,1080);
-    [JsonProperty] internal Vector2 ProjectionSize = new(1920, 1080);
+    [JsonProperty] internal Vector2 ProjectionSize = new(1280, 720);
     [JsonProperty] internal Vector4 ClearColor = new(100, 149, 237, 255);
     [JsonProperty] internal float Size = 1f;
     [JsonProperty] internal bool _isMainCamera = false;

@@ -145,22 +145,12 @@ internal class SceneHierachyPanel : UIElement
                 {
                     if (ImGui.MenuItem("New Empty"))
                         Engine.Get().CurrentScene.AddGameObjectToScene(new Gameobject("Empty"));
+                    
                     if (ImGui.MenuItem("New SpriteRenderer"))
                         Engine.Get().CurrentScene.AddGameObjectToScene(new SpriteRendererGo("SpriteRenderer"));
 
                     if (ImGui.MenuItem("New Game Camera"))
                         Engine.Get().CurrentScene.AddGameObjectToScene(new CameraGO("Camera"));
-
-                    if (ImGui.BeginMenu("Lighting"))
-                    {
-                        if (ImGui.MenuItem("Global Light"))
-                            Engine.Get().CurrentScene.AddGameObjectToScene(new GlobalLightGO("Global Light"));
-
-                        if (ImGui.MenuItem("PointLight"))
-                            Engine.Get().CurrentScene.AddGameObjectToScene(new PointLightGO("Point Light"));
-
-                        ImGui.EndMenu();
-                    }
                 }
             }
             ImGui.EndChild();
