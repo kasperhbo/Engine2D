@@ -1,0 +1,3 @@
+[submodule "vendor/enttsharp"]
+	path = vendor/enttsharp
+	url = https://github.com/RabbitStewDio/EnTTSharp.git

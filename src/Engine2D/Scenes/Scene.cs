@@ -13,6 +13,7 @@ using Engine2D.Rendering;
 using Engine2D.Rendering.NewRenderer;
 using Engine2D.SavingLoading;
 using Engine2D.UI.Debug;
+using EnTTSharp.Entities;
 using KDBEngine.Shaders;
 using Newtonsoft.Json;
 using OpenTK.Graphics.Egl;
@@ -39,6 +40,8 @@ public class Scene
     
     [JsonIgnore]private bool _isPlaying;
 
+    [JsonIgnore] public EntityRegistry<EntityKey> EntityRegistry { get; private set; }
+    
     internal bool IsPlaying
     {
         get => _isPlaying;
@@ -88,32 +91,6 @@ public class Scene
         ReloadScene(_clonesOnStart);
     }
 
-    public Camera? GetMainCamera()
-    {
-        foreach (var go in GameObjects)
-        {
-            var cam = go.GetComponent<Camera>();
-            if (cam != null)
-            {
-                if (cam._isMainCamera) return cam;
-            }
-        }
-        return null;
-    }
-    
-    internal Camera? GetEditorCamera()
-    {
-        foreach (var go in GameObjects)
-        {
-            var cam = go.GetComponent<Camera>();
-            if (cam != null)
-            {
-                if (cam._isEditorCamera) return cam;
-            }
-        }
-
-        return null;
-    }
 
     internal void ReloadScene()
     {
@@ -154,6 +131,8 @@ public class Scene
     /// <param name="scenePath"></param>
     internal virtual void Init(string scenePath)
     {
+       CreateEntityRegistry();
+        
         ScenePath = scenePath;
         
         if(Settings.s_IsEngine)
@@ -168,6 +147,26 @@ public class Scene
         }
         
         Renderer.Init();
+    }
+    
+    private void CreateEntityRegistry()
+    {
+        EntityRegistry = new EntityRegistry<EntityKey>(EntityKey.MaxAge, EntityKey.Create);
+        EntityRegistry.Register<ENTTTransformComponent>();
+        EntityRegistry.Register<ENTTSpriteRenderer>();
+        EntityRegistry.Register<ENTTTagComponent>();
+        
+        //Temp code
+        CreateEntity("Test");
+    }
+
+    internal Entity CreateEntity(string name)
+    {
+        Entity en = new Entity();
+        en.AddComponent(new ENTTTransformComponent());
+        en.AddComponent(new ENTTTagComponent(name));
+        EntityRegistry.Create();
+        return en;
     }
     
     /// <summary>
@@ -362,5 +361,33 @@ public class Scene
         {
          
         }
+    }
+    
+    
+    public Camera? GetMainCamera()
+    {
+        foreach (var go in GameObjects)
+        {
+            var cam = go.GetComponent<Camera>();
+            if (cam != null)
+            {
+                if (cam._isMainCamera) return cam;
+            }
+        }
+        return null;
+    }
+    
+    internal Camera? GetEditorCamera()
+    {
+        foreach (var go in GameObjects)
+        {
+            var cam = go.GetComponent<Camera>();
+            if (cam != null)
+            {
+                if (cam._isEditorCamera) return cam;
+            }
+        }
+
+        return null;
     }
 }

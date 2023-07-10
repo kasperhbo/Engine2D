@@ -261,4 +261,9 @@
       <Folder Include="Rendering\Lines\" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\vendor\enttsharp\src\EnTTSharp\EnttSharp.csproj" />
+    </ItemGroup>
+
 </Project>

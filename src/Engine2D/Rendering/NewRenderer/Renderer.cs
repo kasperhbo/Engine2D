@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Engine2D.Cameras;
+using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
@@ -183,5 +184,32 @@ internal static class Renderer
     {
         GameFrameBuffer = new TestFrameBuffer(Engine.Get().Size);
         EditorFrameBuffer = new TestFrameBuffer(Engine.Get().Size);
+    }
+
+    public static void AddSprite(ENTTSpriteRenderer spriteRenderer)
+    {
+        bool added = false;
+        foreach (var batch in _batches)
+        {
+            if (batch.AddSprite(spriteRenderer))
+            {
+                added = true;
+                break;
+            }
+        }
+
+        if (!added)
+        {
+            _batches.Add(new Batch2D());
+            _batches[^1]
+                .Init(new Shader("Shaders\\ShaderFiles\\testshader.vert", "Shaders\\ShaderFiles\\testshader.frag"),
+                    _batches.Count - 1);
+            _batches[^1].AddSprite(spriteRenderer);
+        }
+    }
+
+    public static void RemoveSprite(ENTTSpriteRenderer enttSpriteRenderer)
+    {
+        
     }
 }

@@ -1,9 +1,10 @@
-﻿using Engine2D.Cameras;
+﻿using System.Numerics;
+using Engine2D.Cameras;
+using Engine2D.Components;
 using Engine2D.GameObjects;
 using Engine2D.Logging;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
 
 namespace Engine2D.Rendering.NewRenderer;
 
@@ -12,6 +13,8 @@ internal class Batch2D : IComparable<Batch2D>
     private int _zIndex;
     private Shader _shader;
 
+    private List<ENTTSpriteRenderer> _sprites = new();
+    
     private float[] _vertices = new float[c_vertexSize * c_maxBatchSize];
     
     private int _quadVA = 0;
@@ -35,6 +38,25 @@ internal class Batch2D : IComparable<Batch2D>
     private static int[] s_Indices = new int[c_maxBatchSize * 6];
     private static bool s_IndicesFilled = false;
     private static Vector4 _clearColor = new(1,1,1,1);
+
+    internal bool AddSprite(ENTTSpriteRenderer spriteRenderer)
+    {
+        if(_quadCount >= c_maxBatchSize)
+            return false;
+        
+        // Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
+        var pos = spriteRenderer.Parent.Transform.Position;
+        var color = spriteRenderer.Color;
+        var textureCoords = spriteRenderer.TextureCoords;
+        var textureID = spriteRenderer.Sprite.Texture.TexID;
+        
+        LoadVertices(
+            new Vector3(pos.X, pos.Y, pos.X), color, textureCoords, textureID);
+        
+        _sprites.Add(spriteRenderer);
+        
+        return true;
+    }
     
     internal void Init(Shader shader, int zIndex)
     {
@@ -69,8 +91,8 @@ internal class Batch2D : IComparable<Batch2D>
         //
         GL.CreateBuffers(1, out int QuadIB);
         GL.BindBuffer(BufferTarget.ElementArrayBuffer, QuadIB);
-        GL.BufferData(BufferTarget.ElementArrayBuffer, s_Indices.Length * sizeof(int), s_Indices, BufferUsageHint.DynamicDraw);
-
+        GL.BufferData(BufferTarget.ElementArrayBuffer,
+            s_Indices.Length * sizeof(int), s_Indices, BufferUsageHint.DynamicDraw);
     }
 
     internal void Render(Camera camera)
@@ -79,6 +101,13 @@ internal class Batch2D : IComparable<Batch2D>
         {
             Log.Error("Camera is not set!");
             return;
+        }
+        bool rebufferData = true;
+        if (rebufferData)
+        {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _quadVA);
+            GL.BufferSubData(BufferTarget.ArrayBuffer, 
+                IntPtr.Zero, _vertices.Length * sizeof(float), _vertices);
         }
         
         _shader.use();
@@ -119,8 +148,6 @@ internal class Batch2D : IComparable<Batch2D>
 
     private void LoadVertices(Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID)
     {
-        
-        
         //     -.5f, -.5f, 0,  .18F, .6F, .96F, 1F,   0f, 0f,             0f,      
         //     .5f, -.5f, 0,   .18F, .6F, .96F, 1F,   1f, 0f,             0f,
         //     .5f, .5f, 0,    .18F, .6F, .96F, 1F,   1f, 1f,             0f,
@@ -217,4 +244,6 @@ internal class Batch2D : IComparable<Batch2D>
 
         return 1;
     }
+
+    
 }
