@@ -103,6 +103,9 @@ public class Entity : Asset
         {
             if (ImGui.MenuItem("Sprite Renderer"))
             {
+                var comp = new ENTTSpriteRenderer();
+                comp.SetParent(this);
+                AddComponent(comp);
                 ImGui.CloseCurrentPopup();
             }
             
@@ -116,9 +119,10 @@ public class Entity : Asset
         //Tag component ui
         if (HasComponent<ENTTTagComponent>())
         {
+            ImGui.PushID("##tagcomponent");
             var tag = GetComponent<ENTTTagComponent>();
             Gui.DrawTable("Tag", () =>
-            {
+            { 
                 if(Gui.DrawProperty("Tag", ref tag.Tag)){
                     SetComponent(tag);
                 }
@@ -129,17 +133,20 @@ public class Entity : Asset
                 // }
             });
             ImGui.Separator();
+            ImGui.PopID();
         }
         
         //Transform component  
         if (HasComponent<ENTTTransformComponent>())
         {
+            ImGui.PushID("##transformcomponent");
             var transform = GetComponent<ENTTTransformComponent>();
             Gui.DrawTable("Transform", () =>
             {
                 if(Gui.DrawProperty("Position", ref transform.Position)){
                     SetComponent(transform);
                 }
+                
                 if(Gui.DrawProperty("Rotation", ref transform.Rotation)){
                     SetComponent(transform);
                 }
@@ -149,6 +156,27 @@ public class Entity : Asset
             });
 
             ImGui.Separator();
+            ImGui.PopID();
+        }
+        
+        //Sprite Renderer component
+        if (HasComponent<ENTTSpriteRenderer>())
+        {
+            ImGui.PushID("##spriterenderercomponent");
+            var spriteRenderer = GetComponent<ENTTSpriteRenderer>();
+            Gui.DrawTable("Sprite Renderer", () =>
+            {
+                //Just for testing if parenting is working
+                Gui.DrawProperty("Parent UUID: " + spriteRenderer.Parent.UUID.ToString());
+                
+                if (Gui.DrawProperty("Color", ref spriteRenderer.Color))
+                {
+                    SetComponent(spriteRenderer);
+                }
+                
+            });
+            ImGui.Separator();
+            ImGui.PopID();
         }
 
     }

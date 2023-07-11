@@ -260,7 +260,10 @@ public static class SaveLoad
                 else if(component is ENTTTagComponent tagComponent)
                     entity.AddComponent(tagComponent);
                 else if(component is ENTTSpriteRenderer spriteRenderer)
+                {
+                    spriteRenderer.SetParent(entity);
                     entity.AddComponent(spriteRenderer);
+                }
                 else
                     Log.Error("Component not found: " + component.GetType().FullName);
                 

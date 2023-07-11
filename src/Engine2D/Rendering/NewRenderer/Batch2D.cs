@@ -45,6 +45,7 @@ internal class Batch2D : IComparable<Batch2D>
         
         //TODO: ADD THE RIGHT PROPERTIES
         // Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
+        
         var pos           = spriteRenderer.Parent.GetComponent<ENTTTransformComponent>().Position;//spriteRenderer.Parent.Transform.Position;
         var color         = new Vector4(1,1,1,1);//spriteRenderer.Color;
         var textureCoords = new []{new Vector2(0,0), new Vector2(0,1), new Vector2(1,1), new Vector2(1,0)};//spriteRenderer.TextureCoords;
