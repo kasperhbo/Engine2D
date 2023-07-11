@@ -230,19 +230,25 @@ public class Scene
         string data = debug_data.GetDebugData(Time);
         
         Log.Succes("LOG: \n" + data);
-        var path = "..\\..\\..\\Logs";
-        if (!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
-        }
-        var fileName = scenename + "--" +currentTime.Second + "-" + currentTime.Minute + "-" + currentTime.Hour + "-" + currentTime.Day + ".txt";
-        var fullPath = Path.Combine(path, fileName);
-        using (var fs = File.Create(fullPath))
-        {
-            fs.Close();
-        }
+        
+        bool savescenestresstest = false;
+        if (savescenestresstest){
+            var path = "..\\..\\..\\Logs";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
 
-        File.WriteAllText(fullPath, data);
+            var fileName = scenename + "--" + currentTime.Second + "-" + currentTime.Minute + "-" + currentTime.Hour +
+                           "-" + currentTime.Day + ".txt";
+            var fullPath = Path.Combine(path, fileName);
+            using (var fs = File.Create(fullPath))
+            {
+                fs.Close();
+            }
+
+            File.WriteAllText(fullPath, data);
+        }
         
     }
 

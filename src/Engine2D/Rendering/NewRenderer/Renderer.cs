@@ -129,7 +129,8 @@ internal static class Renderer
         if (cam == null)
         {
             EditorFrameBuffer.UnBind();
-            Log.Error("No Editor camera set!");
+            //TODO:REANABLE THIS
+            // Log.Error("No Editor camera set!");
             return;
         }
         foreach (var batch in _batches)

@@ -255,6 +255,9 @@ public static class SaveLoad
                 Type componentType = Type.GetType(componentTypeName);
                 object component = JsonConvert.DeserializeObject(serializedComponent, componentType);
 
+                //skip entity component
+                if (component is Entity) return;
+                
                 if(component is ENTTTransformComponent transformComponent)
                     entity.AddComponent(transformComponent);
                 else if(component is ENTTTagComponent tagComponent)
