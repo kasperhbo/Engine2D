@@ -1,4 +1,8 @@
-﻿namespace Engine2D.Managers
+﻿using Engine2D.Components.Sprites;
+using Engine2D.Rendering;
+using ImTool;
+
+namespace Engine2D.Managers
 {
     internal struct ShaderData
     {
@@ -8,5 +12,6 @@
 
     internal static class ResourceManager
     {
+        
     }
 }

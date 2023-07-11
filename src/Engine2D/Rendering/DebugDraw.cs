@@ -1,4 +1,4 @@
-﻿using Engine2D.Cameras;
+﻿using Engine2D.Components.Cameras;
 using Engine2D.Components.ENTT;
 using Engine2D.Core;
 using KDBEngine.Shaders;
@@ -118,49 +118,49 @@ internal static class DebugDraw
 
     private static void AddGridLines(Camera camera)
     {
-        System.Numerics.Vector2 cameraPos = camera.Parent.GetComponent<ENTTTransformComponent>().Position;
-        System.Numerics.Vector2 projectionSize = camera.ProjectionSize;
-
-        float gridSize = Settings.GRID_HEIGHT;
-
-        // Calculate the zoom level for nested grids
-        float zoomLevel = MathF.Floor(camera.Size);
-        if(zoomLevel<1) zoomLevel = 1;
-        
-        float zoomedGridSize = gridSize * zoomLevel;
-        
-        DebugDraw._gridSize = zoomedGridSize;
-
-        float firstX = MathF.Floor(cameraPos.X / zoomedGridSize) * zoomedGridSize;
-        float firstY = MathF.Floor(cameraPos.Y / zoomedGridSize) * zoomedGridSize;
-
-        firstX -= zoomedGridSize / 2;
-        firstY -= zoomedGridSize / 2;
-
-        int numVtLines = (int)MathF.Ceiling(projectionSize.X * camera.Size / zoomedGridSize) + 2;
-        int numHzLines = (int)MathF.Ceiling(projectionSize.Y * camera.Size / zoomedGridSize) + 2;
-
-        float width = MathF.Floor(projectionSize.X * camera.Size) + (5 * zoomedGridSize);
-        float height = MathF.Floor(projectionSize.Y * camera.Size) + (5 * zoomedGridSize);
-
-        int maxLines = Math.Max(numVtLines, numHzLines);
-        Vector4 color = new Vector4(0.2f, 0.2f, 0.2f, 1f);
-
-        for (int i = 0; i < maxLines; i++)
-        {
-            float x = firstX + (zoomedGridSize * i);
-            float y = firstY + (zoomedGridSize * i);
-
-            if (i < numVtLines)
-            {
-                AddLine2D(new Vector2(x, firstY), new Vector2(x, firstY + height), color);
-            }
-
-            if (i < numHzLines)
-            {
-                AddLine2D(new Vector2(firstX, y), new Vector2(firstX + width, y), color);
-            }
-        }
+        // System.Numerics.Vector2 cameraPos = camera.TransformComponent.Position;
+        // System.Numerics.Vector2 projectionSize = camera.ProjectionSize;
+        //
+        // float gridSize = Settings.GRID_HEIGHT;
+        //
+        // // Calculate the zoom level for nested grids
+        // float zoomLevel = MathF.Floor(camera.Size);
+        // if(zoomLevel<1) zoomLevel = 1;
+        //
+        // float zoomedGridSize = gridSize * zoomLevel;
+        //
+        // DebugDraw._gridSize = zoomedGridSize;
+        //
+        // float firstX = MathF.Floor(cameraPos.X / zoomedGridSize) * zoomedGridSize;
+        // float firstY = MathF.Floor(cameraPos.Y / zoomedGridSize) * zoomedGridSize;
+        //
+        // firstX -= zoomedGridSize / 2;
+        // firstY -= zoomedGridSize / 2;
+        //
+        // int numVtLines = (int)MathF.Ceiling(projectionSize.X * camera.Size / zoomedGridSize) + 2;
+        // int numHzLines = (int)MathF.Ceiling(projectionSize.Y * camera.Size / zoomedGridSize) + 2;
+        //
+        // float width = MathF.Floor(projectionSize.X * camera.Size) + (5 * zoomedGridSize);
+        // float height = MathF.Floor(projectionSize.Y * camera.Size) + (5 * zoomedGridSize);
+        //
+        // int maxLines = Math.Max(numVtLines, numHzLines);
+        // Vector4 color = new Vector4(0.2f, 0.2f, 0.2f, 1f);
+        //
+        // for (int i = 0; i < maxLines; i++)
+        // {
+        //     float x = firstX + (zoomedGridSize * i);
+        //     float y = firstY + (zoomedGridSize * i);
+        //
+        //     if (i < numVtLines)
+        //     {
+        //         AddLine2D(new Vector2(x, firstY), new Vector2(x, firstY + height), color);
+        //     }
+        //
+        //     if (i < numHzLines)
+        //     {
+        //         AddLine2D(new Vector2(firstX, y), new Vector2(firstX + width, y), color);
+        //     }
+        // }
     }
 
 

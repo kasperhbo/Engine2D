@@ -1,6 +1,6 @@
 ﻿#region
 
-using Engine2D.Cameras;
+using Engine2D.Components.Cameras;
 using Engine2D.Components.ENTT;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
@@ -31,13 +31,11 @@ public class Scene
     [JsonIgnore] public EntityRegistry<EntityKey> EntityRegistry { get; private set; }
 
     [JsonIgnore] public Physics2DWorld? _physics2DWorld;
-    
-
     [JsonIgnore]private int _totalTimesTimeCounted = 0;
     [JsonIgnore]private double _totalTime = 0;
-    
     [JsonIgnore]private bool _isPlaying;
-
+    [JsonIgnore]private Camera? _editorCamera = null;
+    
     internal bool IsPlaying
     {
         get => _isPlaying;
@@ -293,17 +291,10 @@ public class Scene
         return null;
     }
     
-    internal Camera? GetEditorCamera()
+    
+    
+    internal Camera GetEditorCamera()
     {
-        // foreach (var go in GameObjects)
-        // {
-        //     var cam = go.GetComponent<Camera>();
-        //     if (cam != null)
-        //     {
-        //         if (cam._isEditorCamera) return cam;
-        //     }
-        // }
-
-        return null;
+        return _editorCamera ??= new Camera();
     }
 }

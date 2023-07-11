@@ -1,7 +1,7 @@
 #region
 
 using System.Numerics;
-using Engine2D.Cameras;
+using Engine2D.Components.Cameras;
 using Engine2D.Core;
 using ImGuiNET;
 using OpenTK.Windowing.Common;

@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using Engine2D.Cameras;
+using Engine2D.Components.Cameras;
 using ImGuizmoNET;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
