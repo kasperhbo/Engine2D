@@ -273,12 +273,4 @@ public static class SaveLoad
             }
         }
     }
-    //
-    // public static List<Entity>? LoadScene(string scenePath)
-    // {
-    //     var lines = File.ReadAllText(scenePath);
-    //     var objs = JsonConvert.DeserializeObject<List<Entity>>(lines);
-    //
-    //     return objs;
-    // }
 }
