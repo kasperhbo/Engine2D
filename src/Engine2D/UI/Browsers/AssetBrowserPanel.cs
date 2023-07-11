@@ -2,11 +2,8 @@
 
 using System.Numerics;
 using System.Runtime.InteropServices;
-using Engine2D.Components.Sprites;
-using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
-using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Managers;
 using Engine2D.Rendering;
@@ -221,8 +218,8 @@ internal class AssetBrowserPanel : UIElement
                         
                         savePath = savePath.Replace(ProjectSettings.FullProjectPath, "");
                         
-                        var animation = new Animation(savePath);
-                        animation.Save();
+                        // var animation = new Animation(savePath);
+                        // animation.Save();
                     }
                     
                     ImGui.EndPopup();
@@ -259,14 +256,14 @@ internal class AssetBrowserPanel : UIElement
             {
                 Console.WriteLine("drop");
                 var handle = GCHandle.FromIntPtr(new IntPtr(payload.Data));
-                var draggedObject = (Gameobject?)handle.Target;
-                
-                if (draggedObject != null)
-                {
-                    var fileName = CurrentDirectory.FullName + "\\" + draggedObject.Name;
-                    
-                    SaveLoad.SaveGameobject(fileName, draggedObject);
-                }
+                // var draggedObject = (Gameobject?)handle.Target;
+                //
+                // if (draggedObject != null)
+                // {
+                //     var fileName = CurrentDirectory.FullName + "\\" + draggedObject.Name;
+                //     
+                //     SaveLoad.SaveGameobject(fileName, draggedObject);
+                // }
             }
             ImGui.EndDragDropTarget();
         }
@@ -422,7 +419,7 @@ internal class AssetBrowserEntry
         _texture = texture;
         _assetBrowserPanel = assetBrowserPanel;
 
-        if (_fileType == ESupportedFileTypes.tex) _texture = ResourceManager.LoadTextureFromJson(FullPath);
+        // if (_fileType == ESupportedFileTypes.tex) _texture = ResourceManager.LoadTextureFromJson(FullPath);
     }
 
     internal string Label { get; }
@@ -507,8 +504,8 @@ internal class AssetBrowserEntry
                     savePath += ".spritesheet";
                     savePath = savePath?.Replace(ProjectSettings.FullProjectPath, "");
 
-                    var spriteSheet = new SpriteSheet(relativePath, savePath);
-                    spriteSheet.Save();
+                    // var spriteSheet = new SpriteSheet(relativePath, savePath);
+                    // spriteSheet.Save();
                     AssetBrowserPanel.Refresh();
                 }
                 if (ImGui.MenuItem("Create Sprite(Sheet)"))
@@ -518,8 +515,8 @@ internal class AssetBrowserEntry
                     savePath += ".spritesheet";
                     savePath = savePath?.Replace(ProjectSettings.FullProjectPath, "");
 
-                    var spriteSheet = new SpriteSheet(relativePath, savePath, 16, 16, 1, 0);
-                    spriteSheet.Save();
+                    // var spriteSheet = new SpriteSheet(relativePath, savePath, 16, 16, 1, 0);
+                    // spriteSheet.Save();
                     AssetBrowserPanel.Refresh();
                 }
             }
@@ -543,15 +540,15 @@ internal class AssetBrowserEntry
             
             if (_fileType == ESupportedFileTypes.spritesheet)
             {
-                // SpriteSheet sprite = SaveLoad.LoadSpriteSheetFromJson(fullPath);
-                var spriteSheet = ResourceManager.GetItem<SpriteSheet>(relativePath);
-                Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset = spriteSheet;
+                // // SpriteSheet sprite = SaveLoad.LoadSpriteSheetFromJson(fullPath);
+                // var spriteSheet = ResourceManager.GetItem<SpriteSheet>(relativePath);
+                // Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset = spriteSheet;
             }
 
             if (_fileType == ESupportedFileTypes.animation)
             {
-                var animation = ResourceManager.GetItem<Animation>(relativePath);
-                Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = animation;
+                // var animation = ResourceManager.GetItem<Animation>(relativePath);
+                // Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = animation;
             }
             
         }

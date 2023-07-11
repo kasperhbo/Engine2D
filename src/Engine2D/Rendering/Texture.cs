@@ -286,7 +286,6 @@ internal class Texture : AssetBrowserAsset
             return;
         }
 
-        SaveTextureClass sc = new(_saveName, this, null, true);
-        ResourceManager.TexturesToSave.Add(sc);
+        //TODO: REMIEMPLEMENT SAVING
     }
 }

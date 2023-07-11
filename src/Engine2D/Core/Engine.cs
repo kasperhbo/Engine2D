@@ -1,10 +1,7 @@
 ﻿#region
 
-using Engine2D.Components.Sprites;
-using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Core.Inputs;
 using Engine2D.Logging;
-using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.Rendering.NewRenderer;
 using Engine2D.SavingLoading;
@@ -35,9 +32,9 @@ namespace Engine2D.Core
         internal Asset? CurrentSelectedAsset;
         
         
-        internal SpriteSheet? CurrentSelectedSpriteSheetAssetBrowserAsset { get; set; }= null;
+        // internal SpriteSheet? CurrentSelectedSpriteSheetAssetBrowserAsset { get; set; }= null;
         internal Texture? CurrentSelectedTextureAssetBrowserAsset     { get; set; } = null;
-        internal Animation? CurrentSelectedAnimationAssetBrowserAsset   { get; set; } = null;
+        // internal Animation? CurrentSelectedAnimationAssetBrowserAsset   { get; set; } = null;
         
 
         public Scene CurrentScene { get; private set; }
@@ -137,7 +134,7 @@ namespace Engine2D.Core
         public void LoadEngine()
         {
             UiRenderer.Flush();
-            ResourceManager.Flush();
+            // ResourceManager.Flush();
             
             SaveLoad.LoadWindowSettings();
             SaveLoad.LoadEngineSettings();

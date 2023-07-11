@@ -1,7 +1,6 @@
 ﻿#region
 
 using System.Reflection;
-using Engine2D.Components;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.UI.Debug;
@@ -25,17 +24,17 @@ internal static class AssemblyUtils
     /// <param name="assemblyPath"></param>
     internal static void LoadAssembly(string assemblyPath)
     {
-        DebugStats.AssemblyReloaded++;
-        _loadedAssemblyOrigin = assemblyPath;
-
-        CopyAssembly();
-
-        var data = File.ReadAllBytes(ProjectSettings.FullProjectPath + "\\project.DLL");
-
-        _loadedComponents = new List<Type>();
-        _loadedGameAssembly = Assembly.Load(data);
-
-        GetAssemblyComponents();
+        // DebugStats.AssemblyReloaded++;
+        // _loadedAssemblyOrigin = assemblyPath;
+        //
+        // CopyAssembly();
+        //
+        // var data = File.ReadAllBytes(ProjectSettings.FullProjectPath + "\\project.DLL");
+        //
+        // _loadedComponents = new List<Type>();
+        // _loadedGameAssembly = Assembly.Load(data);
+        //
+        // GetAssemblyComponents();
     }
 
     /// <summary>
@@ -43,7 +42,7 @@ internal static class AssemblyUtils
     /// </summary>
     private static void CopyAssembly()
     {
-        File.Copy(_loadedAssemblyOrigin, ProjectSettings.FullProjectPath+ "\\project.DLL", true);
+        // File.Copy(_loadedAssemblyOrigin, ProjectSettings.FullProjectPath+ "\\project.DLL", true);
     }
 
     /// <summary>
@@ -51,31 +50,31 @@ internal static class AssemblyUtils
     /// </summary>
     private static void GetAssemblyComponents()
     {
-        if (_loadedGameAssembly == null)
-        {
-            Log.Error("No Assembly Is Loaded!");
-            return;
-        }
-        
-        var types = _loadedGameAssembly.GetTypes();
-        
-        foreach (var type in types)
-            try
-            {
-                var theType = _loadedGameAssembly.GetType(type.ToString());
-                var obj = Activator.CreateInstance(theType);
-                var comp = (Component)obj;
-        
-                if (comp != null)
-                {
-                    _loadedComponents.Add(theType);
-                }
-            }
-            catch
-            {
-                if (_enableDebug)
-                    Log.Warning(type.FullName + " is not an component, don't add it in to the project");
-            }
+        // if (_loadedGameAssembly == null)
+        // {
+        //     Log.Error("No Assembly Is Loaded!");
+        //     return;
+        // }
+        //
+        // var types = _loadedGameAssembly.GetTypes();
+        //
+        // foreach (var type in types)
+        //     try
+        //     {
+        //         var theType = _loadedGameAssembly.GetType(type.ToString());
+        //         var obj = Activator.CreateInstance(theType);
+        //         //var comp = (Component)obj;
+        //
+        //         // if (comp != null)
+        //         // {
+        //         //     _loadedComponents.Add(theType);
+        //         // }
+        //     }
+        //     catch
+        //     {
+        //         if (_enableDebug)
+        //             Log.Warning(type.FullName + " is not an component, don't add it in to the project");
+        //     }
     }
 
     /// <summary>
@@ -83,36 +82,37 @@ internal static class AssemblyUtils
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    internal static Component? GetComponent(string type)
-    {
-        for (var i = 0; i < _loadedComponents.Count; i++)
-        {
-            var t = _loadedComponents[i];
-
-            if (type == t.FullName)
-            {
-                if (_enableDebug)
-                    Log.Succes("Found: " + type);
-                return (Component)Activator.CreateInstance(t);
-            }
-        }
-
-        Log.Error(type + " not found. Is the Assembly loaded?");
-        return null;
-    }
+    // internal static Component? GetComponent(string type)
+    // {
+    //     for (var i = 0; i < _loadedComponents.Count; i++)
+    //     {
+    //         var t = _loadedComponents[i];
+    //
+    //         if (type == t.FullName)
+    //         {
+    //             if (_enableDebug)
+    //                 Log.Succes("Found: " + type);
+    //             return (Component)Activator.CreateInstance(t);
+    //         }
+    //     }
+    //
+    //     Log.Error(type + " not found. Is the Assembly loaded?");
+    //     return null;
+    // }
 
     /// <summary>
     ///     Reloads the assembly and readds all components to the gameobjects
     /// </summary>
     internal static void Reload()
     {
-        LoadAssembly(_loadedAssemblyOrigin);
-        Engine.Get().CurrentScene?.ReloadScene();
+        // LoadAssembly(_loadedAssemblyOrigin);
+        // Engine.Get().CurrentScene?.ReloadScene();
     }
 
     internal static List<Type> GetComponents()
     {
-        return _loadedComponents;
+        return null;
+        // return _loadedComponents;
     }
 }
 

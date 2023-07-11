@@ -1,5 +1,5 @@
 ﻿using Engine2D.Cameras;
-using Engine2D.Components.TransformComponents;
+using Engine2D.Components.ENTT;
 using Engine2D.Core;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL4;
@@ -30,7 +30,7 @@ internal static class DebugDraw
         dat.VertexPath = Utils.GetBaseEngineDir() + "\\Shaders\\ShaderFiles\\Line.vert";
         dat.FragPath = Utils.GetBaseEngineDir() + "\\Shaders\\ShaderFiles\\Line.frag";
 
-        Shader = ResourceManager.GetShader(dat);
+        Shader = new Shader(dat.VertexPath, dat.FragPath); // ResourceManager.GetShader(dat);
         
         VaoId = GL.GenVertexArray();
         GL.BindVertexArray(VaoId);
@@ -118,7 +118,7 @@ internal static class DebugDraw
 
     private static void AddGridLines(Camera camera)
     {
-        System.Numerics.Vector2 cameraPos = camera.Parent.GetComponent<Transform>().Position;
+        System.Numerics.Vector2 cameraPos = camera.Parent.GetComponent<ENTTTransformComponent>().Position;
         System.Numerics.Vector2 projectionSize = camera.ProjectionSize;
 
         float gridSize = Settings.GRID_HEIGHT;

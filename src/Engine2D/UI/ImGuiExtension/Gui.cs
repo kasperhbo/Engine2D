@@ -57,15 +57,17 @@ internal static class Gui
         PopID();
     }
     
-    internal static void DrawProperty(string label, ref string value)
+    internal static bool DrawProperty(string label, ref string value)
     {
+        bool pressed = false;
         PushID(label);
         TableNextRow();
         TableSetColumnIndex(0);
         Text(label);
         TableSetColumnIndex(1);
-        KStringInput("##"+label,ref value);
+        if(KStringInput("##"+label,ref value)) pressed = true;
         PopID();
+        return pressed;
     }
     
     internal static bool DrawProperty(string label, ref bool value)
@@ -89,17 +91,20 @@ internal static class Gui
         value.X = v.X;
         value.Y = v.Y;
     }
-
     
-    internal static void DrawProperty(string label, ref Vector2 value)
+    
+    internal static bool DrawProperty(string label, ref Vector2 value)
     {
+        bool pressed = false;
+        
         PushID(label);
         TableNextRow();
         TableSetColumnIndex(0);
         Text(label);
         TableSetColumnIndex(1);
-        Vector2Prop(ref value);
+        if(Vector2Prop(ref value)) pressed = true;
         PopID();
+        return pressed;
     }
 
     internal static void DrawProperty(string label, ref OpenTK.Mathematics.Vector3 value)
@@ -175,13 +180,19 @@ internal static class Gui
         }
     }
     
-    internal static void Vector2Prop(ref Vector2 value)
+    internal static bool Vector2Prop(ref Vector2 value)
     {
+        bool pressed = false;
         PushItemWidth(100);
-        KDragFloat("X", ref value.X, new Vector4(1,0,0,1),0.1f);
+        if(KDragFloat("X", ref value.X, new Vector4(1,0,0,1),0.1f)){
+            pressed = true;
+        }
         SameLine();
-        KDragFloat("Y", ref value.Y, new Vector4(0,1,0,1),0.1f);
+        if(KDragFloat("Y", ref value.Y, new Vector4(0,1,0,1),0.1f)){
+            pressed = true;
+        }
         PopItemWidth();
+        return pressed;
     }
     
     internal static void Vector3Prop(ref Vector3 value)
@@ -209,10 +220,11 @@ internal static class Gui
     }
     
     
-    internal static void KStringInput(string label, ref string value)
+    internal static bool KStringInput(string label, ref string value)
     {
-        if (value == null) return;
-        InputText(("##" + label), ref value, 256);
+        if (value == null) return false;
+        if (InputText(("##" + label), ref value, 256)) return true;
+        return false;
     }
     
     internal static bool KBoolInput(string label, ref bool value)
@@ -258,20 +270,29 @@ internal static class Gui
     
     
     
-    private static void KDragFloat(string label, ref float floatRef,  Vector4 buttonColor = new(), float dragSpeed = 0.1f)
+    private static bool KDragFloat(string label, ref float floatRef,  Vector4 buttonColor = new(), float dragSpeed = 0.1f)
     {
-        
+        bool pressed = false;
         PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
         if(buttonColor != Vector4.Zero)
             PushStyleColor(ImGuiCol.Button, buttonColor);
         
-        if (Button(label)) floatRef = 0;
+        if (Button(label))
+        {
+            pressed = true;
+            floatRef = 0;
+        }
         SameLine();
-        DragFloat(("##" + label), ref floatRef, dragSpeed);
+        if(DragFloat(("##" + label), ref floatRef, dragSpeed))
+        {
+            pressed = true;
+        }
         PopStyleVar();
         
         if(buttonColor != Vector4.Zero)
             PopStyleColor();
+        
+        return pressed;
     }
     
     

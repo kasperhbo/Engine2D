@@ -1,17 +1,22 @@
 ﻿using System.Numerics;
+using Engine2D.UI.ImGuiExtension;
+using EnTTSharp.Entities;
 
-namespace Engine2D.Components;
+namespace Engine2D.Components.ENTT;
 
-public struct ENTTTransformComponent
+public struct ENTTTransformComponent : IENTTComponent
 {
+    public Entity Parent;
+
     Matrix4x4 Transform = Matrix4x4.Identity;
     
-    Vector3 Position = Vector3.Zero;
-    Vector3 Rotation = Vector3.Zero;
-    Vector3 Scale = Vector3.One;
+    public Vector2 Position = Vector2.Zero;
+    public Vector2 Rotation = Vector2.Zero;
+    public Vector2 Scale = Vector2.One;
     
     
-    public ENTTTransformComponent()
+    public ENTTTransformComponent(Entity parent)
     {
+        this.Parent = parent;
     }
 }

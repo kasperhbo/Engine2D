@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 using Engine2D.Cameras;
-using Engine2D.Components;
-using Engine2D.GameObjects;
+using Engine2D.Components.ENTT;
 using Engine2D.Logging;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL;
@@ -44,11 +43,12 @@ internal class Batch2D : IComparable<Batch2D>
         if(_quadCount >= c_maxBatchSize)
             return false;
         
+        //TODO: ADD THE RIGHT PROPERTIES
         // Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
-        var pos = spriteRenderer.Parent.Transform.Position;
-        var color = spriteRenderer.Color;
-        var textureCoords = spriteRenderer.TextureCoords;
-        var textureID = spriteRenderer.Sprite.Texture.TexID;
+        var pos           = spriteRenderer.Parent.GetComponent<ENTTTransformComponent>().Position;//spriteRenderer.Parent.Transform.Position;
+        var color         = new Vector4(1,1,1,1);//spriteRenderer.Color;
+        var textureCoords = new []{new Vector2(0,0), new Vector2(0,1), new Vector2(1,1), new Vector2(1,0)};//spriteRenderer.TextureCoords;
+        var textureID     = 1;//spriteRenderer.Sprite.Texture.TexID;
         
         LoadVertices(
             new Vector3(pos.X, pos.Y, pos.X), color, textureCoords, textureID);

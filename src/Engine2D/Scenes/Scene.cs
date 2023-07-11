@@ -1,23 +1,18 @@
 ﻿#region
 
-using System.Numerics;
 using Engine2D.Cameras;
-using Engine2D.Components;
-using Engine2D.Components.Cameras;
-using Engine2D.Components.Sprites;
+using Engine2D.Components.ENTT;
 using Engine2D.Core;
-using Engine2D.GameObjects;
+using Engine2D.Core.Inputs;
 using Engine2D.Logging;
 using Engine2D.Physics;
-using Engine2D.Rendering;
 using Engine2D.Rendering.NewRenderer;
 using Engine2D.SavingLoading;
 using Engine2D.UI.Debug;
 using EnTTSharp.Entities;
-using KDBEngine.Shaders;
 using Newtonsoft.Json;
-using OpenTK.Graphics.Egl;
 using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 #endregion
 
@@ -25,23 +20,24 @@ namespace Engine2D.Scenes;
 
 public class Scene
 {
-    [JsonProperty]internal List<Gameobject?> GameObjects = new();
-   // [JsonIgnore]internal Renderer? Renderer { get; private set; }
+    // [JsonProperty]internal List<Gameobject?> GameObjects = new();
+    // [JsonIgnore] private List<Gameobject?> _clonesOnStart = new();
+    // [JsonIgnore]internal Renderer? Renderer { get; private set; }
     
     [JsonProperty]internal string ScenePath { get; private set; } = "NoScene";
-    [JsonProperty]internal GlobalLight GlobalLight { get; set; } = null;
     [JsonProperty]public static bool DoUpdate = true;
+    [JsonProperty]public List<Entity> Entities = new();
+    
+    [JsonIgnore] public EntityRegistry<EntityKey> EntityRegistry { get; private set; }
 
     [JsonIgnore] public Physics2DWorld? _physics2DWorld;
-    [JsonIgnore] private List<Gameobject?> _clonesOnStart = new();
+    
 
     [JsonIgnore]private int _totalTimesTimeCounted = 0;
     [JsonIgnore]private double _totalTime = 0;
     
     [JsonIgnore]private bool _isPlaying;
 
-    [JsonIgnore] public EntityRegistry<EntityKey> EntityRegistry { get; private set; }
-    
     internal bool IsPlaying
     {
         get => _isPlaying;
@@ -50,125 +46,67 @@ public class Scene
             if (value)
             {
                 if (IsPlaying) return;
-                SaveLoad.SaveScene(this);
-                StartPlay();
+                
             }
             else
             {
                 if (!_isPlaying) return;
-                StopPlay();
+                
             }
 
             _isPlaying = value;
         }
     }
-
-    private void StartPlay()
-    {
-        SaveLoad.SaveScene(this);
-
-        _clonesOnStart = new();
-        foreach (var go in GameObjects)
-        {
-            if(go is { Serialize: true }) 
-                _clonesOnStart.Add((Gameobject)go.Clone(go.UID));
-        }
-        
-        _physics2DWorld = new();
-        
-        foreach (var go in GameObjects)
-        {
-            go.StartPlay(_physics2DWorld);
-        }
-    }
-  
-    private void StopPlay()
-    {
-        foreach (var go in GameObjects)
-        {
-            go.StopPlay();
-        }
-        ReloadScene(_clonesOnStart);
-    }
-
-
-    internal void ReloadScene()
-    {
-        var clones = new List<Gameobject?>();
-        foreach (var go in GameObjects)
-        {
-            if(go.Serialize)
-            {
-                clones.Add((Gameobject)go.Clone(go.UID));
-            }
-        }
-        ReloadScene(clones);
-    }
-
-    private void ReloadScene(List<Gameobject?> clones)
-    {
-        Log.Message("Reloading scene");
-        var prevEditorCamera = GetEditorCamera();
-        foreach (var go in GameObjects)
-        {
-            go.Destroy();
-        }
-        
-        GameObjects = new();
-        foreach (var go in clones)
-        {
-            AddGameObjectToScene(go);
-        }
-        
-        if(Settings.s_IsEngine)
-            CreateEditorCamera(prevEditorCamera);
-        Log.Succes("Scene reloaded succesfully" + ScenePath);
-    }
-
+    
     /// <summary>
     ///     Runs before anything
     /// </summary>
     /// <param name="scenePath"></param>
     internal virtual void Init(string scenePath)
     {
-       CreateEntityRegistry();
-        
+        CreateEntityRegistry();
+
         ScenePath = scenePath;
+
+        //Load Scene if exists
         
-        if(Settings.s_IsEngine)
+        if (Settings.s_IsEngine)
             CreateEditorCamera();
 
-        //Try to load scene if non existent this returns a new list 
-        var gos = SaveLoad.LoadScene(ScenePath);
-        foreach (var go in gos)
-        {
-            AddGameObjectToScene(go);
-            // go.Transform.Position.X +=
-        }
-        
         Renderer.Init();
     }
-    
+
     private void CreateEntityRegistry()
     {
-        EntityRegistry = new EntityRegistry<EntityKey>(EntityKey.MaxAge, EntityKey.Create);
+        EntityRegistry =  
+            new EntityRegistry<EntityKey>
+            (EntityKey.MaxAge, 
+                (age, id) 
+                    => new EntityKey(age, id));
+        
         EntityRegistry.Register<ENTTTransformComponent>();
         EntityRegistry.Register<ENTTSpriteRenderer>();
         EntityRegistry.Register<ENTTTagComponent>();
         
         //Temp code
-        CreateEntity("Test");
+        CreateEntity("test");
+        CreateEntity("test2");
+        
     }
 
     internal Entity CreateEntity(string name)
     {
-        Entity en = new Entity();
-        en.AddComponent(new ENTTTransformComponent());
+        var key = EntityRegistry.Create();
+        
+        Entity en = new Entity(key,this);
         en.AddComponent(new ENTTTagComponent(name));
-        EntityRegistry.Create();
+        en.AddComponent(new ENTTTransformComponent());
+      
+        Entities.Add(en);
+        
         return en;
     }
-    
+
     /// <summary>
     /// Runs every frame
     /// </summary>
@@ -189,20 +127,17 @@ public class Scene
             GameFixedUpdate();
         }
         
-        //TODO: MAKE THIS FASTER
-        for (int i=0; i < GameObjects.Count; i++) {
-            {
-                var obj = GameObjects[i];
-                if(DoUpdate)
-                    obj.Update(args);
-                if (obj.IsDead)
-                {
-                    obj.Destroy();
-                    i--;
-                }
-            }
+        //TEMP CODE
+        if (Input.KeyDown(Keys.P))
+        {
+            EntityRegistry.GetComponent<ENTTTransformComponent>(
+                Entities[0].m_EntityHandle, out ENTTTransformComponent transform);
+            
+            transform.Position.X += 1;
+            
+            Entities[0].SetComponent<ENTTTransformComponent>(transform);
         }
-      
+
         AfterUpdate();
     }
 
@@ -212,10 +147,7 @@ public class Scene
     /// <param name="args"></param>
     private void EditorUpdate(FrameEventArgs args)
     {
-        foreach (var obj in GameObjects)
-        {
-            obj.EditorUpdate((float)Engine.DeltaTime);
-        }
+      
     }
     
     /// <summary>
@@ -225,9 +157,7 @@ public class Scene
     /// <param name="args"></param>
     private void GameUpdate(FrameEventArgs args)
     {
-        foreach (var obj in GameObjects) obj.GameUpdate((float)Engine.DeltaTime);
-        
-        _physics2DWorld?.GameUpdate((float)args.Time);
+     
     }
 
     private float _physicsTime = 0.0f;
@@ -238,8 +168,6 @@ public class Scene
         _physicsTime += (float)Engine.DeltaTime;
         if (_physicsTime >= 0.0f) {
             _physicsTime -= _physicsTimeStep;
-            _physics2DWorld?.FixedGameUpdate(_physicsTimeStep);
-            foreach (var obj in GameObjects) obj.FixedGameUpdate();
         }
     }
     
@@ -265,6 +193,9 @@ public class Scene
 
     internal virtual void Close()
     {
+        if (EngineSettings.SaveOnClose && !IsPlaying)
+            SaveLoad.SaveScene(this);
+        
         var scenename = "stresstest";
         var Time = (_totalTime / _totalTimesTimeCounted);
 
@@ -286,107 +217,59 @@ public class Scene
 
         File.WriteAllText(fullPath, data);
         
-        if (EngineSettings.SaveOnClose && !IsPlaying)
-            SaveLoad.SaveScene(this);
     }
 
     internal void OnGui()
     {
     }
 
-    internal Gameobject? FindObjectByUID(int uid)
-    {
-        foreach (var go in GameObjects)
-            if (go.UID == uid)
-                return go;
-
-        return null;
-    }
-
     internal virtual void OnResized(ResizeEventArgs newSize)
     {
-        //Renderer.OnResize(newSize);
+        
     }
 
     internal virtual void OnMouseWheel(MouseWheelEventArgs mouseWheelEventArgs)
     {
-        // EditorCamera?.addZoom(mouseWheelEventArgs.OffsetY/10);
-        // EditorCamera?.adjustProjection();
+        
     }
 
     internal virtual void OnTextInput(TextInputEventArgs inputEventArgs)
     {
     }
     
-    public void RemoveGameObject(Gameobject? go)
-    {
-        GameObjects.Remove(go);   
-    }
-
     private void CreateEditorCamera(Camera? prevEditorCamera = null)
     {
-        Gameobject editorCameraGo = new Gameobject("EDITORCAMERA");
-        
-        editorCameraGo.AddComponent(new CameraControls());
-        editorCameraGo.CanBeSelected = false;
-        
-        Camera cam = (Camera)editorCameraGo.AddComponent(new Camera());
-
-        editorCameraGo.Serialize = false;
-        cam._isEditorCamera = true;
-
-        AddGameObjectToScene(editorCameraGo);
-        
+       
         if (prevEditorCamera != null)
-        {
-            cam.CameraType = prevEditorCamera.CameraType;
-            cam.Far = prevEditorCamera.Far;
-            cam.Near = prevEditorCamera.Near;
-            cam.ClearColor = prevEditorCamera.ClearColor;
-            cam.Size = prevEditorCamera.Size;
-        }
-    }
-
-    public void AddGameObjectToScene(Gameobject? go, bool directlyAdd = true)
-    {
-        GameObjects.Add(go);
-        go.Init();
-        // go.Init(Renderer);
-        go.Start();
-
-        if (go.Serialize)
-            Engine.Get().CurrentSelectedAsset = go;
-        
-        if(!_isPlaying  || directlyAdd)
         {
          
         }
     }
-    
-    
+
+
     public Camera? GetMainCamera()
     {
-        foreach (var go in GameObjects)
-        {
-            var cam = go.GetComponent<Camera>();
-            if (cam != null)
-            {
-                if (cam._isMainCamera) return cam;
-            }
-        }
+        // foreach (var go in GameObjects)
+        // {
+        //     var cam = go.GetComponent<Camera>();
+        //     if (cam != null)
+        //     {
+        //         if (cam._isMainCamera) return cam;
+        //     }
+        // }
         return null;
     }
     
     internal Camera? GetEditorCamera()
     {
-        foreach (var go in GameObjects)
-        {
-            var cam = go.GetComponent<Camera>();
-            if (cam != null)
-            {
-                if (cam._isEditorCamera) return cam;
-            }
-        }
+        // foreach (var go in GameObjects)
+        // {
+        //     var cam = go.GetComponent<Camera>();
+        //     if (cam != null)
+        //     {
+        //         if (cam._isEditorCamera) return cam;
+        //     }
+        // }
 
         return null;
     }

@@ -1,10 +1,8 @@
 #region
 
-using System.Net.Quic;
 using System.Numerics;
 using Engine2D.Cameras;
 using Engine2D.Core;
-using Engine2D.Testing;
 using ImGuiNET;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;

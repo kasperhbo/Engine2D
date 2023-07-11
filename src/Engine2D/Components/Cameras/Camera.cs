@@ -1,12 +1,7 @@
 ﻿#region
 
 using System.Numerics;
-using Engine2D.Components;
-using Engine2D.Components.TransformComponents;
-using Engine2D.Core;
-using Engine2D.GameObjects;
-using Engine2D.Logging;
-using Engine2D.Rendering;
+using Engine2D.Components.ENTT;
 using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 using Newtonsoft.Json;
@@ -19,7 +14,7 @@ using Vector4 = System.Numerics.Vector4;
 
 namespace Engine2D.Cameras;
 
-public class Camera : Component
+public class Camera
 {
     [JsonProperty] internal CameraTypes CameraType = CameraTypes.ORTHO;
     [JsonProperty] internal float Far = 1000f;
@@ -36,6 +31,7 @@ public class Camera : Component
     [JsonIgnore] private Matrix4x4 _viewMatrix = Matrix4x4.Identity;
     [JsonIgnore] private Matrix4x4 _viewProjectionMatrix = Matrix4x4.Identity;
     
+    [JsonProperty] internal Entity Parent;
     
     public float FadeRange = 1;
     
@@ -44,7 +40,7 @@ public class Camera : Component
     }
     
 
-    public override void Init()
+    public void Init()
     {
     }
 
@@ -53,13 +49,13 @@ public class Camera : Component
     {
         //return _viewMatrix;
         
-        var transform = Parent.GetComponent<Transform>();
+        var transform = Parent.GetComponent<ENTTTransformComponent>();
 
-        if (transform == null)
-        {
-            Log.Error(Parent.Name + " Has no transform component!");
-            return Matrix4x4.Identity;
-        }
+        // if (transform == null)
+        // {
+        //     Log.Error(Parent.Name + " Has no transform component!");
+        //     return Matrix4x4.Identity;
+        // }
 
         var position = transform.Position;
 
@@ -90,38 +86,31 @@ public class Camera : Component
         return projectionMatrix;
     }
 
-    public override void StartPlay()
+    public  void StartPlay()
     {
 
     }
 
-    public override string GetItemType()
+    public  string GetItemType()
     {
         return this.GetType().FullName;
     }
 
-    public override void Update(FrameEventArgs args)
+    public  void Update(FrameEventArgs args)
     {
 
     }
 
-    public override void Destroy()
+    public  void Destroy()
     {
-        base.Destroy();
     }
 
-    public override void EditorUpdate(double dt)
+    public  void EditorUpdate(double dt)
     {
-        base.EditorUpdate(dt);
     }
 
 
-    internal override float GetFieldSize()
-    {
-        return 100;
-    }
-
-    public override void ImGuiFields()
+    public void ImGuiFields()
     {
         Gui.DrawProperty("Projection Size", ref ProjectionSize);
         Gui.DrawProperty("Fade range", ref FadeRange);
@@ -150,7 +139,7 @@ public class Camera : Component
         }
     }
 
-    public override Camera Clone()
+    public Camera Clone()
     {
         var camera = new Camera();
         

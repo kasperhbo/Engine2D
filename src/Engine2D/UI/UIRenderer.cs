@@ -5,7 +5,6 @@ using Dear_ImGui_Sample;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
-using Engine2D.Rendering;
 using Engine2D.UI.Browsers;
 using Engine2D.UI.Debug;
 using Engine2D.UI.Viewports;
@@ -104,16 +103,16 @@ internal static class UiRenderer
         SetupDockSpace();
 
         //Engine.Get().CurrentScene.Renderer.OnGui();
-        Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset?.OnGui(); 
-        Engine.Get().CurrentSelectedTextureAssetBrowserAsset?.OnGui();     
-        Engine.Get().CurrentSelectedAnimationAssetBrowserAsset?.OnGui();   
+        // Engine.Get().CurrentSelectedSpriteSheetAssetBrowserAsset?.OnGui(); 
+        // Engine.Get().CurrentSelectedTextureAssetBrowserAsset?.OnGui();     
+        // Engine.Get().CurrentSelectedAnimationAssetBrowserAsset?.OnGui();   
         
 
         ImGui.ShowDemoWindow();
 
         KDBImGuiController.Render();
         
-        ResourceManager.OnGUI();
+        // ResourceManager.OnGUI();
         
     }
 
