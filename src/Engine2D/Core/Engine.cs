@@ -118,7 +118,6 @@ namespace Engine2D.Core
                 ntwSettings.Title = WindowSettings.Title;
                 ntwSettings.Size = WindowSettings.Size;
 
-
                 s_instance = new Engine(gameWindowSettings, ntwSettings);
 
                 s_instance.LoadProject();

@@ -1,10 +1,11 @@
 ﻿using ImGuiNET;
+using Newtonsoft.Json;
 
 namespace Engine2D.Components.ENTT;
 
     internal struct ENTTTagComponent : IENTTComponent
     {
-        internal string Tag = "";
+        [JsonProperty]internal string Tag = "";
 
         internal ENTTTagComponent(string tag)
         {

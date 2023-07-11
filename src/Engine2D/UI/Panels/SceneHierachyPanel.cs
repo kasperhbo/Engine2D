@@ -45,7 +45,10 @@ internal class SceneHierachyPanel : UIElement
                     | ImGuiTreeNodeFlags.Leaf
                     | ImGuiTreeNodeFlags.SpanAvailWidth
                     | ImGuiTreeNodeFlags.OpenOnArrow;
-        
+
+        if (!entity.HasComponent<ENTTTagComponent>())
+            entity.AddComponent(new ENTTTagComponent("no-ent-tag"));    
+        //
         var open = ImGui.TreeNodeEx(entity.UUID, flags, entity.GetComponent<ENTTTagComponent>().Tag);
 
         //Handle Drag Drop

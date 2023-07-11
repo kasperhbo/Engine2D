@@ -5,23 +5,22 @@ using Engine2D.Scenes;
 using Engine2D.UI.ImGuiExtension;
 using EnTTSharp.Entities;
 using ImGuiNET;
+using Newtonsoft.Json;
+using Serilog;
 
 public class Entity : Asset
 {
-    public EntityKey m_EntityHandle;
-    public int UUID = -1;
-
+    [JsonProperty]public int UUID = -1;
+    
+    [JsonIgnore]public EntityKey m_EntityHandle;
     private Scene m_Scene = null;
 
-    public Entity()
+    public Entity(EntityKey handle, Scene scene, int uuid)
     {
-        Init();
-    }
-
-    public Entity(EntityKey handle, Scene scene)
-    {
-        m_Scene = scene;
         m_EntityHandle = handle;
+        m_Scene = scene;
+        UUID = uuid;
+        
         Init();
     }
 
@@ -31,15 +30,23 @@ public class Entity : Asset
         {
             UUID = UIDManager.GetUID();
         }
+        else
+        {
+            UIDManager.TakenUids.Add(UUID);
+        }
     }
 
-    public T AddComponent<T>(T component)
+    public T? AddComponent<T>(T? component)
     {
+        if (m_Scene == null)
+        {
+            m_Scene = Engine.Get().CurrentScene;
+        }
+        
         if (HasComponent<T>())
         {
-            throw
-                new Exception
-                    ("Entity already has component!");
+            Log.Warning("Entity already has component!");
+            return GetComponent<T>();
         }
 
         m_Scene.EntityRegistry.AssignComponent(m_EntityHandle, component);
@@ -60,8 +67,8 @@ public class Entity : Asset
     {
         if (!HasComponent<T>())
         {
-            throw new Exception
-                ("Entity does not have component!");
+           Log.Warning("Entity does not have component!");
+           return default;
         }
 
         m_Scene.EntityRegistry.GetComponent<T>(m_EntityHandle, out T? component);
@@ -78,7 +85,7 @@ public class Entity : Asset
     {
         if (!HasComponent<T>())
         {
-            throw new Exception("Entity does not have component!");
+            return;
         }
 
         m_Scene.EntityRegistry.RemoveComponent<T>(m_EntityHandle);
@@ -96,7 +103,6 @@ public class Entity : Asset
         {
             if (ImGui.MenuItem("Sprite Renderer"))
             {
-                AddComponent(new ENTTSpriteRenderer());
                 ImGui.CloseCurrentPopup();
             }
             

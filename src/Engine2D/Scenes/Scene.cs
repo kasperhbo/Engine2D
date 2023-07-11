@@ -57,7 +57,7 @@ public class Scene
             _isPlaying = value;
         }
     }
-    
+
     /// <summary>
     ///     Runs before anything
     /// </summary>
@@ -69,7 +69,12 @@ public class Scene
         ScenePath = scenePath;
 
         //Load Scene if exists
-        
+
+        if (File.Exists(scenePath))
+        {
+            SaveLoad.LoadScene(scenePath, this);
+        }
+
         if (Settings.s_IsEngine)
             CreateEditorCamera();
 
@@ -88,17 +93,34 @@ public class Scene
         EntityRegistry.Register<ENTTSpriteRenderer>();
         EntityRegistry.Register<ENTTTagComponent>();
         
-        //Temp code
-        CreateEntity("test");
-        CreateEntity("test2");
+        // // //Temp code
+        // CreateEntity("test");
+        // CreateEntity("test2");
+    }
+
+    internal Entity CreateEntity(int uuid)
+    {
+        var key = EntityRegistry.Create();
+        Entity en = new Entity(key, this, uuid);
         
+        Entities.Add(en);
+        return en;
+    }
+
+    internal Entity CreateEntity()
+    {
+        var key = EntityRegistry.Create();
+        Entity en = new Entity(key,this, -1);
+        Entities.Add(en);
+        return en;
     }
 
     internal Entity CreateEntity(string name)
     {
         var key = EntityRegistry.Create();
         
-        Entity en = new Entity(key,this);
+        Entity en = new Entity(key,this, -1);
+        
         en.AddComponent(new ENTTTagComponent(name));
         en.AddComponent(new ENTTTransformComponent());
       
@@ -138,6 +160,11 @@ public class Scene
             Entities[0].SetComponent<ENTTTransformComponent>(transform);
         }
 
+        if (Input.KeyPressed(Keys.A))
+        {
+            CreateEntity("test"+Entities.Count);
+        }
+        
         AfterUpdate();
     }
 
