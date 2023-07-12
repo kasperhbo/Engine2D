@@ -1,4 +1,5 @@
-﻿using Engine2D.Components.ENTT;
+﻿using System.Numerics;
+using Engine2D.Components.ENTT;
 using Engine2D.Core;
 using Engine2D.Managers;
 using Engine2D.Rendering.NewRenderer;
@@ -20,6 +21,9 @@ public class Entity : Asset
     [JsonIgnore]public bool IsDirty = true;
     
     [JsonIgnore]private Scene m_Scene = null;
+    [JsonIgnore]private Vector2 _lastPosition = Vector2.Zero;
+    [JsonIgnore]private Quaternion _lastRotation = new Quaternion();
+    [JsonIgnore]private Vector2 _lastScale = Vector2.One;
 
     public Entity(EntityKey handle, Scene scene, int uuid)
     {
@@ -28,6 +32,29 @@ public class Entity : Asset
         UUID = uuid;
         
         Init();
+    }
+
+    /// <summary>
+    /// Runs every frame, not depended on play mode or not
+    /// <param name="dt">delta time</param>
+    /// </summary>
+    public void Update(double dt)
+    {
+        if(this.GetComponent<ENTTTransformComponent>().Position != _lastPosition)
+        {
+            IsDirty = true;
+            _lastPosition = this.GetComponent<ENTTTransformComponent>().Position;
+        }
+        if(this.GetComponent<ENTTTransformComponent>().Rotation != _lastRotation)
+        {
+            IsDirty = true;
+            _lastRotation = this.GetComponent<ENTTTransformComponent>().Rotation;
+        }
+        if(this.GetComponent<ENTTTransformComponent>().Scale != _lastScale)
+        {
+            IsDirty = true;
+            _lastScale = this.GetComponent<ENTTTransformComponent>().Scale;
+        }
     }
 
 

@@ -85,6 +85,8 @@ public class Scene
 
     }
 
+    #region Creating entities
+
     private void CreateTempObjects()
     {
         for (int x = 0; x < 400; x++)
@@ -124,8 +126,6 @@ public class Scene
         // CreateEntity("test2");
     }
 
-    #region Creating entities
-    
     internal Entity CreateEntity(int uuid)
     {
         var key = EntityRegistry.Create();
@@ -173,7 +173,11 @@ public class Scene
         
         _totalTime += args.Time;
         _totalTimesTimeCounted++;
-        
+
+        foreach (var ent in Entities)
+        {
+            ent.Update(args.Time);
+        }   
 
         if (IsPlaying&&DoUpdate)
         {

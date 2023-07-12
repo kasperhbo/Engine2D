@@ -40,6 +40,14 @@ internal class Batch2D : IComparable<Batch2D>
     
     private static bool s_IndicesFilled = false;
     private static Vector4 _clearColor = new(1,1,1,1);
+    private static Vector4[] _quadVertexPositions =
+    {
+        new(-0.5f, -0.5f, 0.0f, 1.0f),
+        new(0.5f,  -0.5f, 0.0f, 1.0f),
+        new(0.5f,   0.5f, 0.0f, 1.0f),
+        new(-0.5f,  0.5f, 0.0f, 1.0f)
+    };
+
 
     static Batch2D()
     {
@@ -51,21 +59,22 @@ internal class Batch2D : IComparable<Batch2D>
         if(_quadCount >= c_maxBatchSize - 1)
             return false;
         
-        
-        //TODO: ADD THE RIGHT PROPERTIES
-        //Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
-        
-        var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
-        
-        var transform            = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
-        var color          = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
-        var textureCoords =spriteRenderer.TextureCoords;
-        var textureID          = -1;//spriteRenderer.Sprite.Texture.TexID;
-        
-        LoadVertices(_quadCount, transform, color, textureCoords, textureID);
-        
+        //
+        // //TODO: ADD THE RIGHT PROPERTIES
+        // //Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
+        //
+        // var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
+        //
+        // var transform            = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
+        // var color                 = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
+        // var textureCoords       = spriteRenderer.TextureCoords;
+        // var textureID                 = -1;//spriteRenderer.Sprite.Texture.TexID;
+        //
+        // LoadVertices(_quadCount, transform, color, textureCoords, textureID);
+        //
         
         _sprites.Add(ent);
+        ChangeEntityAtIndex(_quadCount);
         _quadCount++;
         return true;
     }
@@ -134,7 +143,8 @@ internal class Batch2D : IComparable<Batch2D>
         for (var i = 0; i < _quadCount; i++)
             if (_sprites[i].IsDirty)
             {
-                // _sprites[i].IsDirty = false;
+                Log.Message("IsDirty");
+                _sprites[i].IsDirty = false;
                 ChangeEntityAtIndex(i);
                 rebufferData = true;
             }
@@ -166,14 +176,7 @@ internal class Batch2D : IComparable<Batch2D>
         //
         var offset =  index * 4 * c_vertexSize;
 
-        Vector4[] quadVertexPositions =
-        {
-            new(-0.5f, -0.5f, 0.0f, 1.0f),
-            new(0.5f, -0.5f, 0.0f, 1.0f),
-            new(0.5f, 0.5f, 0.0f, 1.0f),
-            new(-0.5f, 0.5f, 0.0f, 1.0f)
-        };
-        
+      
         for (int i = 0; i < 4; i++)
         {
             // float xaDD = 0;
@@ -204,7 +207,7 @@ internal class Batch2D : IComparable<Batch2D>
             // }
             
            
-            var currentPos = MathUtils.Multiply(transform, quadVertexPositions[i]); //quadVertexPositions[0] * translation;
+            var currentPos = MathUtils.Multiply(transform, _quadVertexPositions[i]); //quadVertexPositions[0] * translation;
             
             // var xPos = //position.X + xaDD;
             // var yPos = //position.Y + yaDD;
