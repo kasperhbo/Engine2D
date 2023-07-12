@@ -64,28 +64,14 @@ internal static class Renderer
 
     internal static void Render()
     {
-        // GL.ClearColor(ClearColor.X, ClearColor.Y, ClearColor.Z, ClearColor.W);
-        // foreach (var batch in Batches)
-        // {
-        //     batch.Render(Engine.Get().CurrentScene.GetEditorCamera());
-        // }
         if(Settings.s_IsEngine)
         {
             RenderEditorbuffer();
-            // RenderGamebuffer();
+            RenderGamebuffer();
         }
-        //TODO: MAKE THIS RENDER SCENE INSTEAD OF EDITOR CAMERA
-        // else
-        // {
-        //     foreach (var batch in Batches)
-        //     {
-        //         batch.Render(Engine.Get().CurrentScene.GetEditorCamera());
-        //     }
-        // }     
-
-        foreach (var toremove in m_ToRemoveEndOfFrame)
+        else
         {
-            
+            RenderScene();
         }
         m_ToRemoveEndOfFrame.Clear();
     }
@@ -93,7 +79,19 @@ internal static class Renderer
     private static void RenderEditorbuffer()
     {
         EditorFrameBuffer.Bind();
-        
+        RenderScene();
+        EditorFrameBuffer.UnBind();
+    }
+
+    private static void RenderGamebuffer()
+    {
+        GameFrameBuffer.Bind();
+        RenderScene();
+        GameFrameBuffer.UnBind();
+    }
+
+    private static void RenderScene()
+    {
         GL.Enable(EnableCap.Blend);
         GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
         GL.ClearColor(ClearColor.X, ClearColor.Y, ClearColor.Z, ClearColor.W);
@@ -115,36 +113,6 @@ internal static class Renderer
         }
         
         GL.Disable(EnableCap.Blend);
-        EditorFrameBuffer.UnBind();
-    }
-
-    private static void RenderGamebuffer()
-    {
-        GameFrameBuffer.Bind();
-
-        
-        // GL.Enable(EnableCap.Blend);
-        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-        
-        
-        var cam = Engine.Get().CurrentScene.GetMainCamera();
-        if (cam == null)
-        {
-            GameFrameBuffer.UnBind();
-            return;
-        }
-        foreach (var batch in Batches)
-        {
-            batch.Render(Engine.Get().CurrentScene.GetMainCamera());
-        }
-        
-        GL.Disable(EnableCap.Blend);
-        GameFrameBuffer.UnBind();
-    }
-
-    private static void RenderScene(Camera? camera)
-    {
-        
     }
 
     internal static void Resize()
