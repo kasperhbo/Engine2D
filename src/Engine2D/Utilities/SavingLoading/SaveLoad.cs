@@ -192,7 +192,17 @@ public static class SaveLoad
             }
 
             // Serialize the entity registry to a JSON string
-            string json = JsonConvert.SerializeObject(serializedEntities, Formatting.Indented);
+            bool indent = false;
+            string json = "";
+            if(indent)
+            {
+                json = JsonConvert.SerializeObject(serializedEntities, Formatting.Indented);
+            }
+            else
+            {
+                json = JsonConvert.SerializeObject(serializedEntities);
+            }
+            
 
             
             if (File.Exists(scene.ScenePath))
@@ -265,7 +275,7 @@ public static class SaveLoad
                 }
                 else
                 {
-                    Log.Error("Component not found: " + component.GetType().FullName);
+                    // Log.Error("Component not found: " + component.GetType().FullName);
                 }
                 
             }

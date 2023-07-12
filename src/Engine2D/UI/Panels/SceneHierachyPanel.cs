@@ -3,7 +3,9 @@
 using System.Runtime.InteropServices;
 using Engine2D.Components.ENTT;
 using Engine2D.Core;
+using Engine2D.Logging;
 using Engine2D.SavingLoading;
+using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
 
 #endregion
@@ -21,22 +23,49 @@ internal class SceneHierachyPanel : UIElement
         IsVisible = true;
     }
 
+    private string _searchString = "";
+    private string _lastString = "";
+    private Entity? _foundEntity = null;
+    
     private void CreateHierachy()
     {
-        var gameobjectsWithoutParents = GetGameObjects();
-
-        for (var i = 0; i < gameobjectsWithoutParents.Count; i++)
+        Gui.DrawTable("Hierachy", () => {
+            if (Gui.DrawProperty("Search: ", ref _searchString))
+            {
+                _searchString = _searchString.ToLower();
+            } });
+        if (Engine.Get().CurrentScene.Entities.Count <= 100 && _searchString == "")
         {
-            var go = gameobjectsWithoutParents[i];
+            var gameobjectsWithoutParents = GetGameObjects();
 
-            DrawGameobjectNode(go);
+            for (var i = 0; i < gameobjectsWithoutParents.Count; i++)
+            {
+                var go = gameobjectsWithoutParents[i];
+                DrawGameobjectNode(go);
+            }
+
+            _foundEntity = null;
+        }
+        else if (_searchString != "" && _lastString != _searchString)
+        {
+            _lastString = _searchString;
+            Log.Message("search for: " + _searchString);
+            _foundEntity = Engine.Get().CurrentScene.FindEntityByName(_searchString);
+        }
+
+        if (_foundEntity != null)
+        {
+            Log.Succes("found for: " + _foundEntity.GetComponent<ENTTTagComponent>().Tag);
+            DrawGameobjectNode(_foundEntity);
         }
     }
 
     private void DrawGameobjectNode(Entity? entity)
     {
         var selected = entity == Engine.Get().CurrentSelectedAsset;
-
+        
+        
+        
         if (entity == null) return;
         
         var flags = ImGuiTreeNodeFlags.FramePadding

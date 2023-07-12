@@ -76,22 +76,22 @@ public class Scene
             SaveLoad.LoadScene(scenePath, this);
         }
 
+      
         if (Settings.s_IsEngine)
             CreateEditorCamera();
 
         bool createbigfatlist = false;
         if(createbigfatlist)
             CreateTempObjects();
-
     }
 
     #region Creating entities
 
     private void CreateTempObjects()
     {
-        for (int x = 0; x < 400; x++)
+        for (int x = 0; x < 100; x++)
         {
-            for (int y = 0; y < 400; y++)
+            for (int y = 0; y < 100; y++)
             {
                 var entity = CreateEntity("new entity " + x + " / " + y);
                 
@@ -102,9 +102,13 @@ public class Scene
                 
                 ENTTSpriteRenderer spriteRenderer = new();
                 //Color based on x and y
+                 
+                entity.AddComponent(spriteRenderer);
+
+                spriteRenderer.ParentUUID = entity.UUID;
                 spriteRenderer.Color = new Vector4(x/100f, y/100f, 0, 1);
                 
-                entity.AddComponent(spriteRenderer);
+                entity.SetComponent(spriteRenderer);
             }
         }        
     }
@@ -254,7 +258,7 @@ public class Scene
         
         Log.Succes("LOG: \n" + data);
         
-        bool savescenestresstest = false;
+        bool savescenestresstest = true;
         if (savescenestresstest){
             var path = "..\\..\\..\\Logs";
             if (!Directory.Exists(path))
@@ -262,7 +266,7 @@ public class Scene
                 Directory.CreateDirectory(path);
             }
 
-            var fileName = scenename + "--" + currentTime.Second + "-" + currentTime.Minute + "-" + currentTime.Hour +
+            var fileName = "no-update--" + scenename + "--" + currentTime.Second + "-" + currentTime.Minute + "-" + currentTime.Hour +
                            "-" + currentTime.Day + ".txt";
             var fullPath = Path.Combine(path, fileName);
             using (var fs = File.Create(fullPath))
@@ -328,6 +332,20 @@ public class Scene
         foreach (var ent in Entities)
         {
             if (ent.UUID == parentUuid) return ent;
+        }
+
+        return null;
+    }
+    
+    public Entity? FindEntityByName(string name)
+    {
+        foreach (var ent in Entities)
+        {
+            if(ent.HasComponent<ENTTTagComponent>())
+            {
+                var tag = ent.GetComponent<ENTTTagComponent>();
+                if (tag.Tag.Contains(name)) return ent;
+            }
         }
 
         return null;

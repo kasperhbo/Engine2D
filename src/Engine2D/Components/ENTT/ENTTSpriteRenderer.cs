@@ -30,6 +30,7 @@ public struct ENTTSpriteRenderer : IENTTComponent
       };
       
       Init(new Vector4(255,255,255,255), textureCoords, parentUuid);
+      
    }
 
    private void Init(Vector4 color, Vector2[] textureCoords, int parentUuid)
@@ -37,6 +38,7 @@ public struct ENTTSpriteRenderer : IENTTComponent
       this.Color = color;
       this.TextureCoords = textureCoords;
       this.ParentUUID = parentUuid;
+      
       Parent = Engine2D.Core.Engine.Get().CurrentScene.FindEntityByUUID(ParentUUID);
       
       if(Parent != null)

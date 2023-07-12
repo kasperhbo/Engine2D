@@ -24,7 +24,7 @@ internal static class UiRenderer
     private static List<UIElement> _windowsToRemoveEndOfFrame = new();
 
     internal static int _hierarchyWindowCount = 1;
-    internal static int _inspectorWindowCount = 1;
+    internal static int _inspectorWindowCount = 0;
     internal static int _assetBrowserWindowCount = 0;
     internal static int _styleSettingsWindowCount = 0;
 

@@ -18,11 +18,11 @@ public class Entity : Asset
     
     //Runtime
     [JsonIgnore]public EntityKey m_EntityHandle;
-    [JsonIgnore]public bool IsDirty = true;
+    [JsonIgnore]public bool IsDirty = false;
     
     [JsonIgnore]private Scene m_Scene = null;
     [JsonIgnore]private Vector2 _lastPosition = Vector2.Zero;
-    [JsonIgnore]private Quaternion _lastRotation = new Quaternion();
+    
     [JsonIgnore]private Vector2 _lastScale = Vector2.One;
 
     public Entity(EntityKey handle, Scene scene, int uuid)
@@ -40,21 +40,22 @@ public class Entity : Asset
     /// </summary>
     public void Update(double dt)
     {
-        if(this.GetComponent<ENTTTransformComponent>().Position != _lastPosition)
+        var pos = this.GetComponent<ENTTTransformComponent>().Position;
+        if(pos.X != _lastPosition.X || pos.Y != _lastPosition.Y)
         {
             IsDirty = true;
             _lastPosition = this.GetComponent<ENTTTransformComponent>().Position;
         }
-        if(this.GetComponent<ENTTTransformComponent>().Rotation != _lastRotation)
-        {
-            IsDirty = true;
-            _lastRotation = this.GetComponent<ENTTTransformComponent>().Rotation;
-        }
-        if(this.GetComponent<ENTTTransformComponent>().Scale != _lastScale)
-        {
-            IsDirty = true;
-            _lastScale = this.GetComponent<ENTTTransformComponent>().Scale;
-        }
+        // if(this.GetComponent<ENTTTransformComponent>().Rotation.Z != _lastRotation.Z)
+        // {
+        //     IsDirty = true;
+        //     _lastRotation = this.GetComponent<ENTTTransformComponent>().Rotation;
+        // }
+        // if(this.GetComponent<ENTTTransformComponent>().Scale != _lastScale)
+        // {
+        //     IsDirty = true;
+        //     _lastScale = this.GetComponent<ENTTTransformComponent>().Scale;
+        // }
     }
 
 
