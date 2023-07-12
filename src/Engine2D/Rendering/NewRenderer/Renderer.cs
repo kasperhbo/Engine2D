@@ -82,6 +82,12 @@ internal static class Renderer
         //         batch.Render(Engine.Get().CurrentScene.GetEditorCamera());
         //     }
         // }     
+
+        foreach (var toremove in m_ToRemoveEndOfFrame)
+        {
+            
+        }
+        m_ToRemoveEndOfFrame.Clear();
     }
 
     private static void RenderEditorbuffer()
@@ -144,7 +150,7 @@ internal static class Renderer
         bool added = false;
         foreach (var batch in Batches)
         {
-            if (batch.HasRoom)
+            if (batch.CanAdd(ent))
             {
                 batch.AddSprite(ent);
                 added = true;
@@ -164,8 +170,10 @@ internal static class Renderer
         }
     }
 
+    
+    static List<Entity> m_ToRemoveEndOfFrame = new();
     public static void RemoveSprite(Entity enttSpriteRenderer)
     {
-        throw new NotImplementedException();
+        m_ToRemoveEndOfFrame.Add(enttSpriteRenderer);
     }
 }

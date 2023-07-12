@@ -1,54 +1,49 @@
 ﻿using System.Numerics;
+using Engine2D.Components.Sprites;
+using Engine2D.Core;
+using Engine2D.Rendering;
 using Engine2D.Rendering.NewRenderer;
 using Newtonsoft.Json;
 using Serilog;
 
 namespace Engine2D.Components.ENTT;
 
+/// <summary>
+/// SPRITE RENDERER MEGA STRUCT <3 <3 <3 <3 <3 <3   
+/// </summary>
 public struct ENTTSpriteRenderer : IENTTComponent
 {
-   [JsonProperty] public Vector4 Color = new Vector4(255, 255, 255, 255);
-   [JsonProperty]public Vector2[] TextureCoords = new Vector2[4];
-   [JsonProperty]public int ParentUUID = 0;
+   [JsonProperty] public Vector4 Color = new Vector4(1, 1, 1, 1);
+   [JsonProperty] public int ParentUUID = 0;
    
-   [JsonIgnore]public Entity? Parent = null;
-
-   [JsonConstructor]
-   public ENTTSpriteRenderer(Vector4 color, Vector2[] textureCoords, int parentUuid)
+   [JsonProperty]
+   public Vector2[] TextureCoords { get; set; } = new Vector2[4]
    {
-      Init(color, textureCoords, parentUuid);
-   }
+      new Vector2(0f, 0f),
+      new Vector2(1f, 0f),
+      new Vector2(1f, 1f),
+      new Vector2(0f, 1f)
+   };
    
-   public ENTTSpriteRenderer(int parentUuid)
+   [JsonProperty] internal string TexturePath = "";
+   
+   [JsonIgnore]private Texture? _sprite = null;
+
+   [JsonIgnore] internal Texture? Sprite
    {
-      var textureCoords = new Vector2[4]
+      get
       {
-         new Vector2(0f, 0f),
-         new Vector2(1f, 0f),
-         new Vector2(1f, 1f),
-         new Vector2(0f, 1f),
-      };
-      
-      Init(new Vector4(255,255,255,255), textureCoords, parentUuid);
-      
+         return _sprite;
+      }
+      set
+      {
+         _sprite = value;
+         TexturePath = value.Filepath;
+      }
    }
 
-   private void Init(Vector4 color, Vector2[] textureCoords, int parentUuid)
+   public ENTTSpriteRenderer()
    {
-      this.Color = color;
-      this.TextureCoords = textureCoords;
-      this.ParentUUID = parentUuid;
       
-      Parent = Engine2D.Core.Engine.Get().CurrentScene.FindEntityByUUID(ParentUUID);
-      
-      if(Parent != null)
-      {
-         Parent.SetComponent(this);
-         Renderer.AddSprite(Parent);
-      }
-      else
-      {
-         Log.Error("Parent not found: " + ParentUUID);
-      }
    }
 }

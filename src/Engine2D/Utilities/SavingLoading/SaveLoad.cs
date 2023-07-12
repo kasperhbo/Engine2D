@@ -1,11 +1,13 @@
 ﻿#region
 
+using System.Numerics;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Soap;
 using Engine2D.Components.ENTT;
 using Engine2D.Core;
 using Engine2D.Logging;
 using Engine2D.Managers;
+using Engine2D.Rendering.NewRenderer;
 using Engine2D.Scenes;
 using Engine2D.UI;
 using Newtonsoft.Json;
@@ -192,7 +194,7 @@ public static class SaveLoad
             }
 
             // Serialize the entity registry to a JSON string
-            bool indent = false;
+            bool indent = true;
             string json = "";
             if(indent)
             {
@@ -272,6 +274,7 @@ public static class SaveLoad
                 else if(component is ENTTSpriteRenderer spriteRenderer)
                 {
                     entity.AddComponent(spriteRenderer);
+                    // Renderer.AddSprite(entity);
                 }
                 else
                 {

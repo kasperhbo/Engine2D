@@ -5,6 +5,7 @@ using Engine2D.Logging;
 using Engine2D.Utilities;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL;
+using TextureUnit = OpenTK.Graphics.OpenGL4.TextureUnit;
 
 namespace Engine2D.Rendering.NewRenderer;
 
@@ -45,6 +46,24 @@ internal class Batch2D
     
     private static int[] s_Indices = new int[6 * c_maxBatchSize];
     private bool s_IndicesFilled = false;
+    
+    //Texture IDS
+    private int[] _textureIDS = new int[7]
+    {
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+    };
+    
+    private readonly int[] _textureUnits = new int[8]
+    {
+        0,1,2,3,4,5,6,7
+    };
+    
     private Vector4[] _quadVertexPositions =
     {
         new(-0.5f, -0.5f, 0.0f, 1.0f),
@@ -53,20 +72,52 @@ internal class Batch2D
         new(-0.5f,  0.5f, 0.0f, 1.0f)
     };
     
-    public bool HasRoom => _quadCount < c_maxBatchSize;
+    private bool _hasRoom => _quadCount < c_maxBatchSize;
+
+    public bool CanAdd(Entity ent)
+    {
+        if(!_hasRoom)
+            return false;
+
+        if (ent.HasComponent<ENTTSpriteRenderer>())
+        {
+            var comp = ent.GetComponent<ENTTSpriteRenderer>();
+            if(comp.Sprite != null)
+            {
+                int textureIDSpriteRenderer = comp.Sprite.TexID;
+
+                //Check if batch contains the texture already, if it does, then we can add the sprite renderer
+                //else make an new batch
+                if (comp.Sprite.TexID != -1)
+                {
+                    for (int i = 0; i < _textureIDS.Length; i++)
+                    {
+                        if (_textureIDS[i] == textureIDSpriteRenderer)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                //If the sprite renderer has no texture, then its fine to add it
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        } 
+        return false;
+    }
+    
+    
     
     internal void AddSprite(Entity ent)
     {
-        var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
-        
-        var transform           = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
-        var color                 = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
-        var textureCoords       = spriteRenderer.TextureCoords;
-        var textureID                 = -1;//spriteRenderer.Sprite.Texture.TexID;
-        
-        LoadVertices(_quadCount, transform, color, textureCoords, textureID);
-        
         _sprites.Add(ent);
+        ChangeEntityAtIndex(_quadCount);
         _quadCount++;
     }
     
@@ -74,18 +125,55 @@ internal class Batch2D
     {
         // return true;
         var ent = _sprites[index];
-        //TODO: ADD THE RIGHT PROPERTIES
-        // Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
-        
         var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
         
-        var transform            = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
-        var color          = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
-        var textureCoords = spriteRenderer.TextureCoords;
-        float textureID          = -1;//spriteRenderer.Sprite.Texture.TexID;
+        var transform      = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
+        var color           = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
+        Vector2[] textureCoords    = spriteRenderer.TextureCoords;
+
+        var textureID = -1; //spriteRenderer.Sprite.Texture.TexID;
+        int slot = 0;
         
-        LoadVertices(index, transform, color, textureCoords, textureID);
+        if(spriteRenderer.Sprite != null)
+        {
+            if (spriteRenderer.Sprite.TexID != -1)
+            {
+                textureID = spriteRenderer.Sprite.TexID;
+
+                bool addTextureNewToList = true;
+                
+                //First check if the texture is already in the batch
+                if(_textureIDS.Contains(textureID))// == textureID)
+                {
+                    for (int i = 0; i < _textureIDS.Length; i++)
+                    {
+                        if (_textureIDS[i] == textureID)
+                        {
+                            slot = i + 1;
+                            addTextureNewToList = false;
+                            break;
+                        }
+                    }
+                }
+                
+                if(addTextureNewToList)
+                {
+                    for (int i = 0; i < _textureIDS.Length; i++)
+                    {
+                        //If the texture is not in the batch, then add it to the first empty slot
+                        if (_textureIDS[i] == -1)
+                        {
+                            slot = i + 1;
+                            _textureIDS[i] = textureID;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         
+        LoadVertices(index, transform, color, textureCoords, slot, spriteRenderer);
+
         return true;
     }
     
@@ -166,22 +254,6 @@ internal class Batch2D
         elements[offsetArrayIndex + 5] = offset + 1;
     }
 
-    private void CreateTestObjects()
-    {
-        for (int i = 0; i < 1; i++)
-        {
-            Vector3 pos = new Vector3(Renderer.Batches.Count, 0, 0);
-            Console.WriteLine(pos.X);
-            Matrix4x4 Transform =   Matrix4x4.CreateScale(1,1, 1) *
-                                    Matrix4x4.CreateFromQuaternion(Quaternion.Identity) *
-                                    Matrix4x4.CreateTranslation(pos.X, pos.Y, 0);
-            
-            LoadVertices(_quadCount, Transform, 
-                new Vector4(1,0,0,1), _defCoords, -1);
-            _quadCount++;
-        }
-    }
-    
     internal void Render(Camera camera)
     {
         if (camera == null)
@@ -191,15 +263,16 @@ internal class Batch2D
         }
         
         bool rebufferData = true;
+        
         for (var i = 0; i < _quadCount; i++)
+        {
             if (_sprites[i].IsDirty)
             {
-                //Log.Message("IsDirty: " + _sprites[i].GetComponent<ENTTTagComponent>().Tag);
                 _sprites[i].IsDirty = false;
                 ChangeEntityAtIndex(i);
                 rebufferData = true;
             }
-
+        }
         
         if (rebufferData)
         {
@@ -207,14 +280,33 @@ internal class Batch2D
             GL.BufferSubData(BufferTarget.ArrayBuffer, 
                 IntPtr.Zero, _vertices.Length * sizeof(float), _vertices);
         }
-        
+        //
         _shader.use();
         _shader.uploadMat4f("u_viewMatrix", camera.GetViewMatrix());
         _shader.uploadMat4f("u_projectionMatrix", camera.GetProjectionMatrix());
-        
-        // GL.BindVertexArray(_quadVA);
+        _shader.UploadIntArray("uTextures", _textureUnits);
+
+        // //TEXTURES
+
 
         GL.BindVertexArray(_vaoId);
+        for (var i = 0; i < _textureIDS.Length; i++)
+        {
+            if (_textureIDS[i] != -1)
+            {
+                var unit = TextureUnit.Texture0 + i + 1;
+                var id = (int)_textureIDS[i];
+
+                Texture.Use(unit, id);
+            }
+        }
+        
+        //
+        // if (_textureIDS[0] != -1)
+        // {
+        //     Texture.Use(TextureUnit.Texture1, 1);
+        // }
+
         GL.EnableVertexAttribArray(0);
         GL.EnableVertexAttribArray(1);
         GL.EnableVertexAttribArray(2);
@@ -231,54 +323,22 @@ internal class Batch2D
         _shader.detach();
     }
     
-    private void LoadVertices(int index, Matrix4x4 transform, Vector4 color, Vector2[]? textureCoords,float textureID)
+    private void LoadVertices(int index, Matrix4x4 transform, Vector4 color, Vector2[] textureCoords, float textureSlot, ENTTSpriteRenderer spriteRenderer)
     {
+        var coords = spriteRenderer.TextureCoords;
+        
         // //     -.5f, -.5f, 0,  .18F, .6F, .96F, 1F,   0f, 0f,             0f,      
         // //     .5f, -.5f, 0,   .18F, .6F, .96F, 1F,   1f, 0f,             0f,
         // //     .5f, .5f, 0,    .18F, .6F, .96F, 1F,   1f, 1f,             0f,
         // //     -.5f, .5f, 0,   .18F, .6F, .96F, 1F,   0f, 1f,             0f,
-        //
+        
         var offset =  index * 4 * c_vertexSize;
 
       
         for (int i = 0; i < 4; i++)
         {
-            // float xaDD = 0;
-            // float yaDD = 0;
-            // float zaDD = 0;
-            // switch (i)
-            // {
-            //     case 0:
-            //         xaDD = -.5f;
-            //         yaDD = -.5f;
-            //         zaDD = 0;
-            //         break;
-            //     case 1:
-            //         xaDD = .5f;
-            //         yaDD = -.5f;
-            //         zaDD = 0;
-            //         break;
-            //     case 2:
-            //         xaDD = .5f;
-            //         yaDD = .5f;
-            //         zaDD = 0;
-            //         break;
-            //     case 3:
-            //         xaDD = -.5f;
-            //         yaDD = .5f;
-            //         zaDD = 0;
-            //         break;
-            // }
-            //
-           
             var currentPos = MathUtils.Multiply(transform, _quadVertexPositions[i]); //quadVertexPositions[0] * translation;
 
-            // Vector3 currentPos = new();
-            // Vector3 position = new(transform.M41, transform.M42, transform.M43);
-            // currentPos.X = position.X + xaDD;
-            // currentPos.Y = position.Y + yaDD;
-            // currentPos.Z = position.Z + zaDD;
-            //
             _vertices[offset]     = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
             _vertices[offset + 2] = currentPos.Z;
@@ -288,13 +348,14 @@ internal class Batch2D
             _vertices[offset + 5] = color.Z;
             _vertices[offset + 6] = color.W;
             
-            if(textureCoords == null)
-                textureCoords = _defCoords;
+            // if(textureCoords == null)
+            //     textureCoords = _defCoords;
             
             _vertices[offset + 7] = textureCoords[i].X;
             _vertices[offset + 8] = textureCoords[i].Y;
             
-            _vertices[offset + 9] = textureID;
+            //Textuer unit
+            _vertices[offset + 9] = textureSlot;
             
             offset+= c_vertexSize;
         }

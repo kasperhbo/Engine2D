@@ -1,13 +1,16 @@
 ﻿using System.Numerics;
 using Engine2D.Components.ENTT;
+using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.Managers;
+using Engine2D.Rendering;
 using Engine2D.Rendering.NewRenderer;
 using Engine2D.Scenes;
 using Engine2D.UI.ImGuiExtension;
 using EnTTSharp.Entities;
 using ImGuiNET;
 using Newtonsoft.Json;
+using OpenTK.Graphics.OpenGL4;
 using Serilog;
 using Vortice.DXGI;
 
@@ -34,7 +37,6 @@ public class Entity : Asset
         m_Scene = scene;
         UUID = uuid;
         IsStatic = isStatic;
-        
         Init();
     }
 
@@ -63,9 +65,16 @@ public class Entity : Asset
     /// Check if location changed since last frame
     /// Only used for non static entities
     /// </summary>
+    [JsonIgnore] private bool _firstRun = true;
     private void CheckForDirty()
     {
-        if (IsStatic) return;
+        if (_firstRun)
+        {
+            _firstRun = false;
+            
+            IsDirty = true;
+        }
+        // if (IsStatic) return;
         var pos = this.GetComponent<ENTTTransformComponent>().Position;
         if(pos.X != _lastPosition.X || pos.Y != _lastPosition.Y)
         {
@@ -85,7 +94,7 @@ public class Entity : Asset
     }
 
     
-    public T? AddComponent<T>(T? component)
+    public void AddComponent<T>(T component)
     {
         if (m_Scene == null)
         {
@@ -95,11 +104,35 @@ public class Entity : Asset
         if (HasComponent<T>())
         {
             Log.Warning("Entity already has component!");
-            return GetComponent<T>();
+            return;
         }
 
-        m_Scene.EntityRegistry.AssignComponent(m_EntityHandle, component);
-        return component;
+        if (component is ENTTSpriteRenderer spriteRenderer)
+        {
+            spriteRenderer.ParentUUID = this.UUID;
+            spriteRenderer.Color = new Vector4(1, 0, 1, 1);
+            spriteRenderer.TextureCoords = new Vector2[]
+            {
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(1, 1),
+                new Vector2(0, 1)
+            };
+
+            if (spriteRenderer.TexturePath != "")
+            {
+                spriteRenderer.Sprite = Scene.TempTexture;
+            }
+
+            m_Scene.EntityRegistry.AssignComponent(m_EntityHandle, spriteRenderer);
+            Renderer.AddSprite(this);
+        }
+        else
+        {
+            m_Scene.EntityRegistry.AssignComponent(m_EntityHandle, component);
+        }
+        
+        IsDirty = true;
     }
 
 
@@ -140,7 +173,7 @@ public class Entity : Asset
 
         m_Scene.EntityRegistry.RemoveComponent<T>(m_EntityHandle);
     }
-
+    
     internal override void OnGui()
     {
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
@@ -153,9 +186,12 @@ public class Entity : Asset
         {
             if (ImGui.MenuItem("Sprite Renderer"))
             {
-                var comp = new ENTTSpriteRenderer(this.UUID);
+                ENTTSpriteRenderer comp = new ENTTSpriteRenderer();
+                  
                 AddComponent(comp);
+                
                 ImGui.CloseCurrentPopup();
+                
             }
             
             ImGui.EndPopup();
@@ -164,6 +200,7 @@ public class Entity : Asset
         ImGui.Text($"UUID: {UUID}");
         ImGui.Text($"Entity Handle: {m_EntityHandle}");
         ImGui.Text("IsStatic: ");
+        
         ImGui.SameLine();
         ImGui.Checkbox("##IsStatic", ref IsStatic);
 
@@ -178,11 +215,6 @@ public class Entity : Asset
                 if(Gui.DrawProperty("Tag", ref tag.Tag)){
                     SetComponent(tag);
                 }
-                // ImGui.Text("Tag: ");
-                // ImGui.SameLine();
-                // if(ImGui.InputText("##TagCompo", ref tag.Tag, 64)){
-                //     SetComponent(tag);
-                // }
             });
             ImGui.PopID();
         }
@@ -191,6 +223,7 @@ public class Entity : Asset
         if (HasComponent<ENTTTransformComponent>())
         {
             ImGui.PushID("##transformcomponent");
+
             var transform = GetComponent<ENTTTransformComponent>();
             Gui.DrawTable("Transform", () =>
             {
@@ -219,8 +252,9 @@ public class Entity : Asset
             var spriteRenderer = GetComponent<ENTTSpriteRenderer>();
             Gui.DrawTable("Sprite Renderer", () =>
             {
-                //Just for testing if parenting is working
-                Gui.DrawProperty("Parent UUID: " + spriteRenderer.Parent?.UUID.ToString());
+                //TODO: REMOVE THIS THIS IS FOR DEBUGGING
+                Gui.DrawProperty("texture id: " + spriteRenderer.Sprite?.TexID);
+                // Gui.DrawProperty("Parent UUID: " + spriteRenderer.Parent?.UUID.ToString());
                 
                 if (Gui.DrawProperty("Color", ref spriteRenderer.Color, isColor:true))
                 {

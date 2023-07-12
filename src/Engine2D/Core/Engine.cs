@@ -20,11 +20,7 @@ namespace Engine2D.Core
 {
     public class Engine : GameWindow
     {
-        private IFocussable? _currentFocussed = null;
-
         private static Engine? s_instance;
-
-        private readonly Dictionary<string, UIElement> _guiWindows = new();
 
         private int _frameCounter;
         private double _previousTime;

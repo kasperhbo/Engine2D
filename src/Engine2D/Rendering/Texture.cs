@@ -48,6 +48,18 @@ internal class Texture : AssetBrowserAsset
         EncodedData = Convert.ToBase64String(Data);
     }
 
+    internal Texture(string path, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
+    {
+        Filepath = path;
+        MinFilter = minFilter;
+        MagFilter = magFilter;
+        Flipped = flipped;
+
+        Gen();
+        LoadFromImage();
+        CreateOpenGL();
+    }
+
     //
     [JsonConstructor]
     internal Texture(

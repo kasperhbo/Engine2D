@@ -7,11 +7,13 @@ using Engine2D.Core;
 using Engine2D.Core.Inputs;
 using Engine2D.Logging;
 using Engine2D.Physics;
+using Engine2D.Rendering;
 using Engine2D.Rendering.NewRenderer;
 using Engine2D.SavingLoading;
 using Engine2D.UI.Debug;
 using EnTTSharp.Entities;
 using Newtonsoft.Json;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -37,6 +39,8 @@ public class Scene
     [JsonIgnore]private bool _isPlaying;
     [JsonIgnore]private Camera? _editorCamera = null;
     [JsonIgnore]private bool _saveScene = true;
+    [JsonIgnore] internal static Texture TempTexture;
+    
     
     internal bool IsPlaying
     {
@@ -64,6 +68,8 @@ public class Scene
     /// <param name="scenePath"></param>
     internal virtual void Init(string scenePath)
     {
+        Scene.TempTexture = new Texture("Images\\test.png",  false, TextureMinFilter.Linear, TextureMagFilter.Linear);
+        
         Renderer.Init();
         
         CreateEntityRegistry();
