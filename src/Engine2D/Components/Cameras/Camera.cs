@@ -16,7 +16,7 @@ public class Camera
 {
     [JsonProperty] internal ENTTTransformComponent TransformComponent = new();
     
-    [JsonProperty] private CameraTypes CameraType = CameraTypes.Ortho;
+    [JsonProperty] internal CameraTypes CameraType = CameraTypes.Ortho;
     
     [JsonProperty] private float _far = 1000f;
     [JsonProperty] private float _near = 0.1f;

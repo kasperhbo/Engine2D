@@ -153,9 +153,9 @@ public class Entity : Asset
                     SetComponent(transform);
                 }
                 
-                if(Gui.DrawProperty("Rotation", ref transform.Rotation)){
-                    SetComponent(transform);
-                }
+                // if(Gui.DrawProperty("Rotation", ref transform.Rotation)){
+                //     SetComponent(transform);
+                // }
                 if(Gui.DrawProperty("Scale", ref transform.Scale)){
                     SetComponent(transform);
                 }

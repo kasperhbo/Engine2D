@@ -2,6 +2,7 @@
 using Engine2D.Components.Cameras;
 using Engine2D.Components.ENTT;
 using Engine2D.Logging;
+using Engine2D.Utilities;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL;
 
@@ -52,16 +53,17 @@ internal class Batch2D : IComparable<Batch2D>
         
         
         //TODO: ADD THE RIGHT PROPERTIES
-        // Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
+        //Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
         
         var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
         
-        var pos            = ent.GetComponent<ENTTTransformComponent>().Position;//spriteRenderer.Parent.Transform.Position;
+        var transform            = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
         var color          = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
         var textureCoords =spriteRenderer.TextureCoords;
         var textureID          = -1;//spriteRenderer.Sprite.Texture.TexID;
         
-        LoadVertices(_quadCount, new Vector3(pos.X, pos.Y, pos.X), color, textureCoords, textureID);
+        LoadVertices(_quadCount, transform, color, textureCoords, textureID);
+        
         
         _sprites.Add(ent);
         _quadCount++;
@@ -76,12 +78,12 @@ internal class Batch2D : IComparable<Batch2D>
         
         var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
         
-        var pos            = ent.GetComponent<ENTTTransformComponent>().Position;//spriteRenderer.Parent.Transform.Position;
+        var transform            = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
         var color          = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
         var textureCoords = spriteRenderer.TextureCoords;
         var textureID          = -1;//spriteRenderer.Sprite.Texture.TexID;
         
-        LoadVertices(index, new Vector3(pos.X, pos.Y, pos.X), color, textureCoords, textureID);
+        LoadVertices(index, transform, color, textureCoords, textureID);
         
         return true;
     }
@@ -155,7 +157,7 @@ internal class Batch2D : IComparable<Batch2D>
         _shader.detach();
     }
     
-    private void LoadVertices(int index, Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID)
+    private void LoadVertices(int index, Matrix4x4 transform, Vector4 color, Vector2[] textureCoords,int textureID)
     {
         // //     -.5f, -.5f, 0,  .18F, .6F, .96F, 1F,   0f, 0f,             0f,      
         // //     .5f, -.5f, 0,   .18F, .6F, .96F, 1F,   1f, 0f,             0f,
@@ -164,43 +166,53 @@ internal class Batch2D : IComparable<Batch2D>
         //
         var offset =  index * 4 * c_vertexSize;
 
+        Vector4[] quadVertexPositions =
+        {
+            new(-0.5f, -0.5f, 0.0f, 1.0f),
+            new(0.5f, -0.5f, 0.0f, 1.0f),
+            new(0.5f, 0.5f, 0.0f, 1.0f),
+            new(-0.5f, 0.5f, 0.0f, 1.0f)
+        };
+        
         for (int i = 0; i < 4; i++)
         {
-            float xaDD = 0;
-            float yaDD = 0;
-            float zaDD = 0;
-            switch (i)
-            {
-                case 0:
-                    xaDD = -.5f;
-                    yaDD = -.5f;
-                    zaDD = 0;
-                    break;
-                case 1:
-                    xaDD = .5f;
-                    yaDD = -.5f;
-                    zaDD = 0;
-                    break;
-                case 2:
-                    xaDD = .5f;
-                    yaDD = .5f;
-                    zaDD = 0;
-                    break;
-                case 3:
-                    xaDD = -.5f;
-                    yaDD = .5f;
-                    zaDD = 0;
-                    break;
-            }
+            // float xaDD = 0;
+            // float yaDD = 0;
+            // float zaDD = 0;
+            // switch (i)
+            // {
+            //     case 0:
+            //         xaDD = -.5f;
+            //         yaDD = -.5f;
+            //         zaDD = 0;
+            //         break;
+            //     case 1:
+            //         xaDD = .5f;
+            //         yaDD = -.5f;
+            //         zaDD = 0;
+            //         break;
+            //     case 2:
+            //         xaDD = .5f;
+            //         yaDD = .5f;
+            //         zaDD = 0;
+            //         break;
+            //     case 3:
+            //         xaDD = -.5f;
+            //         yaDD = .5f;
+            //         zaDD = 0;
+            //         break;
+            // }
             
            
-            var xPos = position.X + xaDD;
-            var yPos = position.Y + yaDD;
-            var zPos = position.Z + zaDD;
+            var currentPos = MathUtils.Multiply(transform, quadVertexPositions[i]); //quadVertexPositions[0] * translation;
             
-            _vertices[offset]     = xPos;
-            _vertices[offset + 1] = yPos;
-            _vertices[offset + 2] = zPos;
+            // var xPos = //position.X + xaDD;
+            // var yPos = //position.Y + yaDD;
+            // var zPos = //position.Z + zaDD;
+            //
+            _vertices[offset]     = currentPos.X;
+            _vertices[offset + 1] = currentPos.Y;
+            _vertices[offset + 2] = currentPos.Z;
             
             _vertices[offset + 3] = color.X;
             _vertices[offset + 4] = color.Y;

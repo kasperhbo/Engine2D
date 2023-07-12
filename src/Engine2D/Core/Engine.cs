@@ -29,7 +29,7 @@ namespace Engine2D.Core
         private int _frameCounter;
         private double _previousTime;
         
-        internal Asset? CurrentSelectedAsset;
+        internal Asset? CurrentSelectedAsset = null;
         
         
         // internal SpriteSheet? CurrentSelectedSpriteSheetAssetBrowserAsset { get; set; }= null;
