@@ -19,7 +19,7 @@ internal class Texture : AssetBrowserAsset
 {
     private readonly bool _enableLog = false;
 
-    [JsonProperty] private string? _saveName = "";
+    [JsonProperty] internal string? SaveName = "";
     [JsonProperty]internal string Filepath = "";
     [JsonProperty]internal string EncodedData;
     [JsonProperty]internal TextureMagFilter MagFilter;
@@ -36,7 +36,7 @@ internal class Texture : AssetBrowserAsset
     internal Texture(string filepath, string? saveName, bool flipped, TextureMinFilter minFilter,
         TextureMagFilter magFilter)
     {
-        _saveName = saveName;
+        SaveName = saveName;
         Filepath = filepath;
         MinFilter = minFilter;
         MagFilter = magFilter;
@@ -47,32 +47,21 @@ internal class Texture : AssetBrowserAsset
         CreateOpenGL();
         EncodedData = Convert.ToBase64String(Data);
     }
-
-    internal Texture(string path, bool flipped, TextureMinFilter minFilter, TextureMagFilter magFilter)
-    {
-        Filepath = path;
-        MinFilter = minFilter;
-        MagFilter = magFilter;
-        Flipped = flipped;
-
-        Gen();
-        LoadFromImage();
-        CreateOpenGL();
-    }
-
+    
     //
     [JsonConstructor]
     internal Texture(
-        string? savePath,
+        string? saveName,
         string encodedData,
         int height, int width,
         TextureMinFilter MinFilter,
         TextureMagFilter MagFilter)
     {
-        _saveName = savePath;
+        SaveName = saveName;
         EncodedData = encodedData;
         Width = width;
         Height = height;
+        
         this.MagFilter = MagFilter;
         this.MinFilter = MinFilter;
 
@@ -179,16 +168,6 @@ internal class Texture : AssetBrowserAsset
         return id;
     }
 
-    internal void bind()
-    {
-        GL.BindTexture(TextureTarget.Texture2D, TexID);
-    }
-
-    internal void unbind()
-    {
-        GL.BindTexture(TextureTarget.Texture2D, 0);
-    }
-
     public override bool Equals(object? obj)
     {
         if (obj == null)
@@ -291,7 +270,7 @@ internal class Texture : AssetBrowserAsset
 
     internal void Save()
     {
-        if (_saveName == "")
+        if (SaveName == "")
         {
             if (_enableLog)
                 Log.Error("Save name not set, not saving!");

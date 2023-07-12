@@ -118,10 +118,17 @@ public class Entity : Asset
                 new Vector2(1, 1),
                 new Vector2(0, 1)
             };
-
-            if (spriteRenderer.TexturePath != "")
+            // spriteRenderer.Sprite = Scene.TempTexture;
+            if (spriteRenderer.TexturePath != "" && spriteRenderer.TexturePath != null)
             {
-                spriteRenderer.Sprite = Scene.TempTexture;
+                var text = ResourceManager.GetItem<Texture>(spriteRenderer.TexturePath);
+                if (text != null)
+                    spriteRenderer.Sprite = text;
+                else
+                {
+                    Engine2D.Logging.Log.Error($"Texture {spriteRenderer.TexturePath} not found!");
+                    
+                }
             }
 
             m_Scene.EntityRegistry.AssignComponent(m_EntityHandle, spriteRenderer);

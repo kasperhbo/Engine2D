@@ -38,7 +38,7 @@ public struct ENTTSpriteRenderer : IENTTComponent
       set
       {
          _sprite = value;
-         TexturePath = value.Filepath;
+         TexturePath = value.SaveName;
       }
    }
 

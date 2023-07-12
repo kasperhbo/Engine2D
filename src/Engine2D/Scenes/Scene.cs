@@ -6,6 +6,7 @@ using Engine2D.Components.ENTT;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.Physics;
 using Engine2D.Rendering;
 using Engine2D.Rendering.NewRenderer;
@@ -68,7 +69,7 @@ public class Scene
     /// <param name="scenePath"></param>
     internal virtual void Init(string scenePath)
     {
-        Scene.TempTexture = new Texture("Images\\test.png",  false, TextureMinFilter.Linear, TextureMagFilter.Linear);
+        Scene.TempTexture = ResourceManager.GetItem<Texture>("\\assets\\spritesheet.tex");
         
         Renderer.Init();
         
