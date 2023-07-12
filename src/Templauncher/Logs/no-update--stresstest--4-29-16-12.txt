@@ -1,0 +1,17 @@
+Scene
+ Scene Name:                 D:\dev\MarioLVL1TestGame\MarioLVL01\MarioLVL01\renderbatchtest.kdbscene
+ Do update:                  True
+ Gameobject 10005
+ Render Stats
+ FPS:                         584,30
+ Frame Time:                  1,71ms
+ Assembly Reloaded:           0
+ Draw Calls:                  0
+ Sprites Drawn:               0
+ Textures Loaded:             0
+ Textures Unloaded:           0
+ Textures Reloaded:           0
+ Textures Created:            0
+ Textures Saved:              0
+ Textures Loaded From Memory: 0
+ Textures Loaded From File:   0

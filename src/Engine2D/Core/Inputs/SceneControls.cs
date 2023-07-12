@@ -100,8 +100,14 @@ public static class SceneControls
 
                     transform.Position = new Vector2(outPos.X, outPos.Y);
                     transform.Rotation = q;
+                    transform.Scale = new Vector2(outScale.X, outScale.Y);
                     
                     if (_currentOperation == OPERATION.TRANSLATE)
+                    {
+                        selectedGo.SetComponent<ENTTTransformComponent>(transform);
+                    }
+                    
+                    if (_currentOperation == OPERATION.SCALE)
                     {
                         selectedGo.SetComponent<ENTTTransformComponent>(transform);
                     }

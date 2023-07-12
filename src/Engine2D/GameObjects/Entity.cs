@@ -33,6 +33,7 @@ public class Entity : Asset
         m_EntityHandle = handle;
         m_Scene = scene;
         UUID = uuid;
+        IsStatic = isStatic;
         
         Init();
     }
@@ -162,7 +163,10 @@ public class Entity : Asset
         
         ImGui.Text($"UUID: {UUID}");
         ImGui.Text($"Entity Handle: {m_EntityHandle}");
-      
+        ImGui.Text("IsStatic: ");
+        ImGui.SameLine();
+        ImGui.Checkbox("##IsStatic", ref IsStatic);
+
         ImGui.Separator();
         //Tag component ui
         if (HasComponent<ENTTTagComponent>())
@@ -180,7 +184,6 @@ public class Entity : Asset
                 //     SetComponent(tag);
                 // }
             });
-            ImGui.Separator();
             ImGui.PopID();
         }
         
@@ -206,7 +209,6 @@ public class Entity : Asset
                 }
             });
 
-            ImGui.Separator();
             ImGui.PopID();
         }
         
@@ -226,7 +228,6 @@ public class Entity : Asset
                 }
                 
             });
-            ImGui.Separator();
             ImGui.PopID();
         }
 

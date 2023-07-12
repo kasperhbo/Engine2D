@@ -28,7 +28,7 @@ internal class Batch2D
         new Vector2(0f, 1f),
     };
 
-    private const int c_maxBatchSize = 1000;
+    private const int c_maxBatchSize = 10000;
     
     private const int c_posSize = 3;
     private const int c_colorSize = 4;

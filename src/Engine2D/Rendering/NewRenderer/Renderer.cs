@@ -153,7 +153,7 @@ internal static class Renderer
 
         if (!added)
         {
-            Log.Error("Creating new batch");
+            // Log.Error("Creating new batch");
             var batch = new Batch2D();
             batch.Init(new Shader(
                     "Shaders\\ShaderFiles\\testshader.vert",
