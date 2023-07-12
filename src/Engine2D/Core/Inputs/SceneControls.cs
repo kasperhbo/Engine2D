@@ -79,9 +79,8 @@ public static class SceneControls
                 var projection = vpCam.GetProjectionMatrix();
                 
                 var transform = selectedGo.GetComponent<ENTTTransformComponent>();
-
-
-                var transformTransform = transform.Transform;
+                
+                var transformTransform = transform.Transform();
                 ImGuizmo.Manipulate(ref view.M11, ref projection.M11,
                     _currentOperation, _currentMode, ref transformTransform.M11);
             

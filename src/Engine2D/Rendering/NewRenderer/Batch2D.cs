@@ -126,8 +126,10 @@ internal class Batch2D
         // return true;
         var ent = _sprites[index];
         var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
+
+        var transformComponent = ent.GetComponent<ENTTTransformComponent>();
         
-        var transform      = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
+        var transform = transformComponent.Transform();//spriteRenderer.Parent.Transform.Position;
         var color           = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
         Vector2[] textureCoords    = spriteRenderer.TextureCoords;
 
@@ -169,6 +171,10 @@ internal class Batch2D
                         }
                     }
                 }
+
+                transform = transformComponent.Transform(
+                    spriteRenderer
+                );
             }
         }
         
@@ -337,7 +343,8 @@ internal class Batch2D
       
         for (int i = 0; i < 4; i++)
         {
-            var currentPos = MathUtils.Multiply(transform, _quadVertexPositions[i]); //quadVertexPositions[0] * translation;
+            var currentPos =
+                MathUtils.Multiply(transform, _quadVertexPositions[i]); //quadVertexPositions[0] * translation;
 
             _vertices[offset]     = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
