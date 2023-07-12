@@ -1,12 +1,13 @@
 ﻿#region
 
 using System.Runtime.InteropServices;
-using Engine2D.Components.SpriteAnimations;
+using Engine2D.Components.ENTT;
 using Engine2D.Core;
-using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.SavingLoading;
+using Engine2D.UI.ImGuiExtension;
 using ImGuiNET;
+using OpenTK.Mathematics;
 
 #endregion
 
@@ -16,30 +17,57 @@ internal class SceneHierachyPanel : UIElement
 {
     private bool _currentlyDragging;
 
-    private Gameobject? _currentlyDraggingOBJ;
+    private Entity? _currentlyDraggingOBJ;
 
     internal SceneHierachyPanel(string title) : base(title)
     {
         IsVisible = true;
     }
 
+    private string _searchString = "";
+    private string _lastString = "";
+    private Entity? _foundEntity = null;
+    
     private void CreateHierachy()
     {
-        var gameobjectsWithoutParents = GetGameObjects();
-
-        for (var i = 0; i < gameobjectsWithoutParents.Count; i++)
+        Gui.DrawTable("Hierachy", () => {
+            if (Gui.DrawProperty("Search: ", ref _searchString))
+            {
+                _searchString = _searchString.ToLower();
+            } });
+        if (Engine.Get().CurrentScene.Entities.Count <= 100 && _searchString == "")
         {
-            var go = gameobjectsWithoutParents[i];
+            var gameobjectsWithoutParents = GetGameObjects();
 
-            DrawGameobjectNode(go);
+            for (var i = 0; i < gameobjectsWithoutParents.Count; i++)
+            {
+                var go = gameobjectsWithoutParents[i];
+                DrawGameobjectNode(go);
+            }
+
+            _foundEntity = null;
+        }
+        else if (_searchString != "" && _lastString != _searchString)
+        {
+            _lastString = _searchString;
+            Log.Message("search for: " + _searchString);
+            _foundEntity = Engine.Get().CurrentScene.FindEntityByName(_searchString);
+        }
+
+        if (_foundEntity != null)
+        {
+            Log.Succes("found for: " + _foundEntity.GetComponent<ENTTTagComponent>().Tag);
+            DrawGameobjectNode(_foundEntity);
         }
     }
 
-    private void DrawGameobjectNode(Gameobject? go)
+    private void DrawGameobjectNode(Entity? entity)
     {
-        var selected = go == Engine.Get().CurrentSelectedAsset;
-
-        if (go == null) return;
+        var selected = entity == Engine.Get().CurrentSelectedAsset;
+        
+        
+        
+        if (entity == null) return;
         
         var flags = ImGuiTreeNodeFlags.FramePadding
                     | ImGuiTreeNodeFlags.DefaultOpen
@@ -47,37 +75,40 @@ internal class SceneHierachyPanel : UIElement
                     | ImGuiTreeNodeFlags.Leaf
                     | ImGuiTreeNodeFlags.SpanAvailWidth
                     | ImGuiTreeNodeFlags.OpenOnArrow;
-        
-        var open = ImGui.TreeNodeEx(go.UID.ToString(), flags, go.Name);
+
+        if (!entity.HasComponent<ENTTTagComponent>())
+            entity.AddComponent(new ENTTTagComponent("no-ent-tag"));    
+        //
+        var open = ImGui.TreeNodeEx(entity.UUID, flags, entity.GetComponent<ENTTTagComponent>().Tag);
 
         //Handle Drag Drop
-        HierachyItemDragDropped(go);
+        HierachyItemDragDropped(entity);
 
         //Handle Item Clicked
-        HierachyItemClicked(go);
+        HierachyItemClicked(entity);
 
         if (open)
         {
-            for (var i = 0;
-                 i < go.Children.Count;
-                 i++)
-            {
-                var item = Engine.Get().CurrentScene.FindObjectByUID(go.Children[i]);
-                DrawGameobjectNode(item);
-            }
+            // for (var i = 0;
+            //      i < entity.Children.Count;
+            //      i++)
+            // {
+            //     // var item = Engine.Get().CurrentScene.FindObjectByUID(go.Children[i]);
+            //     // DrawGameobjectNode(item);
+            // }
 
             ImGui.TreePop();
         }
     }
     private GCHandle? _currentlyDraggedHandle;
-    private unsafe void HierachyItemDragDropped(Gameobject? draggingObject)
+    private unsafe void HierachyItemDragDropped(Entity? draggingObject)
     {
         if (ImGui.BeginDragDropTarget())
         {
             var payload = ImGui.AcceptDragDropPayload("GAMEOBJECT_DROP_Hierachy");
             if (payload.IsValidPayload())
             {
-                _currentlyDraggingOBJ.SetParent(draggingObject.UID);
+                // _currentlyDraggingOBJ.SetParent(draggingObject.UID);
             }
 
             ImGui.EndDragDropTarget();
@@ -109,29 +140,25 @@ internal class SceneHierachyPanel : UIElement
         // }
     }
 
-    private void HierachyItemClicked(Gameobject? clicked)
+    private void HierachyItemClicked(Entity? clicked)
     {
         if (ImGui.IsItemClicked())
         {
             Engine.Get().CurrentSelectedAsset = clicked;
-            if (clicked.GetComponent<SpriteAnimator>() != null)
-            {
-                Engine.Get().CurrentSelectedAnimationAssetBrowserAsset = clicked.GetComponent<SpriteAnimator>().Animation;
-            }
         }
-        
     }
 
-    private List<Gameobject?> GetGameObjects()
+    private List<Entity> GetGameObjects()
     {
-        var gameobjectsWithoutParents = new List<Gameobject?>();
-        for (var i = 0; i < Engine.Get().CurrentScene.GameObjects.Count; i++)
+        var gameobjectsWithoutParents = new List<Entity>();
+        
+        for (var i = 0; i < Engine.Get().CurrentScene.Entities.Count; i++)
         {
-            var go = Engine.Get().CurrentScene.GameObjects[i];
-            
-            if (go.ParentUid == -1 && go.Serialize) gameobjectsWithoutParents.Add(go);
+            var ent = Engine.Get().CurrentScene.Entities[i];
+            gameobjectsWithoutParents.Add(ent);   
+            // if (go.ParentUid == -1 && go.Serialize) gameobjectsWithoutParents.Add(go);
         }
-
+    
         return gameobjectsWithoutParents;
     }
 
@@ -143,23 +170,9 @@ internal class SceneHierachyPanel : UIElement
             {
                 if (ImGui.BeginPopupContextWindow("p"))
                 {
-                    if (ImGui.MenuItem("New Empty"))
-                        Engine.Get().CurrentScene.AddGameObjectToScene(new Gameobject("Empty"));
-                    if (ImGui.MenuItem("New SpriteRenderer"))
-                        Engine.Get().CurrentScene.AddGameObjectToScene(new SpriteRendererGo("SpriteRenderer"));
-
-                    if (ImGui.MenuItem("New Game Camera"))
-                        Engine.Get().CurrentScene.AddGameObjectToScene(new CameraGO("Camera"));
-
-                    if (ImGui.BeginMenu("Lighting"))
+                    if (ImGui.MenuItem("New Gameobject"))
                     {
-                        if (ImGui.MenuItem("Global Light"))
-                            Engine.Get().CurrentScene.AddGameObjectToScene(new GlobalLightGO("Global Light"));
-
-                        if (ImGui.MenuItem("PointLight"))
-                            Engine.Get().CurrentScene.AddGameObjectToScene(new PointLightGO("Point Light"));
-
-                        ImGui.EndMenu();
+                        Engine.Get().CurrentScene.CreateEntity();
                     }
                 }
             }
@@ -170,8 +183,6 @@ internal class SceneHierachyPanel : UIElement
                 if (payload.IsValidPayload())
                 {
                     var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
-                    var prefab = SaveLoad.LoadGameobject(filename);
-                    Engine.Get().CurrentScene.AddGameObjectToScene(prefab);
                 }
                 ImGui.EndDragDropTarget();
             }

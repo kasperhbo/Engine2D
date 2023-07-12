@@ -17,25 +17,32 @@ internal static class Gui
         if (CollapsingHeader(label, ImGuiTreeNodeFlags.DefaultOpen))
         {
             BeginTable("##table", 2, ImGuiTableFlags.None | ImGuiTableFlags.Resizable);
+            
             tableComponents.Invoke();
+            
             EndTable();
             Separator();
         }
     }
     
-    internal static void DrawProperty(string label, ref float value)
+    internal static bool DrawProperty(string label, ref float value)
     {
+        PushItemWidth(110);
+        bool pressed = false;
         PushID(label);
         TableNextRow();
         TableSetColumnIndex(0);
         Text(label);
         TableSetColumnIndex(1);
-        KDragFloat("##"+label,ref value);
+        if(KDragFloat("##" + label, ref value)) pressed = true;
         PopID();
+        return pressed;
+        PopItemWidth();
     }
 
     internal static bool DrawProperty(string label, ref int value, int min, int max)
     {
+        PushItemWidth(110);
         PushID(label);
         TableNextRow();
         TableSetColumnIndex(0);
@@ -43,29 +50,36 @@ internal static class Gui
         TableSetColumnIndex(1);
         bool dragged = KDragInt("##"+label,ref value, min, max);
         PopID();
+        PopItemWidth();
         return dragged;
     }
 
     internal static void DrawProperty(string label, ref int value)
     {
+        PushItemWidth(110);
         PushID(label);
         TableNextRow();
         TableSetColumnIndex(0);
         Text(label);
         TableSetColumnIndex(1);
         KDragInt("##"+label,ref value);
+        PopItemWidth();
         PopID();
     }
     
-    internal static void DrawProperty(string label, ref string value)
+    internal static bool DrawProperty(string label, ref string value)
     {
+        bool pressed = false;
+        PushItemWidth(110);
         PushID(label);
         TableNextRow();
         TableSetColumnIndex(0);
         Text(label);
         TableSetColumnIndex(1);
-        KStringInput("##"+label,ref value);
+        if(KStringInput("##"+label,ref value)) pressed = true;
         PopID();
+        PopItemWidth();
+        return pressed;
     }
     
     internal static bool DrawProperty(string label, ref bool value)
@@ -81,7 +95,6 @@ internal static class Gui
         return pressed;
     }
     
-
     internal static void DrawProperty(string label, ref OpenTK.Mathematics.Vector2 value)
     {
         Vector2 v = new Vector2(value.X, value.Y);
@@ -89,17 +102,18 @@ internal static class Gui
         value.X = v.X;
         value.Y = v.Y;
     }
-
     
-    internal static void DrawProperty(string label, ref Vector2 value)
+    internal static bool DrawProperty(string label, ref Vector2 value)
     {
+        bool pressed = false;
         PushID(label);
         TableNextRow();
         TableSetColumnIndex(0);
         Text(label);
         TableSetColumnIndex(1);
-        Vector2Prop(ref value);
+        if(Vector2Prop(ref value)) pressed = true;
         PopID();
+        return pressed;
     }
 
     internal static void DrawProperty(string label, ref OpenTK.Mathematics.Vector3 value)
@@ -132,15 +146,24 @@ internal static class Gui
         value.W = v.W;
     }
 
-    internal static void DrawProperty(string label, ref Vector4 value)
+    internal static bool DrawProperty(string label, ref Vector4 value, bool isColor = false)
     {
+        bool pressed = false;
         PushID(label);
         TableNextRow();
         TableSetColumnIndex(0);
         Text(label);
         TableSetColumnIndex(1);
-        Vector4Prop(ref value);
+        if (isColor)
+        {
+            if(ColorEdit4("##pickcolor"+label,ref value )) pressed = true;
+        }
+        else
+        {
+            if (Vector4Prop(ref value)) pressed = true;
+        }
         PopID();
+        return pressed;
     }
     
     
@@ -175,13 +198,21 @@ internal static class Gui
         }
     }
     
-    internal static void Vector2Prop(ref Vector2 value)
+    internal static bool Vector2Prop(ref Vector2 value)
     {
+        bool pressed = false;
+        
         PushItemWidth(100);
-        KDragFloat("X", ref value.X, new Vector4(1,0,0,1),0.1f);
+        
+        if(KDragFloat("X", ref value.X, new Vector4(1,0,0,1),0.1f)){
+            pressed = true;
+        }
         SameLine();
-        KDragFloat("Y", ref value.Y, new Vector4(0,1,0,1),0.1f);
+        if(KDragFloat("Y", ref value.Y, new Vector4(0,1,0,1),0.1f)){
+            pressed = true;
+        }
         PopItemWidth();
+        return pressed;
     }
     
     internal static void Vector3Prop(ref Vector3 value)
@@ -194,25 +225,30 @@ internal static class Gui
         KDragFloat("Z", ref value.Z, new Vector4(0,0,1,1),0.1f);
         PopItemWidth();
     }
-    
-    internal static void Vector4Prop(ref Vector4 value)
+
+    internal static bool Vector4Prop(ref Vector4 value)
     {
+        bool pressed = false;
         PushItemWidth(100);
-        KDragFloat("X", ref value.X, new Vector4(1,0,0,1),0.1f);
+        if(KDragFloat("X", ref value.X, new Vector4(1, 0, 0, 1), 0.1f)){pressed = true;}
         SameLine();
-        KDragFloat("Y", ref value.Y, new Vector4(0,1,0,1),0.1f);
+        if(KDragFloat("Y", ref value.Y, new Vector4(0,1,0,1),0.1f)){pressed = true;}
         SameLine();
-        KDragFloat("Z", ref value.Z, new Vector4(0,0,1,1),0.1f);
+        if(KDragFloat("Z", ref value.Z, new Vector4(0,0,1,1),0.1f)){pressed = true;}
         SameLine();
-        KDragFloat("W", ref value.W, new Vector4(1,0,1,1),0.1f);
+        if(KDragFloat("W", ref value.W, new Vector4(1,0,1,1),0.1f)){pressed = true;}
         PopItemWidth();
+        return pressed;
     }
     
     
-    internal static void KStringInput(string label, ref string value)
+    internal static bool KStringInput(string label, ref string value)
     {
-        if (value == null) return;
-        InputText(("##" + label), ref value, 256);
+        PushItemWidth(110);
+        if (value == null) return false;
+        if (InputText(("##" + label), ref value, 256)) return true;
+        PopItemWidth();
+        return false;
     }
     
     internal static bool KBoolInput(string label, ref bool value)
@@ -258,20 +294,29 @@ internal static class Gui
     
     
     
-    private static void KDragFloat(string label, ref float floatRef,  Vector4 buttonColor = new(), float dragSpeed = 0.1f)
+    private static bool KDragFloat(string label, ref float floatRef,  Vector4 buttonColor = new(), float dragSpeed = 0.1f)
     {
-        
+        bool pressed = false;
         PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
         if(buttonColor != Vector4.Zero)
             PushStyleColor(ImGuiCol.Button, buttonColor);
         
-        if (Button(label)) floatRef = 0;
+        if (Button(label))
+        {
+            pressed = true;
+            floatRef = 0;
+        }
         SameLine();
-        DragFloat(("##" + label), ref floatRef, dragSpeed);
+        if(DragFloat(("##" + label), ref floatRef, dragSpeed))
+        {
+            pressed = true;
+        }
         PopStyleVar();
         
         if(buttonColor != Vector4.Zero)
             PopStyleColor();
+        
+        return pressed;
     }
     
     
@@ -412,6 +457,16 @@ internal static class Gui
 
     #endregion
 
+    internal static bool DrawProperty(string label)
+    {
+        bool pressed = false;
+        PushID(label);
+        TableNextRow();
+        TableSetColumnIndex(0);
+        Text(label);
+        PopID();
+        return pressed;
+    }
 }
 
 internal class TopBarButton

@@ -1,7 +1,4 @@
-﻿using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
-
-namespace Engine2D.UI;
+﻿namespace Engine2D.UI;
 
 public interface IFocussable
 {

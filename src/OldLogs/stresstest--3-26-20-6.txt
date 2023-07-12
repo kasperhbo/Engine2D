@@ -1,0 +1,19 @@
+Scene
+ Scene Name:                 D:\dev\MarioLVL1TestGame\MarioLVL01\MarioLVL01\strestest.kdbscene
+ Do update:                  False
+ Gameobject 90001
+ Render Stats
+ FPS:                         11,51
+ Frame Time:                  86,89ms
+ Assembly Reloaded:           1
+ Render Everything:           True
+ Debug Render:                False
+ Draw Calls:                  18
+ Sprites Drawn:               180000
+ Textures Loaded:             0
+ Textures Unloaded:           0
+ Textures Reloaded:           0
+ Textures Created:            18
+ Textures Saved:              0
+ Textures Loaded From Memory: 0
+ Textures Loaded From File:   0

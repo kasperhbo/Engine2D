@@ -1,11 +1,9 @@
 ﻿#region
 
-using Engine2D.Components.Sprites;
-using Engine2D.Components.Sprites.SpriteAnimations;
 using Engine2D.Core.Inputs;
 using Engine2D.Logging;
-using Engine2D.Managers;
 using Engine2D.Rendering;
+using Engine2D.Rendering.NewRenderer;
 using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.UI;
@@ -22,21 +20,17 @@ namespace Engine2D.Core
 {
     public class Engine : GameWindow
     {
-        private IFocussable? _currentFocussed = null;
-
         private static Engine? s_instance;
-
-        private readonly Dictionary<string, UIElement> _guiWindows = new();
 
         private int _frameCounter;
         private double _previousTime;
         
-        internal Asset? CurrentSelectedAsset;
+        internal Asset? CurrentSelectedAsset = null;
         
         
-        internal SpriteSheet? CurrentSelectedSpriteSheetAssetBrowserAsset { get; set; }= null;
+        // internal SpriteSheet? CurrentSelectedSpriteSheetAssetBrowserAsset { get; set; }= null;
         internal Texture? CurrentSelectedTextureAssetBrowserAsset     { get; set; } = null;
-        internal Animation? CurrentSelectedAnimationAssetBrowserAsset   { get; set; } = null;
+        // internal Animation? CurrentSelectedAnimationAssetBrowserAsset   { get; set; } = null;
         
 
         public Scene CurrentScene { get; private set; }
@@ -74,7 +68,6 @@ namespace Engine2D.Core
         
         private void Render(FrameEventArgs args)
         {
-            SetTitle(args);
             DeltaTime = args.Time;
             CurrentScene?.Render((float)DeltaTime);
             
@@ -85,7 +78,9 @@ namespace Engine2D.Core
         private new void OnResize(ResizeEventArgs e)
         {
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
-
+            
+            Renderer.Resize();
+            
             CurrentScene?.OnResized(e);
         }
         
@@ -97,18 +92,6 @@ namespace Engine2D.Core
 
         private void MouseWheel(MouseWheelEventArgs e)
         {
-        }
-
-        private void SetTitle(FrameEventArgs args)
-        {
-            Title = string.Format($"Frame Time: {args.Time * 1000:0.00}ms" + "  |  " + $"FPS: {1 / args.Time:0.00}");
-            // var fps = 1.0f / time;
-             // if (_frameCounter == 30)
-             //            {
-             //                //Title = string.Format("KDB ENGIN V{0} | Scene : {1} | FPS : {2}", 0.1, CurrentScene.ScenePath, fps);
-             //                _frameCounter = 0;
-             //            }_frameCounter++;
-           
         }
 
         #region setup
@@ -131,7 +114,6 @@ namespace Engine2D.Core
                 ntwSettings.Title = WindowSettings.Title;
                 ntwSettings.Size = WindowSettings.Size;
 
-
                 s_instance = new Engine(gameWindowSettings, ntwSettings);
 
                 s_instance.LoadProject();
@@ -147,7 +129,7 @@ namespace Engine2D.Core
         public void LoadEngine()
         {
             UiRenderer.Flush();
-            ResourceManager.Flush();
+            // ResourceManager.Flush();
             
             SaveLoad.LoadWindowSettings();
             SaveLoad.LoadEngineSettings();
@@ -158,7 +140,7 @@ namespace Engine2D.Core
 
             AssignDefaultEvents();
 
-            SwitchScene(ProjectSettings.FullProjectPath + "\\tmxloadertest.kdbscene");
+            SwitchScene(ProjectSettings.FullProjectPath + "\\renderbatchtest.kdbscene");
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);
@@ -227,8 +209,8 @@ public static class Settings
 {
     public static bool s_IsEngine = true;
     public static bool s_RenderDebugWindowSeperate = true;
-    public static float GRID_WIDTH = 16;
-    public static float GRID_HEIGHT = 16;
+    public static float GRID_WIDTH = 1;
+    public static float GRID_HEIGHT = 1;
 }
 
 //Project settings

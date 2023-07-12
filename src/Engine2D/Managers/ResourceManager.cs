@@ -1,14 +1,11 @@
-﻿using Engine2D.Components.SpriteAnimations;
-using Engine2D.Components.Sprites;
+﻿using Engine2D.Components.Sprites;
 using Engine2D.Core;
-using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.UI.Browsers;
 using KDBEngine.Shaders;
 using Newtonsoft.Json;
-using Engine2D.Components.Sprites.SpriteAnimations;
 
 namespace Engine2D.Managers
 {
@@ -27,8 +24,6 @@ namespace Engine2D.Managers
         private static  bool _showDebug = false;
 
         internal static List<SaveTextureClass> TexturesToSave = new();
-        internal static List<SaveSpriteSheetClass> SpriteSheetsToSave = new();
-        internal static List<SaveAnimationClass> AnimationsToSave = new();
         
         static ResourceManager()
         {
@@ -45,61 +40,10 @@ namespace Engine2D.Managers
             _showDebug = false;
     
             TexturesToSave = new();
-            SpriteSheetsToSave = new();
-            AnimationsToSave = new();
+            
             LoadAssets();
         }
-        
-        public static void OnGUI()
-        {
-            bool refreshobjects = false;
-            foreach (var action in TexturesToSave)
-            {
-                refreshobjects = true;
-                SaveTexture(action.defaultSaveName, action.texture, action.currentFolder, action.overwrite);
-            }
 
-            TexturesToSave = new();
-            
-            foreach (var action in SpriteSheetsToSave)
-            {
-                refreshobjects = true;
-                SaveSpriteSheet(action.defaultSaveName, action.spriteSheet, action.currentFolder, action.overwrite);
-            }
-
-            SpriteSheetsToSave = new();
-            
-            foreach (var action in AnimationsToSave)
-            {   
-                refreshobjects = true;
-                SaveAnimation(action.defaultSaveName, action.animation, action.overwrite);
-            }
-            
-            AnimationsToSave = new();
-            
-            
-            //TODO:NEEDS TO BE IMPROVED
-            if(refreshobjects){
-                //Just flush the renderer for now
-                Engine.Get().CurrentScene.Renderer.Flush();
-                
-                foreach (var keyvp in _items)
-                {
-                    if (keyvp.Value is SpriteSheet spriteSheet)
-                        spriteSheet.Refresh();
-                }
-
-                foreach (var go in Engine.Get().CurrentScene.GameObjects)
-                {
-                    if (go.GetComponent<SpriteRenderer>() != null)
-                        go.GetComponent<SpriteRenderer>().Refresh();
-                }
-                
-                Log.Succes("Refreshed");
-            }
-        }
-        
-        
         private static void LoadAssets()
         {
             _items.Clear();
@@ -131,10 +75,6 @@ namespace Engine2D.Managers
                 {
                     case ".tex":
                         return LoadTextureFromJson(filePath);
-                    case ".spritesheet":
-                        return LoadSpriteSheetFromJson(filePath);
-                    case ".animation":
-                        return LoadAnimationFromJson(filePath);
                 }
             }
             catch (Exception e)
@@ -143,20 +83,6 @@ namespace Engine2D.Managers
             }
 
             return null;
-        }
-
-        private static Sprite? LoadSpriteFromJson(string filePath)
-        {
-            try
-            {
-                var spriteData = File.ReadAllText(filePath);
-                return JsonConvert.DeserializeObject<Sprite>(spriteData);
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed to load sprite {filePath}! {e.Message}");
-                return null;
-            }
         }
 
         internal static Texture? LoadTextureFromJson(string filePath)
@@ -178,47 +104,6 @@ namespace Engine2D.Managers
 
             return null;
         }
-
-        private static SpriteSheet? LoadSpriteSheetFromJson(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    var spriteSheetData = File.ReadAllText(filePath);
-                    if (_showDebug)
-                        Log.Succes("Loaded sprite sheet " + filePath);
-                    return JsonConvert.DeserializeObject<SpriteSheet>(spriteSheetData);
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Failed to load sprite sheet {filePath}! {e.Message}");
-                }
-            }
-
-            return null;
-        }
-
-        private static Animation? LoadAnimationFromJson(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    var animationData = File.ReadAllText(filePath);
-                    if (_showDebug)
-                        Log.Succes("Loaded animation " + filePath);
-                    return JsonConvert.DeserializeObject<Animation>(animationData);
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Failed to load animation {filePath}! {e.Message}");
-                }
-            }
-
-            return null;
-        }
-// ...
 
         private static void AddItemToManager(string fullSaveName, AssetBrowserAsset item)
         {
@@ -263,12 +148,12 @@ namespace Engine2D.Managers
             return null;
         }
 
-        internal static Shader? GetShader(ShaderData shaderLocations)
+        internal static Shader? GetShader(ShaderData shaderData)
         {
-            if (!Shaders.TryGetValue(shaderLocations, out var shader))
+            if (!Shaders.TryGetValue(shaderData, out var shader))
             {
-                shader = new Shader(shaderLocations.VertexPath, shaderLocations.FragPath);
-                Shaders.Add(shaderLocations, shader);
+                shader = new Shader(shaderData.VertexPath, shaderData.FragPath);
+                Shaders.Add(shaderData, shader);
             }
 
             return shader;
@@ -304,73 +189,6 @@ namespace Engine2D.Managers
             }
         }
 
-        private static void SaveSpriteSheet(string? defaultSaveName, SpriteSheet spriteSheet,
-            DirectoryInfo? currentFolder = null, bool overwrite = false)
-        {
-            var name = defaultSaveName;
-
-            if (!overwrite)
-            {
-                string extension = Path.GetExtension(defaultSaveName);
-                name = SaveLoad.GetNextFreeName(defaultSaveName);
-            }
-
-            var fullSaveName = (currentFolder?.FullName ?? string.Empty) + name;
-            fullSaveName = ProjectSettings.FullProjectPath + fullSaveName;
-
-            try
-            {
-                var spriteSheetData = JsonConvert.SerializeObject(spriteSheet, Formatting.Indented);
-                File.WriteAllText(fullSaveName, spriteSheetData);
-
-                AddItemToManager(fullSaveName, spriteSheet);
-                AssetBrowserPanel.Refresh();
-                
-                Log.Succes("Sprite sheet saved Succesfully: " + fullSaveName);
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed to save sprite sheet: {fullSaveName}. {e.Message}");
-            }
-        }
-
-        private static void SaveAnimation(string savePath, Animation animation,
-            bool overwrite = false)
-        {
-            var name = savePath;
-            
-            var fullSaveName = ""+ name;
-            fullSaveName = ProjectSettings.FullProjectPath + fullSaveName;
-
-
-            if (!overwrite)
-            {
-                fullSaveName = SaveLoad.GetNextFreeName(fullSaveName);
-                string animSaveName = fullSaveName.Replace(ProjectSettings.FullProjectPath, "");
-                animation.SavePath = animSaveName;
-            }
-            
-            try
-            {
-                var animationData = JsonConvert.SerializeObject(animation, Formatting.Indented);
-                File.WriteAllText(fullSaveName, animationData);
-
-                AddItemToManager(fullSaveName, animation);
-                AssetBrowserPanel.Refresh();
-
-                foreach (var gameObject in Engine.Get().CurrentScene.GameObjects)
-                {
-                    var spriteAnimator = gameObject.GetComponent<SpriteAnimator>();
-                    spriteAnimator?.Refresh();
-                }
-
-                Log.Succes("Animation saved Succesfully: " + fullSaveName);
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Failed to save animation: {fullSaveName}. {e.Message}");
-            }
-        }
     }
 }
 
@@ -386,36 +204,6 @@ internal class SaveTextureClass
         this.defaultSaveName = defaultSaveName;
         this.texture = texture;
         this.currentFolder = currentFolder;
-        this.overwrite = overwrite;
-    }
-}
-
-internal class SaveSpriteSheetClass
-{
-    internal string? defaultSaveName;
-    internal SpriteSheet spriteSheet;
-    internal DirectoryInfo? currentFolder = null;
-    internal bool overwrite = false;
-
-    public SaveSpriteSheetClass(string? defaultSaveName, SpriteSheet spriteSheet, DirectoryInfo? currentFolder, bool overwrite)
-    {
-        this.defaultSaveName = defaultSaveName;
-        this.spriteSheet = spriteSheet;
-        this.currentFolder = currentFolder;
-        this.overwrite = overwrite;
-    }
-}
-
-internal class SaveAnimationClass
-{
-    internal string? defaultSaveName;
-    internal Animation animation;
-    internal bool overwrite = false;
-
-    internal SaveAnimationClass(string? defaultSaveName, Animation animation, bool overwrite)
-    {
-        this.defaultSaveName = defaultSaveName;
-        this.animation = animation;
         this.overwrite = overwrite;
     }
 }

@@ -1,14 +1,17 @@
 ﻿#region
 
+using System.Numerics;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Soap;
+using Engine2D.Components.ENTT;
 using Engine2D.Core;
-using Engine2D.GameObjects;
 using Engine2D.Logging;
 using Engine2D.Managers;
+using Engine2D.Rendering.NewRenderer;
 using Engine2D.Scenes;
 using Engine2D.UI;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 #endregion
 
@@ -124,101 +127,161 @@ public static class SaveLoad
     {
     }
 
-    public static Gameobject? LoadGameobject(string relativePath)
-    {
-        string path = ProjectSettings.FullProjectPath + "\\" + relativePath;
-        if (File.Exists(path))
-        {
-            var lines = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<Gameobject>(lines).Clone(UIDManager.GetUID());
-        }
-
-        return null;
-    }
-    public static void SaveGameobject(string fileName, Gameobject gameobject)
-    {
-        fileName += ".prefab";
-        var lines = JsonConvert.SerializeObject(gameobject, Formatting.Indented);
-        using (var fs = File.Create(fileName))
-        {
-            fs.Close();
-        }
-        File.WriteAllText(fileName, lines);
-    }
+    // public static Gameobject? LoadGameobject(string relativePath)
+    // {
+    //     string path = ProjectSettings.FullProjectPath + "\\" + relativePath;
+    //     if (File.Exists(path))
+    //     {
+    //         var lines = File.ReadAllText(path);
+    //         return JsonConvert.DeserializeObject<Gameobject>(lines).Clone(UIDManager.GetUID());
+    //     }
+    //
+    //     return null;
+    // }
+    // public static void SaveGameobject(string fileName, Gameobject gameobject)
+    // {
+    //     fileName += ".prefab";
+    //     var lines = JsonConvert.SerializeObject(gameobject, Formatting.Indented);
+    //     using (var fs = File.Create(fileName))
+    //     {
+    //         fs.Close();
+    //     }
+    //     File.WriteAllText(fileName, lines);
+    // }
     
-    
-    
-    #region scenes
-
     internal static void SaveScene(Scene scene)
     {
-        Log.Message("Saving: " + scene.ScenePath);
+            Log.Message("Saving: " + scene.ScenePath);
+            
+            // Serialize the EntityRegistry to a JSON string
+            // string json = JsonConvert.SerializeObject(registry, Formatting.Indented);
+            // Create a dictionary to hold entity IDs and their corresponding serialized data
+            Dictionary<int, JObject> serializedEntities = new Dictionary<int, JObject>();
 
-        //TODO: Remove this and make just an seperate array/list in the scene
-        var tempList = new List<Gameobject?>();
-
-        foreach (var go in scene.GameObjects)
-            if (go.Serialize)
-                tempList.Add(go);
-
-        var gameObjectArray = tempList.ToArray();
-
-
-        var sceneData = JsonConvert.SerializeObject(gameObjectArray, Formatting.Indented);
-        //So we can see where the go array stops when we deserialize the file
-        sceneData += "\n////GAMEOBJECTS////\n";
-
-        if (File.Exists(scene.ScenePath))
-        {
-            File.WriteAllText(scene.ScenePath, sceneData);
-        }
-        else
-        {
-            using (var fs = File.Create(scene.ScenePath))
+            foreach (var entity in scene.Entities)
             {
-                fs.Close();
+                // Entity entity = entityPair.Value;
+
+                // Serialize the components of the entity
+                JObject serializedEntity = new JObject();
+                
+                string serializedData = JsonConvert.SerializeObject(entity);
+                serializedEntity[entity.GetType().FullName] = JToken.Parse(serializedData);
+               
+                if(entity.HasComponent<ENTTTransformComponent>())
+                {
+                    var component = entity.GetComponent<ENTTTransformComponent>();
+                    string serializedComponent = JsonConvert.SerializeObject(component);
+                    serializedEntity[component.GetType().FullName] = JToken.Parse(serializedComponent);
+                }  
+                
+                if(entity.HasComponent<ENTTTagComponent>())
+                {
+                    var component = entity.GetComponent<ENTTTagComponent>();
+                    string serializedComponent = JsonConvert.SerializeObject(component);
+                    serializedEntity[component.GetType().FullName] = JToken.Parse(serializedComponent);
+                }  
+                
+                if(entity.HasComponent<ENTTSpriteRenderer>())
+                {
+                    var component = entity.GetComponent<ENTTSpriteRenderer>();
+                    string serializedComponent = JsonConvert.SerializeObject(component);
+                    serializedEntity[component.GetType().FullName] = JToken.Parse(serializedComponent);
+                }  
+                
+                // Add the serialized entity to the dictionary
+                serializedEntities.Add(entity.UUID, serializedEntity);
             }
 
-            File.WriteAllText(scene.ScenePath, sceneData);
-        }
+            // Serialize the entity registry to a JSON string
+            bool indent = true;
+            string json = "";
+            if(indent)
+            {
+                json = JsonConvert.SerializeObject(serializedEntities, Formatting.Indented);
+            }
+            else
+            {
+                json = JsonConvert.SerializeObject(serializedEntities);
+            }
+            
 
-        Log.Succes("Succesfully saved: " + scene.ScenePath);
+            
+            if (File.Exists(scene.ScenePath))
+            {
+                File.WriteAllText(scene.ScenePath, json);
+            }
+            else
+            {
+                using (var fs = File.Create(scene.ScenePath))
+                {
+                    fs.Close();
+                }
+            
+                File.WriteAllText(scene.ScenePath, json);
+            }
+            
+            Log.Succes("Succesfully saved: " + scene.ScenePath);
     }
 
-    internal static List<Gameobject?> LoadScene(string sceneToLoad)
+    public static void LoadScene(string filePath, Scene scene)
     {
-        var objs = new List<Gameobject?>();
-        if (File.Exists(sceneToLoad))
+        // Read the JSON string from the file
+        string json = File.ReadAllText(filePath);
+
+        //Check if json file is empty
+        if (json == "[]" || json == "") return;
+        
+        // Deserialize the JSON string to recreate the serialized entities
+        var serializedEntities = JsonConvert.DeserializeObject<Dictionary<int, JObject>>(json);
+
+        // Clear the existing entity registry
+        scene.Entities.Clear();
+
+        // Deserialize each entity and its components
+        foreach (var serializedEntityPair in serializedEntities)
         {
-            var lines = File.ReadAllText(sceneToLoad);
+            JObject serializedEntity = serializedEntityPair.Value;
 
-            // var gos = "";
-            // var lightSettingsStr = "";
-            //
-            // var lastIndex = 0;
-            // for (var i = 0; i < lines.Length; i++)
-            // {
-            //     lastIndex = i;
-            //     //if comment then we now we are at and of GO array and we break
-            //     if (lines[i].Contains("////GAMEOBJECTS////")) break;
-            //     gos += lines[i];
-            // }
-            //
-            // lastIndex += 1;
-            // for (var i = lastIndex; i < lines.Length; i++)
-            // {
-            //     lastIndex++;
-            //     if (lines[i].Contains("////LightSettings////")) break;
-            //     lightSettingsStr += lines[i];
-            // }
+            var props = serializedEntity.Properties();
+            var prop = props.First();
+            
+            string typeName = prop.Name;
+            string serializedEnt = prop.Value.ToString();
 
-            //Load gameobjects
-            objs = JsonConvert.DeserializeObject<List<Gameobject>>(lines)!;
+            // Deserialize each component and add it to the entity
+            Type type = Type.GetType(typeName);
+            object obj = JsonConvert.DeserializeObject(serializedEnt, type);
+            
+            Entity entityClone = (Entity) obj;
+            
+            // Create a new entity
+            var entity = scene.CreateEntity(entityClone.UUID, entityClone.IsStatic);
+            
+            foreach (var componentProperty in serializedEntity.Properties())
+            {
+                string componentTypeName = componentProperty.Name;
+                string serializedComponent = componentProperty.Value.ToString();
+
+                // Deserialize each component and add it to the entity
+                Type componentType = Type.GetType(componentTypeName);
+                object component = JsonConvert.DeserializeObject(serializedComponent, componentType);
+                
+                if(component is ENTTTransformComponent transformComponent)
+                    entity.AddComponent(transformComponent);
+                else if(component is ENTTTagComponent tagComponent)
+                    entity.AddComponent(tagComponent);
+                else if(component is ENTTSpriteRenderer spriteRenderer)
+                {
+                    entity.AddComponent(spriteRenderer);
+                    // Renderer.AddSprite(entity);
+                }
+                else
+                {
+                    // Log.Error("Component not found: " + component.GetType().FullName);
+                }
+                
+            }
         }
-
-        Log.Succes("qloaded: " + sceneToLoad);
-        return objs;
     }
-
-    #endregion
 }
