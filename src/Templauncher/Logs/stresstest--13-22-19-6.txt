@@ -1,3 +1,0 @@
-Average FPS: 19,53816743824728 | Average Frame Time: 51,18ms
-Time: 19:22:13
-Date: /6/7/2023
