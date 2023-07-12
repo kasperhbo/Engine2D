@@ -24,7 +24,7 @@ public class Camera
     // private Vector2 _projectionSize = new(1920,1080);
     [JsonProperty] private Vector2 _projectionSize = new(1920, 1080);
     [JsonProperty] private Vector4 _clearColor = new(100, 149, 237, 255);
-    [JsonProperty] private float _size = 0.001f;
+    [JsonProperty] private float _size = 0.01f;
     [JsonProperty] private bool _isMainCamera = false;
     [JsonProperty] private bool _isEditorCamera = false;
 

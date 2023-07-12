@@ -12,9 +12,9 @@ internal class Batch2D : IComparable<Batch2D>
     private int _zIndex;
     private Shader _shader;
 
-    private List<ENTTSpriteRenderer> _sprites = new();
+    private List<Entity> _sprites = new();
     
-    private float[] _vertices = new float[c_vertexSize * c_maxBatchSize];
+   
     
     private int _quadVA = 0;
     private int _quadCount = 0;
@@ -34,27 +34,54 @@ internal class Batch2D : IComparable<Batch2D>
     private const int c_vertexSize = 10;
     private const int c_vertexSizeInBytes = c_vertexSize * sizeof(float);
 
-    private static int[] s_Indices = new int[c_maxBatchSize * 6];
+    private static int[] s_Indices = new int  [c_maxBatchSize * 6];
+    private float[] _vertices      = new float[(c_vertexSize * 4) * c_maxBatchSize];
+    
     private static bool s_IndicesFilled = false;
     private static Vector4 _clearColor = new(1,1,1,1);
 
-    internal bool AddSprite(ENTTSpriteRenderer spriteRenderer)
+    static Batch2D()
     {
-        if(_quadCount >= c_maxBatchSize)
+        FillElementArray();
+    }
+    
+    internal bool AddSprite(Entity ent)
+    {
+        if(_quadCount >= c_maxBatchSize - 1)
             return false;
+        
         
         //TODO: ADD THE RIGHT PROPERTIES
         // Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
         
-        var pos           = spriteRenderer.Parent.GetComponent<ENTTTransformComponent>().Position;//spriteRenderer.Parent.Transform.Position;
-        var color         = new Vector4(1,1,1,1);//spriteRenderer.Color;
-        var textureCoords = new []{new Vector2(0,0), new Vector2(0,1), new Vector2(1,1), new Vector2(1,0)};//spriteRenderer.TextureCoords;
-        var textureID     = 1;//spriteRenderer.Sprite.Texture.TexID;
+        var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
         
-        LoadVertices(
-            new Vector3(pos.X, pos.Y, pos.X), color, textureCoords, textureID);
+        var pos            = ent.GetComponent<ENTTTransformComponent>().Position;//spriteRenderer.Parent.Transform.Position;
+        var color          = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
+        var textureCoords =spriteRenderer.TextureCoords;
+        var textureID          = -1;//spriteRenderer.Sprite.Texture.TexID;
         
-        _sprites.Add(spriteRenderer);
+        LoadVertices(_quadCount, new Vector3(pos.X, pos.Y, pos.X), color, textureCoords, textureID);
+        
+        _sprites.Add(ent);
+        _quadCount++;
+        return true;
+    }
+    
+    internal bool ChangeEntityAtIndex(int index)
+    {
+        var ent = _sprites[index];
+        //TODO: ADD THE RIGHT PROPERTIES
+        // Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
+        
+        var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
+        
+        var pos            = ent.GetComponent<ENTTTransformComponent>().Position;//spriteRenderer.Parent.Transform.Position;
+        var color          = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
+        var textureCoords = spriteRenderer.TextureCoords;
+        var textureID          = -1;//spriteRenderer.Sprite.Texture.TexID;
+        
+        LoadVertices(index, new Vector3(pos.X, pos.Y, pos.X), color, textureCoords, textureID);
         
         return true;
     }
@@ -63,11 +90,8 @@ internal class Batch2D : IComparable<Batch2D>
     {
         _shader = shader;
         _zIndex = zIndex;
-        
-        if(!s_IndicesFilled)
-            FillElementArray();
-        
-        CreateTempObjects();
+     
+        // CreateTempObjects();
         
         GL.CreateVertexArrays(1, out
             _quadVA);
@@ -103,7 +127,17 @@ internal class Batch2D : IComparable<Batch2D>
             Log.Error("Camera is not set!");
             return;
         }
+        
         bool rebufferData = true;
+        for (var i = 0; i < _quadCount; i++)
+            if (_sprites[i].IsDirty)
+            {
+                // _sprites[i].IsDirty = false;
+                ChangeEntityAtIndex(i);
+                rebufferData = true;
+            }
+
+        
         if (rebufferData)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, _quadVA);
@@ -116,44 +150,20 @@ internal class Batch2D : IComparable<Batch2D>
         _shader.uploadMat4f("u_projectionMatrix", camera.GetProjectionMatrix());
         
         GL.BindVertexArray(_quadVA);
-        GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
+        GL.DrawElements(PrimitiveType.Triangles, _quadCount * 6, DrawElementsType.UnsignedInt, 0);
         
         _shader.detach();
     }
     
-    private void CreateTempObjects()
+    private void LoadVertices(int index, Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID)
     {
+        // //     -.5f, -.5f, 0,  .18F, .6F, .96F, 1F,   0f, 0f,             0f,      
+        // //     .5f, -.5f, 0,   .18F, .6F, .96F, 1F,   1f, 0f,             0f,
+        // //     .5f, .5f, 0,    .18F, .6F, .96F, 1F,   1f, 1f,             0f,
+        // //     -.5f, .5f, 0,   .18F, .6F, .96F, 1F,   0f, 1f,             0f,
+        //
+        var offset =  index * 4 * c_vertexSize;
 
-        var defaultTextureCoords = new Vector2[4]
-        {
-            new Vector2(0f, 0f),
-            new Vector2(1f, 0f),
-            new Vector2(1f, 1f),
-            new Vector2(0f, 1f),
-        };
-        
-        for (int i = 0; i < 1; i++)
-        {
-            var texID = -1;
-            
-            LoadVertices(
-                new Vector3(0,0,0), 
-                new Vector4(1,1,1,1),
-                defaultTextureCoords, 
-                0
-                );
-            
-            _quadCount++;
-        }
-    }
-
-    private void LoadVertices(Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID)
-    {
-        //     -.5f, -.5f, 0,  .18F, .6F, .96F, 1F,   0f, 0f,             0f,      
-        //     .5f, -.5f, 0,   .18F, .6F, .96F, 1F,   1f, 0f,             0f,
-        //     .5f, .5f, 0,    .18F, .6F, .96F, 1F,   1f, 1f,             0f,
-        //     -.5f, .5f, 0,   .18F, .6F, .96F, 1F,   0f, 1f,             0f,
-        
         for (int i = 0; i < 4; i++)
         {
             float xaDD = 0;
@@ -182,7 +192,8 @@ internal class Batch2D : IComparable<Batch2D>
                     zaDD = 0;
                     break;
             }
-            var offset = c_vertexSize * _quadCount + i * c_vertexSize;
+            
+           
             var xPos = position.X + xaDD;
             var yPos = position.Y + yaDD;
             var zPos = position.Z + zaDD;
@@ -200,10 +211,12 @@ internal class Batch2D : IComparable<Batch2D>
             _vertices[offset + 8] = textureCoords[i].Y;
             
             _vertices[offset + 9] = textureID;
+            
+            offset+= c_vertexSize;
         }
     }
   
-    private void FillElementArray()
+    private static void FillElementArray()
     {
         // int[] _indices = new[]
         // {
@@ -214,7 +227,7 @@ internal class Batch2D : IComparable<Batch2D>
         //     6,7,4
         // };
         
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < c_maxBatchSize; i++)
         {
             var offsetArrayIndex = 6 * i;
             var offset = 4 * i;

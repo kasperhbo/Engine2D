@@ -50,54 +50,8 @@ internal static class Renderer
 
     internal static void Init()
     {
-        _batches.Add(new Batch2D());
-
-        var shader = new Shader("Shaders\\ShaderFiles\\testshader.vert", "Shaders\\ShaderFiles\\testshader.frag");
-        
-        foreach (var batch in _batches)
-        {
-            batch.Init(shader, 0);
-        }
-        
-        // GL.CreateVertexArrays(1, out
-        //     _quadVA);
-        // GL.BindVertexArray(_quadVA);
-        //
-        // GL.CreateBuffers(1, out int QuadVB);
-        // GL.BindBuffer(BufferTarget.ArrayBuffer, QuadVB);
-        // GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
-        //
-        // GL.EnableVertexArrayAttrib(QuadVB, 0);
-        // GL.VertexAttribPointer(0, c_posSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes, c_posOffset);
-        //
-        // GL.EnableVertexArrayAttrib(QuadVB, 1);
-        // GL.VertexAttribPointer(1, c_colorSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes, c_colorOffset);
-        //
-        // GL.EnableVertexArrayAttrib(QuadVB, 2);
-        // GL.VertexAttribPointer(2, c_texCoordSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes, c_texCoordOffset);
-        //   
-        // GL.EnableVertexArrayAttrib(QuadVB, 3);
-        // GL.VertexAttribPointer(3, c_texIDSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes, c_texIdOffset);
-        //
-        // int[] _indices = new[]
-        // {
-        //     0, 1, 2,
-        //     2, 3, 0,
-        //     
-        //     4,5,6,
-        //     6,7,4
-        // };
-        //
-        // GL.CreateBuffers(1, out int QuadIB);
-        // GL.BindBuffer(BufferTarget.ElementArrayBuffer, QuadIB);
-        // GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(int), _indices, BufferUsageHint.StaticDraw);
-        //
-        // //Load the shader
-        //
         EditorFrameBuffer = new TestFrameBuffer(1920, 1080);
         GameFrameBuffer = new TestFrameBuffer(1920, 1080);
-        // Texture texture = new Texture("Images\\TestImages\\512x512 Texel Density Texture 1.png");
-        // Texture texture2 = new Texture("Images\\TestImages\\512x512 Texel Density Texture 1.png");
     }
     
     
@@ -161,23 +115,7 @@ internal static class Renderer
 
     private static void RenderScene(Camera? camera)
     {
-        // if (camera == null)
-        // {
-        //     Log.Error("Camera is not set!");
-        //     return;
-        // }
-        //
-        // GL.ClearColor(_clearColor.X, _clearColor.Y, _clearColor.Z, _clearColor.W);
-        // GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-        //
-        // _shader.use();
-        // _shader.uploadMat4f("u_viewMatrix", camera.GetViewMatrix());
-        // _shader.uploadMat4f("u_projectionMatrix", camera.GetProjectionMatrix());
-        //
-        // GL.BindVertexArray(_quadVA);
-        // GL.DrawElements(PrimitiveType.Triangles, 12, DrawElementsType.UnsignedInt, 0);
-        //
-        // _shader.detach();
+        
     }
 
     internal static void Resize()
@@ -186,12 +124,12 @@ internal static class Renderer
         EditorFrameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
-    public static void AddSprite(ENTTSpriteRenderer spriteRenderer)
+    public static void AddSprite(Entity ent)
     {
         bool added = false;
         foreach (var batch in _batches)
         {
-            if (batch.AddSprite(spriteRenderer))
+            if (batch.AddSprite(ent))
             {
                 added = true;
                 break;
@@ -200,16 +138,19 @@ internal static class Renderer
 
         if (!added)
         {
-            _batches.Add(new Batch2D());
-            _batches[^1]
-                .Init(new Shader("Shaders\\ShaderFiles\\testshader.vert", "Shaders\\ShaderFiles\\testshader.frag"),
-                    _batches.Count - 1);
-            _batches[^1].AddSprite(spriteRenderer);
+            var batch = new Batch2D();
+            _batches.Add(batch);
+            batch
+                .Init(new Shader(
+                        "Shaders\\ShaderFiles\\testshader.vert",
+                        "Shaders\\ShaderFiles\\testshader.frag"),
+                    0);
+            batch.AddSprite(ent);
         }
     }
 
-    public static void RemoveSprite(ENTTSpriteRenderer enttSpriteRenderer)
+    public static void RemoveSprite(Entity enttSpriteRenderer)
     {
-        
+        throw new NotImplementedException();
     }
 }

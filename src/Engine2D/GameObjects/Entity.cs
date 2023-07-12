@@ -1,19 +1,25 @@
 ﻿using Engine2D.Components.ENTT;
 using Engine2D.Core;
 using Engine2D.Managers;
+using Engine2D.Rendering.NewRenderer;
 using Engine2D.Scenes;
 using Engine2D.UI.ImGuiExtension;
 using EnTTSharp.Entities;
 using ImGuiNET;
 using Newtonsoft.Json;
 using Serilog;
+using Vortice.DXGI;
 
 public class Entity : Asset
 {
+    //Serialized
     [JsonProperty]public int UUID = -1;
     
+    //Runtime
     [JsonIgnore]public EntityKey m_EntityHandle;
-    private Scene m_Scene = null;
+    [JsonIgnore]public bool IsDirty = true;
+    
+    [JsonIgnore]private Scene m_Scene = null;
 
     public Entity(EntityKey handle, Scene scene, int uuid)
     {
@@ -23,6 +29,7 @@ public class Entity : Asset
         
         Init();
     }
+
 
     private void Init()
     {
@@ -103,8 +110,7 @@ public class Entity : Asset
         {
             if (ImGui.MenuItem("Sprite Renderer"))
             {
-                var comp = new ENTTSpriteRenderer();
-                comp.SetParent(this);
+                var comp = new ENTTSpriteRenderer(this.UUID);
                 AddComponent(comp);
                 ImGui.CloseCurrentPopup();
             }
@@ -167,9 +173,9 @@ public class Entity : Asset
             Gui.DrawTable("Sprite Renderer", () =>
             {
                 //Just for testing if parenting is working
-                Gui.DrawProperty("Parent UUID: " + spriteRenderer.Parent.UUID.ToString());
+                Gui.DrawProperty("Parent UUID: " + spriteRenderer.Parent?.UUID.ToString());
                 
-                if (Gui.DrawProperty("Color", ref spriteRenderer.Color))
+                if (Gui.DrawProperty("Color", ref spriteRenderer.Color, isColor:true))
                 {
                     SetComponent(spriteRenderer);
                 }

@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Numerics;
 using Engine2D.Components.Cameras;
 using Engine2D.Components.ENTT;
 using Engine2D.Core;
@@ -62,6 +63,8 @@ public class Scene
     /// <param name="scenePath"></param>
     internal virtual void Init(string scenePath)
     {
+        Renderer.Init();
+        
         CreateEntityRegistry();
 
         ScenePath = scenePath;
@@ -76,9 +79,34 @@ public class Scene
         if (Settings.s_IsEngine)
             CreateEditorCamera();
 
-        Renderer.Init();
+        bool createbigfatlist = false;
+        if(createbigfatlist)
+            CreateTempObjects();
+
     }
 
+    private void CreateTempObjects()
+    {
+        for (int x = 0; x < 400; x++)
+        {
+            for (int y = 0; y < 400; y++)
+            {
+                var entity = CreateEntity("new entity " + x + " / " + y);
+                
+                var transform = entity.GetComponent<ENTTTransformComponent>();
+                transform.Position.X = x;
+                transform.Position.Y = y;
+                entity.SetComponent<ENTTTransformComponent>(transform);
+                
+                ENTTSpriteRenderer spriteRenderer = new();
+                //Color based on x and y
+                spriteRenderer.Color = new Vector4(x/100f, y/100f, 0, 1);
+                
+                entity.AddComponent(spriteRenderer);
+            }
+        }        
+    }
+    
     private void CreateEntityRegistry()
     {
         EntityRegistry =  
@@ -96,6 +124,8 @@ public class Scene
         // CreateEntity("test2");
     }
 
+    #region Creating entities
+    
     internal Entity CreateEntity(int uuid)
     {
         var key = EntityRegistry.Create();
@@ -109,6 +139,10 @@ public class Scene
     {
         var key = EntityRegistry.Create();
         Entity en = new Entity(key,this, -1);
+        
+        en.AddComponent(new ENTTTagComponent("New Entity"+Entities.Count));
+        en.AddComponent(new ENTTTransformComponent());
+        
         Entities.Add(en);
         return en;
     }
@@ -126,7 +160,9 @@ public class Scene
         
         return en;
     }
-
+    
+    #endregion
+    
     /// <summary>
     /// Runs every frame
     /// </summary>
@@ -147,21 +183,6 @@ public class Scene
             GameFixedUpdate();
         }
         
-        //TEMP CODE
-        if (Input.KeyDown(Keys.P))
-        {
-            EntityRegistry.GetComponent<ENTTTransformComponent>(
-                Entities[0].m_EntityHandle, out ENTTTransformComponent transform);
-            
-            transform.Position.X += 1;
-            
-            Entities[0].SetComponent<ENTTTransformComponent>(transform);
-        }
-
-        if (Input.KeyPressed(Keys.A))
-        {
-            CreateEntity("test"+Entities.Count);
-        }
         
         AfterUpdate();
     }
@@ -296,5 +317,15 @@ public class Scene
     internal Camera GetEditorCamera()
     {
         return _editorCamera ??= new Camera();
+    }
+
+    public Entity? FindEntityByUUID(int parentUuid)
+    {
+        foreach (var ent in Entities)
+        {
+            if (ent.UUID == parentUuid) return ent;
+        }
+
+        return null;
     }
 }

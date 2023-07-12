@@ -149,7 +149,7 @@ public static class SaveLoad
     
     internal static void SaveScene(Scene scene)
     {
-        Log.Message("Saving: " + scene.ScenePath);
+            Log.Message("Saving: " + scene.ScenePath);
             
             // Serialize the EntityRegistry to a JSON string
             // string json = JsonConvert.SerializeObject(registry, Formatting.Indented);
@@ -254,9 +254,6 @@ public static class SaveLoad
                 // Deserialize each component and add it to the entity
                 Type componentType = Type.GetType(componentTypeName);
                 object component = JsonConvert.DeserializeObject(serializedComponent, componentType);
-
-                //skip entity component
-                if (component is Entity) return;
                 
                 if(component is ENTTTransformComponent transformComponent)
                     entity.AddComponent(transformComponent);
@@ -264,11 +261,12 @@ public static class SaveLoad
                     entity.AddComponent(tagComponent);
                 else if(component is ENTTSpriteRenderer spriteRenderer)
                 {
-                    spriteRenderer.SetParent(entity);
                     entity.AddComponent(spriteRenderer);
                 }
                 else
+                {
                     Log.Error("Component not found: " + component.GetType().FullName);
+                }
                 
             }
         }

@@ -146,7 +146,7 @@ internal static class Gui
         value.W = v.W;
     }
 
-    internal static bool DrawProperty(string label, ref Vector4 value)
+    internal static bool DrawProperty(string label, ref Vector4 value, bool isColor = false)
     {
         bool pressed = false;
         PushID(label);
@@ -154,7 +154,14 @@ internal static class Gui
         TableSetColumnIndex(0);
         Text(label);
         TableSetColumnIndex(1);
-        if (Vector4Prop(ref value)) pressed = true;
+        if (isColor)
+        {
+            if(ColorEdit4("##pickcolor"+label,ref value )) pressed = true;
+        }
+        else
+        {
+            if (Vector4Prop(ref value)) pressed = true;
+        }
         PopID();
         return pressed;
     }

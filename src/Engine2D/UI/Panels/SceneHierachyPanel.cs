@@ -140,14 +140,10 @@ internal class SceneHierachyPanel : UIElement
             {
                 if (ImGui.BeginPopupContextWindow("p"))
                 {
-                    // if (ImGui.MenuItem("New Empty"))
-                    //     Engine.Get().CurrentScene.AddGameObjectToScene(new Gameobject("Empty"));
-                    //
-                    // if (ImGui.MenuItem("New SpriteRenderer"))
-                    //     Engine.Get().CurrentScene.AddGameObjectToScene(new SpriteRendererGo("SpriteRenderer"));
-                    //
-                    // if (ImGui.MenuItem("New Game Camera"))
-                    //     Engine.Get().CurrentScene.AddGameObjectToScene(new CameraGO("Camera"));
+                    if (ImGui.MenuItem("New Gameobject"))
+                    {
+                        Engine.Get().CurrentScene.CreateEntity();
+                    }
                 }
             }
             ImGui.EndChild();
@@ -157,8 +153,6 @@ internal class SceneHierachyPanel : UIElement
                 if (payload.IsValidPayload())
                 {
                     var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
-                    // var prefab = SaveLoad.LoadGameobject(filename);
-                    // Engine.Get().CurrentScene.AddGameObjectToScene(prefab);
                 }
                 ImGui.EndDragDropTarget();
             }
