@@ -14,94 +14,33 @@ public static class SceneControls
 {
     public static void Update(FrameEventArgs args)
     {
+        Camera editorCamera = Engine.Get().CurrentScene.GetEditorCamera();
+        editorCamera.Update(args.Time);
+
        KeyControls(args);
        MouseControls();
     }
-    
-    private static void KeyControls(FrameEventArgs args){
-        Camera editorCamera = Engine.Get().CurrentScene.GetEditorCamera();
 
-        if (editorCamera != null)
-        {
-            var multiplier = 1;
-            if (Input.KeyDown(Keys.LeftShift))
-            {
-                multiplier = 4;
-            }
-            // if (Input.KeyDown(Keys.Left))
-            // {
-            //     editorCamera.Parent.Transform.Position.X -= (100*multiplier)*(float)args.Time;
-            // }
-            // if (Input.KeyDown(Keys.Right))
-            // {
-            //     editorCamera.Parent.Transform.Position.X += (100*multiplier)*(float)args.Time;
-            // }
-            // if (Input.KeyDown(Keys.Up))
-            // {
-            //     editorCamera.Parent.Transform.Position.Y += (100*multiplier)*(float)args.Time;
-            // }
-            // if (Input.KeyDown(Keys.Down))
-            // {
-            //     editorCamera.Parent.Transform.Position.Y -= (100*multiplier)*(float)args.Time;
-            // }
-        }
+    private static void KeyControls(FrameEventArgs args)
+    {
         
-        if (Engine.Get().CurrentSelectedAsset != null)
-        { 
-            if(editorCamera != null)
-            {
-                // var go = (Gameobject)Engine.Get().CurrentSelectedAsset;
-                // if (Input.KeyPressed(Keys.F))
-                // {
-                //     if (Input.KeyDown(Keys.LeftControl))
-                //     {
-                //         go.Transform.Position = editorCamera.Parent.Transform.Position;
-                //     }
-                //     else
-                //     {
-                //          editorCamera.Parent.Transform.Position = go.Transform.Position;
-                //     }
-                // }
-                //
-                // if (Input.KeyDown(Keys.LeftControl))
-                // {
-                //     if (Input.KeyPressed(Keys.C))
-                //     {
-                //         Gameobject? go2 = (Gameobject)go.Clone(-1);
-                //         go2.Name = go.Name + go.UID;
-                //         Engine.Get().CurrentScene.AddGameObjectToScene(go2);
-                //     }
-                // }
-            }
-        }
-
-
     }
 
     private static void MouseControls()
     {
-        // if (Input.MousePressed(MouseButton.Left) && !ImGui.IsMouseDragging(ImGuiMouseButton.Left))
-        // {
-        //     if(UiRenderer.CurrentEditorViewport.IsFocused())
-        //     {                
-        //         var mouseScreenPos = Input.MouseEditorPos;
-        //         for (int i = 0; i < Engine.Get().CurrentScene.GameObjects.Count; i++)
-        //         {
-        //             var go = Engine.Get().CurrentScene.GameObjects[i];
-        //             if (go.AABB(mouseScreenPos.X, mouseScreenPos.Y))
-        //             {
-        //                 Engine.Get().CurrentSelectedAsset = go;
-        //                 break;
-        //             }
-        //         }
-        //     }
-        // }
+       
     }
 
 
     private static MODE _currentMode = MODE.WORLD;
     private static OPERATION _currentOperation = OPERATION.TRANSLATE;
     
+    /// <summary>
+    /// ImGuizmo controls
+    /// </summary>
+    /// <param name="vpOrigin"></param>
+    /// <param name="vpSize"></param>
+    /// <param name="vpCam"></param>
     internal static void GuizmoControls(Vector2 vpOrigin, Vector2 vpSize, Camera vpCam)
     {
         try
@@ -168,7 +107,9 @@ public static class SceneControls
                     }
 
                     if (_currentOperation == OPERATION.ROTATE)
+                    {
                         selectedGo.SetComponent<ENTTTransformComponent>(transform);
+                    }
                     //
                     // if (_currentOperation == OPERATION.SCALE)
                     //     selectedGo.GetComponent<Transform>().Size = new Vector2(outScale.X, outScale.Y);

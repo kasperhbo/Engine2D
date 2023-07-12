@@ -254,7 +254,7 @@ public static class SaveLoad
             Entity entityClone = (Entity) obj;
             
             // Create a new entity
-            var entity = scene.CreateEntity(entityClone.UUID);
+            var entity = scene.CreateEntity(entityClone.UUID, entityClone.IsStatic);
             
             foreach (var componentProperty in serializedEntity.Properties())
             {

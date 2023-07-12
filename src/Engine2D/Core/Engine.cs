@@ -144,7 +144,7 @@ namespace Engine2D.Core
 
             AssignDefaultEvents();
 
-            SwitchScene(ProjectSettings.FullProjectPath + "\\newrenderertest.kdbscene");
+            SwitchScene(ProjectSettings.FullProjectPath + "\\renderbatchtest.kdbscene");
 
             if (Settings.s_IsEngine)
                 UiRenderer.Init(this, true);
@@ -213,8 +213,8 @@ public static class Settings
 {
     public static bool s_IsEngine = true;
     public static bool s_RenderDebugWindowSeperate = true;
-    public static float GRID_WIDTH = 16;
-    public static float GRID_HEIGHT = 16;
+    public static float GRID_WIDTH = 1;
+    public static float GRID_HEIGHT = 1;
 }
 
 //Project settings

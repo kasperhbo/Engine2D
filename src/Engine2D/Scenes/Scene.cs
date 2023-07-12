@@ -36,6 +36,7 @@ public class Scene
     [JsonIgnore]private double _totalTime = 0;
     [JsonIgnore]private bool _isPlaying;
     [JsonIgnore]private Camera? _editorCamera = null;
+    [JsonIgnore]private bool _saveScene = true;
     
     internal bool IsPlaying
     {
@@ -107,7 +108,6 @@ public class Scene
 
                 spriteRenderer.ParentUUID = entity.UUID;
                 spriteRenderer.Color = new Vector4(x/100f, y/100f, 0, 1);
-                
                 entity.SetComponent(spriteRenderer);
             }
         }        
@@ -130,10 +130,10 @@ public class Scene
         // CreateEntity("test2");
     }
 
-    internal Entity CreateEntity(int uuid)
+    internal Entity CreateEntity(int uuid, bool isStatic)
     {
         var key = EntityRegistry.Create();
-        Entity en = new Entity(key, this, uuid);
+        Entity en = new Entity(key, this, uuid, isStatic);
         
         Entities.Add(en);
         return en;
@@ -247,6 +247,8 @@ public class Scene
 
     internal virtual void Close()
     {
+        if(!_saveScene)return;
+        
         if (EngineSettings.SaveOnClose && !IsPlaying)
             SaveLoad.SaveScene(this);
         

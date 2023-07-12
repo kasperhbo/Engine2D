@@ -8,18 +8,26 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Engine2D.Rendering.NewRenderer;
 
-internal class Batch2D : IComparable<Batch2D>
+internal class Batch2D
 {
     private int _zIndex;
     private Shader _shader;
 
     private List<Entity> _sprites = new();
     
-   
-    
-    private int _quadVA = 0;
     private int _quadCount = 0;
+    private int _vaoId, _vboId;
+
+    private float[] _vertices      = new float[(c_vertexSize * 4) * c_maxBatchSize];
     
+    private Vector2[] _defCoords = new Vector2[4]
+    {
+        new Vector2(0f, 0f),
+        new Vector2(1f, 0f),
+        new Vector2(1f, 1f),
+        new Vector2(0f, 1f),
+    };
+
     private const int c_maxBatchSize = 1000;
     
     private const int c_posSize = 3;
@@ -34,13 +42,10 @@ internal class Batch2D : IComparable<Batch2D>
     
     private const int c_vertexSize = 10;
     private const int c_vertexSizeInBytes = c_vertexSize * sizeof(float);
-
-    private static int[] s_Indices = new int  [c_maxBatchSize * 6];
-    private float[] _vertices      = new float[(c_vertexSize * 4) * c_maxBatchSize];
     
-    private static bool s_IndicesFilled = false;
-    private static Vector4 _clearColor = new(1,1,1,1);
-    private static Vector4[] _quadVertexPositions =
+    private static int[] s_Indices = new int[6 * c_maxBatchSize];
+    private bool s_IndicesFilled = false;
+    private Vector4[] _quadVertexPositions =
     {
         new(-0.5f, -0.5f, 0.0f, 1.0f),
         new(0.5f,  -0.5f, 0.0f, 1.0f),
@@ -48,47 +53,26 @@ internal class Batch2D : IComparable<Batch2D>
         new(-0.5f,  0.5f, 0.0f, 1.0f)
     };
     
-    private Vector2[] _defCoords = new Vector2[4]
-    {
-        new Vector2(0f, 0f),
-        new Vector2(1f, 0f),
-        new Vector2(1f, 1f),
-        new Vector2(0f, 1f),
-    };
-
-
-    static Batch2D()
-    {
-        FillElementArray();
-    }
+    public bool HasRoom => _quadCount < c_maxBatchSize;
     
-    internal bool AddSprite(Entity ent)
+    internal void AddSprite(Entity ent)
     {
-        if(_quadCount >= c_maxBatchSize - 1)
-            return false;
-        
-        //
-        // //TODO: ADD THE RIGHT PROPERTIES
-        //Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
-        
         var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
         
-        var transform            = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
+        var transform           = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
         var color                 = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
         var textureCoords       = spriteRenderer.TextureCoords;
         var textureID                 = -1;//spriteRenderer.Sprite.Texture.TexID;
         
         LoadVertices(_quadCount, transform, color, textureCoords, textureID);
         
-        
         _sprites.Add(ent);
-        // ChangeEntityAtIndex(_quadCount);
         _quadCount++;
-        return true;
     }
     
     internal bool ChangeEntityAtIndex(int index)
     {
+        // return true;
         var ent = _sprites[index];
         //TODO: ADD THE RIGHT PROPERTIES
         // Vector3 position, Vector4 color, Vector2[] textureCoords,int textureID
@@ -98,7 +82,7 @@ internal class Batch2D : IComparable<Batch2D>
         var transform            = ent.GetComponent<ENTTTransformComponent>().Transform;//spriteRenderer.Parent.Transform.Position;
         var color          = spriteRenderer.Color;//new Vector4(1,1,1,1);//spriteRenderer.Color;//spriteRenderer.Color;
         var textureCoords = spriteRenderer.TextureCoords;
-        var textureID          = -1;//spriteRenderer.Sprite.Texture.TexID;
+        float textureID          = -1;//spriteRenderer.Sprite.Texture.TexID;
         
         LoadVertices(index, transform, color, textureCoords, textureID);
         
@@ -107,38 +91,97 @@ internal class Batch2D : IComparable<Batch2D>
     
     internal void Init(Shader shader, int zIndex)
     {
+        if(!s_IndicesFilled)
+        {
+            s_Indices = GenerateIndices();
+            s_IndicesFilled = true;
+        }
+        
         _shader = shader;
         _zIndex = zIndex;
-     
-        // CreateTempObjects();
         
-        GL.CreateVertexArrays(1, out
-            _quadVA);
-        GL.BindVertexArray(_quadVA);
+        // CreateTestObjects();
+
+        _vaoId  = GL.GenVertexArray();
+        GL.BindVertexArray(_vaoId );
         
-        GL.CreateBuffers(1, out int QuadVB);
-        GL.BindBuffer(BufferTarget.ArrayBuffer, QuadVB);
-        GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
+        // GL.CreateBuffers(1, out int QuadVB);
+        _vboId = GL.GenBuffer(); 
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _vboId);
+        GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices,
+            BufferUsageHint.DynamicDraw);
+
+        var eboID  = GL.GenBuffer();//GL.CreateBuffers(1, out int );
         
-        GL.EnableVertexArrayAttrib(QuadVB, 0);
-        GL.VertexAttribPointer(0, c_posSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes, c_posOffset);
-        
-        GL.EnableVertexArrayAttrib(QuadVB, 1);
-        GL.VertexAttribPointer(1, c_colorSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes, c_colorOffset);
-        
-        GL.EnableVertexArrayAttrib(QuadVB, 2);
-        GL.VertexAttribPointer(2, c_texCoordSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes, c_texCoordOffset);
-          
-        GL.EnableVertexArrayAttrib(QuadVB, 3);
-        GL.VertexAttribPointer(3, c_texIDSize, VertexAttribPointerType.Float, false, c_vertexSizeInBytes, c_texIdOffset);
-        
-        //
-        GL.CreateBuffers(1, out int QuadIB);
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, QuadIB);
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, eboID); 
         GL.BufferData(BufferTarget.ElementArrayBuffer,
-            s_Indices.Length * sizeof(int), s_Indices, BufferUsageHint.DynamicDraw);
+            s_Indices.Length * sizeof(int), s_Indices, BufferUsageHint.StaticDraw);
+        
+        GL.EnableVertexAttribArray(0);
+        GL.VertexAttribPointer(0, c_posSize,
+            VertexAttribPointerType.Float, false, 
+            c_vertexSizeInBytes, c_posOffset);
+        
+        GL.EnableVertexAttribArray(1);
+        GL.VertexAttribPointer(1, c_colorSize, 
+            VertexAttribPointerType.Float, false, 
+            c_vertexSizeInBytes, c_colorOffset);
+        
+        GL.EnableVertexAttribArray(2);
+        GL.VertexAttribPointer(2, c_texCoordSize,
+            VertexAttribPointerType.Float, false, 
+            c_vertexSizeInBytes, c_texCoordOffset);
+          
+        GL.EnableVertexAttribArray(3);
+        GL.VertexAttribPointer(3, c_texIDSize, 
+            VertexAttribPointerType.Float, false,
+            c_vertexSizeInBytes, c_texIdOffset);
     }
 
+    private int[] GenerateIndices()
+    {
+        // 6 indices per quad (3 per triangle)
+        var elements = new int[6 * c_maxBatchSize];
+
+        for (var i = 0; i < c_maxBatchSize; i++) loadElementIndices(elements, i);
+
+        return elements;
+    }
+    
+
+    private void loadElementIndices(int[] elements, int index)
+    {
+        var offsetArrayIndex = 6 * index;
+        var offset = 4 * index;
+
+        // 3, 2, 0, 0, 2, 1        7, 6, 4, 4, 6, 5
+        // Triangle 1
+        elements[offsetArrayIndex] = offset + 3;
+        elements[offsetArrayIndex + 1] = offset + 2;
+        elements[offsetArrayIndex + 2] = offset + 0;
+
+        // Triangle 2
+        elements[offsetArrayIndex + 3] = offset + 0;
+        elements[offsetArrayIndex + 4] = offset + 2;
+        elements[offsetArrayIndex + 5] = offset + 1;
+    }
+
+    private void CreateTestObjects()
+    {
+        for (int i = 0; i < 1; i++)
+        {
+            Vector3 pos = new Vector3(Renderer.Batches.Count, 0, 0);
+            Console.WriteLine(pos.X);
+            Matrix4x4 Transform =   Matrix4x4.CreateScale(1,1, 1) *
+                                    Matrix4x4.CreateFromQuaternion(Quaternion.Identity) *
+                                    Matrix4x4.CreateTranslation(pos.X, pos.Y, 0);
+            
+            LoadVertices(_quadCount, Transform, 
+                new Vector4(1,0,0,1), _defCoords, -1);
+            _quadCount++;
+        }
+    }
+    
     internal void Render(Camera camera)
     {
         if (camera == null)
@@ -151,7 +194,7 @@ internal class Batch2D : IComparable<Batch2D>
         for (var i = 0; i < _quadCount; i++)
             if (_sprites[i].IsDirty)
             {
-                Log.Message("IsDirty: " + i);
+                //Log.Message("IsDirty: " + _sprites[i].GetComponent<ENTTTagComponent>().Tag);
                 _sprites[i].IsDirty = false;
                 ChangeEntityAtIndex(i);
                 rebufferData = true;
@@ -160,7 +203,7 @@ internal class Batch2D : IComparable<Batch2D>
         
         if (rebufferData)
         {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _quadVA);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vboId);
             GL.BufferSubData(BufferTarget.ArrayBuffer, 
                 IntPtr.Zero, _vertices.Length * sizeof(float), _vertices);
         }
@@ -169,13 +212,26 @@ internal class Batch2D : IComparable<Batch2D>
         _shader.uploadMat4f("u_viewMatrix", camera.GetViewMatrix());
         _shader.uploadMat4f("u_projectionMatrix", camera.GetProjectionMatrix());
         
-        GL.BindVertexArray(_quadVA);
+        // GL.BindVertexArray(_quadVA);
+
+        GL.BindVertexArray(_vaoId);
+        GL.EnableVertexAttribArray(0);
+        GL.EnableVertexAttribArray(1);
+        GL.EnableVertexAttribArray(2);
+        GL.EnableVertexAttribArray(3);
+        
         GL.DrawElements(PrimitiveType.Triangles, _quadCount * 6, DrawElementsType.UnsignedInt, 0);
         
+        GL.DisableVertexAttribArray(0);
+        GL.DisableVertexAttribArray(1);
+        GL.DisableVertexAttribArray(2);
+        GL.DisableVertexAttribArray(3);
+        GL.BindVertexArray(0);
+
         _shader.detach();
     }
     
-    private void LoadVertices(int index, Matrix4x4 transform, Vector4 color, Vector2[]? textureCoords,int textureID)
+    private void LoadVertices(int index, Matrix4x4 transform, Vector4 color, Vector2[]? textureCoords,float textureID)
     {
         // //     -.5f, -.5f, 0,  .18F, .6F, .96F, 1F,   0f, 0f,             0f,      
         // //     .5f, -.5f, 0,   .18F, .6F, .96F, 1F,   1f, 0f,             0f,
@@ -213,13 +269,15 @@ internal class Batch2D : IComparable<Batch2D>
             //         zaDD = 0;
             //         break;
             // }
-            
+            //
            
             var currentPos = MathUtils.Multiply(transform, _quadVertexPositions[i]); //quadVertexPositions[0] * translation;
-            
-            // var xPos = //position.X + xaDD;
-            // var yPos = //position.Y + yaDD;
-            // var zPos = //position.Z + zaDD;
+
+            // Vector3 currentPos = new();
+            // Vector3 position = new(transform.M41, transform.M42, transform.M43);
+            // currentPos.X = position.X + xaDD;
+            // currentPos.Y = position.Y + yaDD;
+            // currentPos.Z = position.Z + zaDD;
             //
             _vertices[offset]     = currentPos.X;
             _vertices[offset + 1] = currentPos.Y;
@@ -241,49 +299,5 @@ internal class Batch2D : IComparable<Batch2D>
             offset+= c_vertexSize;
         }
     }
-  
-    private static void FillElementArray()
-    {
-        // int[] _indices = new[]
-        // {
-        //     0, 1, 2, // first triangle
-        //     2, 3, 0,
-        //     
-        //     4,5,6,  // second triangle
-        //     6,7,4
-        // };
-        
-        for (int i = 0; i < c_maxBatchSize; i++)
-        {
-            var offsetArrayIndex = 6 * i;
-            var offset = 4 * i;
 
-            // 3, 2, 0, 0, 2, 1        7, 6, 4, 4, 6, 5
-            // Triangle 1
-            s_Indices[offsetArrayIndex] = offset + 0;
-            s_Indices[offsetArrayIndex + 1] = offset + 1;
-            s_Indices[offsetArrayIndex + 2] = offset + 2;
-
-            // Triangle 2
-            s_Indices[offsetArrayIndex + 3] = offset + 2;
-            s_Indices[offsetArrayIndex + 4] = offset + 3;
-            s_Indices[offsetArrayIndex + 5] = offset + 0;
-        }
-        
-        Batch2D.s_IndicesFilled= true;
-    }
-    
-
-    public int CompareTo(Batch2D? other)
-    {
-        if (_zIndex < other._zIndex)
-            return -1;
-
-        if (_zIndex == other._zIndex)
-            return 0;
-
-        return 1;
-    }
-
-    
 }

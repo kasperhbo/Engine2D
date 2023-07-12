@@ -15,17 +15,20 @@ public class Entity : Asset
 {
     //Serialized
     [JsonProperty]public int UUID = -1;
+    [JsonProperty]public bool IsStatic = true;
     
     //Runtime
     [JsonIgnore]public EntityKey m_EntityHandle;
-    [JsonIgnore]public bool IsDirty = false;
+    [JsonIgnore]public bool IsDirty = true;
     
     [JsonIgnore]private Scene m_Scene = null;
     [JsonIgnore]private Vector2 _lastPosition = Vector2.Zero;
     
     [JsonIgnore]private Vector2 _lastScale = Vector2.One;
-
-    public Entity(EntityKey handle, Scene scene, int uuid)
+    [JsonIgnore]private Quaternion _lastRotation = new();
+    
+    
+    public Entity(EntityKey handle, Scene scene, int uuid, bool isStatic = false)
     {
         m_EntityHandle = handle;
         m_Scene = scene;
@@ -33,31 +36,6 @@ public class Entity : Asset
         
         Init();
     }
-
-    /// <summary>
-    /// Runs every frame, not depended on play mode or not
-    /// <param name="dt">delta time</param>
-    /// </summary>
-    public void Update(double dt)
-    {
-        var pos = this.GetComponent<ENTTTransformComponent>().Position;
-        if(pos.X != _lastPosition.X || pos.Y != _lastPosition.Y)
-        {
-            IsDirty = true;
-            _lastPosition = this.GetComponent<ENTTTransformComponent>().Position;
-        }
-        // if(this.GetComponent<ENTTTransformComponent>().Rotation.Z != _lastRotation.Z)
-        // {
-        //     IsDirty = true;
-        //     _lastRotation = this.GetComponent<ENTTTransformComponent>().Rotation;
-        // }
-        // if(this.GetComponent<ENTTTransformComponent>().Scale != _lastScale)
-        // {
-        //     IsDirty = true;
-        //     _lastScale = this.GetComponent<ENTTTransformComponent>().Scale;
-        // }
-    }
-
 
     private void Init()
     {
@@ -71,6 +49,41 @@ public class Entity : Asset
         }
     }
 
+    /// <summary>
+    /// Runs every frame, not depended on play mode or not
+    /// <param name="dt">delta time</param>
+    /// </summary>
+    public void Update(double dt)
+    {
+        CheckForDirty();
+    }
+
+    /// <summary>
+    /// Check if location changed since last frame
+    /// Only used for non static entities
+    /// </summary>
+    private void CheckForDirty()
+    {
+        if (IsStatic) return;
+        var pos = this.GetComponent<ENTTTransformComponent>().Position;
+        if(pos.X != _lastPosition.X || pos.Y != _lastPosition.Y)
+        {
+            IsDirty = true;
+            _lastPosition = this.GetComponent<ENTTTransformComponent>().Position;
+        }
+        if(this.GetComponent<ENTTTransformComponent>().Rotation != _lastRotation)
+        {
+            IsDirty = true;
+            _lastRotation = this.GetComponent<ENTTTransformComponent>().Rotation;
+        }
+        if(this.GetComponent<ENTTTransformComponent>().Scale != _lastScale)
+        {
+            IsDirty = true;
+            _lastScale = this.GetComponent<ENTTTransformComponent>().Scale;
+        }
+    }
+
+    
     public T? AddComponent<T>(T? component)
     {
         if (m_Scene == null)
@@ -91,7 +104,8 @@ public class Entity : Asset
 
     public void SetComponent<T>(T component)
     {
-
+        IsDirty = true;
+        
         RemoveComponent<T>();
 
         m_Scene.EntityRegistry.AssignComponent(m_EntityHandle, component);
@@ -177,7 +191,8 @@ public class Entity : Asset
             var transform = GetComponent<ENTTTransformComponent>();
             Gui.DrawTable("Transform", () =>
             {
-                if(Gui.DrawProperty("Position", ref transform.Position)){
+                if(Gui.DrawProperty("Position", ref transform.Position))
+                {
                     SetComponent(transform);
                 }
                 
@@ -185,7 +200,9 @@ public class Entity : Asset
                 //     SetComponent(transform);
                 // }
                 if(Gui.DrawProperty("Scale", ref transform.Scale)){
-                    SetComponent(transform);
+                    {
+                        SetComponent(transform);
+                    }
                 }
             });
 

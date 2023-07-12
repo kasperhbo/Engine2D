@@ -2,7 +2,9 @@
 
 using System.Numerics;
 using Engine2D.Components.ENTT;
+using Engine2D.Core.Inputs;
 using Newtonsoft.Json;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
@@ -67,6 +69,43 @@ public class Camera
         if (CameraType == CameraTypes.Perspective) throw new NotImplementedException();
 
         return projectionMatrix;
+    }
+
+    //Temp for camera controls
+    internal void Update(double dt)
+    {
+        //Update camera position based on user input
+        var position = TransformComponent.Position;
+
+        // if (Input.MouseScroll())
+        // {
+        //     _size += Input.MouseScrollDelta().Y * 0.1f;
+        // }
+        //
+        if (Input.KeyDown(Keys.Up))
+        {
+            position.Y += 100 * (float) dt;
+        }
+        
+        if (Input.KeyDown(Keys.Down))
+        {
+            position.Y -= 100 * (float) dt;
+        }
+        
+        if (Input.KeyDown(Keys.Left))
+        {
+            position.X -= 100 * (float) dt;
+        }
+        
+        if (Input.KeyDown(Keys.Right))
+        {
+            position.X += 100 * (float) dt;
+        }
+
+        TransformComponent = new ENTTTransformComponent()
+        {
+            Position =  position
+        };
     }
 }
 

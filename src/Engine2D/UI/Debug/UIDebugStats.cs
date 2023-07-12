@@ -1,4 +1,5 @@
 ﻿using Engine2D.Core;
+using Engine2D.Rendering.NewRenderer;
 using Engine2D.Scenes;
 using ImGuiNET;
 using OpenTK.Windowing.Common;
@@ -23,6 +24,8 @@ public class UIDebugStats
         
         //ImGui.Checkbox("Render",                 ref Renderer.RenderEverything);
         //ImGui.Checkbox("Debug Render",           ref Renderer.DebugRender);
+        
+        ImGui.Text($"Render batches: {Renderer.Batches.Count}");
         
         ImGui.Text     ($"Draw Calls:                  {DebugStats.DrawCalls}"                );
         ImGui.Text     ($"Sprites Drawn:               {DebugStats.SpritesDrawn}"             );
