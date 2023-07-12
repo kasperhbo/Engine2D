@@ -40,6 +40,6 @@ void main(){
          texColor = v_color;
         break;
     }
-        
+    
      fragColor = texColor;
 }

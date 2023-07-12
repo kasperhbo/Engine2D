@@ -93,7 +93,9 @@ internal static class Renderer
     private static void RenderEditorbuffer()
     {
         EditorFrameBuffer.Bind();
-     
+        
+        GL.Enable(EnableCap.Blend);
+        GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
         GL.ClearColor(ClearColor.X, ClearColor.Y, ClearColor.Z, ClearColor.W);
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
   
@@ -112,15 +114,19 @@ internal static class Renderer
             batch.Render(cam);
         }
         
+        GL.Disable(EnableCap.Blend);
         EditorFrameBuffer.UnBind();
     }
 
     private static void RenderGamebuffer()
     {
         GameFrameBuffer.Bind();
-        GL.ClearColor(ClearColor.X, ClearColor.Y, ClearColor.Z, ClearColor.W);
-        GL.Clear(ClearBufferMask.ColorBufferBit);
 
+        
+        // GL.Enable(EnableCap.Blend);
+        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+        
+        
         var cam = Engine.Get().CurrentScene.GetMainCamera();
         if (cam == null)
         {
@@ -131,6 +137,8 @@ internal static class Renderer
         {
             batch.Render(Engine.Get().CurrentScene.GetMainCamera());
         }
+        
+        GL.Disable(EnableCap.Blend);
         GameFrameBuffer.UnBind();
     }
 

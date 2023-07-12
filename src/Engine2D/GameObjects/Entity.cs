@@ -110,14 +110,7 @@ public class Entity : Asset
         if (component is ENTTSpriteRenderer spriteRenderer)
         {
             spriteRenderer.ParentUUID = this.UUID;
-            spriteRenderer.Color = new Vector4(1, 0, 1, 1);
-            spriteRenderer.TextureCoords = new Vector2[]
-            {
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(1, 1),
-                new Vector2(0, 1)
-            };
+            
             // spriteRenderer.Sprite = Scene.TempTexture;
             if (spriteRenderer.TexturePath != "" && spriteRenderer.TexturePath != null)
             {
