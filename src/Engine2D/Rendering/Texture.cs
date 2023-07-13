@@ -20,13 +20,13 @@ internal class Texture : AssetBrowserAsset
     private readonly bool _enableLog = false;
 
     [JsonProperty] internal string? SaveName = "";
-    [JsonProperty]internal string Filepath = "";
-    [JsonProperty]internal string EncodedData;
-    [JsonProperty]internal TextureMagFilter MagFilter;
-    [JsonProperty]internal int Height;
-    [JsonProperty]internal string Type = "Texture";
-    [JsonProperty]internal int Width;
-    [JsonProperty]internal TextureMinFilter MinFilter;
+    [JsonProperty] internal string Filepath = "";
+    [JsonProperty] internal string EncodedData;
+    [JsonProperty] internal TextureMagFilter MagFilter;
+    [JsonProperty] internal int Height;
+    [JsonProperty] internal string Type = "Texture";
+    [JsonProperty] internal int Width;
+    [JsonProperty] internal TextureMinFilter MinFilter;
 
     [JsonIgnore] internal byte[] Data;
     [JsonIgnore] internal bool Flipped;
@@ -47,7 +47,7 @@ internal class Texture : AssetBrowserAsset
         CreateOpenGL();
         EncodedData = Convert.ToBase64String(Data);
     }
-    
+
     //
     [JsonConstructor]
     internal Texture(
@@ -61,7 +61,7 @@ internal class Texture : AssetBrowserAsset
         EncodedData = encodedData;
         Width = width;
         Height = height;
-        
+
         this.MagFilter = MagFilter;
         this.MinFilter = MinFilter;
 

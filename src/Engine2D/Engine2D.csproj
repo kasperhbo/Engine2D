@@ -266,6 +266,10 @@
 
 
     <ItemGroup>
+      <ProjectReference Include="..\..\vendor\enttsharp\src\EnTTSharp.Annotations\EnTTSharp.Annotations.csproj" />
+      <ProjectReference Include="..\..\vendor\enttsharp\src\EnTTSharp.Serialization.Binary\EnTTSharp.Serialization.Binary.csproj" />
+      <ProjectReference Include="..\..\vendor\enttsharp\src\EnTTSharp.Serialization.Xml\EnTTSharp.Serialization.Xml.csproj" />
+      <ProjectReference Include="..\..\vendor\enttsharp\src\EnTTSharp.Serialization\EnTTSharp.Serialization.csproj" />
       <ProjectReference Include="..\..\vendor\enttsharp\src\EnTTSharp\EnttSharp.csproj" />
     </ItemGroup>
 

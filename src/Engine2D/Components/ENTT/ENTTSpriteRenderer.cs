@@ -15,21 +15,33 @@ public struct ENTTSpriteRenderer : IENTTComponent
 {
    [JsonProperty] public Vector4 Color = new Vector4(1, 1, 1, 1);
    [JsonProperty] public int ParentUUID = 0;
-   
-   [JsonProperty]
-   public Vector2[] TextureCoords { get; set; } = new Vector2[4]
-   {
-      new Vector2(0f, 0f),
-      new Vector2(1f, 0f),
-      new Vector2(1f, 1f),
-      new Vector2(0f, 1f)
-   };
-   
-   [JsonProperty] internal string TexturePath = "";
-   
-   [JsonIgnore]private Texture? _sprite = null;
 
-   [JsonIgnore] internal Texture? Sprite
+   [JsonProperty]
+   public Vector2[] TextureCoords
+   {
+      get
+      {
+         if (Sprite != null)
+         {
+            return Sprite.TextureCoords;
+         }
+         else
+         {
+            return new Vector2[4]
+            {
+               new Vector2(0f, 0f),
+               new Vector2(1f, 0f),
+               new Vector2(1f, 1f),
+               new Vector2(0f, 1f)
+            };
+         }  
+      }
+   }
+   
+   [JsonProperty] internal string SpritePath = "";
+   
+   [JsonIgnore]private Sprite? _sprite = null;
+   [JsonIgnore]internal Sprite? Sprite
    {
       get
       {
@@ -37,8 +49,13 @@ public struct ENTTSpriteRenderer : IENTTComponent
       }
       set
       {
+         if(value == null)
+         {
+            _sprite = value;
+            return;
+         }
          _sprite = value;
-         TexturePath = value.SaveName;
+         SpritePath = value.SavePath;
       }
    }
 

@@ -10,6 +10,7 @@ using Engine2D.Managers;
 using Engine2D.Rendering.NewRenderer;
 using Engine2D.Scenes;
 using Engine2D.UI;
+using EnTTSharp.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -126,33 +127,11 @@ public static class SaveLoad
     internal static void SaveEngineSettings()
     {
     }
-
-    // public static Gameobject? LoadGameobject(string relativePath)
-    // {
-    //     string path = ProjectSettings.FullProjectPath + "\\" + relativePath;
-    //     if (File.Exists(path))
-    //     {
-    //         var lines = File.ReadAllText(path);
-    //         return JsonConvert.DeserializeObject<Gameobject>(lines).Clone(UIDManager.GetUID());
-    //     }
-    //
-    //     return null;
-    // }
-    // public static void SaveGameobject(string fileName, Gameobject gameobject)
-    // {
-    //     fileName += ".prefab";
-    //     var lines = JsonConvert.SerializeObject(gameobject, Formatting.Indented);
-    //     using (var fs = File.Create(fileName))
-    //     {
-    //         fs.Close();
-    //     }
-    //     File.WriteAllText(fileName, lines);
-    // }
     
     internal static void SaveScene(Scene scene)
     {
             Log.Message("Saving: " + scene.ScenePath);
-            
+
             // Serialize the EntityRegistry to a JSON string
             // string json = JsonConvert.SerializeObject(registry, Formatting.Indented);
             // Create a dictionary to hold entity IDs and their corresponding serialized data

@@ -79,36 +79,37 @@ internal class Batch2D
         if(!_hasRoom)
             return false;
 
-        if (ent.HasComponent<ENTTSpriteRenderer>())
+        if (!ent.HasComponent<ENTTSpriteRenderer>()) return false;
+        
+        var comp = ent.GetComponent<ENTTSpriteRenderer>();
+        if(comp.Sprite != null)
         {
-            var comp = ent.GetComponent<ENTTSpriteRenderer>();
-            if(comp.Sprite != null)
-            {
-                int textureIDSpriteRenderer = comp.Sprite.TexID;
+            if (comp.Sprite?.Texture == null) return false;
+                
+            var textureIdSpriteRenderer = comp.Sprite.Texture.TexID;
 
-                //Check if batch contains the texture already, if it does, then we can add the sprite renderer
-                //else make an new batch
-                if (comp.Sprite.TexID != -1)
+            //Check if batch contains the texture already, if it does, then we can add the sprite renderer
+            //else make an new batch
+            if (comp.Sprite?.Texture?.TexID != -1)
+            {
+                for (int i = 0; i < _textureIDS.Length; i++)
                 {
-                    for (int i = 0; i < _textureIDS.Length; i++)
+                    if (_textureIDS[i] == textureIdSpriteRenderer)
                     {
-                        if (_textureIDS[i] == textureIDSpriteRenderer)
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
-                //If the sprite renderer has no texture, then its fine to add it
-                else
-                {
-                    return true;
-                }
             }
+            //If the sprite renderer has no texture, then its fine to add it
             else
             {
                 return true;
             }
-        } 
+        }
+        else
+        {
+            return true;
+        }
         return false;
     }
     
@@ -136,11 +137,11 @@ internal class Batch2D
         var textureID = -1; //spriteRenderer.Sprite.Texture.TexID;
         int slot = 0;
         
-        if(spriteRenderer.Sprite != null)
+        if(spriteRenderer.Sprite?.Texture != null)
         {
-            if (spriteRenderer.Sprite.TexID != -1)
+            if (spriteRenderer.Sprite.Texture.TexID != -1)
             {
-                textureID = spriteRenderer.Sprite.TexID;
+                textureID = spriteRenderer.Sprite.Texture.TexID;
 
                 bool addTextureNewToList = true;
                 

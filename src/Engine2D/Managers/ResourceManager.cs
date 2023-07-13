@@ -75,6 +75,8 @@ namespace Engine2D.Managers
                 {
                     case ".tex":
                         return LoadTextureFromJson(filePath);
+                    case ".sprite":
+                        return LoadSpriteFromJson(filePath);
                 }
             }
             catch (Exception e)
@@ -101,7 +103,25 @@ namespace Engine2D.Managers
                     Log.Error($"Failed to load texture {filePath}! {e.Message}");
                 }
             }
-
+            return null;
+        }
+        
+        internal static Sprite? LoadSpriteFromJson(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    var spriteData = File.ReadAllText(filePath);
+                    if (_showDebug)
+                        Log.Succes("Loaded sprite " + filePath);
+                    return JsonConvert.DeserializeObject<Sprite>(spriteData);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Failed to load sprite {filePath}! {e.Message}");
+                }
+            }
             return null;
         }
 
@@ -133,16 +153,18 @@ namespace Engine2D.Managers
         public static T? GetItem<T>(string? path) where T : AssetBrowserAsset
         {
             if (path == null) return null;
-
+            
             // path = Path.Combine(ProjectSettings.FullProjectPath, path.ToLower());
             path = ProjectSettings.FullProjectPath + path;
-            path.ToLower();
-
+            path = path.ToLower();
+            
+                                               
             for (var i = 0; i < _items.Count; i++)
             {
                 var item = _items.ElementAt(i);
-                if (string.Equals(item.Key, path, StringComparison.OrdinalIgnoreCase) && item.Value is T typedItem)
-                    return typedItem;
+                if (string.Equals(item.Key, path, StringComparison.OrdinalIgnoreCase))
+                    if(item.Value is T typedItem)
+                        return typedItem;
             }
 
             return null;
@@ -159,7 +181,7 @@ namespace Engine2D.Managers
             return shader;
         }
 
-        private static void SaveTexture(string? defaultSaveName, Texture texture, DirectoryInfo? currentFolder = null,
+        internal static void SaveTexture(string? defaultSaveName, Texture texture, DirectoryInfo? currentFolder = null,
             bool overwrite = false)
         {
             var name = defaultSaveName;
@@ -177,6 +199,44 @@ namespace Engine2D.Managers
             {
                 var textureData = JsonConvert.SerializeObject(texture, Formatting.Indented);
                 File.WriteAllText(fullSaveName, textureData);
+
+                AssetBrowserPanel.Refresh();
+                LoadAssets();
+
+                Log.Succes("Texture saved Succesfully: " + fullSaveName);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Failed to save texture: {fullSaveName}. {e.Message}");
+            }
+        }
+        
+        internal static void SaveSprite(string? defaultSaveName, Sprite sprite, DirectoryInfo? currentFolder = null,
+            bool overwrite = true)
+        {
+            var name = defaultSaveName;
+            
+            if(name[0].ToString() != "\\")
+                name = "\\" + name;
+            
+            if (!overwrite)
+            {
+                string extension = Path.GetExtension(name);
+                name = SaveLoad.GetNextFreeName(defaultSaveName);
+            }
+            
+            name = "\\assets" + name;
+
+            sprite.SavePath = name; 
+            
+            
+            var fullSaveName = (currentFolder?.FullName ?? string.Empty) + name;
+            fullSaveName = ProjectSettings.FullProjectPath + fullSaveName;
+
+            try
+            {
+                var spriteData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
+                File.WriteAllText(fullSaveName, spriteData);
 
                 AssetBrowserPanel.Refresh();
                 LoadAssets();

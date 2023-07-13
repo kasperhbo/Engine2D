@@ -110,18 +110,16 @@ public class Entity : Asset
         if (component is ENTTSpriteRenderer spriteRenderer)
         {
             spriteRenderer.ParentUUID = this.UUID;
-            
-            // spriteRenderer.Sprite = Scene.TempTexture;
-            if (spriteRenderer.TexturePath != "" && spriteRenderer.TexturePath != null)
+          
+            if (spriteRenderer.SpritePath != "" && spriteRenderer.SpritePath != null)
             {
-                var text = ResourceManager.GetItem<Texture>(spriteRenderer.TexturePath);
-                if (text != null)
-                    spriteRenderer.Sprite = text;
-                else
+                var sprite = ResourceManager.GetItem<Sprite>(spriteRenderer.SpritePath);
+                if(sprite != null)
                 {
-                    Engine2D.Logging.Log.Error($"Texture {spriteRenderer.TexturePath} not found!");
-                    
-                }
+                    sprite.SetSprite();
+                    spriteRenderer.Sprite = sprite;
+                }else
+                    Log.Error(String.Format("Sprite {0} is not found in the resource manager", spriteRenderer.SpritePath));
             }
 
             m_Scene.EntityRegistry.AssignComponent(m_EntityHandle, spriteRenderer);
@@ -253,7 +251,7 @@ public class Entity : Asset
             Gui.DrawTable("Sprite Renderer", () =>
             {
                 //TODO: REMOVE THIS THIS IS FOR DEBUGGING
-                Gui.DrawProperty("texture id: " + spriteRenderer.Sprite?.TexID);
+                Gui.DrawProperty("texture id: " + spriteRenderer.Sprite?.Texture?.TexID);
                 // Gui.DrawProperty("Parent UUID: " + spriteRenderer.Parent?.UUID.ToString());
                 
                 if (Gui.DrawProperty("Color", ref spriteRenderer.Color, isColor:true))

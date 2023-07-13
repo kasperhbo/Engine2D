@@ -3,6 +3,7 @@
 using System.Numerics;
 using Engine2D.Components.Cameras;
 using Engine2D.Components.ENTT;
+using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
 using Engine2D.Logging;
@@ -69,8 +70,12 @@ public class Scene
     /// <param name="scenePath"></param>
     internal virtual void Init(string scenePath)
     {
-        Scene.TempTexture = ResourceManager.GetItem<Texture>("\\assets\\spritesheet.tex");
+        Sprite sprite = new Sprite("\\assets\\spritesheet.tex");
+        sprite.SetSprite();
+        ResourceManager.SaveSprite("testsprite.sprite", sprite);
         
+        // Scene.TempTexture = ResourceManager.GetItem<Texture>("\\assets\\spritesheet.tex");
+        //
         Renderer.Init();
         
         CreateEntityRegistry();

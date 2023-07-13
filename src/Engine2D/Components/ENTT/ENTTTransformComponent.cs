@@ -12,8 +12,8 @@ public struct ENTTTransformComponent : IENTTComponent
     {
        if(enttSpriteRenderer != null)
        {
-           return Matrix4x4.CreateScale(Scale.X * enttSpriteRenderer.Value.Sprite.Width,
-                      Scale.Y * enttSpriteRenderer.Value.Sprite.Height, 1) *
+           return Matrix4x4.CreateScale(Scale.X * enttSpriteRenderer.Value.Sprite.Texture.Width,
+                      Scale.Y * enttSpriteRenderer.Value.Sprite.Texture.Height, 1) *
                   Matrix4x4.CreateFromQuaternion(Rotation) *
                   Matrix4x4.CreateTranslation(Position.X, Position.Y, 0);
        }
