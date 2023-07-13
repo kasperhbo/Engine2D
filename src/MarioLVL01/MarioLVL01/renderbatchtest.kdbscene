@@ -1,0 +1,113 @@
+{
+  "1": {
+    "Entity": {
+      "UUID": 1,
+      "IsStatic": true,
+      "IsDead": false
+    },
+    "Engine2D.Components.ENTT.ENTTTransformComponent": {
+      "Position": {
+        "X": 2.9481719,
+        "Y": 0.40363628
+      },
+      "Rotation": {
+        "X": 0.0,
+        "Y": 0.0,
+        "Z": -0.36406192,
+        "W": 0.9313747,
+        "IsIdentity": false
+      },
+      "Scale": {
+        "X": 0.010000002,
+        "Y": 0.010000002
+      }
+    },
+    "Engine2D.Components.ENTT.ENTTTagComponent": {
+      "Tag": "New Entity0"
+    },
+    "Engine2D.Components.ENTT.ENTTSpriteRenderer": {
+      "Color": {
+        "X": 0.0,
+        "Y": 1.0,
+        "Z": 0.0,
+        "W": 1.0
+      },
+      "ParentUUID": 1,
+      "SpritePath": "\\assets\\512x512 Texel Density Texture 3.sprite"
+    }
+  },
+  "2": {
+    "Entity": {
+      "UUID": 2,
+      "IsStatic": true,
+      "IsDead": false
+    },
+    "Engine2D.Components.ENTT.ENTTTransformComponent": {
+      "Position": {
+        "X": -3.0794406,
+        "Y": 1.1074127
+      },
+      "Rotation": {
+        "X": 0.0,
+        "Y": 0.0,
+        "Z": 0.0,
+        "W": 1.0,
+        "IsIdentity": true
+      },
+      "Scale": {
+        "X": 0.01,
+        "Y": 0.01
+      }
+    },
+    "Engine2D.Components.ENTT.ENTTTagComponent": {
+      "Tag": "New Entity1"
+    },
+    "Engine2D.Components.ENTT.ENTTSpriteRenderer": {
+      "Color": {
+        "X": 1.0,
+        "Y": 1.0,
+        "Z": 1.0,
+        "W": 1.0
+      },
+      "ParentUUID": 2,
+      "SpritePath": "\\assets\\512x512 Texel Density Texture 1.sprite"
+    }
+  },
+  "3": {
+    "Entity": {
+      "UUID": 3,
+      "IsStatic": false,
+      "IsDead": false
+    },
+    "Engine2D.Components.ENTT.ENTTTransformComponent": {
+      "Position": {
+        "X": -0.6176228,
+        "Y": -3.0344062
+      },
+      "Rotation": {
+        "X": 0.0,
+        "Y": 0.0,
+        "Z": 0.0,
+        "W": 1.0,
+        "IsIdentity": true
+      },
+      "Scale": {
+        "X": 9.235293,
+        "Y": 1.0
+      }
+    },
+    "Engine2D.Components.ENTT.ENTTTagComponent": {
+      "Tag": "New Entity2"
+    },
+    "Engine2D.Components.ENTT.ENTTSpriteRenderer": {
+      "Color": {
+        "X": 1.0,
+        "Y": 1.0,
+        "Z": 1.0,
+        "W": 1.0
+      },
+      "ParentUUID": 3,
+      "SpritePath": ""
+    }
+  }
+}

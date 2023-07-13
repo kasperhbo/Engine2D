@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTTSharp.Serialization.Bin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnTTSharp.Serialization.Xml", "..\vendor\enttsharp\src\EnTTSharp.Serialization.Xml\EnTTSharp.Serialization.Xml.csproj", "{E05DA549-1E65-4E40-B67D-10DBEC9BA170}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarioLVL01", "MarioLVL01\MarioLVL01\MarioLVL01.csproj", "{FBC6E17D-B65E-4EA2-B589-7B493997E1A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{E05DA549-1E65-4E40-B67D-10DBEC9BA170}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E05DA549-1E65-4E40-B67D-10DBEC9BA170}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E05DA549-1E65-4E40-B67D-10DBEC9BA170}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBC6E17D-B65E-4EA2-B589-7B493997E1A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBC6E17D-B65E-4EA2-B589-7B493997E1A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBC6E17D-B65E-4EA2-B589-7B493997E1A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBC6E17D-B65E-4EA2-B589-7B493997E1A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

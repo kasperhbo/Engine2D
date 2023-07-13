@@ -139,7 +139,7 @@ namespace Engine2D.Core
             WindowState = WindowSettings.FullScreen;
 
             AssignDefaultEvents();
-
+            var projectPaht = ProjectSettings.FullProjectPath;
             SwitchScene(ProjectSettings.FullProjectPath + "\\renderbatchtest.kdbscene");
 
             if (Settings.s_IsEngine)
@@ -148,9 +148,9 @@ namespace Engine2D.Core
 
         private void LoadProject()
         {
-            string path = "D:\\dev\\MarioLVL1TestGame\\MarioLVL01\\MarioLVL01\\bin\\Debug\\net7.0\\MarioLVL01.dll";
+            // string path = "D:\\dev\\MarioLVL1TestGame\\MarioLVL01\\MarioLVL01\\bin\\Debug\\net7.0\\MarioLVL01.dll";
             //"D:\dev\Engine2D\src\ExampleGame\bin\Debug\net7.0\ExampleGame.dll"
-            AssemblyUtils.LoadAssembly(path);
+            //AssemblyUtils.LoadAssembly(path);
         }
 
         private void AssignDefaultEvents()
@@ -214,11 +214,14 @@ public static class Settings
 }
 
 //Project settings
-internal static class ProjectSettings
+public static class ProjectSettings
 {
     //TODO: Make this a json file
     //TODO: MAKE THIS ACCESSIBLE FROM A LAUNCHER
-    internal static string ProjectName { get; } = "MarioLVL01";
-    internal static string ProjectLocation { get; } = @"D:\dev\MarioLVL1TestGame\MarioLVL01\";
-    internal static string FullProjectPath { get; } = ProjectLocation + ProjectName;
+    internal static string FullProjectPath;
+
+    public static void SetProject(string path, string name)
+    {
+        FullProjectPath = path + name;
+    }
 }
