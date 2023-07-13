@@ -457,7 +457,7 @@ internal class AssetBrowserEntry
             switch (_fileType)
             {
                 case ESupportedFileTypes.sprite:
-                    ImGui.SetDragDropPayload("sprite_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
+                   ImGui.SetDragDropPayload("sprite_drop", GCHandle.ToIntPtr(_currentlyDraggedHandle.Value),
                         (uint)sizeof(IntPtr));
                     break;
                 case ESupportedFileTypes.spritesheet:

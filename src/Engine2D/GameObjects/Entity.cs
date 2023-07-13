@@ -1,10 +1,13 @@
 ﻿using System.Numerics;
+using System.Runtime.InteropServices;
+using System.Text;
 using Engine2D.Components.ENTT;
 using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.Managers;
 using Engine2D.Rendering;
 using Engine2D.Rendering.NewRenderer;
+using Engine2D.SavingLoading;
 using Engine2D.Scenes;
 using Engine2D.UI.ImGuiExtension;
 using EnTTSharp.Entities;
@@ -120,7 +123,7 @@ public class Entity : Asset
                 }else
                     Log.Error(String.Format("Sprite {0} is not found in the resource manager", spriteRenderer.SpritePath));
             }
-
+            
             m_Scene.EntityRegistry.AssignComponent(m_EntityHandle, spriteRenderer);
             Renderer.AddSprite(this);
         }
@@ -245,13 +248,46 @@ public class Entity : Asset
         //Sprite Renderer component
         if (HasComponent<ENTTSpriteRenderer>())
         {
-            ImGui.PushID("##spriterenderercomponent");
+            ImGui.PushID("##spriterenderercomponent" + UUID);
+            
             var spriteRenderer = GetComponent<ENTTSpriteRenderer>();
+            
             Gui.DrawTable("Sprite Renderer", () =>
             {
                 //TODO: REMOVE THIS THIS IS FOR DEBUGGING
                 Gui.DrawProperty("texture id: " + spriteRenderer.Sprite?.Texture?.TexID);
                 // Gui.DrawProperty("Parent UUID: " + spriteRenderer.Parent?.UUID.ToString());
+                
+                
+                var tex = spriteRenderer.Sprite?.Texture;
+                
+                if (tex == null)
+                    ImGui.Button("Sprite", new Vector2(64, 64));
+                else
+                    ImGui.ImageButton((IntPtr)tex.TexID, new Vector2(64, 64), new Vector2(0, 1), new Vector2(1, 0));
+          
+                if (ImGui.BeginDragDropTarget())
+                {
+                    var payload = ImGui.AcceptDragDropPayload("sprite_drop");
+                    if (payload.IsValidPayload())
+                    {
+                        var filename = (string)GCHandle.FromIntPtr(payload.Data).Target;
+                    
+                        var sprite = ResourceManager.GetItem<Sprite>(filename);
+                        if (sprite != null)
+                        {
+                            spriteRenderer.Sprite = sprite;
+                            SetComponent(spriteRenderer);
+                        }
+                        else
+                        {
+                            Log.Error("Something went wrong when trying to load sprite " + filename);
+                        }
+                    }
+
+                    ImGui.EndDragDropTarget();
+                }
+                
                 
                 if (Gui.DrawProperty("Color", ref spriteRenderer.Color, isColor:true))
                 {
@@ -263,5 +299,4 @@ public class Entity : Asset
         }
 
     }
-
 }

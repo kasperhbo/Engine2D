@@ -1,16 +1,12 @@
 ﻿#region
 
-using System.Numerics;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Soap;
 using Engine2D.Components.ENTT;
 using Engine2D.Core;
 using Engine2D.Logging;
-using Engine2D.Managers;
-using Engine2D.Rendering.NewRenderer;
 using Engine2D.Scenes;
 using Engine2D.UI;
-using EnTTSharp.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

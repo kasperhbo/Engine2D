@@ -12,6 +12,9 @@ internal class Sprite : AssetBrowserAsset
     [JsonProperty] internal string SavePath = "";
     [JsonProperty] internal string TexturePath = "";
 
+    [JsonProperty] private int width = -1;
+    [JsonProperty] private int height = -1;
+    
     [JsonProperty]
     internal Vector2[] TextureCoords { get; set; } = new Vector2[4]
     {
@@ -21,14 +24,77 @@ internal class Sprite : AssetBrowserAsset
         new Vector2(0f, 1f)
     };
 
+    [JsonIgnore]
+    internal int Width
+    {
+        get
+        {
+            if (width != -1)
+            {
+                return width;
+            }       
+            else
+            {
+                if (Texture != null)
+                {
+                    return Texture.Width;
+                }
+                else
+                {
+                    Log.Error("Texture is null");
+                    return 1;
+                }
+            }
+        }
+    }
+    
+    [JsonIgnore] internal int Height 
+    {
+        get
+        {
+            if (height != -1)
+            {
+                return height;
+            }       
+            else
+            {
+                if (Texture != null)
+                {
+                    return Texture.Height;
+                }
+                else
+                {
+                    Log.Error("Texture is null");
+                    return 1;
+                }
+            }
+        }
+    } 
+    
     [JsonIgnore] internal Texture? Texture { get; set; } = null;
 
     [JsonConstructor]
-    internal Sprite(string savePath, string texturePath, Vector2[] textureCoords)
+    internal Sprite(
+        string savePath, 
+        string texturePath,
+        int width, int height,
+        Vector2[] textureCoords
+)
     {
-        SavePath = savePath;
-        TexturePath = texturePath;
-        TextureCoords = textureCoords;
+        this.SavePath = savePath;
+        this.TexturePath = texturePath;
+        this.TextureCoords = textureCoords;
+        if(width == 0 && height == 0)
+        {
+            this.width = -1;
+            this.height = -1;
+        }
+        else
+        {
+            this.width = width;
+            this.height = height;
+        }
+        
         SetSprite();
     }
     

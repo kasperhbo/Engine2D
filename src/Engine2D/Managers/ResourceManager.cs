@@ -48,9 +48,18 @@ namespace Engine2D.Managers
         {
             _items.Clear();
             
+            LoadTextures();
+            LoadSprites();
+
+            if (_showDebug)
+                Log.Succes("Succesfully loaded all assets!");
+        }
+
+        private static void LoadTextures()
+        {
             var baseAssetPath = ProjectSettings.FullProjectPath + @"\" +"assets";
             baseAssetPath.ToLower();
-            var supportedExtensions = new[] { ".tex", ".sprite", ".spritesheet", ".animation" };
+            var supportedExtensions = new[] { ".tex", };
 
             var files = Directory.GetFiles(baseAssetPath, "*.*", SearchOption.AllDirectories)
                 .Where(file => supportedExtensions.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase));
@@ -62,9 +71,24 @@ namespace Engine2D.Managers
                 if (item != null)
                     AddItemToManager(file, item);
             }
+        }
 
-            if (_showDebug)
-                Log.Succes("Succesfully loaded all assets!");
+        private static void LoadSprites()
+        {
+            var baseAssetPath = ProjectSettings.FullProjectPath + @"\" +"assets";
+            baseAssetPath.ToLower();
+            var supportedExtensions = new[] { ".sprite", };
+
+            var files = Directory.GetFiles(baseAssetPath, "*.*", SearchOption.AllDirectories)
+                .Where(file => supportedExtensions.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase));
+
+            foreach (var file in files)
+            {
+                var extension = Path.GetExtension(file);
+                var item = LoadAssetFromFile(file, extension);
+                if (item != null)
+                    AddItemToManager(file, item);
+            }
         }
 
         private static AssetBrowserAsset? LoadAssetFromFile(string filePath, string extension)
@@ -166,6 +190,8 @@ namespace Engine2D.Managers
                     if(item.Value is T typedItem)
                         return typedItem;
             }
+            
+            
 
             return null;
         }
@@ -235,6 +261,10 @@ namespace Engine2D.Managers
 
             try
             {
+                var dir = Path.GetDirectoryName(fullSaveName);
+                if(!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                
                 var spriteData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
                 File.WriteAllText(fullSaveName, spriteData);
 

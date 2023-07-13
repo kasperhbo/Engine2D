@@ -72,6 +72,20 @@ public class Scene
     {
         Renderer.Init();
         
+        // _savePath = savePath;
+        // _texturePath = texturePath;
+        // _spriteWidth = spriteWidth;
+        // _spriteHeight = spriteHeight;
+        // _spacing = spacing;
+        // _spriteCount = spriteCount;
+        //
+        // SpriteSheet spriteSheet = new(
+        //     "spritetest.spritesheet",
+        //     16,16,0,27
+        //     );
+        
+        Console.WriteLine("test");
+        
         CreateEntityRegistry();
 
         ScenePath = scenePath;
