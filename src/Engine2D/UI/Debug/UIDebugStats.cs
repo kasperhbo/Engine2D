@@ -1,4 +1,5 @@
-﻿using Engine2D.Core;
+﻿using System.Numerics;
+using Engine2D.Core;
 using Engine2D.Rendering.NewRenderer;
 using Engine2D.Scenes;
 using ImGuiNET;
@@ -10,6 +11,8 @@ public class UIDebugStats
 {
     public static void OnGui(FrameEventArgs args)
     {
+        var currentCol = ImGui.GetStyle().Colors[(int) ImGuiCol.ChildBg];
+        ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0.1f,0.1f,0.1f, 1.0f));
         ImGui.Begin   ("Debug Stats");
         
         ImGui.Text(debug_data.GetDebugData(args.Time));
@@ -51,12 +54,12 @@ public class UIDebugStats
         }
 
         ImGui.End();
-
+        
         for (int i = 0; i < Renderer.Batches.Count; i++)
         {
             var batch = Renderer.Batches[i];
-            if(batch.DebuggerOpened == false) return;
-            
+               if (!batch.DebuggerOpened) continue;
+               
             ImGui.Begin("Batch: " + (i + 1));
             ImGui.Text("Batch: " + (i + 1));
             ImGui.Separator();
@@ -83,6 +86,8 @@ public class UIDebugStats
             ImGui.Separator();
             ImGui.End();
         }
+        
+        ImGui.PopStyleColor();
     }
 }
 
