@@ -152,6 +152,7 @@ To get a local copy up and running follow these simple example steps.
 - [x] Add ImGuizmo
 - [ ] Add play mode (removed when switching to ENTT)
 - [ ] Reimplement Box2D
+- [ ] Add file compression (especcialy for textures)
 - [ ] Add documentation
 
 
