@@ -11,37 +11,23 @@ public class UIDebugStats
     public static void OnGui(FrameEventArgs args)
     {
         ImGui.Begin   ("Debug Stats");
-        // ImGui.Text    ("Scene");
-        // ImGui.Text    ($"Scene Name:                 {Engine.Get().CurrentScene.ScenePath}"        );
-        // ImGui.Text    ($"GameObjects:                {Engine.Get().CurrentScene.Entities.Count}");
-        //
-        // ImGui.Checkbox("Do update", ref Scene.DoUpdate);
-        //
-        // ImGui.Separator();
-        // ImGui.Text    ($"FPS:                         {1 / args.Time:0.00}"                  );
-        // ImGui.Text    ($"Frame Time:                  {args.Time * 1000:0.00}ms"             );
-        // ImGui.Text    ($"Assembly Reloaded:           {DebugStats.AssemblyReloaded}"         );
-        //
-        // //ImGui.Checkbox("Render",                 ref Renderer.RenderEverything);
-        // //ImGui.Checkbox("Debug Render",           ref Renderer.DebugRender);
-        //
-        // ImGui.Text($"Render batches: {Renderer.Batches.Count}");
-        //
-        // ImGui.Text     ($"Draw Calls:                  {DebugStats.DrawCalls}"                );
-        // ImGui.Text     ($"Sprites Drawn:               {DebugStats.SpritesDrawn}"             );
-        // ImGui.Text     ($"Textures Loaded:             {DebugStats.TexturesLoadedByResourceManager}"           );
-        // ImGui.Text     ($"Textures Unloaded:           {DebugStats.TexturesUnloaded}"         );
-        // ImGui.Text     ($"Textures Reloaded:           {DebugStats.TexturesReloaded}"         );
-        // ImGui.Text     ($"Textures Created:            {DebugStats.TexturesCreated}"          );
-        // ImGui.Text     ($"Textures Saved:              {DebugStats.TexturesSaved}"            );
-        // ImGui.Text     ($"Textures Loaded From Memory: {DebugStats.TexturesLoadedFromMemory}" );
-        // ImGui.Text     ($"Textures Loaded From File:   {DebugStats.TexturesLoadedFromFile}"   );
-        //
-        // ImGui.Text     ($"Sprites Loaded By ResourceManager:   {DebugStats.SpritesLoadedByResourceManager}"   );
-        //
-        // ImGui.Text($"Gameobjects: {Engine.Get().CurrentScene.Entities.Count}");
-
+        
         ImGui.Text(debug_data.GetDebugData(args.Time));
+        
+        ImGui.Separator();
+        
+        ImGui.Text("Renderer");
+        ImGui.Text($"Batches: {Renderer.Batches.Count}");
+        ImGui.Text($"Clear Color: {Renderer.ClearColor}");
+        ImGui.Text($"Game Frame Buffer: {Renderer.GameFrameBuffer}");
+        ImGui.Text($"Editor Frame Buffer: {Renderer.EditorFrameBuffer}");
+        for (int i = 0; i < Renderer.Batches.Count; i++)
+        {
+            if (ImGui.Button("Open / Close DebuggerFor: " + (i + 1)))
+            {
+                Renderer.Batches[i].DebuggerOpened = !Renderer.Batches[i].DebuggerOpened;
+            }
+        }
         
         ImGui.Separator();
         ImGui.Text("UI");
@@ -64,9 +50,39 @@ public class UIDebugStats
             ImGui.EndTable();
         }
 
-
-
         ImGui.End();
+
+        for (int i = 0; i < Renderer.Batches.Count; i++)
+        {
+            var batch = Renderer.Batches[i];
+            if(batch.DebuggerOpened == false) return;
+            
+            ImGui.Begin("Batch: " + (i + 1));
+            ImGui.Text("Batch: " + (i + 1));
+            ImGui.Separator();
+            ImGui.Text($"Z-index: {batch.ZIndex}");
+            
+            ImGui.Separator();
+            ImGui.Text("Shader");
+            ImGui.Text($"Shader ID: {batch.Shader.ShaderProgramId}");
+            ImGui.Text($"VertexSource: " + batch.Shader.VertexSource);
+            ImGui.Text($"FragmentSource: " + batch.Shader.FragmentSource);
+            ImGui.Separator();
+            
+            ImGui.Text("Textures");
+            for (int j = 0; j < batch.TextureIDS.Length; j++)
+            {
+                var texID = batch.TextureIDS[j];
+                if(texID != -1)
+                {
+                    ImGui.Text($"Texture ID: {texID} at index {j}");
+                    ImGui.ImageButton(texID, new System.Numerics.Vector2(64, 64));
+                }
+                
+            }
+            ImGui.Separator();
+            ImGui.End();
+        }
     }
 }
 

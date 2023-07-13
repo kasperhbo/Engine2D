@@ -11,8 +11,10 @@ namespace Engine2D.Rendering.NewRenderer;
 
 internal class Batch2D
 {
-    private int _zIndex;
-    private Shader _shader;
+    internal bool DebuggerOpened = false;
+    
+    internal int ZIndex { get; private set; }
+    internal Shader Shader { get; private set; }
 
     private List<Entity> _sprites = new();
     
@@ -48,7 +50,7 @@ internal class Batch2D
     private bool s_IndicesFilled = false;
     
     //Texture IDS
-    private int[] _textureIDS = new int[7]
+    public int[] TextureIDS { get; private set; } = new int[7]
     {
         -1,
         -1,
@@ -92,9 +94,9 @@ internal class Batch2D
             //else make an new batch
             if (comp.Sprite?.Texture?.TexID != -1)
             {
-                for (int i = 0; i < _textureIDS.Length; i++)
+                for (int i = 0; i < TextureIDS.Length; i++)
                 {
-                    if (_textureIDS[i] == textureIdSpriteRenderer || _textureIDS[i] == -1)
+                    if (TextureIDS[i] == textureIdSpriteRenderer || TextureIDS[i] == -1)
                     {
                         return true;
                     }
@@ -146,11 +148,11 @@ internal class Batch2D
                 bool addTextureNewToList = true;
                 
                 //First check if the texture is already in the batch
-                if(_textureIDS.Contains(textureID))// == textureID)
+                if(TextureIDS.Contains(textureID))// == textureID)
                 {
-                    for (int i = 0; i < _textureIDS.Length; i++)
+                    for (int i = 0; i < TextureIDS.Length; i++)
                     {
-                        if (_textureIDS[i] == textureID)
+                        if (TextureIDS[i] == textureID)
                         {
                             slot = i + 1;
                             addTextureNewToList = false;
@@ -161,13 +163,13 @@ internal class Batch2D
                 
                 if(addTextureNewToList)
                 {
-                    for (int i = 0; i < _textureIDS.Length; i++)
+                    for (int i = 0; i < TextureIDS.Length; i++)
                     {
                         //If the texture is not in the batch, then add it to the first empty slot
-                        if (_textureIDS[i] == -1)
+                        if (TextureIDS[i] == -1)
                         {
                             slot = i + 1;
-                            _textureIDS[i] = textureID;
+                            TextureIDS[i] = textureID;
                             break;
                         }
                     }
@@ -192,8 +194,8 @@ internal class Batch2D
             s_IndicesFilled = true;
         }
         
-        _shader = shader;
-        _zIndex = zIndex;
+        Shader = shader;
+        ZIndex = zIndex;
         
         // CreateTestObjects();
 
@@ -288,21 +290,21 @@ internal class Batch2D
                 IntPtr.Zero, _vertices.Length * sizeof(float), _vertices);
         }
         //
-        _shader.use();
-        _shader.uploadMat4f("u_viewMatrix", camera.GetViewMatrix());
-        _shader.uploadMat4f("u_projectionMatrix", camera.GetProjectionMatrix());
-        _shader.UploadIntArray("uTextures", _textureUnits);
+        Shader.use();
+        Shader.uploadMat4f("u_viewMatrix", camera.GetViewMatrix());
+        Shader.uploadMat4f("u_projectionMatrix", camera.GetProjectionMatrix());
+        Shader.UploadIntArray("uTextures", _textureUnits);
 
         // //TEXTURES
 
 
         GL.BindVertexArray(_vaoId);
-        for (var i = 0; i < _textureIDS.Length; i++)
+        for (var i = 0; i < TextureIDS.Length; i++)
         {
-            if (_textureIDS[i] != -1)
+            if (TextureIDS[i] != -1)
             {
                 var unit = TextureUnit.Texture0 + i + 1;
-                var id = (int)_textureIDS[i];
+                var id = (int)TextureIDS[i];
 
                 Texture.Use(unit, id);
             }
@@ -321,16 +323,16 @@ internal class Batch2D
         
         GL.DrawElements(PrimitiveType.Triangles, _quadCount * 6, DrawElementsType.UnsignedInt, 0);
         
-        for (var i = 0; i < _textureIDS.Length; i++)
+        for (var i = 0; i < TextureIDS.Length; i++)
         {
-            if (_textureIDS[i] != -1)
+            if (TextureIDS[i] != -1)
             {
                 var unit = TextureUnit.Texture0 + i + 1;
                 Texture.Use(unit, 0);
             }
         }
         
-        _shader.detach();
+        Shader.detach();
         GL.DisableVertexAttribArray(0);
         GL.DisableVertexAttribArray(1);
         GL.DisableVertexAttribArray(2);

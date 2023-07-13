@@ -15,17 +15,17 @@ namespace KDBEngine.Shaders;
 // A simple class meant to help create shaders.
 internal class Shader
 {
-    private readonly string fragmentSource;
-
-    private readonly string vertexSource;
-    private int shaderProgramID;
+    public readonly string FragmentSource;
+    public readonly string VertexSource;
+    
+    public int ShaderProgramId { get; private set; }
 
     internal Shader(string vertexFilePath, string fragmentFilePath)
     {
         DebugStats.LoadedShaders++;
-        vertexSource = File.ReadAllText(vertexFilePath);
-        fragmentSource = File.ReadAllText(fragmentFilePath);
-        Compile(vertexSource, fragmentSource);
+        VertexSource = File.ReadAllText(vertexFilePath);
+        FragmentSource = File.ReadAllText(fragmentFilePath);
+        Compile(VertexSource, FragmentSource);
     }
 
     internal void Compile(string vertexSource, string fragmentSource)
@@ -56,21 +56,21 @@ internal class Shader
             throw new Exception($"Error occurred whilst compiling Shader({fragmentID}).\n\n{infoLog}");
         }
 
-        shaderProgramID = GL.CreateProgram();
-        GL.AttachShader(shaderProgramID, vertexID);
-        GL.AttachShader(shaderProgramID, fragmentID);
-        GL.LinkProgram(shaderProgramID);
+        ShaderProgramId = GL.CreateProgram();
+        GL.AttachShader(ShaderProgramId, vertexID);
+        GL.AttachShader(ShaderProgramId, fragmentID);
+        GL.LinkProgram(ShaderProgramId);
 
-        GL.GetProgram(shaderProgramID, ProgramParameter.LinkStatus, out succes);
+        GL.GetProgram(ShaderProgramId, ProgramParameter.LinkStatus, out succes);
         if (succes != (int)All.True)
             // We can use `GL.GetShaderInfoLog(shader)` to get information about the error.
             // We can use `GL.GetProgramInfoLog(program)` to get information about the error.
-            throw new Exception($"Error occurred whilst linking Program({shaderProgramID})");
+            throw new Exception($"Error occurred whilst linking Program({ShaderProgramId})");
     }
 
     internal void use()
     {
-        GL.UseProgram(shaderProgramID);
+        GL.UseProgram(ShaderProgramId);
     }
 
     internal void detach()
@@ -81,14 +81,14 @@ internal class Shader
     internal void uploadMat4f(string varName, Matrix4 mat4)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
         GL.UniformMatrix4(varLocation, false, ref mat4);
     }
 
     internal void uploadMat3f(string varName, Matrix3 mat3)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
 
         GL.UniformMatrix3(varLocation, false, ref mat3);
     }
@@ -96,7 +96,7 @@ internal class Shader
     internal void uploadVec4f(string varName, Vector4 vec)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
 
         GL.Uniform4(varLocation, vec);
     }
@@ -104,7 +104,7 @@ internal class Shader
     internal void uploadVec3f(string varName, Vector3 vec)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
 
         GL.Uniform3(varLocation, vec);
     }
@@ -112,7 +112,7 @@ internal class Shader
     internal void uploadVec2f(string varName, Vector2 vec)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
         GL.Uniform2(varLocation, vec);
     }
 
@@ -129,7 +129,7 @@ internal class Shader
     internal void uploadFloat(string varName, float val)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
 
         GL.Uniform1(varLocation, val);
     }
@@ -137,7 +137,7 @@ internal class Shader
     internal void uploadInt(string varName, int val)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
 
         GL.Uniform1(varLocation, val);
     }
@@ -145,21 +145,21 @@ internal class Shader
     internal void uploadTexture(string varName, int slot)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
         GL.Uniform1(varLocation, slot);
     }
 
     internal void UploadIntArray(string v, int[] values)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, v);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, v);
         GL.Uniform1(varLocation, values.Length, values);
     }
 
     internal void uploadVec2fArray(string varName, Vector2[] vec)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
         var vals = new float[vec.Length * 2];
         for (var i = 0; i < vec.Length; i++)
         {
@@ -173,7 +173,7 @@ internal class Shader
     internal void uploadVec2fArray(string varName, System.Numerics.Vector2[] vec)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
         var vals = new float[vec.Length * 2];
         for (var i = 0; i < vec.Length; i++)
         {
@@ -187,7 +187,7 @@ internal class Shader
 
     internal void uploadVec3fArray(string varName, Vector3[] vec)
     {
-        var varLocation = GL.GetUniformLocation(shaderProgramID, varName);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, varName);
         use();
         var vals = new float[vec.Length * 3];
         for (var i = 0; i < vec.Length; i++)
@@ -202,13 +202,13 @@ internal class Shader
 
     internal int GetAttribLocation(string attribName)
     {
-        return GL.GetAttribLocation(shaderProgramID, attribName);
+        return GL.GetAttribLocation(ShaderProgramId, attribName);
     }
 
     internal void uploadFloatArray(string v, float[] values)
     {
         use();
-        var varLocation = GL.GetUniformLocation(shaderProgramID, v);
+        var varLocation = GL.GetUniformLocation(ShaderProgramId, v);
         GL.Uniform1(varLocation, values.Length, values);
     }
 
