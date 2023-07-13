@@ -23,9 +23,13 @@ internal class Sprite : AssetBrowserAsset
 
     [JsonIgnore] internal Texture? Texture { get; set; } = null;
 
-    internal Sprite()
+    [JsonConstructor]
+    internal Sprite(string savePath, string texturePath, Vector2[] textureCoords)
     {
-        
+        SavePath = savePath;
+        TexturePath = texturePath;
+        TextureCoords = textureCoords;
+        SetSprite();
     }
     
     internal Sprite(string? texturePath)
@@ -34,7 +38,7 @@ internal class Sprite : AssetBrowserAsset
         SetSprite();
     }
 
-    public void SetSprite()
+    private void SetSprite()
     {
         if(TexturePath == "" || TexturePath == null)
         {

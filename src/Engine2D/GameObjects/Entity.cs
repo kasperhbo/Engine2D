@@ -116,7 +116,6 @@ public class Entity : Asset
                 var sprite = ResourceManager.GetItem<Sprite>(spriteRenderer.SpritePath);
                 if(sprite != null)
                 {
-                    sprite.SetSprite();
                     spriteRenderer.Sprite = sprite;
                 }else
                     Log.Error(String.Format("Sprite {0} is not found in the resource manager", spriteRenderer.SpritePath));

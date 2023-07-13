@@ -70,12 +70,6 @@ public class Scene
     /// <param name="scenePath"></param>
     internal virtual void Init(string scenePath)
     {
-        Sprite sprite = new Sprite("\\assets\\spritesheet.tex");
-        sprite.SetSprite();
-        ResourceManager.SaveSprite("testsprite.sprite", sprite);
-        
-        // Scene.TempTexture = ResourceManager.GetItem<Texture>("\\assets\\spritesheet.tex");
-        //
         Renderer.Init();
         
         CreateEntityRegistry();

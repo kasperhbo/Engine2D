@@ -238,9 +238,6 @@
         <None Update="Images\Testmages\4096x4096 Texel Density Texture 5.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Images\test.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 
 
