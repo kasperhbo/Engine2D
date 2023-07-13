@@ -17,12 +17,12 @@
 *** See the bottom of this document for the declaration of the reference variables
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
-
+-->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
--->
+
 
 
 <!-- PROJECT LOGO -->
@@ -84,6 +84,7 @@
 
 ![Product Name Screen Shot][product-screenshot-url]
 
+This is an small (for now) Engine build with OpenGL in C#. It's just to expand my knowledge and test some things out. So don't expect it to be heavily optimized. I try to keep everything as simple as possible.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -143,7 +144,8 @@ To get a local copy up and running follow these simple example steps.
 - [x] Add 2D Batch rendering
 - [x] Add Scene management
 - [x] Add Inspectors
-- [x] Add Serialization 
+- [x] Add Scene Serialization 
+- [x] Add Object Serialization (Textures, Sprites, etc.etc.)
 - [x] Add Resource manager
 - [x] Add ENTT for entities
 - [x] Add ImGui.Net
