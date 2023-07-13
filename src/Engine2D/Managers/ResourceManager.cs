@@ -4,6 +4,7 @@ using Engine2D.Logging;
 using Engine2D.Rendering;
 using Engine2D.SavingLoading;
 using Engine2D.UI.Browsers;
+using Engine2D.UI.Debug;
 using KDBEngine.Shaders;
 using Newtonsoft.Json;
 
@@ -54,7 +55,7 @@ namespace Engine2D.Managers
             if (_showDebug)
                 Log.Succes("Succesfully loaded all assets!");
         }
-
+        
         private static void LoadTextures()
         {
             var baseAssetPath = ProjectSettings.FullProjectPath + @"\" +"assets";
@@ -69,7 +70,9 @@ namespace Engine2D.Managers
                 var extension = Path.GetExtension(file);
                 var item = LoadAssetFromFile(file, extension);
                 if (item != null)
+                {
                     AddItemToManager(file, item);
+                }
             }
         }
 
@@ -110,50 +113,24 @@ namespace Engine2D.Managers
 
             return null;
         }
-
-        internal static Texture? LoadTextureFromJson(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    var textureData = File.ReadAllText(filePath);
-                    if (_showDebug)
-                        Log.Succes("Loaded texture " + filePath);
-                    return JsonConvert.DeserializeObject<Texture>(textureData);
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Failed to load texture {filePath}! {e.Message}");
-                }
-            }
-            return null;
-        }
         
-        internal static Sprite? LoadSpriteFromJson(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    var spriteData = File.ReadAllText(filePath);
-                    if (_showDebug)
-                        Log.Succes("Loaded sprite " + filePath);
-                    return JsonConvert.DeserializeObject<Sprite>(spriteData);
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Failed to load sprite {filePath}! {e.Message}");
-                }
-            }
-            return null;
-        }
-
+        
         private static void AddItemToManager(string fullSaveName, AssetBrowserAsset item)
         {
             fullSaveName = fullSaveName.ToLower();
 
             _items[fullSaveName] = item;
+
+            if (item is Texture)
+            {
+                DebugStats.TexturesLoadedByResourceManager++;
+            }
+            
+            if (item is Sprite)
+            {
+                DebugStats.SpritesLoadedByResourceManager++;
+            }
+            
         }
 
         public static int GetItemIndex(string? path)
@@ -196,6 +173,8 @@ namespace Engine2D.Managers
             return null;
         }
 
+        #region Loading
+
         internal static Shader? GetShader(ShaderData shaderData)
         {
             if (!Shaders.TryGetValue(shaderData, out var shader))
@@ -207,6 +186,49 @@ namespace Engine2D.Managers
             return shader;
         }
 
+        private static Texture? LoadTextureFromJson(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    var textureData = File.ReadAllText(filePath);
+                    if (_showDebug)
+                        Log.Succes("Loaded texture " + filePath);
+                    return JsonConvert.DeserializeObject<Texture>(textureData);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Failed to load texture {filePath}! {e.Message}");
+                }
+            }
+            return null;
+        }
+        
+        private static Sprite? LoadSpriteFromJson(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    var spriteData = File.ReadAllText(filePath);
+                    if (_showDebug)
+                        Log.Succes("Loaded sprite " + filePath);
+                    return JsonConvert.DeserializeObject<Sprite>(spriteData);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Failed to load sprite {filePath}! {e.Message}");
+                }
+            }
+            return null;
+        }
+        
+    #endregion
+
+        
+        #region Saving
+        
         internal static void SaveTexture(string? defaultSaveName, Texture texture, DirectoryInfo? currentFolder = null,
             bool overwrite = false)
         {
@@ -223,12 +245,9 @@ namespace Engine2D.Managers
 
             try
             {
-                var textureData = JsonConvert.SerializeObject(texture, Formatting.Indented);
+                var textureData = JsonConvert.SerializeObject(texture, Formatting.None);
                 File.WriteAllText(fullSaveName, textureData);
-
-                AssetBrowserPanel.Refresh();
-                LoadAssets();
-
+                AddItemToManager(fullSaveName, texture);
                 Log.Succes("Texture saved Succesfully: " + fullSaveName);
             }
             catch (Exception e)
@@ -265,11 +284,10 @@ namespace Engine2D.Managers
                 if(!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 
-                var spriteData = JsonConvert.SerializeObject(sprite, Formatting.Indented);
+                var spriteData = JsonConvert.SerializeObject(sprite, Formatting.None);
                 File.WriteAllText(fullSaveName, spriteData);
 
-                AssetBrowserPanel.Refresh();
-                LoadAssets();
+                AddItemToManager(fullSaveName, sprite);
 
                 Log.Succes("Texture saved Succesfully: " + fullSaveName);
             }
@@ -278,7 +296,8 @@ namespace Engine2D.Managers
                 Log.Error($"Failed to save texture: {fullSaveName}. {e.Message}");
             }
         }
-
+        
+        #endregion
     }
 }
 

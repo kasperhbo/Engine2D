@@ -11,34 +11,38 @@ public class UIDebugStats
     public static void OnGui(FrameEventArgs args)
     {
         ImGui.Begin   ("Debug Stats");
-        ImGui.Text    ("Scene");
-        ImGui.Text    ($"Scene Name:                 {Engine.Get().CurrentScene.ScenePath}"        );
-        ImGui.Text    ($"GameObjects:                {Engine.Get().CurrentScene.Entities.Count}");
-        
-        ImGui.Checkbox("Do update", ref Scene.DoUpdate);
-        
-        ImGui.Separator();
-        ImGui.Text    ($"FPS:                         {1 / args.Time:0.00}"                  );
-        ImGui.Text    ($"Frame Time:                  {args.Time * 1000:0.00}ms"             );
-        ImGui.Text    ($"Assembly Reloaded:           {DebugStats.AssemblyReloaded}"         );
-        
-        //ImGui.Checkbox("Render",                 ref Renderer.RenderEverything);
-        //ImGui.Checkbox("Debug Render",           ref Renderer.DebugRender);
-        
-        ImGui.Text($"Render batches: {Renderer.Batches.Count}");
-        
-        ImGui.Text     ($"Draw Calls:                  {DebugStats.DrawCalls}"                );
-        ImGui.Text     ($"Sprites Drawn:               {DebugStats.SpritesDrawn}"             );
-        ImGui.Text     ($"Textures Loaded:             {DebugStats.TexturesLoaded}"           );
-        ImGui.Text     ($"Textures Unloaded:           {DebugStats.TexturesUnloaded}"         );
-        ImGui.Text     ($"Textures Reloaded:           {DebugStats.TexturesReloaded}"         );
-        ImGui.Text     ($"Textures Created:            {DebugStats.TexturesCreated}"          );
-        ImGui.Text     ($"Textures Saved:              {DebugStats.TexturesSaved}"            );
-        ImGui.Text     ($"Textures Loaded From Memory: {DebugStats.TexturesLoadedFromMemory}" );
-        ImGui.Text     ($"Textures Loaded From File:   {DebugStats.TexturesLoadedFromFile}"   );
+        // ImGui.Text    ("Scene");
+        // ImGui.Text    ($"Scene Name:                 {Engine.Get().CurrentScene.ScenePath}"        );
+        // ImGui.Text    ($"GameObjects:                {Engine.Get().CurrentScene.Entities.Count}");
+        //
+        // ImGui.Checkbox("Do update", ref Scene.DoUpdate);
+        //
+        // ImGui.Separator();
+        // ImGui.Text    ($"FPS:                         {1 / args.Time:0.00}"                  );
+        // ImGui.Text    ($"Frame Time:                  {args.Time * 1000:0.00}ms"             );
+        // ImGui.Text    ($"Assembly Reloaded:           {DebugStats.AssemblyReloaded}"         );
+        //
+        // //ImGui.Checkbox("Render",                 ref Renderer.RenderEverything);
+        // //ImGui.Checkbox("Debug Render",           ref Renderer.DebugRender);
+        //
+        // ImGui.Text($"Render batches: {Renderer.Batches.Count}");
+        //
+        // ImGui.Text     ($"Draw Calls:                  {DebugStats.DrawCalls}"                );
+        // ImGui.Text     ($"Sprites Drawn:               {DebugStats.SpritesDrawn}"             );
+        // ImGui.Text     ($"Textures Loaded:             {DebugStats.TexturesLoadedByResourceManager}"           );
+        // ImGui.Text     ($"Textures Unloaded:           {DebugStats.TexturesUnloaded}"         );
+        // ImGui.Text     ($"Textures Reloaded:           {DebugStats.TexturesReloaded}"         );
+        // ImGui.Text     ($"Textures Created:            {DebugStats.TexturesCreated}"          );
+        // ImGui.Text     ($"Textures Saved:              {DebugStats.TexturesSaved}"            );
+        // ImGui.Text     ($"Textures Loaded From Memory: {DebugStats.TexturesLoadedFromMemory}" );
+        // ImGui.Text     ($"Textures Loaded From File:   {DebugStats.TexturesLoadedFromFile}"   );
+        //
+        // ImGui.Text     ($"Sprites Loaded By ResourceManager:   {DebugStats.SpritesLoadedByResourceManager}"   );
+        //
+        // ImGui.Text($"Gameobjects: {Engine.Get().CurrentScene.Entities.Count}");
 
-        ImGui.Text($"Gameobjects: {Engine.Get().CurrentScene.Entities.Count}");
-
+        ImGui.Text(debug_data.GetDebugData(args.Time));
+        
         ImGui.Separator();
         ImGui.Text("UI");
         ImGui.Text($"UI Elements: {UiRenderer._windows.Count}");
@@ -76,22 +80,33 @@ public static class debug_data
             $"\n Do update:                  {Scene.DoUpdate}" +
             $"\n Gameobject {Engine.Get().CurrentScene.Entities.Count}" +
 
-             "\n Render Stats" +
+            "\n Render Stats" +
             $"\n FPS:                         {1 / time:0.00}" +
             $"\n Frame Time:                  {time * 1000:0.00}ms" +
             $"\n Assembly Reloaded:           {DebugStats.AssemblyReloaded}" +
-          //  $"\n Render Everything:           {Renderer.RenderEverything}" +
-          //  $"\n Debug Render:                {Renderer.DebugRender}" +
             $"\n Draw Calls:                  {DebugStats.DrawCalls}" +
-            $"\n Sprites Drawn:               {DebugStats.SpritesDrawn}" +
-            $"\n Textures Loaded:             {DebugStats.TexturesLoaded}" +
+
+            //Textures
+            "\n Texture Stats" +
+            $"\n Textures Loaded:             {DebugStats.TexturesLoadedByResourceManager}" +
             $"\n Textures Unloaded:           {DebugStats.TexturesUnloaded}" +
             $"\n Textures Reloaded:           {DebugStats.TexturesReloaded}" +
             $"\n Textures Created:            {DebugStats.TexturesCreated}" +
             $"\n Textures Saved:              {DebugStats.TexturesSaved}" +
             $"\n Textures Loaded From Memory: {DebugStats.TexturesLoadedFromMemory}" +
-            $"\n Textures Loaded From File:   {DebugStats.TexturesLoadedFromFile}");
-        
+            $"\n Textures Loaded From File:   {DebugStats.TexturesLoadedFromFile}" +
+
+            //Sprites
+            "\n Sprite Stats" +
+            $"\n Sprites Drawn:                       {DebugStats.SpritesDrawn}" +
+            $"\n Sprites Loaded By ResourceManager:   {DebugStats.SpritesLoadedByResourceManager}" +
+
+            //Shaders
+            "\n Shader Stats" +
+            $"\n Loaded Shaders:                      {DebugStats.LoadedShaders}");
+
+
+
         return test;
     }
 

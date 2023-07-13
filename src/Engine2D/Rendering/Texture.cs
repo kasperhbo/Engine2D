@@ -270,6 +270,7 @@ internal class Texture : AssetBrowserAsset
 
     internal void Save()
     {
+        
         if (SaveName == "")
         {
             if (_enableLog)
@@ -277,6 +278,7 @@ internal class Texture : AssetBrowserAsset
             return;
         }
 
-        //TODO: REMIEMPLEMENT SAVING
+        ResourceManager.SaveTexture(SaveName, this, null, true);
+        
     }
 }

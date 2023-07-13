@@ -2,6 +2,7 @@
 
 using System.Numerics;
 using System.Runtime.InteropServices;
+using Engine2D.Components.Sprites;
 using Engine2D.Core;
 using Engine2D.Core.Inputs;
 using Engine2D.Logging;
@@ -118,8 +119,6 @@ internal class AssetBrowserPanel : UIElement
             
             var texture = new Texture(imageFiles[i].FullName, saveName, true,
                 TextureMinFilter.Linear, TextureMagFilter.Linear);
-
-    
             
             texture.Save();
             Log.Succes(string.Format("Succesfully made texture from {0}, and save it to {1}",
@@ -501,11 +500,14 @@ internal class AssetBrowserEntry
                 {
                     var savePath = _assetBrowserPanel.CurrentDirectory.FullName + "\\";
                     savePath += Label.Remove(Label.Length - 4);
-                    savePath += ".spritesheet";
-                    savePath = savePath?.Replace(ProjectSettings.FullProjectPath, "");
+                    savePath += ".sprite";
+                    savePath = savePath?.Replace(ProjectSettings.FullProjectPath + "\\Assets\\", "");
 
                     // var spriteSheet = new SpriteSheet(relativePath, savePath);
-                    // spriteSheet.Save();
+                    Sprite sprite = new Sprite(relativePath);
+                    ResourceManager.SaveSprite(savePath, sprite);
+                    // ResourceManager.SaveSprite();
+                    // spriteSheet.Save());
                     AssetBrowserPanel.Refresh();
                 }
                 if (ImGui.MenuItem("Create Sprite(Sheet)"))

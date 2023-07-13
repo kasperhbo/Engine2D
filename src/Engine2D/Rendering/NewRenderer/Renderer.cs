@@ -3,6 +3,7 @@ using Engine2D.Components.Cameras;
 using Engine2D.Components.ENTT;
 using Engine2D.Core;
 using Engine2D.Logging;
+using Engine2D.Managers;
 using Engine2D.Testing;
 using KDBEngine.Shaders;
 using OpenTK.Graphics.OpenGL4;
@@ -124,11 +125,16 @@ internal static class Renderer
     public static void AddSprite(Entity ent)
     {
         bool added = false;
-        foreach (var batch in Batches)
+
+
+
+        for (int i = 0; i < Batches.Count; i++)
         {
+            var batch = Batches[i];
             if (batch.CanAdd(ent))
             {
                 batch.AddSprite(ent);
+                ent.AddedToBatch = i + 1;
                 added = true;
             }
         }
@@ -137,11 +143,16 @@ internal static class Renderer
         {
             // Log.Error("Creating new batch");
             var batch = new Batch2D();
-            batch.Init(new Shader(
-                    "Shaders\\ShaderFiles\\testshader.vert",
-                    "Shaders\\ShaderFiles\\testshader.frag"),
-                0);
+            ShaderData data = new()
+            {
+                VertexPath = "Shaders\\ShaderFiles\\testshader.vert",
+                FragPath = "Shaders\\ShaderFiles\\testshader.frag"
+            };
+            
+            batch.Init(ResourceManager.GetShader(data), 0);
+            
             Batches.Add(batch);
+            ent.AddedToBatch = Batches.Count;
             batch.AddSprite(ent);
         }
     }

@@ -94,7 +94,7 @@ internal class Batch2D
             {
                 for (int i = 0; i < _textureIDS.Length; i++)
                 {
-                    if (_textureIDS[i] == textureIdSpriteRenderer)
+                    if (_textureIDS[i] == textureIdSpriteRenderer || _textureIDS[i] == -1)
                     {
                         return true;
                     }
@@ -321,13 +321,22 @@ internal class Batch2D
         
         GL.DrawElements(PrimitiveType.Triangles, _quadCount * 6, DrawElementsType.UnsignedInt, 0);
         
+        for (var i = 0; i < _textureIDS.Length; i++)
+        {
+            if (_textureIDS[i] != -1)
+            {
+                var unit = TextureUnit.Texture0 + i + 1;
+                Texture.Use(unit, 0);
+            }
+        }
+        
+        _shader.detach();
         GL.DisableVertexAttribArray(0);
         GL.DisableVertexAttribArray(1);
         GL.DisableVertexAttribArray(2);
         GL.DisableVertexAttribArray(3);
         GL.BindVertexArray(0);
 
-        _shader.detach();
     }
     
     private void LoadVertices(int index, Matrix4x4 transform, Vector4 color, Vector2[] textureCoords, float textureSlot, ENTTSpriteRenderer spriteRenderer)

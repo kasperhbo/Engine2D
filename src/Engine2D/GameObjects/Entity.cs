@@ -32,6 +32,8 @@ public class Entity : Asset
     
     [JsonIgnore]private Vector2 _lastScale = Vector2.One;
     [JsonIgnore]private Quaternion _lastRotation = new();
+
+    [JsonIgnore] public int AddedToBatch = -1;
     
     
     public Entity(EntityKey handle, Scene scene, int uuid, bool isStatic = false)
@@ -197,6 +199,7 @@ public class Entity : Asset
             ImGui.EndPopup();
         }
         
+        ImGui.Text($"Added to batch: {AddedToBatch}");
         ImGui.Text($"UUID: {UUID}");
         ImGui.Text($"Entity Handle: {m_EntityHandle}");
         ImGui.Text("IsStatic: ");

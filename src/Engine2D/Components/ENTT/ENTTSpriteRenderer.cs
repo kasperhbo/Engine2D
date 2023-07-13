@@ -1,10 +1,6 @@
 ﻿using System.Numerics;
 using Engine2D.Components.Sprites;
-using Engine2D.Core;
-using Engine2D.Rendering;
-using Engine2D.Rendering.NewRenderer;
 using Newtonsoft.Json;
-using Serilog;
 
 namespace Engine2D.Components.ENTT;
 
@@ -16,7 +12,7 @@ public struct ENTTSpriteRenderer : IENTTComponent
    [JsonProperty] public Vector4 Color = new Vector4(1, 1, 1, 1);
    [JsonProperty] public int ParentUUID = 0;
 
-   [JsonProperty]
+   [JsonIgnore]
    public Vector2[] TextureCoords
    {
       get
@@ -27,17 +23,10 @@ public struct ENTTSpriteRenderer : IENTTComponent
          }
          else
          {
-            return new Vector2[4]
-            {
-               new Vector2(0f, 0f),
-               new Vector2(1f, 0f),
-               new Vector2(1f, 1f),
-               new Vector2(0f, 1f)
-            };
+            return DefaultSpriteRendererData.DefaultCoords; 
          }  
       }
    }
-   
    [JsonProperty] internal string SpritePath = "";
    
    [JsonIgnore]private Sprite? _sprite = null;
@@ -63,4 +52,15 @@ public struct ENTTSpriteRenderer : IENTTComponent
    {
       
    }
+}
+
+internal static class DefaultSpriteRendererData{
+
+   public static Vector2[] DefaultCoords = new Vector2[4]
+   {
+      new Vector2(0f, 0f),
+      new Vector2(1f, 0f),
+      new Vector2(1f, 1f),
+      new Vector2(0f, 1f)
+   };
 }
