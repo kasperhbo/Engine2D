@@ -27,7 +27,6 @@ namespace Engine2D.Core
         
         internal Asset? CurrentSelectedAsset = null;
         
-        
         // internal SpriteSheet? CurrentSelectedSpriteSheetAssetBrowserAsset { get; set; }= null;
         internal Texture? CurrentSelectedTextureAssetBrowserAsset     { get; set; } = null;
         // internal Animation? CurrentSelectedAnimationAssetBrowserAsset   { get; set; } = null;

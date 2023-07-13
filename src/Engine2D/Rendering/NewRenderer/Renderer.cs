@@ -15,41 +15,13 @@ internal static class Renderer
     internal static TestFrameBuffer GameFrameBuffer   = new(1920, 1080);
     internal static TestFrameBuffer EditorFrameBuffer = new(1920, 1080);
 
-    public static List<Batch2D> Batches = new();
-    public static Vector4 ClearColor = new(.2F, .2F, .2F, 1.0f);
+    internal static List<Batch2D> Batches = new();
+    internal static Vector4 ClearColor = new(.2F, .2F, .2F, 1.0f);
 
     internal static void Init()
     {
         EditorFrameBuffer = new TestFrameBuffer(1920, 1080);
         GameFrameBuffer = new TestFrameBuffer(1920, 1080);
-        
-        // var batch = new Batch2D();
-        // Batches.Add(batch);
-        // batch.Init(new Shader(
-        //         "Shaders\\ShaderFiles\\testshader.vert",
-        //         "Shaders\\ShaderFiles\\testshader.frag"),
-        //     0);
-        //
-        // var batch1 = new Batch2D();
-        // Batches.Add(batch1);
-        // batch1.Init(new Shader(
-        //         "Shaders\\ShaderFiles\\testshader.vert",
-        //         "Shaders\\ShaderFiles\\testshader.frag"),
-        //     0);
-        //
-        // var batch2 = new Batch2D();
-        // Batches.Add(batch2);
-        // batch2.Init(new Shader(
-        //         "Shaders\\ShaderFiles\\testshader.vert",
-        //         "Shaders\\ShaderFiles\\testshader.frag"),
-        //     0);
-        //
-        // var batch3 = new Batch2D();
-        // Batches.Add(batch3);
-        // batch3.Init(new Shader(
-        //         "Shaders\\ShaderFiles\\testshader.vert",
-        //         "Shaders\\ShaderFiles\\testshader.frag"),
-        //     0);
     }
     
     
@@ -122,12 +94,25 @@ internal static class Renderer
         EditorFrameBuffer = new TestFrameBuffer(Engine.Get().Size);
     }
 
+    public static bool DestroyEntity(Entity ent)
+    {
+        bool found = false;
+
+        foreach (var batch in Batches)
+        {
+            if (batch.DestroyIfExists(ent))
+            {
+                found = true;
+            }
+        }
+        
+        return found;
+    }
+
     public static void AddSprite(Entity ent)
     {
         bool added = false;
-
-
-
+        
         for (int i = 0; i < Batches.Count; i++)
         {
             var batch = Batches[i];

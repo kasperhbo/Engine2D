@@ -23,7 +23,12 @@ public static class SceneControls
 
     private static void KeyControls(FrameEventArgs args)
     {
-        
+        if (Input.KeyPressed(Keys.Delete))
+        {
+            var currentSelectedAsset = Engine.Get().CurrentSelectedAsset;
+            if (currentSelectedAsset != null)
+                currentSelectedAsset.IsDead = true;
+        }
     }
 
     private static void MouseControls()
@@ -45,11 +50,9 @@ public static class SceneControls
     {
         try
         {
-            var selectedGo = (Entity)Engine.Get().CurrentSelectedAsset;
-            
-            
-            if (selectedGo != null)
+            if ((Entity)Engine.Get().CurrentSelectedAsset != null)
             {
+                var selectedGo = (Entity)Engine.Get().CurrentSelectedAsset;
                 if (Input.KeyPressed(Keys.Q))
                 {
                     if (_currentMode == MODE.LOCAL) _currentMode = MODE.WORLD;
@@ -119,6 +122,10 @@ public static class SceneControls
                     // if (_currentOperation == OPERATION.SCALE)
                     //     selectedGo.GetComponent<Transform>().Size = new Vector2(outScale.X, outScale.Y);
                 }
+            }
+            else
+            {
+                ImGuizmo.Enable(false);
             }
         }
         catch

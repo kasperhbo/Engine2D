@@ -63,6 +63,12 @@ public class Entity : Asset
     /// </summary>
     public void Update(double dt)
     {
+        if(IsDead)
+        {
+            Engine.Get().CurrentScene.RemoveEntity(this);
+            Engine.Get().CurrentSelectedAsset = null;
+        }
+        
         CheckForDirty();
     }
 
@@ -302,4 +308,5 @@ public class Entity : Asset
         }
 
     }
+    
 }

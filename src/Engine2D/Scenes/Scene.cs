@@ -33,16 +33,17 @@ public class Scene
     [JsonProperty]public static bool DoUpdate = true;
     [JsonProperty]public List<Entity> Entities = new();
     
-    [JsonIgnore] public EntityRegistry<EntityKey> EntityRegistry { get; private set; }
+    [JsonIgnore]internal EntityRegistry<EntityKey> EntityRegistry { get; private set; }
+    [JsonIgnore]internal Physics2DWorld? _physics2DWorld;
 
-    [JsonIgnore] public Physics2DWorld? _physics2DWorld;
     [JsonIgnore]private int _totalTimesTimeCounted = 0;
     [JsonIgnore]private double _totalTime = 0;
     [JsonIgnore]private bool _isPlaying;
     [JsonIgnore]private Camera? _editorCamera = null;
     [JsonIgnore]private bool _saveScene = true;
-    [JsonIgnore] internal static Texture TempTexture;
+    [JsonIgnore]private List<Entity> _toRemoveEndOfFrame = new();
     
+    [JsonIgnore]internal static Texture TempTexture;
     
     internal bool IsPlaying
     {
@@ -251,9 +252,18 @@ public class Scene
     /// </summary>
     private void AfterUpdate()
     {
-        
+        foreach (var ent in _toRemoveEndOfFrame)
+        {
+            Entities.Remove(ent);
+            Renderer.DestroyEntity(ent);
+        }
     }
-    
+
+    public void RemoveEntity(Entity ent)
+    {
+        _toRemoveEndOfFrame.Add(ent);
+    }
+
     /// <summary>
     /// Render the scene
     /// </summary>

@@ -14,9 +14,11 @@ internal class Batch2D
     internal bool DebuggerOpened = false;
     
     internal int ZIndex { get; private set; }
-    internal Shader Shader { get; private set; }
+    internal Shader Shader { get; private set; } = null!;
 
-    private List<Entity> _sprites = new();
+    // private List<Entity> _entities = new();
+
+    private Entity[] _entities = new Entity[c_maxBatchSize];
     
     private int _quadCount = 0;
     private int _vaoId, _vboId;
@@ -50,6 +52,7 @@ internal class Batch2D
     private bool s_IndicesFilled = false;
     
     //Texture IDS
+    private Dictionary<int, List<Entity>> _textureIDMap = new();
     public int[] TextureIDS { get; private set; } = new int[7]
     {
         -1,
@@ -119,15 +122,16 @@ internal class Batch2D
     
     internal void AddSprite(Entity ent)
     {
-        _sprites.Add(ent);
+        _entities[_quadCount] = ent;
         ChangeEntityAtIndex(_quadCount);
+        
         _quadCount++;
     }
     
     internal bool ChangeEntityAtIndex(int index)
     {
         // return true;
-        var ent = _sprites[index];
+        var ent = _entities[index];
         var spriteRenderer = ent.GetComponent<ENTTSpriteRenderer>();
 
         var transformComponent = ent.GetComponent<ENTTTransformComponent>();
@@ -275,9 +279,9 @@ internal class Batch2D
         
         for (var i = 0; i < _quadCount; i++)
         {
-            if (_sprites[i].IsDirty)
+            if (_entities[i].IsDirty)
             {
-                _sprites[i].IsDirty = false;
+                _entities[i].IsDirty = false;
                 ChangeEntityAtIndex(i);
                 rebufferData = true;
             }
@@ -380,4 +384,27 @@ internal class Batch2D
         }
     }
 
+    
+    public bool DestroyIfExists(Entity go)
+    {
+        for (int i = 0; i < _quadCount; i++)
+        {
+            if (_entities[i] == go)
+            {
+                for (int j=i; j < _quadCount - 1; j++) {
+                    _entities[j] = _entities[j + 1];
+                    _entities[j].IsDirty = true;
+                }
+                _quadCount--;
+                return true;
+            }
+        }
+        return false;
+    }
+  
+}
+
+public class Test
+{
+    
 }
